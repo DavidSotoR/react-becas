@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Navbar from "./NavBar";
-import TablaFolios from "./HomePage/TablesClientes";
+import Navbar from "../NavBar/NavBar";
+import TablaFolios from "./TablesClientes";
 
 function HomePage() {
   const [activeTab, setActiveTab] = useState('escuelas');
