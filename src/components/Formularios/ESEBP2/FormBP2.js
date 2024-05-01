@@ -15,11 +15,37 @@ function FormBP2() {
         { integrante: 'Madre', activo: 'si', empresa: '' },
     ]);
 
+    const [deudasMensuales, setDeudasMensuales] = useState([
+        { concepto: 'Tarjeta de Credito', deudaTotal: '0', mensualidad: '0' },
+        { concepto: 'Tarjeta Departamentales', deudaTotal: '0', mensualidad: '0' },
+        { concepto: 'Prestamos Bancarios/Nomina/Familiares', deudaTotal: '0', mensualidad: '0' },
+        { concepto: 'Credito Hipotecario', deudaTotal: '0', mensualidad: '0' },
+        { concepto: 'Credito Automotriz', deudaTotal: '0', mensualidad: '0' },
+    ]);
+
     const [ingresosPorMes, setIngresosPorMes] = useState([
         { tipoIngreso: 'INGRESO NETO'},{ tipoIngreso: 'BONOS DE DESPENSA'},{ tipoIngreso: 'VALES  GASOLINA'},
         { tipoIngreso: 'COMISIONES POR VENTAS'},{ tipoIngreso: 'AGUINALDO'},{ tipoIngreso: 'BONO DE  PRODUCTIVIDAD'},
         { tipoIngreso: 'FONDO DE AHORRO'},{ tipoIngreso: 'UTILIDADES'},{ tipoIngreso: 'PRIMA VACACIONAL'},
         { tipoIngreso: 'RENTA QUE RECIBA'},{ tipoIngreso: 'AYUDA QUE RECIBA'}
+    ]);
+
+    const [egresosPorMes, setEgresosPorMes] = useState([
+        { tipoEgreso: 'DESPENSA'},{ tipoEgreso: 'HIPOTECA  CASA, TERRENO'},{ tipoEgreso: 'RENTA'},
+        { tipoEgreso: 'SERVICIOS , LUZ, AGUA, GAS, TELEFONO, INTERNET, TV PAGA, CELULARES'},{ tipoEgreso: 'MTTO. Y SEGURIDAD FRACCIONAMIENTO'},{ tipoEgreso: 'CREDITO AUTOMOTRIZ'},
+        { tipoEgreso: 'GASOLINA Y TRANSPORTE'},{ tipoEgreso: 'SERVICIO DOMESTICO'},{ tipoEgreso: 'MASCOTAS'},
+        { tipoEgreso: 'ROPA Y CALZADO'},{ tipoEgreso: 'MEMBRESIA DEPORTIVO O CLUB'},{ tipoEgreso: 'COLEGIATURA, ESTANCIA, EXTRACURRICULARES EN EL COLEGIO'},
+        { tipoEgreso: 'ESPARCIMIENTO (RESTAURANTES, PASEOS, CINE, CONVIVIOS'},{ tipoEgreso: 'AYUDA A PARIENTES'},{ tipoEgreso: 'AHORRO PARA EL RETIRO'},
+        
+    ]);
+
+    const [egresosAnual, setEgresosAnual] = useState([
+        { tipoEgreso: 'SEGURO DE VIDA'},{ tipoEgreso: 'SEGUBECA'},{ tipoEgreso: 'SEGURO GMM'},
+        { tipoEgreso: 'SEGURO DE AUTO'},{ tipoEgreso: 'TENENCIA'},{ tipoEgreso: 'MTTO. AUTO'},
+        { tipoEgreso: 'SEGURO DE CASA'},{ tipoEgreso: 'PREDIAL'},{ tipoEgreso: 'MTTO. CASA'},
+        { tipoEgreso: 'VACACIONES (1 AÑO ATRÁS)'},{ tipoEgreso: 'CONSULTAS, TRATAMIENTOS, ESPECIALISTAS'},{ tipoEgreso: 'GASTOS ANUALES EDUCACION (INSCRIPCIONES, LIBROS, ULTILES, UNIFORMES, CALZADO, SOCIEDAD DE PADRES, FIDEICOMISOS, PLATAFORMAS)'},
+        { tipoEgreso: 'PRESTAMO FAMILIAR, BANCARIO, NOMINA'},{ tipoEgreso: 'OTROS VARIOS'}
+        
     ]);
 
     const addAlumno = () => {
@@ -70,6 +96,48 @@ function FormBP2() {
         ));
     };
 
+    const renderFilasTablaDeudasMensuales = () => {
+        return deudasMensuales.map((deuda, index) => (
+            <tr key={'tr-deuda-'+index}>
+                <td>
+                    <p style={{ fontWeight: "bold" }}>{deuda.concepto}</p>
+                </td>
+                <td>
+                    <input type="text" className="form-control" id={`input-deuda-${index}`} placeholder="$0.00" />
+                </td>
+                <td>
+                    <input type="text" className="form-control" id={`input-deuda-${index}`} placeholder="$0.00"/>
+                </td>
+            </tr>
+        ));
+    };
+
+    const renderFilasTablaEgresosMensuales = () => {
+        return egresosPorMes.map((egreso, index) => (
+            <tr key={'tr-deuda-'+index}>
+                <td>
+                    <p>{egreso.tipoEgreso}</p>
+                </td>
+                <td>
+                    <input type="text" className="form-control" id={`input-egreso-${index}`} placeholder="$0.00" />
+                </td>
+            </tr>
+        ));
+    };
+
+    const renderFilasTablaEgresoAnual = () => {
+        return egresosAnual.map((egreso, index) => (
+            <tr key={'tr-deuda-'+index}>
+                <td>
+                    <p style={{ fontWeight: "bold" }}>{egreso.tipoEgreso}</p>
+                </td>
+                <td>
+                    <input type="text" className="form-control" id={`input-egresoan-${index}`} placeholder="$0.00" />
+                </td>
+            </tr>
+        ));
+    };
+
     return (
         <div className="">
             <Navbar />
@@ -81,7 +149,7 @@ function FormBP2() {
                     <h4 className="text-center">Familia: {Familia}  </h4>
                 </div>
                 <div id="contenido-form" className="d-grid justify-content-center m-3">
-                    <div id="list-alumnos" className="d-grid justify-content-center mb-3" >
+                    <div id="list-alumnos" className="d-grid justify-content-center mb-5" >
                         <div className="container text-center">
                             <div className="row align-items-start">
                                 <div className="col">
@@ -130,12 +198,12 @@ function FormBP2() {
                             <button className="btn btn-primary btn-small" onClick={ addAlumno }>Agregar</button>
                         </div>
                     </div>
-                    <div id="container-1-form" className="mb-3">
-                        <label for="exampleFormControlTextarea1" className="form-label">1. Situacion por la cual solicita el apoyo de beca:</label>
+                    <div id="container-1-form" className="mb-5">
+                        <label for="exampleFormControlTextarea1" className="form-label" style={{ fontWeight:"bold", fontSize:"1rem" }}>1. Situacion por la cual solicita el apoyo de beca:</label>
                         <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                     </div>
-                    <div id="container-2-form" className="mb-3">
-                        <p className="mb-2">2. Familia economicamente activa.</p>
+                    <div id="container-2-form" className="mb-5">
+                        <h5 className="mb-2">2. Familia economicamente activa.</h5>
                         <table className="table mt-2">
                             <thead>
                                 <tr>
@@ -179,8 +247,8 @@ function FormBP2() {
                             <button className="btn btn-primary btn-small">Agregar Familia</button>
                         </div>
                     </div>
-                    <div id="container-3-form" className="mb-3">
-                        <p className="mb-2">3. Ingresos por mes.</p>
+                    <div id="container-3-form" className="mb-5">
+                        <h5 className="mb-2">3. Ingresos por mes.</h5>
                         <table className="table mt-2">
                             <thead>
                                 <tr>
@@ -217,8 +285,8 @@ function FormBP2() {
                             </tbody>
                         </table>
                     </div>
-                    <div id="container-4-form" className="mb-3">
-                        <p className="mb-2">4. Quienes dependen economicamente del ingreso familiar</p>
+                    <div id="container-4-form" className="mb-5">
+                        <h5 className="mb-2">4. Quienes dependen economicamente del ingreso familiar</h5>
                         <div className="d-flex">
                             <div className="m-1">
                                 <select class="form-select" aria-label="Default select example">
@@ -237,8 +305,8 @@ function FormBP2() {
                             <button className="btn btn-primary btn-small">Agregar Familiar</button>
                         </div>
                     </div>
-                    <div id="container-5-form" className="mb-3">
-                        <p className="mb-2">5. Vehiculos:</p>
+                    <div id="container-5-form" className="mb-5">
+                        <h5 className="mb-2">5. Vehiculos:</h5>
                         <table className="table mt-2">
                             <thead>
                                 <tr>
@@ -307,6 +375,101 @@ function FormBP2() {
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div id="container-6-form" className="mb-5">
+                        <h5>6. Casa Habitacion</h5>
+                        <div className="row">
+                            <div className="col mb-2">
+                                <label for="casa-comprobo" className="mb-2">Comprobo con:</label>
+                                <select id="casa-comprobo" class="form-select" aria-label="Default select example">
+                                    <option value="1" selected>Contrato de renta</option>
+                                    <option value="2" >Pago de Renta</option>
+                                    <option value="3" >Credito/Pago Hipotecario</option>
+                                    <option value="4" >Pago Hipoteca </option>
+                                    <option value="5" > Recibo de Servicios</option>
+                                    <option value="No" >No comprobo </option>
+                                </select>
+                            </div>
+                            <div className="col mb-3">
+                                <label htmlFor="cantidad-casa" class="form-label">Pago Hipoteca o Renta</label>
+                                <input type="text" class="form-control" id="cantidad-casa" placeholder="$0.00"/>
+                            </div>
+                            <div className="col mb-3">
+                                <label htmlFor="valor-casa" class="form-label">Valor comercial aproximado</label>
+                                <input type="text" class="form-control" id="valor-casa" placeholder="$0.00"/>
+                            </div>
+                        </div>
+                        <p>Cuenta con otra casa, Terreno, Departamento, Locales, etc.</p>
+                        <div className="row">
+                            <div className="col-4">
+                                <select class="form-select" aria-label="Default select example">
+                                    <option value="1" selected>Propia/Liquidada</option>
+                                    <option value="2" >Rentada</option>
+                                    <option value="2" >Hipoteca </option>
+                                    <option value="3" >Prestado/Familiar </option>
+                                    <option value="4" > Prestada/Amistades</option>
+                                    <option value="5" >Vive con parientes </option>
+                                </select>   
+                            </div>
+                            <div className="col mt-0">
+                                <div className="row">
+                                    <label for="staticEmail" class="col-4 col-form-label" style={{ width: "140px" }}>Valor Comercial</label>
+                                    <div class="col-6">
+                                        <input type="text" class="form-control" id="staticEmail" placeholder="$0.00"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="d-flex p-1">
+                            <button className="btn btn-primary btn-small">Agregar Familiar</button>
+                        </div>
+                        <div className="d-grid p-1">
+                            <h5>Subtotal: $ 0</h5>
+                            <h5>Total: $ 0</h5>
+                        </div>
+                    </div>
+                    <div id="container-7-form" className="mb-5">
+                        <h5>7. Deudas Mensuales</h5>
+                        <div className="">
+                            <p className="mb-0">¿Cuenta con Deudas mensuales?</p>
+                            <select class="form-select" aria-label="Default select example" style={{ width:"100px" }}>
+                                <option value="1">Si</option>
+                                <option value="0" selected>No</option>
+                            </select>   
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Concepto</th>
+                                    <th scope="col">Total a deber</th>
+                                    <th scope="col">Mensualidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { renderFilasTablaDeudasMensuales() }
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                    <div id="container-8-form" className="mb-5">
+                        <h5>8. Gastos Familiares Mensuales</h5>
+                        <div className="container">
+                            <div className="row mb-4">
+                                <div className="col">
+                                    <table>
+                                        <tbody> { renderFilasTablaEgresosMensuales() } </tbody>
+                                    </table>
+                                </div>
+                                <div className="col">
+                                    <table>
+                                        <tbody> { renderFilasTablaEgresoAnual() } </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div className="d-flex justify-content-center">
+                                <h5>Total: $0</h5>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
