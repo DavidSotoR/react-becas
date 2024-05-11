@@ -39,6 +39,14 @@ function Navbar() {
 
                 </ul>
               </li>
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Solicitud Becas
+                </a>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="/ese-1-2">Estudio SOCIOECONÓMICO 1/2</a></li>
+                </ul>
+              </li>
           </ul>
           <div>
             <a style={ { color:"white" } } className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

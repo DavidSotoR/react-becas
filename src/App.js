@@ -10,6 +10,7 @@ import NotFound from './components/NotFound/NotFound';
 import FormBP2 from './components/Formularios/ESEBP2/FormBP2';
 import FormBP3 from './components/Formularios/ESEBP3/FormBP3';
 import FormBP7 from './components/Formularios/ESEBP7/FormBP7';
+import ESE12 from './components/Formularios/SolicitudBeca/ESE12';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,6 +29,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<HomePage />} />
+          <Route path="/ese-1-2" element={<ESE12 />} />
           <Route path="/form-1" element={<FormBP2 />} />
           <Route path="/form-2" element={<FormBP3 />} />
           <Route path="/form-3" element={<FormBP7 />} />
