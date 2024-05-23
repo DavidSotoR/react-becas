@@ -8,8 +8,7 @@ function Login() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const changeRolType = (e) => {
-    console.log(e.target.value);
-    localStorage.setItem("rol", e.target.value)
+    setTypeRol(e.target.value)
   }
 
   const sendLogin = async () => {
@@ -17,25 +16,10 @@ function Login() {
     var servLogin = await loginService(roleSelected)
     localStorage.setItem('login',servLogin.success)
     login();
-    console.log(servLogin);
-    navigate('/')
-    switch (servLogin.role) {
-      case 'admin':
-          
-        break;
-      case 'colaborador':
-          navigate('/colaborador')
-        break;
-  
-      case 'calidad':
-        navigate('/calidad')
-        break;
-      case 'postulante':
-        navigate('/familia')
-        break;
-      default:
-          alert('Usuario No Valido')
-        break;
+    if (servLogin.success) {
+      navigate('/')
+    } else {
+      alert('Usuario No Valido')
     }
   }
   
@@ -64,7 +48,7 @@ function Login() {
                 <option value="admin">Adminitrados</option>
                 <option value="colaborador">Colaborador</option>
                 <option value="calidad">Calidad</option>
-                <option value="postulante">Postulante</option>
+                <option value="familia">Familia</option>
               </select>
             </div>
             <div className="mb-3">

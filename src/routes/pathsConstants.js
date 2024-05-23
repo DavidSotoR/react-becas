@@ -4,7 +4,7 @@ const PathConstants = {
     ESEBP2: '/form-1',
     COLABORADOR: '/colaborador',
     CALIDAD: '/calidad',
-    FAMILIA: '/familia',
+    FAMILIAS: '/familias',
 }
 
 export default PathConstants
