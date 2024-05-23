@@ -140,7 +140,6 @@ function FormBP2() {
 
     return (
         <div className="">
-            <Navbar />
             <div id="body-form">
                 <div id="titulos-form" className="d-grid justify-content-center">
                     <h3 className="text-center">ESTUDIO SOCIOECONÓMICO PARA BECAS</h3>

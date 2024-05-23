@@ -1,0 +1,164 @@
+import { useEffect, useState } from "react";
+import TablaFolios from "./TablesClientes";
+
+const ESCUELAS = [
+  { id: 1, nombre: "Colegio Oxford", tipo:"Escuela", folios: [
+    {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+    {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+    {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+    {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+  ]},
+  { id: 2, nombre: "Colegio Internacional",tipo: "Escuela", folios: [
+    {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+    {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+    {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+    {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+  ]},
+  { id: 3, nombre: "Colegio San Pablo", tipo: "Escuela", folios: [
+    {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+    {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+    {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+    {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+  ]},
+  {id: 4, nombre: "Colegio Santa Maria", tipo: "Escuela", folios: [
+    {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+    {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+    {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+    {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+  ]}
+]
+
+const EMPRESAS = [
+  { id: 1, nombre: "GETIC", tipo:"Escuela", folios: [
+    {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+    {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+    {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+    {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+  ]},
+  { id: 2, nombre: "CASTELEC",tipo: "Escuela", folios: [
+    {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+    {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+    {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+    {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+  ]},
+  { id: 3, nombre: "OXXO", tipo: "Escuela", folios: [
+    {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+    {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+    {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+    {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+  ]},
+  {id: 4, nombre: "GRUPO SORAH", tipo: "Escuela", folios: [
+    {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+    {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+    {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+    {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+  ]}
+]
+
+function HomePageAdmin() {
+  const [activeTab, setActiveTab] = useState('escuelas');
+  const [catalogFolios, setCatalogFolios] = useState([
+    { id: 1, nombre: "Colegio Oxford", tipo:"Escuela", folios: [
+      {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+      {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+      {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+      {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+    ]},
+    { id: 2, nombre: "Colegio Internacional",tipo: "Escuela", folios: [
+      {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+      {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+      {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+      {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+    ]},
+    { id: 3, nombre: "Colegio San Pablo", tipo: "Escuela", folios: [
+      {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+      {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+      {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+      {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+    ]},
+    {id: 4, nombre: "Colegio Santa Maria", tipo: "Escuela", folios: [
+      {folio: "0001", familia: "Perez Garcia", asignado: "Colaborador 1" },
+      {folio: "0002", familia: "Gonzalez Martinez", asignado: "Colaborador 2"},
+      {folio: "0003", familia: "Lopez Fernandez", asignado: "Colaborador 3"},
+      {folio: "0004", familia: "Ramirez Sanchez", asignado: "Colaborador 4" }
+    ]}
+  ])
+  
+  console.log('Cargo HOME');
+
+  const changeTab = () =>{
+    if (activeTab === 'escuelas') {
+      setActiveTab(ESCUELAS)
+    } else {
+      setActiveTab(EMPRESAS)
+    }
+  }
+
+  const listaFolios = () => {
+    return (
+          <div className="accordion" id="accordionExample">
+            {
+              catalogFolios.map(school => {
+                return (
+                  <div className="accordion-item" key={"key"+school.id}>
+                    <h2 className="accordion-header">
+                      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse-${school.id}`} aria-expanded="false" aria-controls={`collapse-${school.id}`}>
+                        {school.nombre}
+                      </button>
+                    </h2>
+                    <div id={`collapse-${school.id}`} className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                      <div className="accordion-body pt-0">
+                        <TablaFolios folios={school.folios  } />
+                      </div>
+                    </div>
+                  </div>
+                );
+              }) 
+            }
+          </div>
+      )
+  }
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab); 
+  };
+  
+
+  useEffect(() => {
+    if (activeTab === 'escuelas') {
+      setCatalogFolios(ESCUELAS);
+    } else {
+      setCatalogFolios(EMPRESAS);
+    }
+  }, [activeTab]);
+
+
+  return (
+    <div className="">
+        <h3 className="m-3">Seguimiento de Folios</h3>
+        <ul className="nav nav-tabs">
+          <li className="nav-item">
+            <a
+              className={`nav-link ${activeTab === 'escuelas' ? 'active' : ''}`}
+              onClick={() => handleTabClick('escuelas')}
+            >
+              Escuelas
+            </a>
+          </li>
+          <li className="nav-item">
+            <a
+              className={`nav-link ${activeTab === 'empresas' ? 'active' : ''}`}
+              onClick={() => handleTabClick('empresas')}
+            >
+              Empresas
+            </a>
+          </li>
+        </ul>
+        <div className="m-2">
+          { listaFolios()}
+        </div>
+    </div>
+  );
+}
+
+export default HomePageAdmin;

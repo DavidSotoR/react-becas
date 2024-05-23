@@ -1,22 +1,50 @@
-import { useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { loginService } from "../../services/LoginService";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
-const sendLogin = () => {
-  console.log("Esta es el login");
-  localStorage.setItem('login','true')
-  window.location.replace('/home')
-}
 function Login() {
+  const [ typeRol, setTypeRol ] = useState("admin")
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
+  const changeRolType = (e) => {
+    console.log(e.target.value);
+    localStorage.setItem("rol", e.target.value)
+  }
+
+  const sendLogin = async () => {
+    const roleSelected = {role: typeRol} ;
+    var servLogin = await loginService(roleSelected)
+    localStorage.setItem('login',servLogin.success)
+    login();
+    console.log(servLogin);
+    navigate('/')
+    switch (servLogin.role) {
+      case 'admin':
+          
+        break;
+      case 'colaborador':
+          navigate('/colaborador')
+        break;
+  
+      case 'calidad':
+        navigate('/calidad')
+        break;
+      case 'postulante':
+        navigate('/familia')
+        break;
+      default:
+          alert('Usuario No Valido')
+        break;
+    }
+  }
+  
   useEffect(() => {
 
   }, []);
 
   return (
     <div>
-      <nav class="navbar sticky-top bg-primary" data-bs-theme="dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Servicio de becas</a>
-        </div>
-      </nav>
       <div className="mt-5 d-flex flex-column justify-content-center align-items-center">
           <div className="d-grid">
             <div className="d-flex" style={{ width: "100%" }}>
@@ -32,11 +60,11 @@ function Login() {
             </div>
             <div className="mb-3">
               <label htmlFor="login-type"> Tipo de usuario </label>
-              <select id="login-type" class="form-select">
-                <option value="1">Adminitrados</option>
-                <option value="2">Colaborador</option>
-                <option value="3">Calidad</option>
-                <option value="4">Postulante</option>
+              <select id="login-type" className="form-select" onChange={ (e) => { changeRolType(e) } }>
+                <option value="admin">Adminitrados</option>
+                <option value="colaborador">Colaborador</option>
+                <option value="calidad">Calidad</option>
+                <option value="postulante">Postulante</option>
               </select>
             </div>
             <div className="mb-3">
