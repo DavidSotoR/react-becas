@@ -5,6 +5,7 @@ const PathConstants = {
     COLABORADOR: '/colaborador',
     CALIDAD: '/calidad',
     FAMILIAS: '/familias',
+    FAMILIASFILES:'/familias/archivos',
 }
 
 export default PathConstants

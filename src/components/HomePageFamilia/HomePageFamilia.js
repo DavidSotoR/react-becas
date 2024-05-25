@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+import PathConstants from "../../routes/pathsConstants";
 
 
 function HomePageFamilia() {
@@ -76,8 +78,8 @@ function HomePageFamilia() {
                     <p className="fw-bold">EN EL CASO QUE LOS DOCUMETNOS LOS SOLICITE EL COLEGIO DE MANERA FISICA,
                     ENTREGAR 1 JUEGO DE COPIAS Y TENER PARA EL MOMENTO DEL ESTUDIO LOS ORIGINALES</p>
                 </div>
-                <div className="col-12 d-flex justify-content-center">
-                    <button className="btn btn-primary">Subir Archivos</button>
+                <div className="col-12 d-flex justify-content-center pb-5">
+                    <Link className="btn btn-primary" to={ PathConstants.FAMILIASFILES }>Subir Archivos</Link>
                 </div>
             </div>
         </div>
