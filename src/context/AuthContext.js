@@ -5,19 +5,21 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('login') === 'true');
+  const [roleSession, setRoleSession] = useState(localStorage.getItem('role'))
 
   const login = () => {
     localStorage.setItem('login', 'true');
+    setRoleSession(localStorage.getItem('role'))
     setIsLoggedIn(true);
   };
 
   const logout = () => {
-    localStorage.removeItem('login');
+    localStorage.clear();
     setIsLoggedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, roleSession, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -8,8 +8,7 @@ const Logout = () => {
 }
 
 function Navbar() {
-  const { isLoggedIn, logout } = useContext(AuthContext);
-  console.log('Inicia navbar');
+  const { isLoggedIn,roleSession, logout } = useContext(AuthContext);
   return (
     <nav className="navbar bg-primary sticky-top navbar-expand-lg" data-bs-theme="dark"> 
     {isLoggedIn ? (
@@ -20,7 +19,8 @@ function Navbar() {
               <li className="nav-item">
                 <Link className="nav-link active" aria-current="page" to="/">Inicio</Link>
               </li>
-              <li className="nav-item dropdown">
+              { roleSession === 'admin' && (
+                <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle active" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Catalogos
                 </a>
@@ -32,6 +32,10 @@ function Navbar() {
                   <li><Link className="dropdown-item" to="/familias">Familias</Link></li>
                 </ul>
               </li>
+              )
+
+              }
+              { roleSession === 'admin' &&
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle active" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Formularios
@@ -43,6 +47,9 @@ function Navbar() {
 
                 </ul>
               </li>
+              }
+
+              { roleSession === 'admin' &&
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle active" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Solicitud Becas
@@ -51,6 +58,8 @@ function Navbar() {
                   <li><Link className="dropdown-item" to="/ese-1-2">Estudio SOCIOECONÓMICO 1/2</Link></li>
                 </ul>
               </li>
+              }
+              
           </ul>
           <div>
             <a style={ { color:"white" } } className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
