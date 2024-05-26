@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkreact_becas=self.webpackChunkreact_becas||[]).push([[666],{666:(a,e,c)=>{c.r(e),c.d(e,{default:()=>t});var s=c(579);const t=function(){return(0,s.jsx)("div",{children:"Catalogo Familias"})}}}]);
+//# sourceMappingURL=666.ac106253.chunk.js.map

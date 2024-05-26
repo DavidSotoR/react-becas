@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.a3312b70.css",
+    "main.js": "/static/js/main.a50fe1f9.js",
+    "static/js/829.d10ede1b.chunk.js": "/static/js/829.d10ede1b.chunk.js",
+    "static/js/327.f013df8d.chunk.js": "/static/js/327.f013df8d.chunk.js",
+    "static/js/666.ac106253.chunk.js": "/static/js/666.ac106253.chunk.js",
+    "static/js/275.c2db360a.chunk.js": "/static/js/275.c2db360a.chunk.js",
+    "static/js/654.41177054.chunk.js": "/static/js/654.41177054.chunk.js",
+    "static/js/453.2c3c40b2.chunk.js": "/static/js/453.2c3c40b2.chunk.js",
+    "static/media/TT_Rounds_Neue_Trial_Regular.ttf": "/static/media/TT_Rounds_Neue_Trial_Regular.0989ed650c3ba4623576.ttf",
+    "index.html": "/index.html",
+    "main.a3312b70.css.map": "/static/css/main.a3312b70.css.map",
+    "main.a50fe1f9.js.map": "/static/js/main.a50fe1f9.js.map",
+    "829.d10ede1b.chunk.js.map": "/static/js/829.d10ede1b.chunk.js.map",
+    "327.f013df8d.chunk.js.map": "/static/js/327.f013df8d.chunk.js.map",
+    "666.ac106253.chunk.js.map": "/static/js/666.ac106253.chunk.js.map",
+    "275.c2db360a.chunk.js.map": "/static/js/275.c2db360a.chunk.js.map",
+    "654.41177054.chunk.js.map": "/static/js/654.41177054.chunk.js.map",
+    "453.2c3c40b2.chunk.js.map": "/static/js/453.2c3c40b2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a3312b70.css",
+    "static/js/main.a50fe1f9.js"
+  ]
+}
