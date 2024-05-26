@@ -5,6 +5,7 @@ const PathConstants = {
     COLABORADOR: '/colaborador',
     CALIDAD: '/calidad',
     FAMILIAS: '/familias',
+    FAMILIASALTA: '/familias/alta',
     FAMILIASFILES:'/familias/archivos',
 }
 

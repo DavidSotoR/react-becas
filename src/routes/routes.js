@@ -5,6 +5,7 @@ import PathConstants from "./pathsConstants";
 const Home = React.lazy(() => import("../components/HomePage/HomePage"))
 const Login = React.lazy(() => import("../components/Login/login"))
 const CatFamilia = React.lazy(()=> import('../components/Catalogos/Familias/Familias'))
+const CatFamiliaAlta = React.lazy(()=> import('../components/Catalogos/Familias/FamiliaAlta'))
 const FormBP2 = React.lazy(()=> import('../components/Formularios/ESEBP2/FormBP2'))
 const FormFamilaFiles = React.lazy(()=> import('../components/Formularios/FamiliaSubirArchivos/FAmiliaFormSubirArchivos'))
 //const Details = React.lazy(() => import("../pages/details/details"))
@@ -30,6 +31,12 @@ const routes = [
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute element={<CatFamilia />} />
+        </Suspense>
+      )},
+    { path: PathConstants.FAMILIASALTA, 
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PrivateRoute element={<CatFamiliaAlta />} />
         </Suspense>
       )},
     { path: PathConstants.FAMILIASFILES, 
