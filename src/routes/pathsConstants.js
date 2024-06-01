@@ -7,6 +7,8 @@ const PathConstants = {
     FAMILIAS: '/familias',
     FAMILIASALTA: '/familias/alta',
     FAMILIASFILES:'/familias/archivos',
+    PERFILES: '/perfiles',
+    USUARIOS: '/usuarios'
 }
 
 export default PathConstants

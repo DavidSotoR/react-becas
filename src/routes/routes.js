@@ -6,6 +6,8 @@ const Home = React.lazy(() => import("../components/HomePage/HomePage"))
 const Login = React.lazy(() => import("../components/Login/login"))
 const CatFamilia = React.lazy(()=> import('../components/Catalogos/Familias/Familias'))
 const CatFamiliaAlta = React.lazy(()=> import('../components/Catalogos/Familias/FamiliaAlta'))
+const CatUsuarios = React.lazy(()=> import('../components/Catalogos/Usuarios/Usuarios'))
+const CatPerfiles = React.lazy(()=> import('../components/Catalogos/Perfiles/Perfiles'))
 const FormBP2 = React.lazy(()=> import('../components/Formularios/ESEBP2/FormBP2'))
 const FormFamilaFiles = React.lazy(()=> import('../components/Formularios/FamiliaSubirArchivos/FAmiliaFormSubirArchivos'))
 //const Details = React.lazy(() => import("../pages/details/details"))
@@ -25,6 +27,18 @@ const routes = [
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute element={<Home />} />
+        </Suspense>
+      )},
+    { path: PathConstants.USUARIOS, 
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PrivateRoute element={<CatUsuarios />} />
+        </Suspense>
+      )},
+    { path: PathConstants.PERFILES, 
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PrivateRoute element={<CatPerfiles />} />
         </Suspense>
       )},
     { path: PathConstants.FAMILIAS, 

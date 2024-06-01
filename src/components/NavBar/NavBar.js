@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import PathConstants from "../../routes/pathsConstants";
 
 const Logout = () => {
   localStorage.clear()
@@ -25,7 +26,8 @@ function Navbar() {
                   Catalogos
                 </a>
                 <ul className="dropdown-menu">
-                  <li><Link className="dropdown-item" to="#">Usuarios</Link></li>
+                  <li><Link className="dropdown-item" to={ PathConstants.USUARIOS }>Usuarios</Link></li>
+                  <li><Link className="dropdown-item" to={ PathConstants.PERFILES }>Perfiles</Link></li>
                   <li><Link className="dropdown-item" to="#">Escuelas</Link></li>
                   <li><Link className="dropdown-item" to="#">Empresas</Link></li>
                   <li><Link className="dropdown-item" to="#">Folios</Link></li>

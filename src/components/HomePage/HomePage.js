@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import TablaFolios from "../HomePageAdmin/TablesClientes";
+import { useState } from "react";
 import HomePageAdmin from "../HomePageAdmin/HomePageAdmin";
 import HomePageFamilia from "../HomePageFamilia/HomePageFamilia";
 
@@ -13,7 +12,7 @@ function HomePage() {
       case 'familia':
         return <HomePageFamilia />;
       default:
-        return <div>Usuario no válido</div>; // Caso por defecto si el rol no coincide
+        return <div className="d-flex justify-content-center align-items-center">Usuario no válido</div>; // Caso por defecto si el rol no coincide
     }
   };
 

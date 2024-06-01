@@ -4,23 +4,31 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 function Login() {
-  const [ typeRol, setTypeRol ] = useState("admin")
+  //const [ typeRol, setTypeRol ] = useState("admin")
+  const [ inputEmail, setInputEmail ] = useState("")
+  const [ inputPass, setInputPass ] = useState("")
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
-  const changeRolType = (e) => {
-    setTypeRol(e.target.value)
+  const { login, isLoggedIn } = useContext(AuthContext);
+
+  const changeEmail = (e) => {
+    setInputEmail(e.target.value)
+  }
+
+  const changePass = (e) => {
+    setInputPass(e.target.value)
   }
 
   const sendLogin = async () => {
-    const roleSelected = {role: typeRol} ;
-    var servLogin = await loginService(roleSelected)
-    localStorage.setItem('login',servLogin.success)
-    login();
-    if (servLogin.success) {
-      navigate('/')
-    } else {
-      alert('Usuario No Valido')
+    var dataPost = {
+      "email": inputEmail,
+      "password": inputPass
     }
+
+    const loged = await login(dataPost);
+    if (loged) {
+      navigate('/')
+    }
+
   }
   
   useEffect(() => {
@@ -36,13 +44,13 @@ function Login() {
             </div>
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label text-align-right">Usuario</label>
-              <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="Usuario"/>
+              <input onChange={ (e) => { changeEmail(e) } } type="email" className="form-control" id="exampleFormControlInput1" placeholder="Usuario"/>
             </div>
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput2" className="form-label text-align-left">Contraseña</label>
-              <input type="password" className="form-control" id="exampleFormControlInput2" placeholder="Contraseña"/>
+              <input onChange={ (e) => { changePass(e) } } type="password" className="form-control" id="exampleFormControlInput2" placeholder="Contraseña"/>
             </div>
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label htmlFor="login-type"> Tipo de usuario </label>
               <select id="login-type" className="form-select" onChange={ (e) => { changeRolType(e) } }>
                 <option value="admin">Adminitrados</option>
@@ -50,7 +58,7 @@ function Login() {
                 <option value="calidad">Calidad</option>
                 <option value="familia">Familia</option>
               </select>
-            </div>
+            </div> */}
             <div className="mb-3">
               <button onClick={ sendLogin } className="btn btn-primary">Iniciar Sesión</button>
             </div>

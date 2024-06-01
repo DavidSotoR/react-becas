@@ -35,8 +35,8 @@ function FamiliaAlta() {
                 <div className="col-2 pt-2">
                     FAMILIA:
                 </div>
-                <div className="col-10">
-                    <input type="text" id="inputFamiliaName" cla="form-control" />
+                <div className="col">
+                    <input type="text" id="inputFamiliaName" className="form-control" />
                 </div>
             </div>
             <div className="row mb-3">
@@ -45,31 +45,77 @@ function FamiliaAlta() {
                     <textarea class="form-control" id="inputSituacionNecesidad" rows="3"></textarea>
                 </div>
             </div>
-            <div className="row card">
+            <div className="row p-3 card" style={{ flexDirection: "row" }}>
                 <h5>Datos de quíen(es) solicita(n) la Beca:</h5>
-                <div className="col-12">
-                        {alumnos.map((alumno, index) => (
-                            <div className="row">
-                                <div className="col">
-                                    <p className="">{'Alumno ' + index+1}</p>
-                                </div>
-                                <div className="col">
-                                    <input className="mx-1 form-control"
-                                    key={index+"al"}
-                                    id={"input-alumno-" + index}
-                                    type="text"
-                                    value={alumno.alumno}
-                                    onChange={(e) => handleAlumnoChange(index, 'alumno', e.target.value)}
-                                    />
-                                </div>
-                                <div className="col">
-                                    <button className="btn btn-danger" onClick={ () => {deleteAlumno(index)} }>X</button>
-                                </div>
+                <div className="col-12 mb-3">
+                    {alumnos.map((alumno, index) => (
+                        <div className="row my-2">
+                            <div className="col-2 d-flex justify-content-center align-items-center">
+                                <p className="m-0 p-0">{'Alumno ' + (index+1)}</p>
                             </div>
-                        ))}
-                        <div className="d-flex justify-content-center">
-                            <button className="btn btn-primary btn-small" onClick={ addAlumno }>Agregar</button>
+                            <div className="col">
+                                <input className="mx-1 form-control"
+                                key={index+"al"}
+                                id={"input-alumno-" + index}
+                                type="text"
+                                value={alumno.alumno}
+                                onChange={(e) => handleAlumnoChange(index, 'alumno', e.target.value)}
+                                />
+                            </div>
+                            <div className="col-1">
+                                <button className="btn btn-danger" onClick={ () => {deleteAlumno(index)} }>X</button>
+                            </div>
                         </div>
+                    ))}
+                    <div className="d-flex justify-content-center">
+                        <button className="btn btn-primary btn-small" onClick={ addAlumno }>Agregar</button>
+                    </div>
+                </div>
+                <div className="col-4">
+                    <label for="inputDomicilio" class="form-label">Domicilio Particular Calle, No:</label>
+                    <input type="text" id="inputDomicilio" className="form-control" />
+                </div>
+                <div className="col-4">
+                    <label for="inputColonia" class="form-label">Colonia:</label>
+                    <input type="text" id="inputColonia" className="form-control" />
+                </div>
+                <div className="col-4">
+                    <label for="inputMunicipio" class="form-label">Municipio:</label>
+                    <input type="text" id="inputMunicipio" className="form-control" />
+                </div>
+                <div className="col-4">
+                    <label for="inputCP" class="form-label">Codigo Postal:</label>
+                    <input type="text" id="inputCP" className="form-control" />
+                </div>
+                <div className="row">
+                    <div className="col-5">
+                        <label for="inputTelPadre" class="form-label">Telefono Padre:</label>
+                        <input type="text" id="inputTelPadre" className="form-control" />
+                    </div>
+                    <div className="col-5">
+                        <label for="inputTelMadre" class="form-label">Telefono Madre:</label>
+                        <input type="text" id="inputTelMadre" className="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div className="card">
+                <h5> 2. Datos del Padre </h5>
+                <div className="row">
+                    <div className="col-6">
+                        <label for="inputNombrePadre" class="form-label">Nombre del Padre:</label>
+                        <input type="text" id="inputNombrePadre" className="form-control" />
+                    </div>
+                    <div className="col-2">
+                        <label for="inputEdadPadre" class="form-label">Edad:</label>
+                        <input type="text" id="inputEdadPadre" className="form-control" />
+                    </div>
+                    <div className="col-2">
+                        <label for="inputPadreVive" class="form-label">Vive:</label>
+                        <select id="inputPadreVive" class="form-select form-select-sm" aria-label="Small select example">
+                            <option value="si">SI</option>
+                            <option value="no">NO</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
