@@ -32,6 +32,7 @@ function Navbar() {
                   <li><Link className="dropdown-item" to="#">Empresas</Link></li>
                   <li><Link className="dropdown-item" to="#">Folios</Link></li>
                   <li><Link className="dropdown-item" to="/familias">Familias</Link></li>
+                  <li><Link className="dropdown-item" to={PathConstants.CICLOSESCOLARES}>Ciclos Escolares</Link></li>
                 </ul>
               </li>
               )
