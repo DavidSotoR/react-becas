@@ -8,6 +8,7 @@ const CatFamilia = React.lazy(()=> import('../components/Catalogos/Familias/Fami
 const CatFamiliaAlta = React.lazy(()=> import('../components/Catalogos/Familias/FamiliaAlta'))
 const CatUsuarios = React.lazy(()=> import('../components/Catalogos/Usuarios/Usuarios'))
 const CatPerfiles = React.lazy(()=> import('../components/Catalogos/Perfiles/Perfiles'))
+const CatCiclosEscolares = React.lazy(()=> import('../components/Catalogos/CiclosEscolares/CiclosEscolares'))
 const FormBP2 = React.lazy(()=> import('../components/Formularios/ESEBP2/FormBP2'))
 const FormFamilaFiles = React.lazy(()=> import('../components/Formularios/FamiliaSubirArchivos/FAmiliaFormSubirArchivos'))
 //const Details = React.lazy(() => import("../pages/details/details"))
@@ -59,6 +60,12 @@ const routes = [
           <PrivateRoute element={<FormFamilaFiles />} />
         </Suspense>
       )},
+      { path: PathConstants.CICLOSESCOLARES, 
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <PrivateRoute element={<CatCiclosEscolares />} />
+          </Suspense>
+        )},
     { path: PathConstants.ESEBP2, element: (
       <Suspense fallback={<div>Loading...</div>}>
         <PrivateRoute element={<FormBP2 />} />

@@ -1,38 +1,37 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-function Perfiles() {
-    const [ allPerfiles, setAllPerfiles ] = useState([])
+function CiclosEscolares() {
+    const [ allCiclosEscolares, setAllCiclosEscolares ] = useState([])
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const getPerfilesList = async () => {
+    const getCiclosEscolaresList = async () => {
         try {
-            const resp = await axios.get('http://localhost:8000/api/auth/perfiles', config);
-            setAllPerfiles(resp.data);
+            const resp = await axios.get('http://localhost:8000/api/auth/ciclos', config);
+            setAllCiclosEscolares(resp.data);
         } catch (error) {
-            console.error("Error fetching perfiles:", error);
+            console.error("Error fetching Ciclos Escolares:", error);
         }
     }
 
     useEffect( ()=>{
-        getPerfilesList();
+        getCiclosEscolaresList();
     }, [])
 
-    const renderFilasTablaPerfiles = () => {
-        return allPerfiles.map((perfil, index) => (
+    const renderFilasTablaCiclosEscolares = () => {
+        return allCiclosEscolares.map((ciclos, index) => (
             <tr key={'tr-perfil-'+index}>
                 <td>
-                    <p>{perfil.id}</p>
+                    <p>{ciclos.id}</p>
                 </td>
                 <td>
-                    <p>{perfil.activo ? 'Si' : 'No' }</p>
+                    <p>{ciclos.activo ? 'Si' : 'No' }</p>
                 </td>
                 <td>
-                    <p class="mb-0">{perfil.nombre}</p>
-                    <p class="text-secondary mb-0"><i>Descripcion: {perfil.descripcion}</i></p>
+                    <p class="mb-0">{ciclos.inicio} / {ciclos.fin}</p>
                 </td>
             </tr>
         ));
@@ -45,7 +44,7 @@ function Perfiles() {
             
             <div className="row mb-3">
                 <div className="col">
-                    <h4>Lista de Perfiles:</h4>
+                    <h4>Lista de Ciclos Escolares:</h4>
                 </div>
             </div>
 
@@ -58,11 +57,11 @@ function Perfiles() {
                     </tr>
                 </thead>
                 <tbody>
-                    { renderFilasTablaPerfiles() }
+                    { renderFilasTablaCiclosEscolares() }
                 </tbody>
             </table>
         </div>
     )
 }
 
-export default Perfiles;
+export default CiclosEscolares;
