@@ -1,16 +1,34 @@
 import axios from "axios";
 import React,{ useEffect, useState } from "react";
 import UsuarioCrear from "./UsuarioCrear";
+import { Button, Modal } from "react-bootstrap";
 
 function Usuarios() {
+    const [ btnEnable, setBtnEnable ] = useState(true)
     const [ allUsuarios, setAllUsuarios ] = useState([])
     const [ dataPostUsuario, setDataPostUsuario ] = useState({})
+    const [show, setShow] = useState(false); 
+    const handleClose = () => setShow(false); 
+    const handleShow = () => setShow(true); 
 
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+
+    const postCrearUsuario = async () => {
+        var data = dataPostUsuario;
+        try {
+            const resp = await axios.post('http://localhost:8000/api/auth/register', data, config)
+            console.log(resp);
+            handleClose()
+            getAllDataUsuarios()  
+        } catch (error) {
+            console.log(error);
+        }   
+    }
+
     const getAllDataUsuarios = async () => {
         try {
             const resp = await axios.get('http://localhost:8000/api/auth/usuarios', config);
@@ -54,12 +72,16 @@ function Usuarios() {
         return name
     }
 
-    const getDatosPost = (datosPost) => {
-        setDataPostUsuario(datosPost)
+    const getDatosPost = (datosPost, pbtnEnable) => {
+        var data = datosPost
+        setDataPostUsuario(data)
+        setBtnEnable(pbtnEnable)
+        console.log(btnEnable);
     }
 
     const sendDataPost = () => {
         console.log(dataPostUsuario);
+        postCrearUsuario()
     }
 
     useEffect( ()=>{
@@ -93,12 +115,12 @@ function Usuarios() {
     
     return (
         <div className="container mt-3">
-            <div className="row mb-3">
-                <div className="col-4">
+            <div className="mb-3 d-flex justify-content-between align-items-center">
+                <div className="">
                     <h4>Catalogo de Usuarios</h4>
                 </div>
-                <div className="col">
-                    <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Agregar Usuario</button>
+                <div className="">
+                    <Button className="btn btn-primary" onClick={handleShow}>Agregar Usuario</Button>
                 </div>
             </div>
             <div className="row">
@@ -120,23 +142,18 @@ function Usuarios() {
                 </div>
             </div>
 
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Crear Nuevo Usuario</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <UsuarioCrear onCreate={ getDatosPost }/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onClick={ sendDataPost }>Crear</button>
-                </div>
-                </div>
-            </div>
-            </div>
+            <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Crear Nuevo Usuario</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{ height: '50vh', overflowY: 'scroll' }}>
+                    <UsuarioCrear onCreate={getDatosPost} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
+                    <Button variant="primary" disabled={ btnEnable } onClick={sendDataPost}>Crear</Button>
+                </Modal.Footer>
+            </Modal>
 
         </div>
     )

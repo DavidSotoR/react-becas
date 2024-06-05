@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 function FamiliaAlta() {
+
     const [alumnos, setAlumnos] = useState([
         { alumno: ''}
     ]);
@@ -45,7 +46,7 @@ function FamiliaAlta() {
                     <textarea class="form-control" id="inputSituacionNecesidad" rows="3"></textarea>
                 </div>
             </div>
-            <div className="row p-3 card" style={{ flexDirection: "row" }}>
+            <div className="row p-3 card mb-3" style={{ flexDirection: "row" }}>
                 <h5>Datos de quíen(es) solicita(n) la Beca:</h5>
                 <div className="col-12 mb-3">
                     {alumnos.map((alumno, index) => (
@@ -98,7 +99,7 @@ function FamiliaAlta() {
                     </div>
                 </div>
             </div>
-            <div className="card">
+            <div className="row p-3 card mb-3">
                 <h5> 2. Datos del Padre </h5>
                 <div className="row">
                     <div className="col-6">
@@ -115,6 +116,66 @@ function FamiliaAlta() {
                             <option value="si">SI</option>
                             <option value="no">NO</option>
                         </select>
+                    </div>
+                    <div className="col-12">
+                        <label for="inputDireccionPadre" class="form-label">Edad:</label>
+                        <input type="text" id="inputDireccionPadre" className="form-control" />
+                    </div>
+                    <div className="col-12">
+                        <label for="inputOcupacionPadre" class="form-label">Ocupacion Actual:</label>
+                        <input type="text" id="inputOcupacionPadre" className="form-control" />
+                    </div>
+                    <div className="col-12">
+                        <label for="inputEmpresaPadre" class="form-label">Empresa en que trabaja:</label>
+                        <input type="text" id="inputEmpresaPadre" className="form-control" />
+                    </div>
+                    <div className="col-6">
+                        <label for="inputEmailPadre" class="form-label">Empresa en que trabaja:</label>
+                        <input type="email" id="inputEmpresaPadre" className="form-control" />
+                    </div>
+                    <div className="col-6">
+                        <label for="inputTelCasaPadre" class="form-label">Empresa en que trabaja:</label>
+                        <input type="email" id="inputEmpresaPadre" className="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div className="row p-3 card mb-3">
+                <h5> 3. Datos de la Madre </h5>
+                <div className="row">
+                    <div className="col-6">
+                        <label for="inputNombreMadre" class="form-label">Nombre de la Madre:</label>
+                        <input type="text" id="inputNombrePadre" className="form-control" />
+                    </div>
+                    <div className="col-2">
+                        <label for="inputEdadMadre" class="form-label">Edad:</label>
+                        <input type="text" id="inputEdadMadre" className="form-control" />
+                    </div>
+                    <div className="col-2">
+                        <label for="inputMadreVive" class="form-label">Vive:</label>
+                        <select id="inputMadreVive" class="form-select form-select-sm" aria-label="Small select example">
+                            <option value="si">SI</option>
+                            <option value="no">NO</option>
+                        </select>
+                    </div>
+                    <div className="col-12">
+                        <label for="inputDireccionMadre" class="form-label">Edad:</label>
+                        <input type="text" id="inputDireccionMadre" className="form-control" />
+                    </div>
+                    <div className="col-12">
+                        <label for="inputOcupacionMadre" class="form-label">Ocupacion Actual:</label>
+                        <input type="text" id="inputOcupacionMadre" className="form-control" />
+                    </div>
+                    <div className="col-12">
+                        <label for="inputEmpresaMadre" class="form-label">Empresa en que trabaja:</label>
+                        <input type="text" id="inputEmpresaMadre" className="form-control" />
+                    </div>
+                    <div className="col-6">
+                        <label for="inputEmailMadre" class="form-label">Empresa en que trabaja:</label>
+                        <input type="email" id="inputEmpresaMadre" className="form-control" />
+                    </div>
+                    <div className="col-6">
+                        <label for="inputTelCasaMadre" class="form-label">Empresa en que trabaja:</label>
+                        <input type="email" id="inputEmpresaMadre" className="form-control" />
                     </div>
                 </div>
             </div>

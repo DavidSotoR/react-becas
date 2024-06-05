@@ -2,13 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 function UsuarioCrear({ onCreate }) {
+    const [ btnEnable, setBtnEnable ] = useState(true)
     const [listaPerfiles, setListaPerfiles] = useState([])
     const [ dataPostUsuario, setDataPostUsuario ] = useState({
         name:"",
         email:"",
         password:"",
         password_confirmation:"",
-        id_perfil: 1
+        id_perfil: "1"
     })
 
     const config = {
@@ -16,6 +17,7 @@ function UsuarioCrear({ onCreate }) {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+
     const getPerfilesList = async () => {
         try {
             const resp = await axios.get('http://localhost:8000/api/auth/perfiles', config);
@@ -28,19 +30,25 @@ function UsuarioCrear({ onCreate }) {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log(e);
+        console.log(value);
+        if (value !== '') {
+            setBtnEnable(false)    
+        } else {
+            setBtnEnable(true)
+        }
+        
         setDataPostUsuario(prevState => ({
             ...prevState,
             [name]: value
         }));
 
-        onCreate(dataPostUsuario)
+        onCreate(dataPostUsuario, btnEnable)
 
     };
 
     const agregarOpcionesSelect = () => {
         return listaPerfiles.map((perfil,index)=>(
-            <option key={perfil.id} value={perfil.id} selected={index === 0}>
+            <option key={perfil.id} value={ `${perfil.id}`} selected={index === 0}>
                 {perfil.nombre}
             </option>
             
