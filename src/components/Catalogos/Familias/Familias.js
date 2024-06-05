@@ -31,11 +31,11 @@ function CatalogoFamilias() {
     
     return (
        <div className="container mt-3">
-            <div className="row">
+            <div className="row mb-3">
                 <div className="col">
                     <h3>Catalogo Familias</h3>
                 </div>
-                <div className="col">
+                <div className="col d-flex flex-row-reverse">
                     <Link className="btn btn-primary" to={PathConstants.FAMILIASALTA}>Agregar Familia</Link>
                 </div>
             </div>
