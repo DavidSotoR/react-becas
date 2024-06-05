@@ -42,6 +42,13 @@ function Perfiles() {
     
     return (
         <div className="container mt-3">
+            
+            <div className="row mb-3">
+                <div className="col">
+                    <h4>Lista de Perfiles:</h4>
+                </div>
+            </div>
+
             <table className="table">
                 <thead>
                     <tr>
