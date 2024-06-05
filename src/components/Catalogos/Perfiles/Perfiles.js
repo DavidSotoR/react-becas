@@ -28,13 +28,11 @@ function Perfiles() {
                     <p>{perfil.id}</p>
                 </td>
                 <td>
-                    <p>{perfil.nombre}</p>
+                    <p>{perfil.activo ? 'Si' : 'No' }</p>
                 </td>
                 <td>
-                    <p>{perfil.descripcion}</p>
-                </td>
-                <td>
-                    <p>{perfil.activo}</p>
+                    <p class="mb-0">{perfil.nombre}</p>
+                    <p class="text-secondary mb-0"><i>Descripcion: {perfil.descripcion}</i></p>
                 </td>
             </tr>
         ));
@@ -48,9 +46,8 @@ function Perfiles() {
                 <thead>
                     <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Descripcion</th>
                     <th scope="col">Activo</th>
+                    <th scope="col">Nombre</th>
                     </tr>
                 </thead>
                 <tbody>

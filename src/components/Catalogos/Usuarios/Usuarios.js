@@ -94,10 +94,10 @@ function Usuarios() {
     return (
         <div className="container mt-3">
             <div className="row mb-3">
-                <div className="col-4">
+                <div className="col">
                     <h4>Catalogo de Usuarios</h4>
                 </div>
-                <div className="col">
+                <div className="col d-flex flex-row-reverse">
                     <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Agregar Usuario</button>
                 </div>
             </div>
