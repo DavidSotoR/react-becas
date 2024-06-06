@@ -14,7 +14,7 @@ function Navbar() {
     <nav className="navbar bg-primary sticky-top navbar-expand-lg" data-bs-theme="dark"> 
     {isLoggedIn ? (
         <div className="container-fluid">
-        <Link className="navbar-brand" to="/">Servicio de Becas</Link>
+        <Link className="navbar-brand" to="/">SINERGIA</Link>
         <div className="collapse navbar-collapse d-flex justify-content-between" id="navbarNavAltMarkup">
           <ul className="navbar-nav">
               <li className="nav-item">
@@ -77,7 +77,7 @@ function Navbar() {
       </div>
       ) : (
         <div className="container-fluid">
-          <a className="navbar-brand" to="">Servicio de Becas</a>
+          <a className="navbar-brand" to="">SINERGIA EN ESTUDIOS</a>
         </div>
       )}
       

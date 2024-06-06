@@ -9,7 +9,7 @@ function UsuarioCrear({ onCreate }) {
         email:"",
         password:"",
         password_confirmation:"",
-        id_perfil: "1"
+        id_perfil: ""
     })
 
     const config = {
@@ -17,6 +17,8 @@ function UsuarioCrear({ onCreate }) {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+
+    const [errors, setErrors] = useState({});
 
     const getPerfilesList = async () => {
         try {
@@ -28,73 +30,116 @@ function UsuarioCrear({ onCreate }) {
         }
     }
 
+    const validateField = (name, value) => {
+        let errorMsg = "";
+        switch (name) {
+            case "name":
+                if (!value) errorMsg = "El nombre es requerido";
+                break;
+            case "email":
+                if (!value) errorMsg = "El email es requerido";
+                else if (!/\S+@\S+\.\S+/.test(value)) errorMsg = "El email no es válido";
+                break;
+            case "password":
+                if (!value) errorMsg = "La contraseña es requerida";
+                else if (!/(?=.*[A-Z])(?=.*\d)/.test(value)) errorMsg = "La contraseña debe contener al menos una letra mayúscula y un número";
+                break;
+            case "password_confirmation":
+                if (value !== dataPostUsuario.password) errorMsg = "Las contraseñas no coinciden";
+                break;
+            default:
+                break;
+        }
+
+        console.log(errorMsg);
+
+        setErrors(prevErrors => ({
+            ...prevErrors,
+            [name]: errorMsg
+        }));
+        
+        const hasErrors = Object.values(errors).some(err => err !== "") || errorMsg !== "";
+        const allFieldsFilled = Object.values(dataPostUsuario).every(val => val !== "");
+        console.log('El valor allfieldsfilled: ', allFieldsFilled);
+        setBtnEnable(hasErrors, !allFieldsFilled);
+    };
+
+    
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log(value);
-        if (value !== '') {
-            setBtnEnable(false)    
-        } else {
-            setBtnEnable(true)
-        }
         
         setDataPostUsuario(prevState => ({
             ...prevState,
             [name]: value
         }));
 
+        validateField(name,value)
         onCreate(dataPostUsuario, btnEnable)
 
     };
 
     const agregarOpcionesSelect = () => {
-        return listaPerfiles.map((perfil,index)=>(
-            <option key={perfil.id} value={ `${perfil.id}`} selected={index === 0}>
-                {perfil.nombre}
-            </option>
-            
-        ))
+        return [
+            <option key="default" value="" selected>
+                Seleccione uno
+            </option>,
+            ...listaPerfiles.map((perfil) => (
+                <option key={perfil.id} value={`${perfil.id}`}>
+                    {perfil.nombre}
+                </option>
+            ))
+        ];
     }
 
-    useEffect(()=>{
-        getPerfilesList()
+    useEffect(() => {
+        getPerfilesList();
         console.log('Effect Usuarios Crear');
-    }, [])
+    }, []);
+
+    useEffect(()=>{
+        const hasErrors = Object.values(errors).some(err => err !== "");
+        const allFieldsFilled = Object.values(dataPostUsuario).every(val => val !== "");
+
+        setBtnEnable(hasErrors || !allFieldsFilled);
+    }, [errors, dataPostUsuario])
 
     return (
             <div className="container">
-            <div class="mb-3">
-                <label htmlFor="inputName" class="form-label">Nombre:</label>
-                <input type="text" class="form-control" id="inputName" name="name"
+            <div className="mb-3">
+                <label htmlFor="inputName" className="form-label">Nombre:</label>
+                <input type="text" className="form-control mb-2" id="inputName" name="name"
                         placeholder="Nombre:"
                         value={dataPostUsuario.name}
                         onChange={handleInputChange}/>
+                {errors.name && <div className="text-danger fw-medium">{errors.name}</div>}
             </div>
-            <div class="mb-3">
-                <label htmlFor="inputEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="inputEmail" name="email"
+            <div className="mb-3">
+                <label htmlFor="inputEmail" className="form-label">Email</label>
+                <input type="email" className="form-control" id="inputEmail" name="email"
                         placeholder="name@example.com"
                         value={dataPostUsuario.email}
                         onChange={handleInputChange}/>
+                {errors.email && <div className="text-danger fw-medium">{errors.email}</div>}
             </div>
             <div className="mb-3">
-                    <label htmlFor="inputPassword" class="form-label">Password</label>
-                    <input type="password" id="inputPassword" class="form-control" 
+                    <label htmlFor="inputPassword" className="form-label">Password</label>
+                    <input type="password" id="inputPassword" className="form-control" 
                     aria-describedby="passwordHelpBlock" name="password" value={dataPostUsuario.password}
                     onChange={handleInputChange}/>
-                    <div id="passwordHelpBlock" class="form-text">
-                        El password debe contener al menos una letra mayuscula y numeros.
-                    </div>
+                    {errors.password && <div className="text-danger fw-medium">{errors.password}</div>}
             </div>
             <div className="mb-3">
-                <label htmlFor="inputPasswordConfirmar" class="form-label">Confirmar Password</label>
+                <label htmlFor="inputPasswordConfirmar" className="form-label">Confirmar Password</label>
                 <input type="password" id="inputPasswordConfirmar" name="password_confirmation"
                         className="form-control" 
                         aria-describedby="passwordHelpBlock"
                         value={dataPostUsuario.password_confirmation}
                         onChange={handleInputChange}/>
+                        {errors.password_confirmation && <div className="text-danger fw-medium">{errors.password_confirmation}</div>}
             </div>
             <div className="mb-3">
-                <label htmlFor="inputPerfil" class="form-label">Perfil</label>
+                <label htmlFor="inputPerfil" className="form-label">Perfil</label>
                 <select id="inputPerfil" 
                         name="id_perfil"
                         className="form-select" 
