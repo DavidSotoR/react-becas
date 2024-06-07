@@ -9,7 +9,7 @@ const Logout = () => {
 }
 
 function Navbar() {
-  const { isLoggedIn,roleSession, logout } = useContext(AuthContext);
+  const { isLoggedIn, userSession,roleSession, logout } = useContext(AuthContext);
   return (
     <nav className="navbar bg-primary sticky-top navbar-expand-lg" data-bs-theme="dark"> 
     {isLoggedIn ? (
@@ -20,7 +20,7 @@ function Navbar() {
               <li className="nav-item">
                 <Link className="nav-link active" aria-current="page" to="/">Inicio</Link>
               </li>
-              { roleSession === 'admin' && (
+              { roleSession === 'Administrador' && (
                 <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle active" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Catalogos
@@ -38,7 +38,7 @@ function Navbar() {
               )
 
               }
-              { roleSession === 'admin' &&
+              { roleSession === 'Administrador' &&
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle active" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Formularios
@@ -52,7 +52,7 @@ function Navbar() {
               </li>
               }
 
-              { roleSession === 'admin' &&
+              { roleSession === 'Administrador' &&
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle active" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Solicitud Becas
@@ -66,7 +66,7 @@ function Navbar() {
           </ul>
           <div>
             <a style={ { color:"white" } } className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Usuario 1
+              { userSession }
             </a>
             <ul className="dropdown-menu dropdown-menu-end">
               <li><a className="dropdown-item" to="#" onClick={ Logout }>Cerrar Sesión</a></li>

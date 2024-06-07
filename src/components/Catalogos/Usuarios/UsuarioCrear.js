@@ -9,7 +9,7 @@ function UsuarioCrear({ onCreate }) {
         email:"",
         password:"",
         password_confirmation:"",
-        id_perfil: ""
+        id_perfil: "0"
     })
 
     const config = {
@@ -47,6 +47,9 @@ function UsuarioCrear({ onCreate }) {
             case "password_confirmation":
                 if (value !== dataPostUsuario.password) errorMsg = "Las contraseñas no coinciden";
                 break;
+            case "perfil_id":
+                if(value === '0') errorMsg = "Debe seleccionar un perfil"
+                break
             default:
                 break;
         }
@@ -68,20 +71,20 @@ function UsuarioCrear({ onCreate }) {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        
-        setDataPostUsuario(prevState => ({
+        console.log(name, value);
+        setDataPostUsuario(prevState => ({  
             ...prevState,
             [name]: value
         }));
 
         validateField(name,value)
-        onCreate(dataPostUsuario, btnEnable)
+        onCreate({ ...dataPostUsuario, [name]: value }, btnEnable)
 
     };
 
     const agregarOpcionesSelect = () => {
         return [
-            <option key="default" value="" selected>
+            <option key="default" value="0" selected>
                 Seleccione uno
             </option>,
             ...listaPerfiles.map((perfil) => (

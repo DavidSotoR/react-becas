@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { loginService } from "../../services/LoginService";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -40,7 +39,7 @@ function Login() {
       <div className="mt-5 d-flex flex-column justify-content-center align-items-center">
           <div className="d-grid">
             <div className="d-flex justify-content-center">
-              <img src="/img/logo_principal_colores.png" style={{ width:'200px', height:'200px' }}></img>
+              <img src="/img/logo_principal_colores.png" style={{ width:'150px', height:'150px' }}></img>
             </div>
             <div className="d-flex" style={{ width: "100%" }}>
               <h3 className="text-start">Inicio de Sesion</h3>
