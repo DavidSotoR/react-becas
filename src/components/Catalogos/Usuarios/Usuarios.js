@@ -4,6 +4,7 @@ import UsuarioCrear from "./UsuarioCrear";
 import { Button, Modal } from "react-bootstrap";
 
 function Usuarios() {
+    const [ clearForm, setClearForm ] = useState(false)
     const [ btnEnable, setBtnEnable ] = useState(true)
     const [ allUsuarios, setAllUsuarios ] = useState([])
     const [ dataPostUsuario, setDataPostUsuario ] = useState({})
@@ -16,6 +17,11 @@ function Usuarios() {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+    
+    const defaultValuesForm = () =>{
+        setClearForm(false)
+
+    }
 
     const postCrearUsuario = async () => {
         var data = dataPostUsuario;
@@ -23,7 +29,8 @@ function Usuarios() {
             const resp = await axios.post('http://localhost:8000/api/auth/register', data, config)
             console.log(resp);
             handleClose()
-            getAllDataUsuarios()  
+            getAllDataUsuarios()
+            setClearForm(true)
         } catch (error) {
             console.log(error);
         }   
@@ -147,7 +154,7 @@ function Usuarios() {
                     <Modal.Title>Crear Nuevo Usuario</Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{ height: '50vh', overflowY: 'scroll' }}>
-                    <UsuarioCrear onCreate={getDatosPost} />
+                    <UsuarioCrear onCreate={getDatosPost} clear={ defaultValuesForm } clearForm={ clearForm } />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Cancelar</Button>

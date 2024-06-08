@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-function UsuarioCrear({ onCreate }) {
+function UsuarioCrear({ onCreate, clearForm, clear }) {
     const [ btnEnable, setBtnEnable ] = useState(true)
     const [listaPerfiles, setListaPerfiles] = useState([])
     const [ dataPostUsuario, setDataPostUsuario ] = useState({
@@ -47,8 +47,8 @@ function UsuarioCrear({ onCreate }) {
             case "password_confirmation":
                 if (value !== dataPostUsuario.password) errorMsg = "Las contraseñas no coinciden";
                 break;
-            case "perfil_id":
-                if(value === '0') errorMsg = "Debe seleccionar un perfil"
+            case "id_perfil":
+                if(value === '0') errorMsg = "Debe seleccionar un perfil";
                 break
             default:
                 break;
@@ -94,6 +94,23 @@ function UsuarioCrear({ onCreate }) {
             ))
         ];
     }
+
+    useEffect(()=>{
+        console.log('este es el dato de clear: '+ clearForm);
+        if (clearForm) {
+            setBtnEnable(true)
+            setDataPostUsuario({
+                name:"",
+                email:"",
+                password:"",
+                password_confirmation:"",
+                id_perfil: "0"
+            })
+            setErrors({})
+            clear()
+            onCreate(dataPostUsuario, btnEnable)
+        }
+    },[btnEnable, dataPostUsuario, errors])
 
     useEffect(() => {
         getPerfilesList();
@@ -145,12 +162,13 @@ function UsuarioCrear({ onCreate }) {
                 <label htmlFor="inputPerfil" className="form-label">Perfil</label>
                 <select id="inputPerfil" 
                         name="id_perfil"
-                        className="form-select" 
+                        className="form-select mb-2" 
                         aria-label="Default select example"
                         value={dataPostUsuario.id_perfil}
                         onChange={handleInputChange}>
                     { agregarOpcionesSelect() }
                 </select>
+                {errors.id_perfil && <div className="text-danger fw-medium">{errors.id_perfil}</div>}
             </div>
         </div>
     )
