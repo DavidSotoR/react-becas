@@ -11,7 +11,7 @@ function TablaFolios({ folios }) {
             <th>Asignado</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className='numeros'>
           {folios.map((folio) => (
             <tr key={folio.folio}>
               <td>{folio.folio}</td>
