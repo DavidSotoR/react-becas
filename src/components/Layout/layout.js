@@ -1,12 +1,13 @@
 import { Link, Outlet } from "react-router-dom"
-import { Suspense, useContext } from "react"
+import React, { Suspense, useContext, useState } from "react"
 import Navbar from "../NavBar/NavBar"
 import { AuthContext } from "../../context/AuthContext";
 import PathConstants from "../../routes/pathsConstants";
-import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
+import { Menu, MenuItem, Sidebar, SubMenu, menuClasses } from "react-pro-sidebar";
 
 export default function Layout() {
     const { isLoggedIn, userSession,roleSession, logout } = useContext(AuthContext);
+    const [collapsed, setCollapsed] = useState(false);
     const Logout = () => {
         localStorage.clear()
         window.location.replace('/')
@@ -17,11 +18,18 @@ export default function Layout() {
             <main>
                 <div className="row m-0">
                     {isLoggedIn && (
-                        <Sidebar rootStyles={{
+                        <Sidebar collapsed={collapsed} rootStyles={{
                               backgroundColor: '#47D1D6',
                           }}>
                         <Menu
-                            rootStyles={{ backgroundColor: "#47D1D6"}}
+                            rootStyles={{ 
+                              backgroundColor: "#47D1D6",
+                              ['.'+menuClasses.button]:{
+                                '&:hover':{
+                                  background: "rgba(0,0,0,.4)"
+                                }
+                              }
+                            }}
                             menuItemStyles={{
                                 button: ({ level, active, disabled }) => {
                                   // only apply styles on first level elements of the tree
@@ -34,12 +42,31 @@ export default function Layout() {
                                 },
                               }}
                         >
+                          <div>
+                            <div className="mt-3 d-flex justify-content-center align-items-center">
+                              <ion-icon size="large" onClick={() => setCollapsed(!collapsed)} name="menu-outline"></ion-icon>
+                            </div>
+                            
+                          </div>
                             <div className="d-flex justify-content-center align-items-center">
-                            <img src='/img/logo_principal_blanco.png' style={{ width:'200px' }} alt="Descripción de la imagen" />
+                              <img src='/img/logo_principal_blanco.png' style={{ width:'200px' }} alt="Descripción de la imagen" />
                             </div>
                           
                           <MenuItem component={<Link to={PathConstants.HOME} />}> INICIO</MenuItem>
-                            <SubMenu label="CATALOGOS">
+                            <SubMenu label="CATALOGOS" rootStyles={{
+                              color:"white",
+                              ['& > .' + menuClasses.button]: {
+                                backgroundColor: '#47D1D6',
+                                color: 'white',
+                                '&:hover': {
+                                  backgroundColor: '#47D1D6',
+                                },
+                              },
+                              ['.' + menuClasses.subMenuContent]: {
+                                backgroundColor: '#47D1D6',
+                                fontWeight: 'bold'
+                              },
+                            }}>
                                 <MenuItem component={<Link to={PathConstants.USUARIOS} />}> USUARIOS</MenuItem>
                                 <MenuItem component={<Link to={PathConstants.PERFILES} />}> PERFILES</MenuItem>
                             </SubMenu>
