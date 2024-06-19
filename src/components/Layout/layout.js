@@ -38,6 +38,10 @@ export default function Layout() {
                                       color: active ? 'black' : 'white',
                                       fontWeight: 'bold',
                                       backgroundColor: active ? '#black' : undefined,
+                                      '&:hover': {
+                                        color: '#777777',
+                                        borderRadius:'5px',
+                                      },
                                     };
                                 },
                               }}
