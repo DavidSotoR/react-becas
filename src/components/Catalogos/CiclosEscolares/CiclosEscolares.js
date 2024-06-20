@@ -1,8 +1,12 @@
 import axios from "axios";
+import ModalCiclosEscolares from "./ModalCiclosEscolares"
 import { useEffect, useState } from "react";
 
 function CiclosEscolares() {
     const [ allCiclosEscolares, setAllCiclosEscolares ] = useState([])
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -18,8 +22,10 @@ function CiclosEscolares() {
     }
 
     useEffect( ()=>{
-        getCiclosEscolaresList();
-    }, [])
+        if (!show) {
+            getCiclosEscolaresList()
+        }
+    }, [show])
 
     const renderFilasTablaCiclosEscolares = () => {
         return allCiclosEscolares.map((ciclos, index) => (
@@ -36,15 +42,16 @@ function CiclosEscolares() {
             </tr>
         ));
     };
-
-    
     
     return (
         <div className="container mt-3">
             
-            <div className="row mb-3">
-                <div className="col">
+            <div className="d-flex justify-content-between mb-3">
+                <div className="">
                     <h4>Lista de Ciclos Escolares:</h4>
+                </div>
+                <div className="">
+                    <button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Crear Cliente</button>
                 </div>
             </div>
 
@@ -60,6 +67,7 @@ function CiclosEscolares() {
                     { renderFilasTablaCiclosEscolares() }
                 </tbody>
             </table>
+            <ModalCiclosEscolares show={show} handleClose={handleClose}/>
         </div>
     )
 }

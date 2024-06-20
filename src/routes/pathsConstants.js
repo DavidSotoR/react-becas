@@ -4,6 +4,8 @@ const PathConstants = {
     ESEBP2: '/form-1',
     COLABORADOR: '/colaborador',
     CALIDAD: '/calidad',
+    CLIENTES: '/clientes',
+    TIPOSCLIENTES: '/tipos-clientes',
     FAMILIAS: '/familias',
     FAMILIASALTA: '/familias/alta',
     FAMILIASFILES:'/familias/archivos',

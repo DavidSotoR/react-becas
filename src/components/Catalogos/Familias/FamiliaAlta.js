@@ -7,7 +7,12 @@ function FamiliaAlta() {
     ]);
 
     const addAlumno = () => {
-        setAlumnos([...alumnos, { alumno: ''}]);
+        if (alumnos.length >= 5) {
+            alert('No se pueden agregar mas de 5 alumnos.')
+        } else {
+            setAlumnos([...alumnos, { alumno: ''}]);
+        }
+        
     };
 
     const deleteAlumno = (index) => {
@@ -29,7 +34,7 @@ function FamiliaAlta() {
         <div className="container mt-3">
             <div className="row">
                 <div className="col">
-                    <h3>SOLICITUD PARA EL ESTUDIO SOCIOECONÓMICO 1/2</h3>
+                    <h5>SOLICITUD PARA EL ESTUDIO SOCIOECONÓMICO 1/2</h5>
                 </div>
             </div>
             <div className="row mt-3 mb-3">
@@ -37,7 +42,7 @@ function FamiliaAlta() {
                     FAMILIA:
                 </div>
                 <div className="col">
-                    <input type="text" id="inputFamiliaName" className="form-control" />
+                    <input type="text" id="inputFamiliaName" className="form-control form-control-sm" />
                 </div>
             </div>
             <div className="row mb-3">
@@ -46,8 +51,9 @@ function FamiliaAlta() {
                     <textarea class="form-control" id="inputSituacionNecesidad" rows="3"></textarea>
                 </div>
             </div>
+            <div className="container">
             <div className="row p-3 card mb-3" style={{ flexDirection: "row" }}>
-                <h5>Datos de quíen(es) solicita(n) la Beca:</h5>
+                <h6 style={{ fontWeight: 'bold' }}>1. Datos de quíen(es) solicita(n) la Beca:</h6>
                 <div className="col-12 mb-3">
                     {alumnos.map((alumno, index) => (
                         <div className="row my-2">
@@ -55,7 +61,7 @@ function FamiliaAlta() {
                                 <p className="m-0 p-0">{'Alumno ' + (index+1)}</p>
                             </div>
                             <div className="col">
-                                <input className="mx-1 form-control"
+                                <input className="mx-1 form-control form-control-sm"
                                 key={index+"al"}
                                 id={"input-alumno-" + index}
                                 type="text"
@@ -64,12 +70,12 @@ function FamiliaAlta() {
                                 />
                             </div>
                             <div className="col-1">
-                                <button className="btn btn-danger" onClick={ () => {deleteAlumno(index)} }>X</button>
+                                <button className="btn btn-danger btn-sm" onClick={ () => {deleteAlumno(index)} }>X</button>
                             </div>
                         </div>
                     ))}
                     <div className="d-flex justify-content-center">
-                        <button className="btn btn-primary btn-small" onClick={ addAlumno }>Agregar</button>
+                        <button className="btn btn-primary btn-sm" onClick={ addAlumno }>Agregar</button>
                     </div>
                 </div>
                 <div className="col-4">
@@ -100,7 +106,7 @@ function FamiliaAlta() {
                 </div>
             </div>
             <div className="row p-3 card mb-3">
-                <h5> 2. Datos del Padre </h5>
+                <h6 style={{ fontWeight:'bold' }}> 2. Datos del Padre </h6>
                 <div className="row">
                     <div className="col-6">
                         <label for="inputNombrePadre" class="form-label">Nombre del Padre:</label>
@@ -140,7 +146,7 @@ function FamiliaAlta() {
                 </div>
             </div>
             <div className="row p-3 card mb-3">
-                <h5> 3. Datos de la Madre </h5>
+                <h6 style={{ fontWeight: 'bold' }}> 3. Datos de la Madre </h6>
                 <div className="row">
                     <div className="col-6">
                         <label for="inputNombreMadre" class="form-label">Nombre de la Madre:</label>
@@ -179,6 +185,8 @@ function FamiliaAlta() {
                     </div>
                 </div>
             </div>
+            </div>
+            
         </div>
     )
 }

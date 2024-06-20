@@ -124,10 +124,10 @@ function Usuarios() {
         <div className="container mt-3">
             <div className="mb-3 d-flex justify-content-between align-items-center">
                 <div className="">
-                    <h4>Catalogo de Usuarios</h4>
+                    <h6 style={{ fontWeight: 'bold' }}>Catalogo de Usuarios</h6>
                 </div>
                 <div className="">
-                    <Button className="btn btn-primary" onClick={handleShow}>Agregar Usuario</Button>
+                    <Button className="btn btn-primary btn-sm" onClick={handleShow}>Agregar Usuario</Button>
                 </div>
             </div>
             <div className="row">

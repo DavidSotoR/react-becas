@@ -21,11 +21,15 @@ export default function Layout() {
                         <Sidebar collapsed={collapsed} rootStyles={{
                               backgroundColor: '#47D1D6',
                           }}>
+                            <div className="mt-3 d-flex justify-content-center align-items-center">
+                              <ion-icon size="large" onClick={() => setCollapsed(!collapsed)} name="menu-outline"></ion-icon>
+                            </div>
                         <Menu
                             rootStyles={{ 
                               backgroundColor: "#47D1D6",
                               ['.'+menuClasses.button]:{
                                 '&:hover':{
+                                  color:'white',
                                   background: "rgba(0,0,0,.4)"
                                 }
                               }
@@ -46,17 +50,14 @@ export default function Layout() {
                                 },
                               }}
                         >
-                          <div>
-                            <div className="mt-3 d-flex justify-content-center align-items-center">
-                              <ion-icon size="large" onClick={() => setCollapsed(!collapsed)} name="menu-outline"></ion-icon>
-                            </div>
                             
-                          </div>
+                            
                             <div className="d-flex justify-content-center align-items-center">
                               <img src='/img/logo_principal_blanco.png' style={{ width:'200px' }} alt="Descripción de la imagen" />
                             </div>
                           
                           <MenuItem component={<Link to={PathConstants.HOME} />}> INICIO</MenuItem>
+                          <MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> CICLOS ESCOLARES</MenuItem>
                             <SubMenu label="CATALOGOS" rootStyles={{
                               color:"white",
                               ['& > .' + menuClasses.button]: {
@@ -73,6 +74,9 @@ export default function Layout() {
                             }}>
                                 <MenuItem component={<Link to={PathConstants.USUARIOS} />}> USUARIOS</MenuItem>
                                 <MenuItem component={<Link to={PathConstants.PERFILES} />}> PERFILES</MenuItem>
+                                <MenuItem component={<Link to={PathConstants.FAMILIAS} />}> FAMILIAS</MenuItem>
+                                <MenuItem component={<Link to={PathConstants.CLIENTES} />}> CLIENTES</MenuItem>
+                                <MenuItem component={<Link to={PathConstants.TIPOSCLIENTES} />}> TIPOS CLIENTES</MenuItem>
                             </SubMenu>
                           <MenuItem onClick={Logout}> Logout</MenuItem>
                         </Menu>
