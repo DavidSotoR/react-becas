@@ -79,19 +79,33 @@ function Clientes() {
 
     return (
         <div className="container">
-            <div className="mt-3 d-flex justify-content-between">
+            <div className="d-flex justify-content-between mb-3">
                 <div className="">
-                    <p className="fw-bold fs-3">Catalogo Clientes</p>
+                    <h6 style={{ fontWeight:'bold' }}>Catalogo Clientes</h6>
                 </div>
-                <div className="pt-3">
-                    <button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Crear Cliente</button>
+                <div className="">
+                    <button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Nuevo Cliente</button>
                 </div>
             </div>
-            <div className="table">
+            <div className="mb-3 row">
+                <p className="fw-bold mb-1">Filtros:</p>
+                <div className="row">
+                    <div className="col-3">
+                        <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
+                    </div>
+                    <div className="col-3">
+                    <select class="form-select form-select-sm" aria-label="Default select example">
+                        <option >Tipo Cliente</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+            <hr></hr>
+            <div className="table-wrapper">
                 <table className="table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th scope="col" className="col-id">#</th>
                         <th scope="col">Tipo</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Descripción</th>

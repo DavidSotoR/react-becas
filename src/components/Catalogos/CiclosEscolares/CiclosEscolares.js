@@ -1,6 +1,7 @@
 import axios from "axios";
 import ModalCiclosEscolares from "./ModalCiclosEscolares"
 import { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
 
 function CiclosEscolares() {
     const [ allCiclosEscolares, setAllCiclosEscolares ] = useState([])
@@ -30,7 +31,7 @@ function CiclosEscolares() {
     const renderFilasTablaCiclosEscolares = () => {
         return allCiclosEscolares.map((ciclos, index) => (
             <tr key={'tr-perfil-'+index}>
-                <td>
+                <td >
                     <p>{ciclos.id}</p>
                 </td>
                 <td>
@@ -45,28 +46,49 @@ function CiclosEscolares() {
     
     return (
         <div className="container mt-3">
-            
-            <div className="d-flex justify-content-between mb-3">
+            <div className="d-flex justify-content-between align-items-center mb-3">
                 <div className="">
-                    <h4>Lista de Ciclos Escolares:</h4>
+                    <h6 style={{ fontWeight:'bold' }}>Ciclos Escolares</h6>
                 </div>
                 <div className="">
-                    <button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Crear Cliente</button>
+                    <Button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Nuevo Ciclo Escolar</Button>
                 </div>
             </div>
-
-            <table className="table">
-                <thead>
-                    <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Activo</th>
-                    <th scope="col">Nombre</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    { renderFilasTablaCiclosEscolares() }
-                </tbody>
-            </table>
+            
+            <div className="mb-3 row">
+                <p className="fw-bold mb-1">Filtros:</p>
+                <div className="row">
+                    <div className="col-3">
+                        <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
+                    </div>
+                    <div className="col-3">
+                    <select class="form-select form-select-sm" aria-label="Default select example">
+                        <option value="1">Activos</option>
+                        <option value="0">Inactivos</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+            <hr></hr>
+            <div className="row">
+                <div className="col">
+                    <div className="table-wrapper">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                <th scope="col" className="col-id">#</th>
+                                <th scope="col" className="col-activo">Activo</th>
+                                <th scope="col">Nombre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { renderFilasTablaCiclosEscolares() }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
             <ModalCiclosEscolares show={show} handleClose={handleClose}/>
         </div>
     )

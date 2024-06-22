@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import PathConstants from "../../../routes/pathsConstants";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import ModalNuevaFamilia from "./ModalNuevaFamilia";
+import { AuthContext } from "../../../context/AuthContext";
 
 function CatalogoFamilias() {
+    const { logout } = useContext(AuthContext);
     const [ allCiclosEscolares, setAllCiclosEscolares ] = useState([])
     const [ allFamilias, setAllFamilias ] = useState([])
     const [show, setShow] = useState(false);
@@ -32,7 +34,9 @@ function CatalogoFamilias() {
             setAllCiclosEscolares(resp.data);
 
         } catch (error) {
-            console.error("Error fetching Ciclos Escolares:", error);
+            if (error.response.status === 401) {
+                logout()
+            }
         }
     }
 
@@ -90,22 +94,38 @@ function CatalogoFamilias() {
                     <button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Nueva Familia</button>
                 </div>
             </div>
+            <div className="mb-3 row">
+                <p className="fw-bold mb-1">Filtros:</p>
+                <div className="row">
+                    <div className="col-3">
+                        <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
+                    </div>
+                    <div className="col-3">
+                    <select class="form-select form-select-sm" aria-label="Default select example">
+                        <option >Ciclo Escolar</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+            <hr></hr>
             <div className="row">
                 <div className="col">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Familia</th>
-                                <th scope="col">Ciclo Escolar</th>
-                                <th scope="col">Situacion Beca</th>
-                                <th scope="col">Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            { renderFilasTablaFamilias() }
-                        </tbody>
-                    </table>
+                    <div className="table-wrapper">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" className="col-id">ID</th>
+                                    <th scope="col">Familia</th>
+                                    <th scope="col">Ciclo Escolar</th>
+                                    <th scope="col">Situacion Beca</th>
+                                    <th scope="col">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { renderFilasTablaFamilias() }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <ModalNuevaFamilia show={show} handleClose={handleClose}></ModalNuevaFamilia>

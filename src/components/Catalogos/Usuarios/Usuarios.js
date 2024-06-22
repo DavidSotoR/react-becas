@@ -1,9 +1,11 @@
 import axios from "axios";
-import React,{ useEffect, useState } from "react";
+import React,{ useContext, useEffect, useState } from "react";
 import UsuarioCrear from "./UsuarioCrear";
 import { Button, Modal } from "react-bootstrap";
+import { AuthContext } from "../../../context/AuthContext";
 
 function Usuarios() {
+    const { logout } = useContext(AuthContext);
     const [ clearForm, setClearForm ] = useState(false)
     const [ btnEnable, setBtnEnable ] = useState(true)
     const [ allUsuarios, setAllUsuarios ] = useState([])
@@ -33,6 +35,9 @@ function Usuarios() {
             setClearForm(true)
         } catch (error) {
             console.log(error);
+            if (error.response.status === 401) {
+                logout()
+            }
         }   
     }
 
@@ -43,6 +48,9 @@ function Usuarios() {
             setAllUsuarios(resp.data);
         } catch (error) {
             console.error("Error fetching perfiles:", error);
+            if (error.response.status === 401) {
+                logout()
+            }
         }
     }
 
@@ -130,22 +138,39 @@ function Usuarios() {
                     <Button className="btn btn-primary btn-sm" onClick={handleShow}>Agregar Usuario</Button>
                 </div>
             </div>
+            <div className="mb-3 row">
+                <p className="fw-bold mb-1">Filtros:</p>
+                <div className="row">
+                    <div className="col-3">
+                        <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
+                    </div>
+                    <div className="col-3">
+                    <select class="form-select form-select-sm" aria-label="Default select example">
+                        <option value="0">Seleccione un Perfil</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+            <hr></hr>
             <div className="row">
-                <div className="col">
-                <table className="table">
-                    <thead>
-                        <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Perfil</th>
-                        <th scope="col">Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { renderFilasTablaUsuarios() }
-                    </tbody>
-                </table>
+                <div className="col" >
+                    <div className="table-wrapper">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                            <th scope="col" className="col-id">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Perfil</th>
+                            <th scope="col">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { renderFilasTablaUsuarios() }
+                        </tbody>
+                    </table>
+                    </div>
+                
                 </div>
             </div>
 

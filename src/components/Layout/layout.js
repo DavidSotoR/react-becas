@@ -20,6 +20,10 @@ export default function Layout() {
                     {isLoggedIn && (
                         <Sidebar collapsed={collapsed} rootStyles={{
                               backgroundColor: '#47D1D6',
+                              overflowY: 'auto',
+                              height:'100vh',
+                              paddingRight: '0px',
+                              paddingLeft: '0px'
                           }}>
                             <div className="mt-3 d-flex justify-content-center align-items-center">
                               <ion-icon size="large" onClick={() => setCollapsed(!collapsed)} name="menu-outline"></ion-icon>
@@ -30,7 +34,8 @@ export default function Layout() {
                               ['.'+menuClasses.button]:{
                                 '&:hover':{
                                   color:'white',
-                                  background: "rgba(0,0,0,.4)"
+                                  background: "rgba(0,0,0,.4)",
+                                  borderRadius: "5px",
                                 }
                               }
                             }}
@@ -83,7 +88,7 @@ export default function Layout() {
                       </Sidebar>
                     )}
                     
-                    <div className="col scrollable-content">
+                    <div className="col pt-5 scrollable-content" style={{ height:'100vh' }}>
                     <Suspense fallback={<div>Loading...</div>}>
                         <Outlet />
                     </Suspense>

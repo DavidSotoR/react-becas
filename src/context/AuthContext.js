@@ -58,6 +58,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
+    window.location.replace('/')
   };
 
   return (

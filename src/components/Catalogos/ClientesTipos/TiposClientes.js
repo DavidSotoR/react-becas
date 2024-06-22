@@ -1,8 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../../context/AuthContext";
 
 function TiposClientes() {
     const [ allTiposClientes, setAllTiposClientes ] = useState([])
+    const { logout } = useContext(AuthContext);
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -18,7 +20,9 @@ function TiposClientes() {
             }
             
         } catch (error) {
-            console.error("Error fetching Tipos Perfiles:", error);
+            if (error.response?.status === 401) {
+                logout()
+            }
         }
     }
 
@@ -43,10 +47,9 @@ function TiposClientes() {
     
     return (
         <div className="container mt-3">
-            
-            <div className="row mb-3">
-                <div className="col">
-                    <h4>Lista de Tipos Perfiles:</h4>
+            <div className="d-flex justify-content-between mb-3">
+                <div className="">
+                    <h6 style={{ fontWeight:'bold' }}>Lista de Tipos Perfiles:</h6>
                 </div>
             </div>
 

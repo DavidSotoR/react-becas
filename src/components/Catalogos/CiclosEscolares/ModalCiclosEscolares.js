@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import { AuthContext } from "../../../context/AuthContext";
 
 function ModalCiclosEscolares({ show, handleClose }) {
     const config = {
@@ -8,6 +9,7 @@ function ModalCiclosEscolares({ show, handleClose }) {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+    const { logout } = useContext(AuthContext);
     const [msgError, setMsgError] = useState('')
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
@@ -72,7 +74,9 @@ function ModalCiclosEscolares({ show, handleClose }) {
             console.log(resp);
             handleClose()
         }).catch((resp)=>{
-            console.log(resp);
+            if (resp.status === 401) {
+                logout()
+            }
         })
         
     }

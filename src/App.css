@@ -48,3 +48,21 @@ body {
 .css-dip3t8{ /* Esto quita un bloque blanco en el sidebar */
   background-color: #47D1D6!important;
 }
+
+.table-wrapper {
+  max-height: 400px; /* Altura máxima de la tabla */
+  overflow-y: auto; /* Scroll vertical */
+  overflow-x: auto; /* Scroll horizontal si es necesario */
+}
+
+.table {
+  width: 100%; /* Asegúrate de que la tabla ocupe todo el ancho disponible */
+  table-layout: fixed; /* Mantén un layout fijo para las columnas */
+}
+
+.col-id {
+  width: 7%;
+}
+.col-activo {
+  width: 10%;
+}
