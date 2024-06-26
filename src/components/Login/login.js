@@ -35,8 +35,7 @@ function Login() {
   }, []);
 
   return (
-    <div>
-      <div className="mt-5 d-flex flex-column justify-content-center align-items-center">
+      <div className="div-login mt-5 d-flex flex-column justify-content-center align-items-center">
           <div className="d-grid">
             <div className="d-flex justify-content-center">
               <img src="/img/logo_principal_colores.png" style={{ width:'150px', height:'150px' }}></img>
@@ -57,7 +56,6 @@ function Login() {
             </div>
           </div>
       </div>
-    </div>
     
   );
 }

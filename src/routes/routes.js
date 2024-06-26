@@ -20,8 +20,10 @@ const isAuthenticated = () => {
   return localStorage.getItem('login') === 'true';
 };
   
-const PrivateRoute = ({ element }) => {
+const PrivateRoute = ({ path,perfil ,element }) => {
   console.log('private route?');
+  console.log(path);
+  console.log(perfil);
   return isAuthenticated() ? element : <Navigate to={PathConstants.LOGIN} replace />;
 };
 
@@ -75,16 +77,16 @@ const routes = [
     )},
     { path: PathConstants.CLIENTES,perfil:'Administrador',element: (
       <Suspense fallback={<div>Loading...</div>}>
-        <CatClientes />
+        <PrivateRoute element={ <CatClientes /> }/>
       </Suspense>
     )},
     { path: PathConstants.TIPOSCLIENTES, perfil:'Administrador',element: (
       <Suspense fallback={<div>Loading...</div>}>
-        <CatTiposClientes />
+        <PrivateRoute element={ <CatTiposClientes /> }/>
       </Suspense>
     )},
     { path: PathConstants.LOGIN, perfil:'todos',element: (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense path={PathConstants.LOGIN} perfil='todos' fallback={<div>Loading...</div>}>
         <Login />
       </Suspense>
     )},

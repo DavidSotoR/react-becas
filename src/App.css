@@ -38,6 +38,16 @@ body {
   overflow-y: auto;
 }
 
+.background-login{
+  background:#47D1D6; 
+  padding-inline: 30vw;
+}
+
+.div-login{
+  background: white; 
+  border-radius: 28px;
+}
+
 /* Permitir que el segundo div tenga scroll */
 .scrollable-content {
   height: 100vh;

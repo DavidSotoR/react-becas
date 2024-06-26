@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom"
-import React, { Suspense, useContext, useState } from "react"
+import React, { Suspense, useContext, useEffect, useState } from "react"
 import Navbar from "../NavBar/NavBar"
 import { AuthContext } from "../../context/AuthContext";
 import PathConstants from "../../routes/pathsConstants";
@@ -12,10 +12,17 @@ export default function Layout() {
         localStorage.clear()
         window.location.replace('/')
       }
+    useEffect(()=>{
+      console.log(collapsed);
+      if (collapsed) {
+        
+      }
+    },[collapsed])
+
     return (
         <>
             {/* <Navbar /> */}
-            <main>
+            <main className={ !isLoggedIn ? 'background-login' : ''}>
                 <div className="row m-0">
                     {isLoggedIn && (
                         <Sidebar collapsed={collapsed} rootStyles={{
@@ -25,8 +32,11 @@ export default function Layout() {
                               paddingRight: '0px',
                               paddingLeft: '0px'
                           }}>
-                            <div className="mt-3 d-flex justify-content-center align-items-center">
-                              <ion-icon size="large" onClick={() => setCollapsed(!collapsed)} name="menu-outline"></ion-icon>
+                            <div className={ collapsed ? 'mt-3 d-flex justify-content-center align-items-center text-light' : 'mt-3 pe-3 d-flex justify-content-end align-items-center text-light' }>
+                              { collapsed ?
+                                (<ion-icon size="large" onClick={() => setCollapsed(!collapsed)} name="menu-outline"></ion-icon>) :
+                                (<ion-icon size="large" onClick={() => setCollapsed(!collapsed)} name="close-circle-outline"></ion-icon>)
+                              }
                             </div>
                         <Menu
                             rootStyles={{ 
@@ -61,11 +71,19 @@ export default function Layout() {
                               <img src='/img/logo_principal_blanco.png' style={{ width:'200px' }} alt="Descripción de la imagen" />
                             </div>
                           
-                          <MenuItem component={<Link to={PathConstants.HOME} />}> INICIO</MenuItem>
+                          <MenuItem component={<Link to={PathConstants.HOME} />}> 
+                              { collapsed ?
+                                (<div className="ion-text-center"><ion-icon name="home" size="large"/></div>):(<p>INICIO</p>)
+                              }
+                              
+                          </MenuItem>
                           { roleSession === 'Administrador' &&
                             <>
-                            <MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> CICLOS ESCOLARES</MenuItem>
-                            <SubMenu label="CATALOGOS" rootStyles={{
+                              <MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> 
+                                {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>CICLOS ESCOLARES</p>)}
+                              </MenuItem>
+                            <SubMenu label="CATALOGOS"  icon={ collapsed && (<div className="d-flex justify-content-center align-items-center"><ion-icon size="large" name="file-tray-full"/></div>) }
+                              rootStyles={{
                               color:"white",
                               ['& > .' + menuClasses.button]: {
                                 backgroundColor: '#47D1D6',
@@ -83,12 +101,15 @@ export default function Layout() {
                                 <MenuItem component={<Link to={PathConstants.PERFILES} />}> PERFILES</MenuItem>
                                 <MenuItem component={<Link to={PathConstants.FAMILIAS} />}> FAMILIAS</MenuItem>
                                 <MenuItem component={<Link to={PathConstants.CLIENTES} />}> CLIENTES</MenuItem>
-                                <MenuItem component={<Link to={PathConstants.TIPOSCLIENTES} />}> TIPOS CLIENTES</MenuItem>
                             </SubMenu>
                             </>
                           }
                           
-                          <MenuItem onClick={Logout}> Logout</MenuItem>
+                          <MenuItem onClick={Logout} className="ps-1"> 
+                          { collapsed ?
+                                (<ion-icon  name="log-out" size="large"/>):(<p>Logout</p>)
+                              }
+                          </MenuItem>
                         </Menu>
                       </Sidebar>
                     )}
