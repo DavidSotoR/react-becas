@@ -84,7 +84,7 @@ function ModalNuevaFamilia({ show, handleClose }) {
             </Modal.Header>
             <Modal.Body>
                     <div className="mb-3">
-                        <label>Tipo Cliente</label>
+                        <label>Ciclo Escolar</label>
                         <Form.Select aria-label="Default select example" name="id_ciclo_escolar" onChange={(e)=> formInputChange(e)}>
                             <option>Seleccione una Opción</option>
                             { renderOptionsCiclos() }

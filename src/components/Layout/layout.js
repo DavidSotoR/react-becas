@@ -62,7 +62,9 @@ export default function Layout() {
                             </div>
                           
                           <MenuItem component={<Link to={PathConstants.HOME} />}> INICIO</MenuItem>
-                          <MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> CICLOS ESCOLARES</MenuItem>
+                          { roleSession === 'Administrador' &&
+                            <>
+                            <MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> CICLOS ESCOLARES</MenuItem>
                             <SubMenu label="CATALOGOS" rootStyles={{
                               color:"white",
                               ['& > .' + menuClasses.button]: {
@@ -83,6 +85,9 @@ export default function Layout() {
                                 <MenuItem component={<Link to={PathConstants.CLIENTES} />}> CLIENTES</MenuItem>
                                 <MenuItem component={<Link to={PathConstants.TIPOSCLIENTES} />}> TIPOS CLIENTES</MenuItem>
                             </SubMenu>
+                            </>
+                          }
+                          
                           <MenuItem onClick={Logout}> Logout</MenuItem>
                         </Menu>
                       </Sidebar>

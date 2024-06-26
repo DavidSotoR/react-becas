@@ -34,7 +34,7 @@ function FamiliaAlta() {
         <div className="container mt-3">
             <div className="row">
                 <div className="col">
-                    <h5>SOLICITUD PARA EL ESTUDIO SOCIOECONÓMICO 1/2</h5>
+                    <h5>ALTA DE DATOS FAMILIA</h5>
                 </div>
             </div>
             <div className="row mt-3 mb-3">

@@ -26,64 +26,64 @@ const PrivateRoute = ({ element }) => {
 };
 
 const routes = [
-    { path: PathConstants.HOME, 
+    { path: PathConstants.HOME, perfil:'todos', 
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute element={<Home />} />
         </Suspense>
       )},
-    { path: PathConstants.USUARIOS, 
+    { path: PathConstants.USUARIOS, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute element={<CatUsuarios />} />
         </Suspense>
       )},
-    { path: PathConstants.PERFILES, 
+    { path: PathConstants.PERFILES, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute element={<CatPerfiles />} />
         </Suspense>
       )},
-    { path: PathConstants.FAMILIAS, 
+    { path: PathConstants.FAMILIAS, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute element={<CatFamilia />} />
         </Suspense>
       )},
-    { path: PathConstants.FAMILIASALTA, 
+    { path: PathConstants.FAMILIASALTA, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute element={<CatFamiliaAlta />} />
         </Suspense>
       )},
-    { path: PathConstants.FAMILIASFILES, 
+    { path: PathConstants.FAMILIASFILES, perfil:'familias',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute element={<FormFamilaFiles />} />
         </Suspense>
       )},
-      { path: PathConstants.CICLOSESCOLARES, 
+      { path: PathConstants.CICLOSESCOLARES, perfil:'Administrador',
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <PrivateRoute element={<CatCiclosEscolares />} />
           </Suspense>
         )},
-    { path: PathConstants.ESEBP2, element: (
+    { path: PathConstants.ESEBP2,perfil:'Administrador', element: ( 
       <Suspense fallback={<div>Loading...</div>}>
         <PrivateRoute element={<FormBP2 />} />
       </Suspense>
     )},
-    { path: PathConstants.CLIENTES, element: (
+    { path: PathConstants.CLIENTES,perfil:'Administrador',element: (
       <Suspense fallback={<div>Loading...</div>}>
         <CatClientes />
       </Suspense>
     )},
-    { path: PathConstants.TIPOSCLIENTES, element: (
+    { path: PathConstants.TIPOSCLIENTES, perfil:'Administrador',element: (
       <Suspense fallback={<div>Loading...</div>}>
         <CatTiposClientes />
       </Suspense>
     )},
-    { path: PathConstants.LOGIN, element: (
+    { path: PathConstants.LOGIN, perfil:'todos',element: (
       <Suspense fallback={<div>Loading...</div>}>
         <Login />
       </Suspense>
