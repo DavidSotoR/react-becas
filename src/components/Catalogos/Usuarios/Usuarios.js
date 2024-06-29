@@ -5,10 +5,13 @@ import { Button, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 
 function Usuarios() {
+    const APIURL = process.env.REACT_APP_API_URL
     const { logout } = useContext(AuthContext);
     const [ clearForm, setClearForm ] = useState(false)
     const [ btnEnable, setBtnEnable ] = useState(true)
     const [ allUsuarios, setAllUsuarios ] = useState([])
+    const [ allPerfiles, setAllPerfiles ] = useState([])
+    const [ allClientes, setAllClientes ] = useState([])
     const [ dataPostUsuario, setDataPostUsuario ] = useState({})
     const [show, setShow] = useState(false); 
     const handleClose = () => setShow(false); 
@@ -43,11 +46,35 @@ function Usuarios() {
 
     const getAllDataUsuarios = async () => {
         try {
-            const resp = await axios.get('http://localhost:8000/api/auth/usuarios', config);
+            const resp = await axios.get(APIURL+'/usuarios', config);
             console.log(resp);
             setAllUsuarios(resp.data);
         } catch (error) {
             console.error("Error fetching perfiles:", error);
+            if (error.response.status === 401) {
+                logout()
+            }
+        }
+    }
+
+    const getAllPerfiles = async () => {
+        try {
+            const resp = await axios.get(APIURL+'/perfiles', config)
+            console.log(resp.data);
+            setAllPerfiles(resp.data)
+        } catch (error) {
+            if (error.response.status === 401) {
+                logout()
+            }
+        }
+    }
+
+    const getAllClientes = async () => {
+        try {
+            const resp = await axios.get(APIURL+'/clientes', config)
+            console.log(resp.data);
+            setAllClientes(resp.data)
+        } catch (error) {
             if (error.response.status === 401) {
                 logout()
             }
@@ -98,10 +125,31 @@ function Usuarios() {
         console.log(dataPostUsuario);
         postCrearUsuario()
     }
+    
 
     useEffect( ()=>{
+        getAllPerfiles()
+        getAllClientes()
         getAllDataUsuarios();
-    }, [])
+    },[APIURL])
+
+    const renderFiltroPerfiles = () => {
+
+        return [...allPerfiles.map((perfil) => (
+            <option key={perfil.id} value={`${perfil.id}`}>
+                { perfil.nombre }
+            </option>
+        ))]
+    }
+
+    const renderFiltroClientes = () => {
+
+        return [...allClientes.map((cliente) => (
+            <option key={cliente.id} value={`${cliente.id}`}>
+                { cliente.nombre }
+            </option>
+        ))]
+    }
 
     const renderFilasTablaUsuarios = () => {
         return allUsuarios.map((usuario, index) => (
@@ -141,12 +189,19 @@ function Usuarios() {
             <div className="mb-3 row">
                 <p className="fw-bold mb-1">Filtros:</p>
                 <div className="row">
-                    <div className="col-3">
+                    <div className="col-2">
                         <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
                     </div>
                     <div className="col-3">
-                    <select class="form-select form-select-sm" aria-label="Default select example">
+                    <select className="form-select form-select-sm" aria-label="Default select example">
                         <option value="0">Seleccione un Perfil</option>
+                        { renderFiltroPerfiles() }
+                    </select>
+                    </div>
+                    <div className="col-3">
+                    <select className="form-select form-select-sm" aria-label="Default select example">
+                        <option value="0">Seleccione un Cliente</option>
+                        {renderFiltroClientes()}
                     </select>
                     </div>
                 </div>
@@ -160,7 +215,7 @@ function Usuarios() {
                             <tr>
                             <th scope="col" className="col-id">#</th>
                             <th scope="col">Nombre</th>
-                            <th scope="col">Email</th>
+                            <th scope="col">Cuenta</th>
                             <th scope="col">Perfil</th>
                             <th scope="col">Opciones</th>
                             </tr>

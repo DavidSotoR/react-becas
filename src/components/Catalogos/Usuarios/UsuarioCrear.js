@@ -1,9 +1,13 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../../context/AuthContext";
 
 function UsuarioCrear({ onCreate, clearForm, clear }) {
+    const APIURL = process.env.REACT_APP_API_URL
+    const { logout } = useContext(AuthContext);
     const [ btnEnable, setBtnEnable ] = useState(true)
     const [listaPerfiles, setListaPerfiles] = useState([])
+    const [ allClientes, setAllClientes ] = useState([])
     const [ dataPostUsuario, setDataPostUsuario ] = useState({
         name:"",
         email:"",
@@ -27,6 +31,18 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
         } catch (error) {
             setListaPerfiles([])
             console.error("Error fetching perfiles:", error);
+        }
+    }
+
+    const getAllClientes = async () => {
+        try {
+            const resp = await axios.get(APIURL+'/clientes', config)
+            console.log(resp.data);
+            setAllClientes(resp.data)
+        } catch (error) {
+            if (error.response.status === 401) {
+                logout()
+            }
         }
     }
 
@@ -95,6 +111,15 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
         ];
     }
 
+    const renderFiltroClientes = () => {
+
+        return [...allClientes.map((cliente) => (
+            <option key={cliente.id} value={`${cliente.id}`}>
+                { cliente.nombre }
+            </option>
+        ))]
+    }
+
     useEffect(()=>{
         console.log('este es el dato de clear: '+ clearForm);
         if (clearForm) {
@@ -114,8 +139,8 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
 
     useEffect(() => {
         getPerfilesList();
-        console.log('Effect Usuarios Crear');
-    }, []);
+        getAllClientes();
+    }, [APIURL]);
 
     useEffect(()=>{
         const hasErrors = Object.values(errors).some(err => err !== "");
@@ -126,6 +151,18 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
 
     return (
             <div className="container">
+            <div className="mb-3">
+            <label htmlFor="inputCliente" className="form-label">Cliente</label>
+            <select id="inputCliente" 
+                    name="id_cliente"
+                    className="form-select mb-2" 
+                    aria-label="Default select example"
+                    value={dataPostUsuario.id_cliente}
+                    onChange={handleInputChange}>
+                { renderFiltroClientes() }
+            </select>
+            {errors.id_perfil && <div className="text-danger fw-medium">{errors.id_perfil}</div>}
+            </div>
             <div className="mb-3">
                 <label htmlFor="inputName" className="form-label">Nombre:</label>
                 <input type="text" className="form-control mb-2" id="inputName" name="name"
