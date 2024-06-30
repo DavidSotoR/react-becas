@@ -1,6 +1,9 @@
-import React, { Suspense } from "react"
+import React, { Suspense, useContext, useState } from "react"
 import { Navigate } from "react-router-dom";
 import PathConstants from "./pathsConstants";
+import { AuthContext } from "../context/AuthContext";
+import Cookies from 'js-cookie';
+
 
 const Home = React.lazy(() => import("../components/HomePage/HomePage"))
 const Login = React.lazy(() => import("../components/Login/login"))
@@ -20,69 +23,92 @@ const isAuthenticated = () => {
   return localStorage.getItem('login') === 'true';
 };
   
-const PrivateRoute = ({ path,perfil ,element }) => {
-  console.log('private route?');
+const PrivateRoute = ({ path ,element }) => {
+  const { logout,roleSession } = useContext(AuthContext);
+  const [cookieValue, setCookieValue] = useState('');
+  const value = Cookies.get('localhost');
+  console.log(value);
+  /* console.log('private route?');
   console.log(path);
-  console.log(perfil);
-  return isAuthenticated() ? element : <Navigate to={PathConstants.LOGIN} replace />;
+  console.log(roleSession) */
+  var role = localStorage.getItem('role') ?? ''
+  if (isAuthenticated()) {
+    if (role === '' || role !== roleSession) {
+      localStorage.clear()
+      logout()
+    }
+    if (role === 'Administrador') {
+      return element 
+    }
+
+    if (role === 'Familias') {
+      if (path === PathConstants.HOME || path === PathConstants.FAMILIASFILES) {
+        return element
+      } else {
+        return window.location.replace('/')
+      }
+    }
+  } else {
+    return <Navigate to={PathConstants.LOGIN} replace />
+  }
 };
 
 const routes = [
     { path: PathConstants.HOME, perfil:'todos', 
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <PrivateRoute element={<Home />} />
+          <PrivateRoute path={PathConstants.HOME} element={<Home />} />
         </Suspense>
       )},
     { path: PathConstants.USUARIOS, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <PrivateRoute element={<CatUsuarios />} />
+          <PrivateRoute path={PathConstants.USUARIOS} element={<CatUsuarios />} />
         </Suspense>
       )},
     { path: PathConstants.PERFILES, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <PrivateRoute element={<CatPerfiles />} />
+          <PrivateRoute path={PathConstants.PERFILES} element={<CatPerfiles />} />
         </Suspense>
       )},
     { path: PathConstants.FAMILIAS, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <PrivateRoute element={<CatFamilia />} />
+          <PrivateRoute path={PathConstants.FAMILIAS} element={<CatFamilia />} />
         </Suspense>
       )},
     { path: PathConstants.FAMILIASALTA, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <PrivateRoute element={<CatFamiliaAlta />} />
+          <PrivateRoute path={PathConstants.FAMILIASALTA} element={<CatFamiliaAlta />} />
         </Suspense>
       )},
     { path: PathConstants.FAMILIASFILES, perfil:'familias',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
-          <PrivateRoute element={<FormFamilaFiles />} />
+          <PrivateRoute path={PathConstants.FAMILIASFILES} element={<FormFamilaFiles />} />
         </Suspense>
       )},
       { path: PathConstants.CICLOSESCOLARES, perfil:'Administrador',
         element: (
           <Suspense fallback={<div>Loading...</div>}>
-            <PrivateRoute element={<CatCiclosEscolares />} />
+            <PrivateRoute path={PathConstants.CICLOSESCOLARES} element={<CatCiclosEscolares />} />
           </Suspense>
         )},
     { path: PathConstants.ESEBP2,perfil:'Administrador', element: ( 
       <Suspense fallback={<div>Loading...</div>}>
-        <PrivateRoute element={<FormBP2 />} />
+        <PrivateRoute path={PathConstants.ESEBP2} element={<FormBP2 />} />
       </Suspense>
     )},
     { path: PathConstants.CLIENTES,perfil:'Administrador',element: (
       <Suspense fallback={<div>Loading...</div>}>
-        <PrivateRoute element={ <CatClientes /> }/>
+        <PrivateRoute path={PathConstants.CLIENTES} element={ <CatClientes /> }/>
       </Suspense>
     )},
     { path: PathConstants.TIPOSCLIENTES, perfil:'Administrador',element: (
       <Suspense fallback={<div>Loading...</div>}>
-        <PrivateRoute element={ <CatTiposClientes /> }/>
+        <PrivateRoute path={PathConstants.TIPOSCLIENTES} element={ <CatTiposClientes /> }/>
       </Suspense>
     )},
     { path: PathConstants.LOGIN, perfil:'todos',element: (

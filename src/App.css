@@ -73,6 +73,12 @@ body {
 .col-id {
   width: 7%;
 }
+.col-nombre{
+  word-wrap: break-word;
+}
+.col-cuenta{
+  word-wrap: break-word;
+}
 .col-activo {
   width: 10%;
 }

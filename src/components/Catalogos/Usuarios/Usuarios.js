@@ -154,14 +154,17 @@ function Usuarios() {
     const renderFilasTablaUsuarios = () => {
         return allUsuarios.map((usuario, index) => (
             <tr key={'tr-usuario-'+index}>
-                <td>
+                <td className="col-id">
                     <p>{usuario.id}</p>
                 </td>
-                <td>
+                <td className="col-nombre">
                     <p>{usuario.name}</p>
                 </td>
-                <td>
+                <td className="col-cuenta">
                     <p>{usuario.email}</p>
+                </td>
+                <td>
+                    <p>{usuario?.cliente ?? 'Sin asignar'}</p>
                 </td>
                 <td>
                     <p>{ getNamePerfil(usuario.id_perfil)}</p>
@@ -186,19 +189,19 @@ function Usuarios() {
                     <Button className="btn btn-primary btn-sm" onClick={handleShow}>Agregar Usuario</Button>
                 </div>
             </div>
-            <div className="mb-3 row">
+            <div className="mb-3 d-flex">
                 <p className="fw-bold mb-1">Filtros:</p>
                 <div className="row">
-                    <div className="col-2">
+                    <div className="col-lg-3 col-md-2 col-sm-8 col-8">
                         <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
                     </div>
-                    <div className="col-3">
+                    <div className="col-lg-4 col-md-3 col-sm-6 col-6">
                     <select className="form-select form-select-sm" aria-label="Default select example">
                         <option value="0">Seleccione un Perfil</option>
                         { renderFiltroPerfiles() }
                     </select>
                     </div>
-                    <div className="col-3">
+                    <div className="col-lg-4 col-md-3 col-sm-6 col-6">
                     <select className="form-select form-select-sm" aria-label="Default select example">
                         <option value="0">Seleccione un Cliente</option>
                         {renderFiltroClientes()}
@@ -216,6 +219,7 @@ function Usuarios() {
                             <th scope="col" className="col-id">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Cuenta</th>
+                            <th scope="col">Cliente</th>
                             <th scope="col">Perfil</th>
                             <th scope="col">Opciones</th>
                             </tr>

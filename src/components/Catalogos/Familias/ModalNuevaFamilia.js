@@ -67,7 +67,7 @@ function ModalNuevaFamilia({ show, handleClose }) {
     const renderOptionsCiclos = () =>{
         return [...allCiclosEscolares.map((ciclo) => (
             <option key={ciclo.id} value={`${ciclo.id}`}>
-                {`${ciclo.inicio.slice(0, -3)} a ${ciclo.fin.slice(0,-3)}`}
+                {`${ciclo.inicio.slice(0, -6)} a ${ciclo.fin.slice(0,-6)}`}
             </option>
         ))]
     }

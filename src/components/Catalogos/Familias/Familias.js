@@ -70,7 +70,7 @@ function CatalogoFamilias() {
         var anio = ''
         allCiclosEscolares.forEach((ciclo)=>{
             if (id === ciclo.id) {
-                anio = `${ciclo.inicio.slice(0, -3)} a ${ciclo.fin.slice(0,-3)}`    
+                anio = `${ciclo.inicio.slice(0, -6)} a ${ciclo.fin.slice(0,-6)}`    
             }
         })
         return anio
