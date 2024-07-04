@@ -135,42 +135,47 @@ function HomePageAdmin() {
 
   return (
     <div className="container">
-        <h5 className="m-3" style={{ fontWeight:'bold' }}>Seguimiento de Folios</h5>
-        <div className="container row align-items-center mb-3"> 
-              <div className="col-1"><h6 className="m-0">Filtros:</h6></div> 
-              <div className="col">
+        <h5 className="m-2" style={{ fontWeight:'bold' }}>Seguimiento de Folios</h5>
+        <div className="container">
+          <p className="fw-bold mb-1">Filtros:</p>
+          <div className="row align-items-center mb-3"> 
+              <div className="col-4 col-md-3 mb-1">
                   <input className="form-control  form-control-sm" placeholder="Buscar: "/>
               </div>
-              <div className="col">
+              <div className="col-4 col-md-3 mb-1">
                   <select class="form-select form-select-sm" aria-label="Default select example">
                       <option selected>Escuelas y Empresas</option>
                       <option value="1">Escuelas</option>
                       <option value="2">Empresas</option>
                   </select>
               </div>
+              <div className="col-4 col-md-3 mb-1">
+                  <select class="form-select form-select-sm" aria-label="Default select example">
+                      <option selected>Cliente:</option>
+                  </select>
+              </div>
+              <div className="col-4 col-md-3 mb-1">
+                  <select class="form-select form-select-sm" aria-label="Default select example">
+                      <option selected>Asignado a:</option>
+                  </select>
+              </div>
+          </div>
         </div>
+        
         <div className="container">
-        <ul className="nav nav-tabs">
-            <li className="nav-item">
-              <a
-                className={`nav-link ${activeTab === 'escuelas' ? 'active' : ''}`}
-                onClick={() => handleTabClick('escuelas')}
-              >
-                Escuelas
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className={`nav-link ${activeTab === 'empresas' ? 'active' : ''}`}
-                onClick={() => handleTabClick('empresas')}
-              >
-                Empresas
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div className="m-2">
-          { listaFolios()}
+          <div className="table-wrapper">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Folio</th>
+                  <th>Familia</th>
+                  <th>Cliente</th>
+                  <th>Asignado</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
     </div>
   );

@@ -1,9 +1,11 @@
 import axios from "axios";
 import ModalCiclosEscolares from "./ModalCiclosEscolares"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import { AuthContext } from "../../../context/AuthContext";
 
 function CiclosEscolares() {
+    const { logout } = useContext(AuthContext);
     const [ allCiclosEscolares, setAllCiclosEscolares ] = useState([])
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -19,6 +21,9 @@ function CiclosEscolares() {
             setAllCiclosEscolares(resp.data);
         } catch (error) {
             console.error("Error fetching Ciclos Escolares:", error);
+            if (error.response.status === 401) {
+                logout()
+            }
         }
     }
 

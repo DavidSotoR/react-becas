@@ -57,7 +57,7 @@ function CatalogoFamilias() {
                 </td>
                 <td>
                     <div className="d-flex">
-                        <Link className="btn btn-primary btn-sm" to={PathConstants.FAMILIASALTA}>Editar</Link>
+                        <Link className="btn btn-primary btn-sm" to={`/familias/${familia.id}`}>Editar</Link>
                         {/* <button className="btn btn-primary btn-sm mx-1">Editar</button> */}
                         <button className="btn btn-danger btn-sm mx-1">Borrar</button>
                     </div>

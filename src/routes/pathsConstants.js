@@ -7,7 +7,7 @@ const PathConstants = {
     CLIENTES: '/clientes',
     TIPOSCLIENTES: '/tipos-clientes',
     FAMILIAS: '/familias',
-    FAMILIASALTA: '/familias/alta',
+    FAMILIASALTA: '/familias/:IDFAMILIA',
     FAMILIASFILES:'/familias/archivos',
     PERFILES: '/perfiles',
     USUARIOS: '/usuarios',
