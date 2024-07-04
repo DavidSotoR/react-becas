@@ -17,6 +17,12 @@ function Login() {
     setInputPass(e.target.value)
   }
 
+  const enterPress = (e) =>{
+    if (e.code === 'Enter') {
+      sendLogin()
+    }
+  }
+
   const sendLogin = async () => {
     var dataPost = {
       "email": inputEmail,
@@ -45,11 +51,11 @@ function Login() {
             </div>
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label text-align-right">Usuario</label>
-              <input onChange={ (e) => { changeEmail(e) } } type="email" className="form-control" id="exampleFormControlInput1" placeholder="Usuario"/>
+              <input onKeyDown={(e)=>{ enterPress(e) }} onChange={ (e) => { changeEmail(e) } } type="email" className="form-control" id="exampleFormControlInput1" placeholder="Usuario"/>
             </div>
             <div className="mb-3">
               <label htmlFor="exampleFormControlInput2" className="form-label text-align-left">Contraseña</label>
-              <input onChange={ (e) => { changePass(e) } } type="password" className="form-control" id="exampleFormControlInput2" placeholder="Contraseña"/>
+              <input onKeyDown={(e)=>{ enterPress(e) }} onChange={ (e) => { changePass(e) } } type="password" className="form-control" id="exampleFormControlInput2" placeholder="Contraseña"/>
             </div>
             <div className="mb-3 d-flex justify-content-center">
               <button onClick={ sendLogin } className="btn btn-primary">Iniciar Sesión</button>
