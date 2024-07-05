@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthContext";
+import { Alert, Button } from "react-bootstrap";
 
 function FamiliaAlta() {
     const { logout } = useContext(AuthContext);
@@ -17,7 +18,7 @@ function FamiliaAlta() {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-
+    const [showAlert, setShowAlert] = useState(true);
     const [ tieneAlumnos, setTieneAlumnos ] = useState(false)
     const [ nuevoID, setNuevoID ] = useState(null)
 
@@ -70,22 +71,20 @@ function FamiliaAlta() {
     const getDatosPadresFamilia = () => {
         axios.get(APIURL+`/familias/${IDFAMILIA}/padres`,config).then((resp)=>{
             setDataPadresFamilia(resp.data)
-            console.log(dataPadresFamilia);
-            setDataFormPadre(dataPadresFamilia[0])
-            setDataFormMadre(dataPadresFamilia[1])
+            var padres = resp.data
+            setDataFormPadre(padres[0])
+            setDataFormMadre(padres[1])
         }).catch((error)=>{
             console.log(error);
         })
     }
 
     const getDatosFamilia = () =>{
-        axios.get('http://localhost:8000/api/auth/familias/'+IDFAMILIA,config).then((resp)=>{
-            console.log(resp);
+        axios.get(APIURL+'/familias/'+IDFAMILIA,config).then((resp)=>{
             setDataFamilia(resp.data)
             var familia = resp.data
             getDatosAlumnosFamilia(familia.id)
         }).catch((resp)=>{
-            console.log(resp);
             if (resp.response.status === 401) {
                 logout()
             }
@@ -93,7 +92,7 @@ function FamiliaAlta() {
     }
 
     const getDatosAlumnosFamilia = (id) =>{
-        axios.get('http://localhost:8000/api/auth/familias/'+id+'/alumnos',config).then((resp)=>{
+        axios.get(APIURL+'/familias/'+id+'/alumnos',config).then((resp)=>{
             console.log(resp);
             setDataAlumnosFamilia(resp.data)
             var alumnos = resp.data
@@ -136,29 +135,14 @@ function FamiliaAlta() {
 
 
     const handleChangeInputAlumno = (e) => {
+        console.log('Se edito alumno');
         var name = e.target.name
         var value = e.target.value
-        if (name === 'alumnos_nombre') {
-            dataAlumno.nombre = value
-        }
-        if (name === 'alumnos_domicilio') {
-            dataAlumno.domicilio = value
-        }
-        if (name === 'alumnos_colonia') {
-            dataAlumno.colonia = value
-        }
-        if (name === 'alumnos_municipio') {
-            dataAlumno.municipio = value
-        }
-        if (name === 'alumnos_cp') {
-            dataAlumno.codigo_postal = value
-        }
-        if (name === 'alumnos_padre_tel') {
-            dataAlumno.telefono_padre = value
-        }
-        if (name === 'alumnos_madre_tel') {
-            dataAlumno.telefono_madre = value
-        }
+
+        setDataAlumno((prevState) => ({
+            ...prevState,
+            [name]: value
+          }));
 
     }
 
@@ -188,18 +172,22 @@ function FamiliaAlta() {
         var nuevaFamilia = resp.data.data
         setNuevoID(nuevaFamilia.id)
         setTieneAlumnos(true)
+        setShowAlert(true)
     }
 
     const postGuardarPadre = () =>{
         
         var data = dataFormPadre
-        data.vive = data.vive == '1' ? true : false
+        data.vive = data.vive === '1' ? true : false
+        data.id_familias_padres_tipo = 1
         data.id_familia =parseInt(IDFAMILIA,10) 
         data.edad = parseInt(data.edad,10)
         console.log(data);
         axios.post(APIURL+'/familias/padres',data,config).then((resp)=>{
             console.log(resp);
+            setShowAlert(true)
         }).catch((error)=>{
+            
             console.log(error);
         })
     }
@@ -207,12 +195,14 @@ function FamiliaAlta() {
     const postGuardarMadre = () =>{
         
         var data = dataFormMadre
-        data.vive = data.vive == '1' ? true : false
+        data.vive = data.vive === '1' ? true : false
+        data.id_familias_padres_tipo = 2
         data.id_familia =parseInt(IDFAMILIA,10) 
         data.edad = parseInt(data.edad,10)
         console.log(data);
         axios.post(APIURL+'/familias/padres',data,config).then((resp)=>{
             console.log(resp);
+            setShowAlert(true)
         }).catch((error)=>{
             console.log(error);
         })
@@ -240,8 +230,8 @@ function FamiliaAlta() {
             </div>
             {/* <div className="row mb-3">
                 <div className="col-12">
-                    <label for="inputSituacionNecesidad" class="form-label">SITUACION POR LA CUAL SE VEN EN LA NECESIDAD DE PEDIR APOYO DE BECA:</label>
-                    <textarea onChange={ (e)=>{handleChangeInput(e)} } name="situacion" class="form-control" id="inputSituacionNecesidad" rows="3"></textarea>
+                    <label htmlFor="inputSituacionNecesidad" className="form-label">SITUACION POR LA CUAL SE VEN EN LA NECESIDAD DE PEDIR APOYO DE BECA:</label>
+                    <textarea onChange={ (e)=>{handleChangeInput(e)} } name="situacion" className="form-control" id="inputSituacionNecesidad" rows="3"></textarea>
                 </div>
             </div> */}
             <div className="container">
@@ -272,33 +262,33 @@ function FamiliaAlta() {
                         </div> */}
                         <input hidden={true} disabled={true} value={dataFamilia.id}/>
                         <input hidden={true} disabled={true} value={dataFamilia.id_ciclo_escolar}/>
-                        <label htmlFor="input-alumno" class="form-label">Alumno:</label>
-                        <input value={dataAlumno.nombre} id="input-alumno" name="alumnos_nombre" className="form-control form-control-sm" type="text" onChange={(e) => handleChangeInputAlumno(e)}/>
+                        <label htmlFor="input-alumno" className="form-label">Alumno:</label>
+                        <input value={dataAlumno?.nombre} id="input-alumno" name="nombre" className="form-control form-control-sm" type="text" onChange={(e) => handleChangeInputAlumno(e)}/>
                     </div>
                     <div className="col-4">
-                        <label for="inputDomicilio" class="form-label">Domicilio Particular Calle, No:</label>
-                        <input value={dataAlumno.domicilio} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="alumnos_domicilio" type="text" id="inputDomicilio" className="form-control" />
+                        <label htmlFor="inputDomicilio" className="form-label">Domicilio Particular Calle, No:</label>
+                        <input value={dataAlumno?.domicilio} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="domicilio" type="text" id="inputDomicilio" className="form-control" />
                     </div>
                     <div className="col-4">
-                        <label for="inputColonia" class="form-label">Colonia:</label>
-                        <input value={dataAlumno.colonia} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="alumnos_colonia" type="text" id="inputColonia" className="form-control" />
+                        <label htmlFor="inputColonia" className="form-label">Colonia:</label>
+                        <input value={dataAlumno?.colonia} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="colonia" type="text" id="inputColonia" className="form-control" />
                     </div>
                     <div className="col-4">
-                        <label for="inputMunicipio" class="form-label">Municipio:</label>
-                        <input value={dataAlumno.municipio} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="alumnos_municipio" type="text" id="inputMunicipio" className="form-control" />
+                        <label htmlFor="inputMunicipio" className="form-label">Municipio:</label>
+                        <input value={dataAlumno?.municipio} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="municipio" type="text" id="inputMunicipio" className="form-control" />
                     </div>
                     <div className="col-4">
-                        <label for="inputCP" class="form-label">Codigo Postal:</label>
-                        <input value={dataAlumno.codigo_postal} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="alumnos_cp" type="text" id="inputCP" className="form-control" />
+                        <label htmlFor="inputCP" className="form-label">Codigo Postal:</label>
+                        <input value={dataAlumno?.codigo_postal} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="codigo_postal" type="text" id="inputCP" className="form-control" />
                     </div>
                     <div className="row">
                         <div className="col-5">
-                            <label for="inputTelPadre" class="form-label">Telefono Padre:</label>
-                            <input value={dataAlumno.telefono_padre} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="alumnos_padre_tel" type="text" id="inputTelPadre" className="form-control" />
+                            <label htmlFor="inputTelPadre" className="form-label">Telefono Padre:</label>
+                            <input value={dataAlumno?.telefono_padre} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="telefono_padre" type="text" id="inputTelPadre" className="form-control" />
                         </div>
                         <div className="col-5">
-                            <label for="inputTelMadre" class="form-label">Telefono Madre:</label>
-                            <input value={dataAlumno.telefono_madre} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="alumnos_madre_tel" type="text" id="inputTelMadre" className="form-control" />
+                            <label htmlFor="inputTelMadre" className="form-label">Telefono Madre:</label>
+                            <input value={dataAlumno?.telefono_madre} onChange={ (e)=>{handleChangeInputAlumno(e)} } name="telefono_madre" type="text" id="inputTelMadre" className="form-control" />
                         </div>
                     </div>
                     <div className="d-flex justify-content-center m-3">
@@ -311,18 +301,18 @@ function FamiliaAlta() {
                     <h6 style={{ fontWeight:'bold' }}> 2. Datos del Padre </h6>
                     <div className="row">
                         <div className="col-6">
-                            <label for="inputNombrePadre" class="form-label">Nombre del Padre:</label>
+                            <label htmlFor="inputNombrePadre" className="form-label">Nombre del Padre:</label>
                             <input onChange={ (e)=>{handleChangeInputPadre(e)} } name="nombre" value={dataFormPadre?.nombre}
                             type="text" id="inputNombrePadre" className="form-control" />
                         </div>
                         <div className="col-2">
-                            <label for="inputEdadPadre" class="form-label">Edad:</label>
+                            <label htmlFor="inputEdadPadre" className="form-label">Edad:</label>
                             <input onChange={ (e)=>{handleChangeInputPadre(e)} } name="edad" value={dataFormPadre?.edad}
                             type="text" id="inputEdadPadre" className="form-control" />
                         </div>
                         <div className="col-2">
-                            <label for="inputPadreVive" class="form-label">Vive:</label>
-                            <select id="inputPadreVive" class="form-select form-select-sm" 
+                            <label htmlFor="inputPadreVive" className="form-label">Vive:</label>
+                            <select id="inputPadreVive" className="form-select form-select-sm" 
                             onChange={ (e)=>{handleChangeInputPadre(e)} } name="vive" value={dataFormPadre?.vive}
                             aria-label="Small select example">
                                 <option value="1">SI</option>
@@ -330,27 +320,27 @@ function FamiliaAlta() {
                             </select>
                         </div>
                         <div className="col-12">
-                            <label for="inputDireccionPadre" class="form-label">Dirección:</label>
+                            <label htmlFor="inputDireccionPadre" className="form-label">Dirección:</label>
                             <input onChange={ (e)=>{handleChangeInputPadre(e)} } name="direccion" value={dataFormPadre?.direccion}
                             type="text" id="inputDireccionPadre" className="form-control" />
                         </div>
                         <div className="col-12">
-                            <label for="inputOcupacionPadre" class="form-label">Ocupacion Actual:</label>
+                            <label htmlFor="inputOcupacionPadre" className="form-label">Ocupacion Actual:</label>
                             <input onChange={ (e)=>{handleChangeInputPadre(e)} } name="ocupacion_actual" value={dataFormPadre?.ocupacion_actual}
                             type="text" id="inputOcupacionPadre" className="form-control" />
                         </div>
                         <div className="col-12">
-                            <label for="inputEmpresaPadre" class="form-label">Empresa en que trabaja:</label>
+                            <label htmlFor="inputEmpresaPadre" className="form-label">Empresa en que trabaja:</label>
                             <input onChange={ (e)=>{handleChangeInputPadre(e)} } name="empresa_trabajo" value={dataFormPadre?.empresa_trabajo}
                             type="text" id="inputEmpresaPadre" className="form-control" />
                         </div>
                         <div className="col-6">
-                            <label for="inputEmailPadre" class="form-label">Email:</label>
+                            <label htmlFor="inputEmailPadre" className="form-label">Email:</label>
                             <input onChange={ (e)=>{handleChangeInputPadre(e)} } name="email" value={dataFormPadre?.email}
                             type="email" id="inputEmpresaPadre" className="form-control" />
                         </div>
                         <div className="col-6">
-                            <label for="inputTelCasaPadre" class="form-label">Tel. Casa:</label>
+                            <label htmlFor="inputTelCasaPadre" className="form-label">Tel. Casa:</label>
                             <input onChange={ (e)=>{handleChangeInputPadre(e)} } name="telefono_casa" value={dataFormPadre?.telefono_casa}
                             type="text" id="inputEmpresaPadre" className="form-control" />
                         </div>
@@ -364,46 +354,46 @@ function FamiliaAlta() {
                     <h6 style={{ fontWeight: 'bold' }}> 3. Datos de la Madre </h6>
                     <div className="row">
                         <div className="col-6">
-                            <label for="inputNombreMadre" class="form-label">Nombre de la Madre:</label>
+                            <label htmlFor="inputNombreMadre" className="form-label">Nombre de la Madre:</label>
                             <input onChange={ (e)=>{handleChangeInputMadre(e)} } name="nombre" value={dataFormMadre?.nombre}
                             type="text" id="inputNombrePadre" className="form-control" />
                         </div>
                         <div className="col-2">
-                            <label for="inputEdadMadre" class="form-label">Edad:</label>
+                            <label htmlFor="inputEdadMadre" className="form-label">Edad:</label>
                             <input onChange={ (e)=>{handleChangeInputMadre(e)} } name="edad" value={dataFormMadre?.edad}
                             type="text" id="inputEdadMadre" className="form-control" />
                         </div>
                         <div className="col-2">
-                            <label for="inputMadreVive" class="form-label">Vive:</label>
-                            <select id="inputMadreVive" class="form-select form-select-sm" value={dataFormMadre?.vive}
+                            <label htmlFor="inputMadreVive" className="form-label">Vive:</label>
+                            <select id="inputMadreVive" className="form-select form-select-sm" value={dataFormMadre?.vive}
                             onChange={ (e)=>{handleChangeInputMadre(e)} } name="vive"
                             aria-label="Small select example">
-                                <option value="si">SI</option>
-                                <option value="no">NO</option>
+                                <option value="1">SI</option>
+                                <option value="0">NO</option>
                             </select>
                         </div>
                         <div className="col-12">
-                            <label for="inputDireccionMadre" class="form-label">Dirección:</label>
+                            <label htmlFor="inputDireccionMadre" className="form-label">Dirección:</label>
                             <input onChange={ (e)=>{handleChangeInputMadre(e)} } name="direccion" value={dataFormMadre?.direccion}
                             type="text" id="inputDireccionMadre" className="form-control" />
                         </div>
                         <div className="col-12">
-                            <label for="inputOcupacionMadre" class="form-label">Ocupacion Actual:</label>
+                            <label htmlFor="inputOcupacionMadre" className="form-label">Ocupacion Actual:</label>
                             <input onChange={ (e)=>{handleChangeInputMadre(e)} } name="ocupacion_actual" value={dataFormMadre?.ocupacion_actual}
                             type="text" id="inputOcupacionMadre" className="form-control" />
                         </div>
                         <div className="col-12">
-                            <label for="inputEmpresaMadre" class="form-label">Empresa en que trabaja:</label>
+                            <label htmlFor="inputEmpresaMadre" className="form-label">Empresa en que trabaja:</label>
                             <input onChange={ (e)=>{handleChangeInputMadre(e)} } name="empresa_trabajo" value={dataFormMadre?.empresa_trabajo}
                             type="text" id="inputEmpresaMadre" className="form-control" />
                         </div>
                         <div className="col-6">
-                            <label for="inputEmailMadre" class="form-label">Email:</label>
+                            <label htmlFor="inputEmailMadre" className="form-label">Email:</label>
                             <input onChange={ (e)=>{handleChangeInputMadre(e)} } name="email" value={dataFormMadre?.email}
                             type="email" id="inputEmpresaMadre" className="form-control" />
                         </div>
                         <div className="col-6">
-                            <label for="inputTelCasaMadre" class="form-label">Tel. Casa:</label>
+                            <label htmlFor="inputTelCasaMadre" className="form-label">Tel. Casa:</label>
                             <input onChange={ (e)=>{handleChangeInputMadre(e)} } name="telefono_casa" value={dataFormMadre?.telefono_casa}
                             type="text" id="inputEmpresaMadre" className="form-control" />
                         </div>
@@ -415,6 +405,14 @@ function FamiliaAlta() {
                     </>
                 }
                 
+            </div>
+            <div >
+            <Alert show={showAlert} onClose={()=>{ setShowAlert(false) }} variant="success" className="alert-flotante" dismissible>
+                <Alert.Heading>Success</Alert.Heading>
+                <p>
+                    Se ha guardado correctamente los datos.
+                </p>
+            </Alert>
             </div>
             
         </div>

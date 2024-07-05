@@ -82,6 +82,9 @@ export default function Layout() {
                               <MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> 
                                 {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>CICLOS ESCOLARES</p>)}
                               </MenuItem>
+                              <MenuItem component={<Link to={PathConstants.ENCUESTAS} />}> 
+                                {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="clipboard"/></div>):(<p>ENCUESTAS</p>)}
+                              </MenuItem>
                             <SubMenu label="CATALOGOS"  icon={ collapsed && (<div className="d-flex justify-content-center align-items-center"><ion-icon size="large" name="file-tray-full"/></div>) }
                               rootStyles={{
                               color:"white",

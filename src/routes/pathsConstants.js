@@ -5,6 +5,7 @@ const PathConstants = {
     COLABORADOR: '/colaborador',
     CALIDAD: '/calidad',
     CLIENTES: '/clientes',
+    ENCUESTAS: '/encuestas',
     TIPOSCLIENTES: '/tipos-clientes',
     FAMILIAS: '/familias',
     FAMILIASALTA: '/familias/:IDFAMILIA',

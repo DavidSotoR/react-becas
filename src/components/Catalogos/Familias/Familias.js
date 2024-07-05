@@ -101,7 +101,12 @@ function CatalogoFamilias() {
                         <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
                     </div>
                     <div className="col-3">
-                    <select class="form-select form-select-sm" aria-label="Default select example">
+                    <select className="form-select form-select-sm" aria-label="Default select example">
+                        <option >Cliente</option>
+                    </select>
+                    </div>
+                    <div className="col-3">
+                    <select className="form-select form-select-sm" aria-label="Default select example">
                         <option >Ciclo Escolar</option>
                     </select>
                     </div>
@@ -111,7 +116,7 @@ function CatalogoFamilias() {
             <div className="row">
                 <div className="col">
                     <div className="table-wrapper">
-                        <table class="table">
+                        <table className="table">
                             <thead>
                                 <tr>
                                     <th scope="col" className="col-id">ID</th>

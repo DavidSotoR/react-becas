@@ -3,19 +3,20 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 
-function ModalNuevaFamilia({ show, handleClose }) {
-    const { logout } = useContext(AuthContext);
+function ModalNuevaEncuesta({ show, handleClose }) {
+    const APIURL = process.env.REACT_APP_API_URL
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const [ allCiclosEscolares, setAllCiclosEscolares ] = useState([])
+    const { logout } = useContext(AuthContext);
+    const [ allTipoClientes, setAllTipoClientes ] = useState([])
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
-        id_ciclo_escolar: '',
+        id_tipo_cliente: '',
         nombre:'',
-        situacion_beca: '',
+        descripcion: '',
     })
 
     const formInputChange =(e) => {
@@ -29,15 +30,15 @@ function ModalNuevaFamilia({ show, handleClose }) {
     }
 
     const validateFields = ()=>{
-        var messageError = ''
-        if (formData.id_ciclo_escolar === '') {
-            messageError = 'Campo Ciclo Escolar es OBLIGATORIO\n'
+        var messageError = []
+        if (formData.id_tipo_cliente === '') {
+            messageError.push('Campo Ciclo Escolar es OBLIGATORIO')
         }
         if (formData.nombre.length <= 3 || formData.nombre === '') {
-            messageError += 'Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres\n'
+            messageError.push('Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres')
         }
-        if (formData.situacion_beca === '') {
-            messageError += 'Campo Situacion Beca es OBLIGATORIO\n'
+        if (formData.descripcion === '') {
+            messageError.push('Campo Situacion Beca es OBLIGATORIO\n')
         }
         if (messageError.length === 0) {
             setFormValid(false)
@@ -46,50 +47,56 @@ function ModalNuevaFamilia({ show, handleClose }) {
         }
     }
 
-    const sendDataFamiliaNuevo = () =>{
-        axios.post('http://localhost:8000/api/auth/familias',formData,config).then((resp)=>{
+    const sendDataEncuestaNuevo = () =>{
+        axios.post(APIURL+'/catalogos/encuestas',formData,config).then((resp)=>{
             console.log(resp);
             handleClose()
         }).catch((resp)=>{
-            console.log(resp);
+            if (resp.status === 401) {
+                logout()
+            }
         })
         
     }
 
-    const getCiclosEscolaresList = async () => {
+    const getListaClientes = async () => {
         try {
-            const resp = await axios.get('http://localhost:8000/api/auth/ciclos', config);
-            setAllCiclosEscolares(resp.data);
+            const resp = await axios.get(APIURL+'/clientes/tipos', config);
+            console.log(resp);
+            setAllTipoClientes(resp.data);
 
         } catch (error) {
             console.error("Error fetching Ciclos Escolares:", error);
+            if (error.response?.status === 401) {
+                logout()
+            }
         }
     }
 
-    const renderOptionsCiclos = () =>{
-        return [...allCiclosEscolares.map((ciclo) => (
-            <option key={ciclo.id} value={`${ciclo.id}`}>
-                {`${ciclo.inicio.slice(0, -6)} a ${ciclo.fin.slice(0,-6)}`}
+    const renderTiposClientes= () =>{
+        return [...allTipoClientes.map((tipo) => (
+            <option key={tipo.id} value={`${tipo.id}`}>
+                {`${tipo.nombre}`}
             </option>
         ))]
     }
 
     useEffect(()=>{
         validateFields()
-        getCiclosEscolaresList()
+        getListaClientes()
     }, [formData])
 
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Nueva Familia</Modal.Title>
+                <Modal.Title>Nueva Encuesta</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                     <div className="mb-3">
-                        <label>Ciclo Escolar</label>
-                        <Form.Select aria-label="Default select example" name="id_ciclo_escolar" onChange={(e)=> formInputChange(e)}>
-                            <option>Seleccione una Opción</option>
-                            { renderOptionsCiclos() }
+                        <label>Tipo Cliente</label>
+                        <Form.Select aria-label="Default select example" name="id_tipo_cliente" onChange={(e)=> formInputChange(e)}>
+                            <option>Tipo Cliente</option>
+                            { renderTiposClientes() }
                         </Form.Select>
                     </div>
                     <div className="mb-3">
@@ -97,15 +104,15 @@ function ModalNuevaFamilia({ show, handleClose }) {
                         <input type="text" className="form-control" name="nombre" onChange={(e)=> formInputChange(e)}/>
                     </div>
                     <div className="mb-3">
-                        <label>Situacion Beca</label>
-                        <input type="text" className="form-control" name="situacion_beca" onChange={(e)=> formInputChange(e)}/>
+                        <label>Descripcion:</label>
+                        <input type="text" className="form-control" name="descripcion" onChange={(e)=> formInputChange(e)}/>
                     </div>              
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={sendDataFamiliaNuevo} disabled={formValid}>
+                <Button variant="primary" onClick={sendDataEncuestaNuevo} disabled={formValid}>
                     Crear
                 </Button>
             </Modal.Footer>
@@ -113,4 +120,4 @@ function ModalNuevaFamilia({ show, handleClose }) {
     )
 }
 
-export default ModalNuevaFamilia;
+export default ModalNuevaEncuesta;

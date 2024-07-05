@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 
 const Home = React.lazy(() => import("../components/HomePage/HomePage"))
 const Login = React.lazy(() => import("../components/Login/login"))
+const CatEncuestas = React.lazy(()=> import('../components/Catalogos/Encuestas/Encuestas'))
 const CatFamilia = React.lazy(()=> import('../components/Catalogos/Familias/Familias'))
 const CatFamiliaAlta = React.lazy(()=> import('../components/Catalogos/Familias/FamiliaAlta'))
 const CatUsuarios = React.lazy(()=> import('../components/Catalogos/Usuarios/Usuarios'))
@@ -28,9 +29,6 @@ const PrivateRoute = ({ path ,element }) => {
   const [cookieValue, setCookieValue] = useState('');
   const value = Cookies.get('localhost');
   console.log(value);
-  /* console.log('private route?');
-  console.log(path);
-  console.log(roleSession) */
   var role = localStorage.getItem('role') ?? ''
   if (isAuthenticated()) {
     if (role === '' || role !== roleSession) {
@@ -66,6 +64,12 @@ const routes = [
           <PrivateRoute path={PathConstants.USUARIOS} element={<CatUsuarios />} />
         </Suspense>
       )},
+    { path: PathConstants.ENCUESTAS, perfil:'Administrador',
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PrivateRoute path={PathConstants.ENCUESTAS} element={<CatEncuestas />} />
+        </Suspense>
+    )},
     { path: PathConstants.PERFILES, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
