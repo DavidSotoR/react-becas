@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 const Home = React.lazy(() => import("../components/HomePage/HomePage"))
 const Login = React.lazy(() => import("../components/Login/login"))
 const CatEncuestas = React.lazy(()=> import('../components/Catalogos/Encuestas/Encuestas'))
+const CatEncuestasID = React.lazy(()=> import('../components/Catalogos/Encuestas/CreacionEncuesta'))
 const CatFamilia = React.lazy(()=> import('../components/Catalogos/Familias/Familias'))
 const CatFamiliaAlta = React.lazy(()=> import('../components/Catalogos/Familias/FamiliaAlta'))
 const CatUsuarios = React.lazy(()=> import('../components/Catalogos/Usuarios/Usuarios'))
@@ -62,6 +63,12 @@ const routes = [
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute path={PathConstants.USUARIOS} element={<CatUsuarios />} />
+        </Suspense>
+      )},
+    { path: PathConstants.ENCUESTASID, perfil:'Administrador',
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PrivateRoute path={PathConstants.ENCUESTASID} element={<CatEncuestasID />} />
         </Suspense>
       )},
     { path: PathConstants.ENCUESTAS, perfil:'Administrador',
