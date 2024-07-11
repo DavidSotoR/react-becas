@@ -190,9 +190,11 @@ function Usuarios() {
                 </div>
             </div>
             <div className="mb-3 d-flex">
-                <p className="fw-bold mb-1">Filtros:</p>
+                <div className="d-flex justify-content-center align-items-center">
+                    <p className="fw-bold m-0 me-1">Filtros:</p>
+                </div>
                 <div className="row">
-                    <div className="col-lg-3 col-md-2 col-sm-8 col-8">
+                    <div className="col-lg-3 col-md-3 col-sm-8 col-8">
                         <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
                     </div>
                     <div className="col-lg-4 col-md-3 col-sm-6 col-6">

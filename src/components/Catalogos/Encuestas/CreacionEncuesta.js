@@ -1,10 +1,20 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import ModalNuevoParametro from "./ModalNuevoParametro";
 import ModalNuevaPregunta from "./ModalNuevaPregunta";
+import axios from "axios";
+import { AuthContext } from "../../../context/AuthContext";
 
 function CreacionEncuesta() {
     const { ID } = useParams();
+    const { logout } = useContext(AuthContext);
+    const APIURL = process.env.REACT_APP_API_URL
+    const config = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    }
+
     const [ showModalNuevoParametro, setShowModalNUevoParametro ] = useState(false)
     const handleCloseMNuevoParametro = () => setShowModalNUevoParametro(false);
     const handleShowMNuevoParametro = () => setShowModalNUevoParametro(true);
@@ -23,6 +33,46 @@ function CreacionEncuesta() {
         puntos_maximos: 0
     })
 
+    const getListaPreguntasEncuensta = () => {
+        axios.get(APIURL+'/catalogos/encuestas/'+ID+'/preguntas',config).then((resp)=>{
+            setAllPreguntas(resp.data)
+        }).catch((error)=>{
+            console.log(error.response);
+        })
+    }
+
+    const renderBodyTablaPreguntas = () => {
+        return allPreguntas.map((preguntas, index) => (
+            <tr key={'tr-'+index}>
+                <td>
+                    <p style={{ fontWeight: "bold" }}>{preguntas.id}</p>
+                </td>
+                <td>
+                    <p style={{ fontWeight: "bold" }}>{preguntas.id_catalogo_encuestas_preguntas_tipo}</p>
+                </td>
+                <td>
+                    <p style={{ fontWeight: "bold" }}>{preguntas.id_catalogo_encuestas_preguntas_parametro_clasificacion}</p>
+                </td>
+                <td>
+                    <p style={{ fontWeight: "bold" }}>{preguntas.pregunta}</p>
+                </td>
+                <td>
+                    <p style={{ fontWeight: "bold" }}>{preguntas.puntos_maximos}</p>
+                </td>
+                <td>
+                    <div className="d-flex">
+                        <Link className="btn btn-primary btn-sm">Editar</Link>
+                        <button className="btn btn-danger btn-sm mx-1">Borrar</button>
+                    </div>
+                </td>
+            </tr>
+        ));
+    };
+
+    useEffect(()=>{
+        getListaPreguntasEncuensta()
+    },[])
+
     return (
         <div className="container">
             <div>
@@ -38,7 +88,26 @@ function CreacionEncuesta() {
             </div>
             <hr></hr>
             <div className="row">
-                Se iran agregando las preguntas
+                <div className="col">
+                <div className="table-wrapper">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" className="col-id">ID</th>
+                                <th scope="col">Tipo Pregunta</th>
+                                <th scope="col">Parametro</th>
+                                <th scope="col">Pregunta</th>
+                                <th scope="col">Puntaje maximo</th>
+                                <th scope="col">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { renderBodyTablaPreguntas() }
+                        </tbody>
+                    </table>
+                </div>
+                    
+                </div>
             </div>
             <ModalNuevoParametro show={showModalNuevoParametro} handleClose={handleCloseMNuevoParametro}></ModalNuevoParametro>
             <ModalNuevaPregunta show={showModalNuevaPregunta} handleClose={handleCloseMNuevaPregunta}></ModalNuevaPregunta>

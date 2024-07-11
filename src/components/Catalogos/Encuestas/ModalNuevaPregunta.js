@@ -13,12 +13,17 @@ function ModalNuevaPregunta({ show, handleClose }) {
         }
     }
     const { logout } = useContext(AuthContext);
+    const [ allTiposPreguntas, setAllTiposPreguntas ] = useState([])
+    const [ allParametros, setAllParametros ] = useState([])
     const [ allTipoClientes, setAllTipoClientes ] = useState([])
+
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
-        id_catalogo_encuesta:0,
-        nombre:"",
-        puntos_maximo:20
+        id_catalogo_encuesta: 0,
+        id_catalogo_encuestas_preguntas_tipo: 0,
+        id_catalogo_encuestas_preguntas_parametro_clasificacion: 0,
+        pregunta:"",
+        puntos_maximos: 0
     })
 
     const formInputChange =(e) => {
@@ -33,15 +38,17 @@ function ModalNuevaPregunta({ show, handleClose }) {
 
     const validateFields = ()=>{
         var messageError = []
-        if (formData.nombre === '') {
+        if (formData.pregunta === '') {
             messageError.push('Campo Nombre es OBLIGATORIO')
         }
-        if (formData.nombre.length <= 3 || formData.nombre === '') {
+        if (formData.pregunta.length <= 3 || formData.pregunta === '') {
             messageError.push('Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres')
         }
-        if (formData.puntos_maximo > -1) {
+        if (formData.puntos_maximos < 0 || formData.puntos_maximos === '') {
             messageError.push('Campo Puntos Maximo debe ser igual o mayor a 0')
         }
+
+        console.log(messageError);
         if (messageError.length === 0) {
             setFormValid(false)
         } else {
@@ -49,8 +56,12 @@ function ModalNuevaPregunta({ show, handleClose }) {
         }
     }
 
-    const postDataNuevoParametro = () =>{
-        axios.post(APIURL+'/catalogos/encuestas/parametros',formData,config).then((resp)=>{
+    const postDataNuevaPregunta = () =>{
+        //console.log(formData);
+        var data = formData;
+        data.id_catalogo_encuesta = ID
+        console.log(data);
+        axios.post(APIURL+'/catalogos/encuestas/preguntas',data,config).then((resp)=>{
             console.log(resp);
             handleClose()
         }).catch((resp)=>{
@@ -61,10 +72,52 @@ function ModalNuevaPregunta({ show, handleClose }) {
         
     }
 
+    const renderOpcionesTipoPregunta = () => {
+
+        return [...allTiposPreguntas.map((tp) => (
+            <option key={tp.id} value={`${tp.id}`}>
+                { tp.nombre }
+            </option>
+        ))]
+    }
+
+    const renderOpcionesParametros = () => {
+        return [...allParametros.map((param) => (
+            <option key={param.id} value={`${param.id}`}>
+                { param.nombre }
+            </option>
+        ))]
+    }
+
+    const getDatosOptions = () =>{
+        axios.get(APIURL+'/catalogos/encuestas/preguntas/tipos',config).then((resp)=>{
+            console.log(resp.data);
+            setAllTiposPreguntas(resp.data)
+        }).catch((resp)=>{
+            if (resp.response.status === 401) {
+                logout()
+            }
+        })
+
+        axios.get(APIURL+'/catalogos/encuestas/'+ID+'/parametros',config).then((resp)=>{
+            console.log(resp.data);
+            setAllParametros(resp.data)
+        }).catch((resp)=>{
+            console.log(resp);
+            if (resp.response.status === 401) {
+                logout()
+            }
+        })
+    }
+
     useEffect(()=>{
          validateFields()
         /*getListaClientes() */
     }, [formData])
+
+    useEffect(()=>{
+        getDatosOptions()
+    },[])
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -77,13 +130,15 @@ function ModalNuevaPregunta({ show, handleClose }) {
                     <select id="tipo-pregunta" className="form-select form-control-sm" onChange={(e)=> formInputChange(e)}
                     aria-label="Default select example" name="id_catalogo_encuestas_preguntas_tipo">
                         <option>Tipo Pregunta</option>
+                        { renderOpcionesTipoPregunta() }
                     </select>
                 </div>
                 <div className="mb-2">
                     <label htmlFor="parametro-clasificacion" className="form-label">Parametro Clasificacion:</label>
                     <select id="parametro-clasificacion" className="form-select form-control-sm" onChange={(e)=> formInputChange(e)}
                     aria-label="Default select example" name="id_catalogo_encuestas_preguntas_parametro_clasificacion">
-                        <option>Tipo Pregunta</option>
+                        <option>Parametro</option>
+                        { renderOpcionesParametros() }
                     </select>
                 </div>  
                 <div className="mb-2">
@@ -100,9 +155,9 @@ function ModalNuevaPregunta({ show, handleClose }) {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
-                    Close
+                    Cerrar
                 </Button>
-                <Button variant="primary" disabled={formValid}>
+                <Button variant="primary" onClick={ postDataNuevaPregunta } disabled={formValid}>
                     Crear
                 </Button>
             </Modal.Footer>

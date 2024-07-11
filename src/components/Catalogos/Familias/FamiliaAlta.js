@@ -18,7 +18,7 @@ function FamiliaAlta() {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const [showAlert, setShowAlert] = useState(true);
+    const [showAlert, setShowAlert] = useState(false);
     const [ tieneAlumnos, setTieneAlumnos ] = useState(false)
     const [ nuevoID, setNuevoID ] = useState(null)
 

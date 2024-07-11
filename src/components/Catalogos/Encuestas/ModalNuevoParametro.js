@@ -14,6 +14,7 @@ function ModalNuevoParametro({ show, handleClose }) {
     }
     const { logout } = useContext(AuthContext);
     const [ allTipoClientes, setAllTipoClientes ] = useState([])
+
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
         id_catalogo_encuesta:0,
@@ -32,16 +33,22 @@ function ModalNuevoParametro({ show, handleClose }) {
     }
 
     const validateFields = ()=>{
+        console.log(formData);
         var messageError = []
         if (formData.nombre === '') {
             messageError.push('Campo Nombre es OBLIGATORIO')
         }
-        if (formData.nombre.length <= 3 || formData.nombre === '') {
+        if (formData.nombre.length < 3 || formData.nombre === '') {
             messageError.push('Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres')
         }
-        if (formData.puntos_maximo > -1) {
+        if (parseInt(formData.puntos_maximo,10) < 0) {
             messageError.push('Campo Puntos Maximo debe ser igual o mayor a 0')
         }
+
+        if (isNaN(formData.puntos_maximo)) {
+            messageError.push('Campo Puntos Maximo debe ser un valor numerico')
+        }
+        console.log(messageError);
         if (messageError.length === 0) {
             setFormValid(false)
         } else {
@@ -50,7 +57,10 @@ function ModalNuevoParametro({ show, handleClose }) {
     }
 
     const postDataNuevoParametro = () =>{
-        axios.post(APIURL+'/catalogos/encuestas/parametros',formData,config).then((resp)=>{
+        var data = formData;
+        data.id_catalogo_encuesta = ID
+
+        axios.post(APIURL+'/catalogos/encuestas/parametros',data,config).then((resp)=>{
             console.log(resp);
             handleClose()
         }).catch((resp)=>{
@@ -69,7 +79,7 @@ function ModalNuevoParametro({ show, handleClose }) {
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Nueva Encuesta</Modal.Title>
+                <Modal.Title>Nuevo Parametro</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="mb-2">
