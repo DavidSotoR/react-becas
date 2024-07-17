@@ -104,6 +104,7 @@ export default function Layout() {
                                 <MenuItem component={<Link to={PathConstants.PERFILES} />}> PERFILES</MenuItem>
                                 <MenuItem component={<Link to={PathConstants.FAMILIAS} />}> FAMILIAS</MenuItem>
                                 <MenuItem component={<Link to={PathConstants.CLIENTES} />}> CLIENTES</MenuItem>
+                                <MenuItem component={<Link to={PathConstants.COLEGIOSCOMUNES} />}> COLEGIOS COMUNES</MenuItem>
                             </SubMenu>
                             </>
                           }
