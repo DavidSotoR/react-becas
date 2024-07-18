@@ -3,6 +3,7 @@ import PathConstants from "../../../routes/pathsConstants";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
+import ModalNuevoColegioComun from "./ModalNuevoColegioComun";
 
 function CatalogoFamilias() {
     const { logout } = useContext(AuthContext);
@@ -54,11 +55,10 @@ function CatalogoFamilias() {
                     <ul>
                         {renderListaHermanos(familia.lista)}
                     </ul>
+                    <button className="btn btn-link btn-sm fw-bold" onClick={handleShow}>Añadir</button>
                 </td>
                 <td>
                     <div className="d-flex">
-                        <Link className="btn btn-primary btn-sm" to={`/familias/${familia.id}`}>Editar</Link>
-                        {/* <button className="btn btn-primary btn-sm mx-1">Editar</button> */}
                         <button className="btn btn-danger btn-sm mx-1">Borrar</button>
                     </div>
                 </td>
@@ -112,7 +112,7 @@ function CatalogoFamilias() {
                     </div>
                 </div>
             </div>
-            modal nueva familia
+            <ModalNuevoColegioComun show={show} handleClose={handleClose}></ModalNuevoColegioComun>
        </div> 
     )
 }
