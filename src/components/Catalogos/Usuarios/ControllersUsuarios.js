@@ -20,6 +20,8 @@ function ControllerUsuarios() {
     
         return password;
     }
+
+    return { GenerarPassword }
     
 }
 

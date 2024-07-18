@@ -1,13 +1,17 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import ControllerUsuarios from "./ControllersUsuarios";
+import { OverlayTrigger, Popover } from "react-bootstrap";
 
 function UsuarioCrear({ onCreate, clearForm, clear }) {
     const APIURL = process.env.REACT_APP_API_URL
+    const { GenerarPassword } = ControllerUsuarios();
     const { logout } = useContext(AuthContext);
     const [ btnEnable, setBtnEnable ] = useState(true)
     const [listaPerfiles, setListaPerfiles] = useState([])
     const [ allClientes, setAllClientes ] = useState([])
+    const [ showPassword, setShowPassword ] = useState(false)
     const [ dataPostUsuario, setDataPostUsuario ] = useState({
         name:"",
         email:"",
@@ -15,6 +19,21 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
         password_confirmation:"",
         id_perfil: "0"
     })
+
+    const popoverContraseña = (
+        <Popover id="popover-basic">
+          <Popover.Body>
+            { showPassword ? ('Ocultar Contraseña') : ('Mostrar Contraseña') }
+          </Popover.Body>
+        </Popover>
+      );
+    const popoverGenerarContraseña = (
+    <Popover id="popover-basic">
+        <Popover.Body>
+        Generar Contraseña
+        </Popover.Body>
+    </Popover>
+    );
 
     const config = {
         headers: {
@@ -120,6 +139,23 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
         ))]
     }
 
+    const asignarContraseñaAutomatico = () =>{
+        var newPass = GenerarPassword()
+        var data = dataPostUsuario
+        data.password = newPass
+        data.password_confirmation = newPass
+
+        setDataPostUsuario(data)
+        onCreate(dataPostUsuario)
+        validateField('password',newPass)
+        validateField('password_confirmation',newPass)
+        console.log(dataPostUsuario);
+    }
+
+    const changeShowPassword = () => {
+        setShowPassword(!showPassword)
+    }
+
     useEffect(()=>{
         console.log('este es el dato de clear: '+ clearForm);
         if (clearForm) {
@@ -180,20 +216,44 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
                 {errors.email && <div className="text-danger fw-medium">{errors.email}</div>}
             </div>
             <div className="mb-3">
-                    <label htmlFor="inputPassword" className="form-label">Password</label>
-                    <input type="password" id="inputPassword" className="form-control" 
-                    aria-describedby="passwordHelpBlock" name="password" value={dataPostUsuario.password}
-                    onChange={handleInputChange}/>
+                    <div className="row d-flex justify-content-start align-items-center m-0">
+                        <div className="col m-0 ps-0">
+                            <label htmlFor="inputPassword" className="form-label">Password</label>
+                            <input type={ showPassword ? ('text') : ('password') } id="inputPassword" className="form-control" 
+                            aria-describedby="passwordHelpBlock" name="password" value={dataPostUsuario.password}
+                            onChange={handleInputChange}/>
+                        </div>
+                        <div className="col-1 m-0 ps-0 mt-4 pt-1">
+                            <OverlayTrigger trigger={'hover'} overlay={popoverGenerarContraseña}>
+                                <button className="btn btn-primary btn-sm btn-icon-fix btn-icon-style" onClick={ asignarContraseñaAutomatico }>
+                                    <ion-icon name="reload-outline"></ion-icon>
+                                </button>
+                            </OverlayTrigger>
+                            
+                        </div>
+                    </div>
                     {errors.password && <div className="text-danger fw-medium">{errors.password}</div>}
             </div>
             <div className="mb-3">
-                <label htmlFor="inputPasswordConfirmar" className="form-label">Confirmar Password</label>
-                <input type="password" id="inputPasswordConfirmar" name="password_confirmation"
-                        className="form-control" 
-                        aria-describedby="passwordHelpBlock"
-                        value={dataPostUsuario.password_confirmation}
-                        onChange={handleInputChange}/>
-                        {errors.password_confirmation && <div className="text-danger fw-medium">{errors.password_confirmation}</div>}
+                <div className="row d-flex justify-content-start align-items-center m-0">
+                    <div className="col m-0 ps-0">
+                        <label htmlFor="inputPasswordConfirmar" className="form-label">Confirmar Password</label>
+                        <input type={ showPassword ? ('text') : ('password') } id="inputPasswordConfirmar" name="password_confirmation"
+                            className="form-control" 
+                            aria-describedby="passwordHelpBlock"
+                            value={dataPostUsuario.password_confirmation}
+                            onChange={handleInputChange}/>
+                            
+                    </div>
+                    <div className="col-1 m-0 ps-0 mt-4 pt-1">
+                    <OverlayTrigger trigger={'hover'} overlay={popoverContraseña}>
+                        <button className="btn btn-primary btn-sm btn-icon-fix btn-icon-style" onClick={ changeShowPassword }>
+                            { !showPassword ? (<ion-icon name="eye-off-outline"></ion-icon>) : (<ion-icon name="eye-outline"></ion-icon>)}
+                        </button>
+                    </OverlayTrigger>
+                    </div>
+                </div>
+                {errors.password_confirmation && <div className="text-danger fw-medium">{errors.password_confirmation}</div>}
             </div>
             <div className="mb-3">
                 <label htmlFor="inputPerfil" className="form-label">Perfil</label>

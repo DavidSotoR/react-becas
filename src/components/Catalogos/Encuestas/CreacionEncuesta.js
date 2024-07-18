@@ -35,6 +35,7 @@ function CreacionEncuesta() {
 
     const getListaPreguntasEncuensta = () => {
         axios.get(APIURL+'/catalogos/encuestas/'+ID+'/preguntas',config).then((resp)=>{
+            console.log(resp.data);
             setAllPreguntas(resp.data)
         }).catch((error)=>{
             console.log(error.response);
@@ -48,10 +49,10 @@ function CreacionEncuesta() {
                     <p style={{ fontWeight: "bold" }}>{preguntas.id}</p>
                 </td>
                 <td>
-                    <p style={{ fontWeight: "bold" }}>{preguntas.id_catalogo_encuestas_preguntas_tipo}</p>
+                    <p style={{ fontWeight: "bold" }}>{preguntas.tipo_preguntas.nombre}</p>
                 </td>
                 <td>
-                    <p style={{ fontWeight: "bold" }}>{preguntas.id_catalogo_encuestas_preguntas_parametro_clasificacion}</p>
+                    <p style={{ fontWeight: "bold" }}>{preguntas.parametro_de_clasificacion.nombre}</p>
                 </td>
                 <td>
                     <p style={{ fontWeight: "bold" }}>{preguntas.pregunta}</p>
@@ -87,6 +88,9 @@ function CreacionEncuesta() {
                 </div>
             </div>
             <hr></hr>
+            <div>
+                <h6>Catalogo Preguntas</h6>
+            </div>
             <div className="row">
                 <div className="col">
                 <div className="table-wrapper">
