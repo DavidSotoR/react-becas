@@ -3,7 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 
-function ModalNuevaFamilia({ showNuevoHemano, handleNuevoHemanoClose }) {
+import Select from "react-select"
+import makeAnimated from 'react-select/animated';
+
+function ModalEnlazarColegioComun({ showNuevoHemano, handleNuevoHemanoClose }) {
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -19,6 +22,15 @@ function ModalNuevaFamilia({ showNuevoHemano, handleNuevoHemanoClose }) {
         situacion_beca: '',
     })
 
+    const [ optionsEnlazar, setOptionsEnlazar ] = useState([])
+
+    const animatedComponents = makeAnimated;
+    const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' }
+      ]
+
     const formInputChange =(e) => {
         var name = e.target.name
         var value = e.target.value
@@ -31,17 +43,9 @@ function ModalNuevaFamilia({ showNuevoHemano, handleNuevoHemanoClose }) {
 
     const validateFields = ()=>{
         var messageError = ''
-        if (formData.id_ciclo_escolar === '') {
-            messageError = 'Campo Ciclo Escolar es OBLIGATORIO\n'
-        }
-        if (formData.nombre.length <= 3 || formData.nombre === '') {
-            messageError += 'Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres\n'
-        }
-        if (formData.situacion_beca === '') {
-            messageError += 'Campo Situacion Beca es OBLIGATORIO\n'
-        }
+        
         if (messageError.length === 0) {
-            setFormValid(false)
+            setFormValid(true)
         } else {
             setFormValid(true)
         }
@@ -60,11 +64,24 @@ function ModalNuevaFamilia({ showNuevoHemano, handleNuevoHemanoClose }) {
     const getClientesNoHermanosList = async () => {
         try {
             const resp = await axios.get(APIURL+'/clientes?id_tipo_cliente=1&id_clientes_hermanos=0', config);
+            console.log(resp.data);
             setallClientesNoHermanos(resp.data);
-
+            formatOptionsEnlazar(resp.data)
         } catch (error) {
             console.error("Error fetching Ciclos Escolares:", error);
         }
+    }
+
+    const formatOptionsEnlazar = (opciones) =>{
+        var arrNew = []
+        
+        opciones.forEach((h)=>{
+            var option = { value: '', label:'' }
+            option.label = h.nombre
+            option.value = h.id
+            arrNew.push(option)
+        })
+        setOptionsEnlazar(arrNew)
     }
 
     const renderOptionsCiclos = () =>{
@@ -75,10 +92,18 @@ function ModalNuevaFamilia({ showNuevoHemano, handleNuevoHemanoClose }) {
         ))]
     }
 
+    const handlerChangeSelect = (e) =>{
+        console.log(e);
+    }
+
     useEffect(()=>{
         validateFields()
         getClientesNoHermanosList()
     }, [formData])
+
+    useEffect(()=>{
+        console.log('se inicio modal enlace');
+    },[allClientesNoHermanos])
 
     return (
         <Modal show={showNuevoHemano} onHide={handleNuevoHemanoClose}>
@@ -86,21 +111,13 @@ function ModalNuevaFamilia({ showNuevoHemano, handleNuevoHemanoClose }) {
                 <Modal.Title>Nueva Familia</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                    <div className="mb-3">
-                        <label>Ciclo Escolar</label>
-                        <Form.Select aria-label="Default select example" name="id_ciclo_escolar" onChange={(e)=> formInputChange(e)}>
-                            <option>Seleccione una Opción</option>
-                            { renderOptionsCiclos() }
-                        </Form.Select>
-                    </div>
-                    <div className="mb-3">
-                        <label>Nombre</label>
-                        <input type="text" className="form-control" name="nombre" onChange={(e)=> formInputChange(e)}/>
-                    </div>
-                    <div className="mb-3">
-                        <label>Situacion Beca</label>
-                        <input type="text" className="form-control" name="situacion_beca" onChange={(e)=> formInputChange(e)}/>
-                    </div>              
+                <div className="mb-3">
+                        <Select options={ optionsEnlazar } onChange={(e)=>handlerChangeSelect(e)}
+                        closeMenuOnSelect={false}
+                        components={animatedComponents}
+                        isMulti
+                        ></Select>
+                    </div>         
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleNuevoHemanoClose}>
@@ -114,4 +131,4 @@ function ModalNuevaFamilia({ showNuevoHemano, handleNuevoHemanoClose }) {
     )
 }
 
-export default ModalNuevaFamilia;
+export default ModalEnlazarColegioComun;

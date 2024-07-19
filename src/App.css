@@ -130,3 +130,8 @@ body {
   padding-top: 8px;
   padding-bottom: 8px;
 }
+
+.icon-sidebar{
+  font-weight: bold !important;
+  font-size: 1.1rem !important;
+}

@@ -4,6 +4,7 @@ import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
 import ModalNuevoColegioComun from "./ModalNuevoColegioComun";
+import ModalEnlazarColegioComun from "./ModalEnlazarColegioComun";
 
 function CatalogoFamilias() {
     const { logout } = useContext(AuthContext);
@@ -12,6 +13,11 @@ function CatalogoFamilias() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [showEnlazar, setShowEnlazar] = useState(false);
+    const handleCloseEnlazar = () => setShowEnlazar(false);
+    const handleShowEnlazar = () => setShowEnlazar(true);
+
     const APIURL = process.env.REACT_APP_API_URL
 
     const config = {
@@ -52,10 +58,13 @@ function CatalogoFamilias() {
                     <p style={{ fontWeight: "bold" }}>{familia.nombre}</p>
                 </td>
                 <td>
-                    <ul>
-                        {renderListaHermanos(familia.lista)}
-                    </ul>
-                    <button className="btn btn-link btn-sm fw-bold" onClick={handleShow}>Añadir</button>
+                    { familia?.lista.length > 0 && 
+                        <ul>
+                            {renderListaHermanos(familia.lista)}
+                        </ul>
+                    }
+                    
+                    <button className="btn btn-link btn-sm fw-bold" onClick={handleShowEnlazar}>Añadir</button>
                 </td>
                 <td>
                     <div className="d-flex">
@@ -113,6 +122,7 @@ function CatalogoFamilias() {
                 </div>
             </div>
             <ModalNuevoColegioComun show={show} handleClose={handleClose}></ModalNuevoColegioComun>
+            <ModalEnlazarColegioComun showNuevoHemano={ showEnlazar } handleNuevoHemanoClose={handleCloseEnlazar}></ModalEnlazarColegioComun>
        </div> 
     )
 }
