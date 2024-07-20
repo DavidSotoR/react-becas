@@ -2,8 +2,6 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
-import Select from "react-select"
-import makeAnimated from 'react-select/animated';
 
 
 function ModalNuevoColegioComun({ show, handleClose }) {
@@ -19,12 +17,6 @@ function ModalNuevoColegioComun({ show, handleClose }) {
         nombre:'',
     })
 
-    const animatedComponents = makeAnimated;
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-      ]
 
     const formInputChange =(e) => {
         var name = e.target.name
@@ -72,14 +64,6 @@ function ModalNuevoColegioComun({ show, handleClose }) {
                     <div className="mb-3">
                         <label>Nombre</label>
                         <input type="text" className="form-control" name="nombre" onChange={(e)=> formInputChange(e)}/>
-                    </div>
-                    <div className="mb-3">
-                        <Select options={ options }
-                        closeMenuOnSelect={false}
-                        components={animatedComponents}
-                        defaultValue={[options[0], options[1]]}
-                        isMulti
-                        ></Select>
                     </div>
             </Modal.Body>
             <Modal.Footer>
