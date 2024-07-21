@@ -5,9 +5,17 @@ import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
 import ModalNuevoColegioComun from "./ModalNuevoColegioComun";
 import ModalEnlazarColegioComun from "./ModalEnlazarColegioComun";
+import ModalEliminarColegioComun from "./ModalEliminarColegioComun";
 
 function CatalogoFamilias() {
     const { logout } = useContext(AuthContext);
+    const APIURL = process.env.REACT_APP_API_URL;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    }
+
     const [ allClientes, setAllClientes ] = useState([])
     const [ allClientesHermanos, setAllClientesHermanos ] = useState([])
     const [show, setShow] = useState(false);
@@ -15,17 +23,36 @@ function CatalogoFamilias() {
     const handleShow = () => setShow(true);
 
     const [showEnlazar, setShowEnlazar] = useState(false);
-    const handleCloseEnlazar = () => setShowEnlazar(false);
-    const handleShowEnlazar = () => setShowEnlazar(true);
+    const [idColegioComun, setIdColegioComun] = useState(0);
+    const [tituloColegioComun, setTituloColegioComun] = useState('');
 
-    const APIURL = process.env.REACT_APP_API_URL
-
-    const config = {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+    const handleCloseEnlazar = () => {
+        setShowEnlazar(false);
+        setIdColegioComun(0);
+        setTituloColegioComun('');
+    }
+    const handleShowEnlazar = (id,nombre) => {
+        setShowEnlazar(true);
+        setIdColegioComun(id);
+        setTituloColegioComun(nombre);
+    }
+    //
+    const [showEliminar, setShowEliminar] = useState(false);
+    const [idColegioComunEliminar, setIdColegioComunEliminar] = useState(0);
+    const [nombreColegioComunEliminar, setNombreColegioComunEliminar] = useState('');
+    
+    const handleCloseEliminar = () => {
+        setShowEliminar(false);
+        setIdColegioComunEliminar(0);
+        setNombreColegioComunEliminar('');
+    }
+    const handleShowEliminar = (id,nombre) => {
+        setShowEliminar(true);
+        setIdColegioComunEliminar(id);
+        setNombreColegioComunEliminar(nombre);
     }
 
+    
     const getDatosClientesHermanos = () =>{
         axios.get(APIURL+'/clientes/hermanos',config).then((resp)=>{
             console.log(resp);
@@ -48,10 +75,17 @@ function CatalogoFamilias() {
     }
 
     const renderListaHermanos = (lista) => {
-        return [...lista.map((colegio) =>  (<li>{colegio.nombre}</li>) )]
+        return [...lista.map((colegio,index) =>  (
+        <li key={'li-'+index}> 
+            <a onClick={() => handleShowEliminar(colegio.id,colegio.nombre)}>{colegio.nombre}</a>
+        </li>
+    ) )]
     };
 
     const renderFilasColegiosHermanos = () => {
+        if(!allClientesHermanos){
+            return "";
+        }
         return allClientesHermanos.map((familia, index) => (
             <tr key={'tr-'+index}>
                 <td>
@@ -59,12 +93,12 @@ function CatalogoFamilias() {
                 </td>
                 <td>
                     { familia?.lista.length > 0 && 
-                        <ul>
+                        <ul> 
                             {renderListaHermanos(familia.lista)}
                         </ul>
                     }
                     
-                    <button className="btn btn-link btn-sm fw-bold" onClick={handleShowEnlazar}>Añadir</button>
+                    <button className="btn btn-link btn-sm fw-bold" onClick={() =>handleShowEnlazar(familia.id,familia.nombre)}>Añadir</button>
                 </td>
                 <td>
                     <div className="d-flex">
@@ -81,8 +115,16 @@ function CatalogoFamilias() {
             console.log('Se cerro, renderiza');
             getDatosClientesHermanos()
         }
+        if(!showEnlazar){
+            console.log('Se cerro, renderiza');
+            getDatosClientesHermanos()
+        }
+        if(!showEliminar){
+            console.log('Se cerro, renderiza');
+            getDatosClientesHermanos()
+        }
         getClientesList()
-    },[show])
+    },[show,showEnlazar,showEliminar])
 
     return (
        <div className="container mt-3">
@@ -109,8 +151,8 @@ function CatalogoFamilias() {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Nombre Familia</th>
-                                    <th scope="col">Colegios comunes</th>
+                                    <th scope="col">Nombre colegios comunes</th>
+                                    <th scope="col">Colegios</th>
                                     <th scope="col">Opciones</th>
                                 </tr>
                             </thead>
@@ -122,7 +164,8 @@ function CatalogoFamilias() {
                 </div>
             </div>
             <ModalNuevoColegioComun show={show} handleClose={handleClose}></ModalNuevoColegioComun>
-            <ModalEnlazarColegioComun showNuevoHemano={ showEnlazar } handleNuevoHemanoClose={handleCloseEnlazar}></ModalEnlazarColegioComun>
+            <ModalEnlazarColegioComun showNuevoHemano={ showEnlazar } handleNuevoHemanoClose={handleCloseEnlazar} idColegioComun={ idColegioComun } tituloColegioComun={ tituloColegioComun }></ModalEnlazarColegioComun>
+            <ModalEliminarColegioComun show={ showEliminar } handleClose={handleCloseEliminar} idColegio={ idColegioComunEliminar } nombreCoegio={ nombreColegioComunEliminar }></ModalEliminarColegioComun>
        </div> 
     )
 }

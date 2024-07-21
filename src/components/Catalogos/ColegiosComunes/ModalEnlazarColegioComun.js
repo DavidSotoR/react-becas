@@ -6,7 +6,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import Select from "react-select"
 import makeAnimated from 'react-select/animated';
 
-function ModalEnlazarColegioComun({ showNuevoHemano, handleNuevoHemanoClose }) {
+function ModalEnlazarColegioComun({ showNuevoHemano, handleNuevoHemanoClose , idColegioComun, tituloColegioComun }) {
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -17,44 +17,30 @@ function ModalEnlazarColegioComun({ showNuevoHemano, handleNuevoHemanoClose }) {
     const [ allClientesNoHermanos, setallClientesNoHermanos ] = useState([])
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
-        id_ciclo_escolar: '',
-        nombre:'',
-        situacion_beca: '',
+        lista_clientes: [],
     })
 
     const [ optionsEnlazar, setOptionsEnlazar ] = useState([])
 
     const animatedComponents = makeAnimated;
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-      ]
-
-    const formInputChange =(e) => {
-        var name = e.target.name
-        var value = e.target.value
-        setFormData(prevState => ({  
-            ...prevState,
-            [name]: value
-        }));
-
-    }
 
     const validateFields = ()=>{
         var messageError = ''
-        
-        if (messageError.length === 0) {
-            setFormValid(true)
+        //formData
+        const lista_clientes = formData.lista_clientes ? formData.lista_clientes : [] ;
+        messageError = (lista_clientes.length > 0) ? '' : 'Seleccione un colegio';
+        console.log(lista_clientes.length+' '+messageError.length);
+        if (!messageError.length) {
+            setFormValid(false)
         } else {
             setFormValid(true)
         }
     }
 
     const sendDataFamiliaNuevo = () =>{
-        axios.post(APIURL+'/familias',formData,config).then((resp)=>{
+        axios.post(APIURL+'/clientes/hermanos/'+idColegioComun,formData,config).then((resp)=>{
             console.log(resp);
-            handleNuevoHemanoClose()
+            handleNuevoHemanoClose();
         }).catch((resp)=>{
             console.log(resp);
         })
@@ -63,6 +49,7 @@ function ModalEnlazarColegioComun({ showNuevoHemano, handleNuevoHemanoClose }) {
 
     const getClientesNoHermanosList = async () => {
         try {
+            setallClientesNoHermanos([]);
             const resp = await axios.get(APIURL+'/clientes?id_tipo_cliente=1&id_clientes_hermanos=0', config);
             console.log(resp.data);
             setallClientesNoHermanos(resp.data);
@@ -93,13 +80,28 @@ function ModalEnlazarColegioComun({ showNuevoHemano, handleNuevoHemanoClose }) {
     }
 
     const handlerChangeSelect = (e) =>{
-        console.log(e);
+        if(e.length){
+            const allValues = e.map(e => e.value);
+            setFormData({ 
+                lista_clientes: allValues
+            });
+            console.log(allValues);
+        }else{
+            setFormData({ 
+                lista_clientes: []
+            });
+        }
+
     }
 
     useEffect(()=>{
         validateFields()
-        getClientesNoHermanosList()
-    }, [formData])
+        if(showNuevoHemano){
+            getClientesNoHermanosList()
+        }
+    }, [formData,showNuevoHemano])
+
+    
 
     useEffect(()=>{
         console.log('se inicio modal enlace');
@@ -108,7 +110,7 @@ function ModalEnlazarColegioComun({ showNuevoHemano, handleNuevoHemanoClose }) {
     return (
         <Modal show={showNuevoHemano} onHide={handleNuevoHemanoClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Nueva Familia</Modal.Title>
+                <Modal.Title><div class="h5"><b>Añadir Colegio a:</b> {tituloColegioComun}</div> </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="mb-3">
