@@ -54,7 +54,7 @@ function CatalogoFamilias() {
 
     
     const getDatosClientesHermanos = () =>{
-        axios.get(APIURL+'/clientes/hermanos',config).then((resp)=>{
+        axios.get(APIURL+'/clientes/hermanos?lista=1',config).then((resp)=>{
             console.log(resp);
             setAllClientesHermanos(resp.data)
         }).catch((resp)=>{
