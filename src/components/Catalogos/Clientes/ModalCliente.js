@@ -23,7 +23,7 @@ function ModalCliente({ show, handleClose }) {
 
     const formInputChange =(e) => {
         var name = e.target.name
-        var value = e.target.value
+        var value = (e.target.value === "null") ? null : e.target.value;
         setFormData(prevState => ({
             ...prevState,
             [name]: value
@@ -94,10 +94,13 @@ function ModalCliente({ show, handleClose }) {
 
     const sendDataClienteNuevo = () =>{
         console.log(formData);
-        axios.post('http://localhost:8000/api/auth/clientes',formData,config).then((resp)=>{
+        axios.post(APIURL+'/clientes',formData,config).then((resp)=>{
             console.log(resp);
             handleClose()
         }).catch((resp)=>{
+            if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
+                console.log(resp.response.data);
+            }
             console.log(resp);
         })
         
@@ -113,7 +116,6 @@ function ModalCliente({ show, handleClose }) {
                 <Modal.Title>Crear Clientes</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            {JSON.stringify(formData)}
                     <div className="mb-3">
                         <label>Tipo Cliente</label>
                         <Form.Select aria-label="Default select example" name="id_tipo_cliente" onChange={(e)=> {formInputChange(e); changeTipoCliente(e);}}>
