@@ -16,14 +16,21 @@ function ModalCiclosEscolares({ show, handleClose }) {
         inicio: '',
         fin:'',
     })
+    const [ cicloActivo, setCicloActivo ] = useState(true)
 
     const formInputChange =(e) => {
         var name = e.target.name
         var value = e.target.value
-        setFormData(prevState => ({  
-            ...prevState,
-            [name]: value
-        }));
+        if (name === 'ciclo_activo') {
+            setCicloActivo(!cicloActivo)
+            console.log('ciclo esta activo:'+cicloActivo);
+        } else {
+            setFormData(prevState => ({  
+                ...prevState,
+                [name]: value
+            }));
+        }
+        
 
     }
 
@@ -62,14 +69,21 @@ function ModalCiclosEscolares({ show, handleClose }) {
         return newDate
     }
 
+    const success = (poss)=>{
+        console.log(poss);
+    }
+
     const sendDataCicloEscolar = () =>{
         var fechaIni = changeFormatoFecha(formData.inicio)
         var fechaFin = changeFormatoFecha(formData.fin)
         var newData = {
             inicio: fechaIni,
-            fin: fechaFin
+            fin: fechaFin,
+            //ciclo_activo: cicloActivo
         }
-
+        /* var geo = navigator.geolocation.getCurrentPosition(success)
+        console.log(geo);
+        console.log(newData); */
         axios.post('http://localhost:8000/api/auth/ciclos',newData,config).then((resp)=>{
             console.log(resp);
             handleClose()
@@ -98,6 +112,11 @@ function ModalCiclosEscolares({ show, handleClose }) {
                 <div className="mb-3">
                     <label> Fecha Fin: </label>
                     <input className="form-control" name="fin" type="date" onChange={(e) => {formInputChange(e)}}/>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" name="ciclo_activo" type="checkbox" checked={cicloActivo}
+                    role="switch" value={'on'} id="flexSwitchCheckChecked" onChange={(e) => {formInputChange(e)}}/>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Ciclo Escolar Activo</label>
                 </div>
                 <div className="mb-3">
                     <p style={{ color:"red" }}> { msgError } </p>
