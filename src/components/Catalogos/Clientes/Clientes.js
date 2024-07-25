@@ -17,7 +17,7 @@ function Clientes() {
 
     const getDataClientes = () =>{
         axios.get('http://localhost:8000/api/auth/clientes',config).then((resp)=>{
-            console.log(resp);
+            //console.log(resp);
             setAllClientes(resp.data)
         }).catch((resp)=>{
             console.log(resp);
@@ -72,7 +72,7 @@ function Clientes() {
 
     useEffect(()=>{
         if (!show) {
-            console.log('Se cerro, renderiza');
+            //console.log('Se cerro, renderiza');
             getDataClientes()
         }
     },[show])
@@ -94,7 +94,7 @@ function Clientes() {
                         <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
                     </div>
                     <div className="col-3">
-                    <select class="form-select form-select-sm" aria-label="Default select example">
+                    <select className="form-select form-select-sm" aria-label="Default select example">
                         <option >Tipo Cliente</option>
                     </select>
                     </div>
