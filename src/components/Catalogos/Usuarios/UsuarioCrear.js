@@ -74,6 +74,7 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
             case "email":
                 if (!value) errorMsg = "El email es requerido";
                 else if (!/\S+@\S+\.\S+/.test(value)) errorMsg = "El email no es válido";
+                else if (value.includes(" ")) errorMsg = "El campo email no debe contener espacios vacios."
                 break;
             case "password":
                 if (!value) errorMsg = "La contraseña es requerida";
@@ -107,10 +108,18 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         console.log(name, value);
-        setDataPostUsuario(prevState => ({  
-            ...prevState,
-            [name]: value
-        }));
+        if (name === 'name' || name === 'email' || name === 'password' || name === 'password_confirmation'){
+            setDataPostUsuario(prevState => ({  
+                ...prevState,
+                [name]: value.trim()
+            }));
+        } else {
+            setDataPostUsuario(prevState => ({  
+                ...prevState,
+                [name]: value
+            }));
+        }
+        
 
         validateField(name,value)
         onCreate({ ...dataPostUsuario, [name]: value }, btnEnable)
