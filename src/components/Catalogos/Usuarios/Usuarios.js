@@ -16,7 +16,10 @@ function Usuarios() {
     const [ dataPostUsuario, setDataPostUsuario ] = useState({})
     const [show, setShow] = useState(false); 
     const handleClose = () => setShow(false); 
-    const handleShow = () => setShow(true); 
+    const handleShow = () => setShow(true);
+
+    const [search,setSearch] = useState("");
+    const [searchPorPerfil,setSearchPorPerfil] = useState(null);
 
     const [ userSelected, setUserSelected ] = useState(null)
 
@@ -55,7 +58,37 @@ function Usuarios() {
         try {
             const resp = await axios.get(APIURL+'/usuarios', config);
             console.log(resp);
-            setAllUsuarios(resp.data);
+            var listaUsuarios = resp.data
+            var listafiltrada = []
+            switch (searchPorPerfil) {
+                case '0':
+                case undefined:
+                case null:
+                    listafiltrada = listaUsuarios;
+                    break;
+                case '1':
+                    listafiltrada = listaUsuarios.filter(item => item.id_perfil === 1);
+                    break;
+                case '2':
+                    listafiltrada = listaUsuarios.filter(item => item.id_perfil === 2);
+                    break;
+                case '3':
+                    listafiltrada = listaUsuarios.filter(item => item.id_perfil === 3);
+                    break;
+                case '4':
+                    listafiltrada = listaUsuarios.filter(item => item.id_perfil === 4);
+                    break;
+                case '5':
+                    listafiltrada = listaUsuarios.filter(item => item.id_perfil === 5);
+                    break;
+                case '6':
+                    listafiltrada = listaUsuarios.filter(item => item.id_perfil === 6);
+                    break;
+                default:
+                    listafiltrada = []; // O maneja otros casos según sea necesario
+                    break;
+            }
+            setAllUsuarios(listafiltrada);
         } catch (error) {
             console.error("Error fetching perfiles:", error);
             if (error.response.status === 401) {
@@ -67,7 +100,6 @@ function Usuarios() {
     const getAllPerfiles = async () => {
         try {
             const resp = await axios.get(APIURL+'/perfiles', config)
-            console.log(resp.data);
             setAllPerfiles(resp.data)
         } catch (error) {
             if (error.response.status === 401) {
@@ -79,7 +111,6 @@ function Usuarios() {
     const getAllClientes = async () => {
         try {
             const resp = await axios.get(APIURL+'/clientes', config)
-            console.log(resp.data);
             setAllClientes(resp.data)
         } catch (error) {
             if (error.response.status === 401) {
@@ -133,13 +164,6 @@ function Usuarios() {
         postCrearUsuario()
     }
     
-
-    useEffect( ()=>{
-        getAllPerfiles()
-        getAllClientes()
-        getAllDataUsuarios();
-    },[APIURL])
-
     const renderFiltroPerfiles = () => {
 
         return [...allPerfiles.map((perfil) => (
@@ -164,7 +188,7 @@ function Usuarios() {
     }
 
     const renderFilasTablaUsuarios = () => {
-        return allUsuarios.map((usuario, index) => (
+        return allUsuariosFiltrados.map((usuario, index) => (
             <tr key={'tr-usuario-'+index}>
                 <td className="col-id">
                     <p>{usuario.id}</p>
@@ -190,7 +214,43 @@ function Usuarios() {
             </tr>
         ));
     };
-    
+
+    const searchUsuarioPorPerfil = (e) => {
+        var value = e.target.value
+        setSearchPorPerfil(value)
+    }
+
+    const searchText = (e) => {
+        const buscar = e.target.value;
+        console.log(buscar);
+        setSearch(buscar);
+    }
+
+    const allUsuariosFiltrados = allUsuarios.filter(item =>
+        item.name.toLowerCase().includes(search.toLowerCase()) || item.email.toLowerCase().includes(search.toLowerCase())
+    );
+
+    useEffect( ()=>{
+        if (APIURL) {
+            getAllPerfiles()
+            getAllClientes()
+            getAllDataUsuarios();
+        }
+        
+    },[APIURL])
+
+    useEffect( (e)=>{
+        //console.log(e);
+        //console.log(searchPorPerfil);
+        if (searchPorPerfil) {
+            console.log(searchPorPerfil);
+            getAllDataUsuarios()
+        }
+        //getAllDataUsuarios();
+        
+    },[searchPorPerfil])
+
+
     return (
         <div className="container mt-3">
             <div className="mb-3 d-flex justify-content-between align-items-center">
@@ -207,10 +267,10 @@ function Usuarios() {
                 </div>
                 <div className="row">
                     <div className="col-lg-3 col-md-3 col-sm-8 col-8">
-                        <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
+                        <input type="text" className="form-control form-control-sm" placeholder="Buscar:" onChange={ (e)=> { searchText(e) }}/>
                     </div>
                     <div className="col-lg-4 col-md-3 col-sm-6 col-6">
-                    <select className="form-select form-select-sm" aria-label="Default select example">
+                    <select className="form-select form-select-sm" aria-label="Default select example" onChange={(e)=>{ searchUsuarioPorPerfil(e) }}>
                         <option value="0">Seleccione un Perfil</option>
                         { renderFiltroPerfiles() }
                     </select>

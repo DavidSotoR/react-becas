@@ -3,7 +3,9 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 
 function Perfiles() {
+    const [search,setSearch] = useState("");
     const [ allPerfiles, setAllPerfiles ] = useState([])
+    const [ filtroActivo, setFiltroActivo ] = useState('1')
     const { logout } = useContext(AuthContext);
     const config = {
         headers: {
@@ -13,7 +15,20 @@ function Perfiles() {
     const getPerfilesList = async () => {
         try {
             const resp = await axios.get('http://localhost:8000/api/auth/perfiles', config);
-            setAllPerfiles(resp.data);
+            var perfiles = resp.data
+            console.log(perfiles);
+            var perfilesFiltrados = []
+            if (filtroActivo === '1') {
+                console.log(filtroActivo);
+                perfilesFiltrados = perfiles.filter(item =>
+                    item.activo === 1
+                );
+            } else {
+                perfilesFiltrados = perfiles.filter(item =>
+                    item.activo === 0
+                );
+            }
+            setAllPerfiles(perfilesFiltrados);
         } catch (error) {
             console.error("Error fetching perfiles:", error);
             if (error.response.status === 401) {
@@ -22,12 +37,31 @@ function Perfiles() {
         }
     }
 
+    const filtroActivoSearch = (e) => {
+        const activo = e.target.value;
+        console.log(activo);
+        setFiltroActivo(activo);
+    }
+
+    const searchText = (e) => {
+        const buscar = e.target.value;
+        setSearch(buscar);
+    }
+
+    const allPerfilesFiltrados = allPerfiles.filter(item =>
+        item.nombre.toLowerCase().includes(search.toLowerCase())
+    );
+
     useEffect( ()=>{
         getPerfilesList();
-    }, [])
+    }, [filtroActivo])
+
+    /* useEffect(() => {
+        getPerfilesList();
+    }, [filtroActivo]); */
 
     const renderFilasTablaPerfiles = () => {
-        return allPerfiles.map((perfil, index) => (
+        return allPerfilesFiltrados.map((perfil, index) => (
             <tr key={'tr-perfil-'+index}>
                 <td>
                     <p>{perfil.id}</p>
@@ -57,11 +91,11 @@ function Perfiles() {
                 <p className="fw-bold mb-1">Filtros:</p>
                 <div className="row">
                     <div className="col-3">
-                        <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
+                        <input type="text" className="form-control form-control-sm" placeholder="Buscar:" onChange={ searchText }/>
                     </div>
                     <div className="col-3">
-                    <select class="form-select form-select-sm" aria-label="Default select example">
-                        <option value="1">Activos</option>
+                    <select class="form-select form-select-sm" aria-label="Default select example" onChange={ (e)=> {filtroActivoSearch(e)} }>
+                        <option value="1" selected={true}>Activos</option>
                         <option value="0">Inactivos</option>
                     </select>
                     </div>
