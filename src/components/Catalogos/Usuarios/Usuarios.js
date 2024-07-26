@@ -3,6 +3,7 @@ import React,{ useContext, useEffect, useState } from "react";
 import UsuarioCrear from "./UsuarioCrear";
 import { Button, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
+import ModalUpdateUser from "./ModalUpdateUser";
 
 function Usuarios() {
     const APIURL = process.env.REACT_APP_API_URL
@@ -16,6 +17,12 @@ function Usuarios() {
     const [show, setShow] = useState(false); 
     const handleClose = () => setShow(false); 
     const handleShow = () => setShow(true); 
+
+    const [ userSelected, setUserSelected ] = useState(null)
+
+    const [ showUpdate, setShowUpdate ] = useState(false)
+    const handleCloseUpdate = () => setShowUpdate(false); 
+    const handleShowUpdate = () => setShowUpdate(true); 
 
     const config = {
         headers: {
@@ -151,6 +158,11 @@ function Usuarios() {
         ))]
     }
 
+    const selectUserToUpdate = (usuario) => {
+        setUserSelected(usuario)
+        setShowUpdate(!showUpdate)
+    }
+
     const renderFilasTablaUsuarios = () => {
         return allUsuarios.map((usuario, index) => (
             <tr key={'tr-usuario-'+index}>
@@ -171,7 +183,7 @@ function Usuarios() {
                 </td>
                 <td>
                     <div className="d-flex justify-content-start">
-                        <button className="btn btn-primary mx-1 btn-sm">Editar</button>
+                        <button className="btn btn-primary mx-1 btn-sm" onClick={ ()=>{ selectUserToUpdate(usuario) }  }>Editar</button>
                         <button className="btn btn-small btn-danger mx-1 btn-sm">X</button>
                     </div>
                 </td>
@@ -234,6 +246,11 @@ function Usuarios() {
                 
                 </div>
             </div>
+                {showUpdate && (
+                    <ModalUpdateUser show={ showUpdate } handleCloseModal={ handleCloseUpdate } dataUser={ userSelected }></ModalUpdateUser>
+                )
+            }
+            
 
             <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
