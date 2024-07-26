@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button,Form, Modal } from "react-bootstrap";
 import ModalCliente from "./ModalCliente";
 import axios from "axios";
 
 function Clientes() {
-    const [ allClientes, setAllClientes ] = useState([])
+    const APIURL = process.env.REACT_APP_API_URL;
+    const [ allClientes, setAllClientes ] = useState([]);
+    const [ allTiposClientes, setallTiposClientes ] = useState([]);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [tiposCliente,setTiposCliente] = useState("");
+    const [search,setSearch] = useState("");
     
     const config = {
         headers: {
@@ -16,40 +20,71 @@ function Clientes() {
     }
 
     const getDataClientes = () =>{
-        axios.get('http://localhost:8000/api/auth/clientes',config).then((resp)=>{
-            console.log(resp);
+        let paramsConfig = config;
+        const params = new URLSearchParams();
+        if(tiposCliente !== ""){
+            params.append("id_tipo_cliente",tiposCliente)
+            paramsConfig["params"]=params;
+        }
+
+        axios.get(APIURL+'/clientes',paramsConfig).then((resp)=>{
             setAllClientes(resp.data)
         }).catch((resp)=>{
             console.log(resp);
         })
     }
-
-    const rtnTypeCliente = (id) =>{
-        var tipo = ''
-        switch (id) {
-            case 1:
-                tipo = 'Escuela'
-                break;
-        
-            case 2:
-                tipo = 'Empresa'
-                break;
-    
-            default:
-                tipo = 'Sin identificar'
-                break;
-        }
-        return tipo
+    const getDataTiposClientes= () =>{
+        axios.get(APIURL+'/clientes/tipos',config).then((resp)=>{
+            setallTiposClientes(resp.data);
+        }).catch((resp)=>{
+            console.log(resp);
+        })
     }
 
+    const renderOptionTiposClientes = () => {
+        return [<option key={'select-tc-'+0} value="" >Todos los clientes</option>,...allTiposClientes.map((option) => (
+            <option key={'select-tc-'+option.id} value={option.id}> {option.nombre} </option>
+        ))]
+    }
+    
+
+    const filtroTipoCliente = (e) => {
+        const tipo_cliente = e.target.value;
+        console.log(e);
+        setTiposCliente(tipo_cliente);
+    }
+
+    const searchText = (e) => {
+        const buscar = e.target.value;
+        setSearch(buscar);
+    }
+
+    const allClientesFiltrados = allClientes.filter(item =>
+        item.nombre.toLowerCase().includes(search.toLowerCase())
+    );
+
+    useEffect(()=>{
+        getDataTiposClientes();
+        if (!show) {
+            //console.log('Se cerro, renderiza');
+            getDataClientes();
+        }
+
+        if(tiposCliente){
+            getDataClientes();
+        }
+
+    },[show,tiposCliente])
+
+
     const renderFilasTablaClientes = () => {
-        return allClientes.map((cliente, index) => (
+        return allClientesFiltrados.map((cliente, index) => (
             <tr key={'tr-cliente-'+index}>
                 <td>
                     <p>{cliente.id}</p>
                 </td>
                 <td>
-                    <p>{rtnTypeCliente(cliente.id_tipo_cliente)}</p>
+                    <p>{cliente.tipo_cliente.nombre}</p>
                 </td>
                 <td>
                     <p>{cliente.nombre}</p>
@@ -70,12 +105,6 @@ function Clientes() {
         ));
     };
 
-    useEffect(()=>{
-        if (!show) {
-            console.log('Se cerro, renderiza');
-            getDataClientes()
-        }
-    },[show])
 
     return (
         <div className="container">
@@ -91,12 +120,13 @@ function Clientes() {
                 <p className="fw-bold mb-1">Filtros:</p>
                 <div className="row">
                     <div className="col-3">
-                        <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
+                        <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
                     </div>
                     <div className="col-3">
-                    <select class="form-select form-select-sm" aria-label="Default select example">
-                        <option >Tipo Cliente</option>
-                    </select>
+                        
+                    <Form.Select className="form-select form-select-sm" name="id_tipo_cliente" id="id_tipo_cliente" onChange={(e)=> filtroTipoCliente(e)}>
+                        {renderOptionTiposClientes()}
+                    </Form.Select>
                     </div>
                 </div>
             </div>
