@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button,Form, Modal } from "react-bootstrap";
 import ModalCliente from "./ModalCliente";
+import ResaltarTexto from "../../ResaltarTexto/ResaltarTexto";
 import axios from "axios";
 
 function Clientes() {
@@ -87,7 +88,7 @@ function Clientes() {
                     <p>{cliente.tipo_cliente.nombre}</p>
                 </td>
                 <td>
-                    <p>{cliente.nombre}</p>
+                    <p><ResaltarTexto texto={cliente.nombre} reslatar={search}/></p>
                 </td>
                 <td>
                     <p>{ cliente.descripcion }</p>

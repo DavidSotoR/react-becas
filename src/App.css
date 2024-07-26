@@ -135,3 +135,8 @@ body {
   font-weight: bold !important;
   font-size: 1.1rem !important;
 }
+
+mark {
+  background-color: yellow;
+  color: black;
+}
