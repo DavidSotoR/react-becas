@@ -4,6 +4,8 @@ import ModalNuevoParametro from "./ModalNuevoParametro";
 import ModalNuevaPregunta from "./ModalNuevaPregunta";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 function CreacionEncuesta() {
     const { ID } = useParams();
@@ -87,32 +89,46 @@ function CreacionEncuesta() {
                     <button className="btn btn-primary" onClick={handleShowMNuevaPregunta}>Agregar Pregunta</button>
                 </div>
             </div>
-            <hr></hr>
-            <div>
-                <h6>Catalogo Preguntas</h6>
-            </div>
-            <div className="row">
-                <div className="col">
-                <div className="table-wrapper">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th scope="col" className="col-id">ID</th>
-                                <th scope="col">Tipo Pregunta</th>
-                                <th scope="col">Parametro</th>
-                                <th scope="col">Pregunta</th>
-                                <th scope="col">Puntaje maximo</th>
-                                <th scope="col">Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            { renderBodyTablaPreguntas() }
-                        </tbody>
-                    </table>
-                </div>
-                    
-                </div>
-            </div>
+            
+            <br/>
+			<Tabs>
+				<TabList>
+					<Tab>Preguntas</Tab>
+					<Tab>Parametros</Tab>
+				</TabList>
+ 
+				<TabPanel>
+                    <div className="row">
+                        <div className="col">
+                        <div className="table-wrapper">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" className="col-id">ID</th>
+                                        <th scope="col">Tipo Pregunta</th>
+                                        <th scope="col">Parametro</th>
+                                        <th scope="col">Pregunta</th>
+                                        <th scope="col">Puntaje maximo</th>
+                                        <th scope="col">Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    { renderBodyTablaPreguntas() }
+                                </tbody>
+                            </table>
+                        </div>
+                            
+                        </div>
+                    </div>
+				</TabPanel>
+				<TabPanel>
+					<div className='tab-content'>
+						<h2>Tab content 2</h2>
+						<p>Here is your tab content. You can separate this as a component.</p>
+						<p>Lorem ipsum dolor sit amet ...</p>
+					</div>
+				</TabPanel>
+			</Tabs>
             <ModalNuevoParametro show={showModalNuevoParametro} handleClose={handleCloseMNuevoParametro}></ModalNuevoParametro>
             <ModalNuevaPregunta show={showModalNuevaPregunta} handleClose={handleCloseMNuevaPregunta}></ModalNuevaPregunta>
         </div>
