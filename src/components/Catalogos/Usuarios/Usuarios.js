@@ -4,6 +4,7 @@ import UsuarioCrear from "./UsuarioCrear";
 import { Button, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 import ModalUpdateUser from "./ModalUpdateUser";
+import ModalCrearUsuario from "./ModalCrearUsuario";
 
 function Usuarios() {
     const APIURL = process.env.REACT_APP_API_URL
@@ -309,10 +310,12 @@ function Usuarios() {
                 {showUpdate && (
                     <ModalUpdateUser show={ showUpdate } handleCloseModal={ handleCloseUpdate } dataUser={ userSelected }></ModalUpdateUser>
                 )
-            }
-            
+            }            
 
-            <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+            {   show &&
+                <ModalCrearUsuario show={show} handleClose={handleClose}></ModalCrearUsuario>
+            }
+            {/* <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>Crear Nuevo Usuario</Modal.Title>
                 </Modal.Header>
@@ -323,7 +326,7 @@ function Usuarios() {
                     <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
                     <Button variant="primary" disabled={ btnEnable } onClick={sendDataPost}>Crear</Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
 
         </div>
     )
