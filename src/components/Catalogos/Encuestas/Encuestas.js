@@ -46,7 +46,6 @@ function Encuestas() {
                 <td>
                     <div className="d-flex">
                         <Link className="btn btn-primary btn-sm" to={`/encuestas/${encuesta.id}`}>Editar</Link>
-                        <button className="btn btn-danger btn-sm mx-1">Borrar</button>
                     </div>
                 </td>
             </tr>

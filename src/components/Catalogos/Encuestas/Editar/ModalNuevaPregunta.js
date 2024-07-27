@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { AuthContext } from "../../../context/AuthContext";
+import { AuthContext } from "./../../../../context/AuthContext";
 import { useParams } from "react-router-dom";
 
 function ModalNuevaPregunta({ show, handleClose }) {
