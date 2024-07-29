@@ -84,11 +84,11 @@ function ModalNuevoParametro({ show, handleClose }) {
             <Modal.Body>
                 <div className="mb-2">
                     <label htmlFor="nombre_parametro" className="form-label">Nombre Parametro:</label>
-                    <input id="nombre_parametro" type="text" class="form-control form-control-sm" placeholder="" name="nombre" onChange={(e)=> formInputChange(e)}/>
+                    <input id="nombre_parametro" type="text" className="form-control form-control-sm" placeholder="" name="nombre" onChange={(e)=> formInputChange(e)}/>
                 </div>
                 <div className="mb-2">
                     <label htmlFor="puntos_maximo" className="form-label">Puntos Maximos:</label>
-                    <input id="puntos_maximo" type="text" class="form-control form-control-sm" placeholder="0" name="puntos_maximo" onChange={(e)=> formInputChange(e)}/>
+                    <input id="puntos_maximo" type="text" className="form-control form-control-sm" placeholder="0" name="puntos_maximo" onChange={(e)=> formInputChange(e)}/>
                 </div>            
             </Modal.Body>
             <Modal.Footer>

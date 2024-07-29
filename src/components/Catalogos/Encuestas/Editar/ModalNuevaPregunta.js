@@ -37,9 +37,14 @@ function ModalNuevaPregunta({ show, handleClose }) {
     }
 
     const validateFields = ()=>{
+
         var messageError = []
-        if (formData.pregunta === '') {
-            messageError.push('Campo Nombre es OBLIGATORIO')
+        
+        if (formData.id_catalogo_encuestas_preguntas_parametro_clasificacion === 0) {
+            messageError.push('Seleccione un tipo de pregunta')
+        }
+        if (formData.id_catalogo_encuestas_preguntas_tipo === 0) {
+            messageError.push('Seleccione un tipo de pregunta')
         }
         if (formData.pregunta.length <= 3 || formData.pregunta === '') {
             messageError.push('Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres')
@@ -74,7 +79,7 @@ function ModalNuevaPregunta({ show, handleClose }) {
 
     const renderOpcionesTipoPregunta = () => {
 
-        return [...allTiposPreguntas.map((tp) => (
+        return [<option value="0">Seleccione un tipo de pregunta</option>,...allTiposPreguntas.map((tp) => (
             <option key={tp.id} value={`${tp.id}`}>
                 { tp.nombre }
             </option>
@@ -82,7 +87,7 @@ function ModalNuevaPregunta({ show, handleClose }) {
     }
 
     const renderOpcionesParametros = () => {
-        return [...allParametros.map((param) => (
+        return [<option value="0">Parametro</option>,...allParametros.map((param) => (
             <option key={param.id} value={`${param.id}`}>
                 { param.nombre }
             </option>
@@ -129,7 +134,6 @@ function ModalNuevaPregunta({ show, handleClose }) {
                     <label htmlFor="tipo-pregunta" className="form-label">Tipo Pregunta:</label>
                     <select id="tipo-pregunta" className="form-select form-control-sm" onChange={(e)=> formInputChange(e)}
                     aria-label="Default select example" name="id_catalogo_encuestas_preguntas_tipo">
-                        <option>Tipo Pregunta</option>
                         { renderOpcionesTipoPregunta() }
                     </select>
                 </div>
@@ -137,7 +141,6 @@ function ModalNuevaPregunta({ show, handleClose }) {
                     <label htmlFor="parametro-clasificacion" className="form-label">Parametro Clasificacion:</label>
                     <select id="parametro-clasificacion" className="form-select form-control-sm" onChange={(e)=> formInputChange(e)}
                     aria-label="Default select example" name="id_catalogo_encuestas_preguntas_parametro_clasificacion">
-                        <option>Parametro</option>
                         { renderOpcionesParametros() }
                     </select>
                 </div>  

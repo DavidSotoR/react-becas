@@ -69,7 +69,10 @@ function TablaPreguntas() {
 
     useEffect(()=>{
         getListaPreguntasEncuensta()
-    },[])
+        if(!showModalNuevaPregunta){
+            getListaPreguntasEncuensta()
+        }
+    },[showModalNuevaPregunta])
 
     return (
         <div>
