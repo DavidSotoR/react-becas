@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { AuthContext } from "./../../../../context/AuthContext";
+import { AuthContext } from "../../../../context/AuthContext";
 import ModalNuevaPregunta from "./ModalNuevaPregunta";
 
 function TablaPreguntas() {

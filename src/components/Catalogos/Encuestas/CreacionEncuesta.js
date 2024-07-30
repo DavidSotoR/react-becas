@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import TablaPreguntas from "./TablaPreguntas";
-import TablaParametros from "./TablaParametros";
+import TablaPreguntas from "./Preguntas/TablaPreguntas";
+import TablaParametros from "./Parametros/TablaParametros";
 import axios from "axios";
-import { AuthContext } from "./../../../../context/AuthContext";
+import { AuthContext } from "../../../context/AuthContext";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 

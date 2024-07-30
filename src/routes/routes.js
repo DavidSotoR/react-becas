@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 const Home = React.lazy(() => import("../components/HomePage/HomePage"))
 const Login = React.lazy(() => import("../components/Login/login"))
 const CatEncuestas = React.lazy(()=> import('../components/Catalogos/Encuestas/Encuestas'))
-const CatEncuestasID = React.lazy(()=> import('../components/Catalogos/Encuestas/Editar/CreacionEncuesta'))
+const CatEncuestasID = React.lazy(()=> import('../components/Catalogos/Encuestas/CreacionEncuesta'))
 const CatFamilia = React.lazy(()=> import('../components/Catalogos/Familias/Familias'))
 const CatFamiliaAlta = React.lazy(()=> import('../components/Catalogos/Familias/FamiliaAlta'))
 const CatUsuarios = React.lazy(()=> import('../components/Catalogos/Usuarios/Usuarios'))

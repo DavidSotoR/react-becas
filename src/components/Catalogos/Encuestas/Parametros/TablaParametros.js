@@ -24,12 +24,6 @@ function TablaParametros() {
             console.log(error.response);
         })
     }
-
-    const data = [
-        {nombre:"Liquides",tipo_parametro_clasificacion:"Mayor",descripcion:"Enim adipisicing quis sunt culpa mollit eu nostrud officia amet veniam commodo nisi. Fugiat qui enim mollit qui voluptate magna laborum aliqua in ea commodo exercitation. Duis nulla Lorem deserunt proident nostrud aute. Cupidatat nulla consectetur veniam tempor Lorem nostrud. Dolore adipisicing id id sit ad culpa dolor ipsum velit pariatur sit tempor exercitation. Excepteur excepteur enim amet aute dolore ea non nostrud. Anim fugiat excepteur consectetur dolore id elit exercitation."},
-        {nombre:"Educacion",tipo_parametro_clasificacion:"Rango",descripcion:"Enim adipisicing quis sunt culpa mollit eu nostrud officia amet veniam commodo nisi. Fugiat qui enim mollit qui voluptate magna laborum aliqua in ea commodo exercitation. Duis nulla Lorem deserunt proident nostrud aute. Cupidatat nulla consectetur veniam tempor Lorem nostrud. Dolore adipisicing id id sit ad culpa dolor ipsum velit pariatur sit tempor exercitation. Excepteur excepteur enim amet aute dolore ea non nostrud. Anim fugiat excepteur consectetur dolore id elit exercitation."},
-        {nombre:"Salud",tipo_parametro_clasificacion:"Seleccion",descripcion:"Enim adipisicing quis sunt culpa mollit eu nostrud officia amet veniam commodo nisi. Fugiat qui enim mollit qui voluptate magna laborum aliqua in ea commodo exercitation. Duis nulla Lorem deserunt proident nostrud aute. Cupidatat nulla consectetur veniam tempor Lorem nostrud. Dolore adipisicing id id sit ad culpa dolor ipsum velit pariatur sit tempor exercitation. Excepteur excepteur enim amet aute dolore ea non nostrud. Anim fugiat excepteur consectetur dolore id elit exercitation."}
-    ];
     
     const [ showModalNuevoParametro, setShowModalNUevoParametro ] = useState(false)
     const handleCloseMNuevoParametro = () => setShowModalNUevoParametro(false);
@@ -55,13 +49,12 @@ function TablaParametros() {
                 <button className="btn btn-primary btn-sm fw-bold" onClick={handleShowMNuevoParametro}>Agregar Parametros</button>
                 </div>
             </div>
-            {JSON.stringify(allParametros)}
             <div className='tab-content'>
                 {allParametrosFiltrados.map((a,i) =>(
                     <div key={'pg-'+i} className="mb-3 p-3 border rounded border-opacity-75"> 
                         <div className="d-flex justify-content-between mb-3">
                             <div className="">
-                                    <h4>{a.nombre}</h4>
+                                    <h5>{a.nombre}</h5>
                             </div>
                             <div className="">
                                 <div className="dropdown">
@@ -78,7 +71,7 @@ function TablaParametros() {
                         </div>
                         <hr/>
                             <p>
-                                <b>Tipo de clasificacion:</b> {a?.tipo_parametro_clasificacion}, <b>Puntuacion Maxima:</b> {a.puntos_maximo}
+                                <b>Tipo de clasificacion:</b> {a?.tipo_parametro?.nombre}, <b>Puntuacion Maxima:</b> {a.puntos_maximo}
                             </p>
                         <hr/>
                         <div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { AuthContext } from "./../../../../context/AuthContext";
+import { AuthContext } from "../../../../context/AuthContext";
 import { useParams } from "react-router-dom";
 
 function ModalNuevoParametro({ show, handleClose }) {
@@ -15,11 +15,23 @@ function ModalNuevoParametro({ show, handleClose }) {
     const { logout } = useContext(AuthContext);
     const [ allTipoClientes, setAllTipoClientes ] = useState([])
 
+    
+    const [ allParametrosTipos, setAllParametrosTipos ] = useState([]);
+
+    const getListaParametrosTipos = () => {
+        axios.get(APIURL+'/catalogos/encuestas/parametros/tipos',config).then((resp)=>{
+            setAllParametrosTipos(resp.data)
+        }).catch((error)=>{
+            console.log(error.response);
+        })
+    }
+
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
         id_catalogo_encuesta:0,
         nombre:"",
-        puntos_maximo:20
+        puntos_maximo:20,
+        id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos:0
     })
 
     const formInputChange =(e) => {
@@ -35,6 +47,9 @@ function ModalNuevoParametro({ show, handleClose }) {
     const validateFields = ()=>{
         console.log(formData);
         var messageError = []
+        if(formData.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos == 0){
+            messageError.push('Campo Tipo de Parametro es OBLIGATORIO')
+        }
         if (formData.nombre === '') {
             messageError.push('Campo Nombre es OBLIGATORIO')
         }
@@ -70,10 +85,19 @@ function ModalNuevoParametro({ show, handleClose }) {
         })
         
     }
+    
+    const renderOpcionesParametrosTipos = () => {
+        return [<option value="0">Seleccione Tipo de Parametro</option>,...allParametrosTipos.map((param) => (
+            <option key="sapt-{param.id}" value={`${param.id}`}>
+                { param.nombre }
+            </option>
+        ))]
+    }
 
     useEffect(()=>{
-         validateFields()
+         validateFields();
         /*getListaClientes() */
+        getListaParametrosTipos();
     }, [formData])
 
     return (
@@ -82,6 +106,13 @@ function ModalNuevoParametro({ show, handleClose }) {
                 <Modal.Title>Nuevo Parametro</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <div className="mb-2">
+                    <label htmlFor="parametro-clasificacion" className="form-label">Tipo de Parametro:</label>
+                    <select id="parametro-clasificacion" className="form-select form-control-sm" onChange={(e)=> formInputChange(e)}
+                    aria-label="Default select example" name="id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos">
+                        { renderOpcionesParametrosTipos() }
+                    </select>
+                </div>  
                 <div className="mb-2">
                     <label htmlFor="nombre_parametro" className="form-label">Nombre Parametro:</label>
                     <input id="nombre_parametro" type="text" className="form-control form-control-sm" placeholder="" name="nombre" onChange={(e)=> formInputChange(e)}/>
