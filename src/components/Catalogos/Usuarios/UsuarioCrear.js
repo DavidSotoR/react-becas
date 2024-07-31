@@ -17,7 +17,8 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
         email:"",
         password:"",
         password_confirmation:"",
-        id_perfil: "0"
+        id_perfil: "0",
+        id_cliente: "1"
     })
 
     const popoverContraseña = (
@@ -85,6 +86,9 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
                 break;
             case "id_perfil":
                 if(value === '0') errorMsg = "Debe seleccionar un perfil";
+                break
+            case "id_cliente":
+                if(value === '0') errorMsg = "Debe seleccionar un cliente";
                 break
             default:
                 break;
@@ -197,6 +201,18 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
     return (
             <div className="container">
                 <div className="mb-3">
+                    <label htmlFor="inputPerfil" className="form-label">Perfil</label>
+                    <select id="inputPerfil" 
+                            name="id_perfil"
+                            className="form-select mb-2" 
+                            aria-label="Default select example"
+                            value={dataPostUsuario.id_perfil}
+                            onChange={handleInputChange}>
+                        { agregarOpcionesSelect() }
+                    </select>
+                    {errors.id_perfil && <div className="text-danger fw-medium">{errors.id_perfil}</div>}
+                </div>
+                <div className="mb-3">
                 <label htmlFor="inputCliente" className="form-label">Cliente</label>
                 <select id="inputCliente" 
                         name="id_cliente"
@@ -264,18 +280,7 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
                     </div>
                     {errors.password_confirmation && <div className="text-danger fw-medium">{errors.password_confirmation}</div>}
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="inputPerfil" className="form-label">Perfil</label>
-                    <select id="inputPerfil" 
-                            name="id_perfil"
-                            className="form-select mb-2" 
-                            aria-label="Default select example"
-                            value={dataPostUsuario.id_perfil}
-                            onChange={handleInputChange}>
-                        { agregarOpcionesSelect() }
-                    </select>
-                    {errors.id_perfil && <div className="text-danger fw-medium">{errors.id_perfil}</div>}
-                </div>
+                
             </div>
     )
 }

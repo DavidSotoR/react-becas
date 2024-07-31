@@ -201,7 +201,7 @@ function Usuarios() {
                     <p>{usuario.email}</p>
                 </td>
                 <td>
-                    <p>{usuario?.cliente ?? 'Sin asignar'}</p>
+                    <p>{usuario?.id_cliente ? usuario.cliente.nombre : 'Sin asignar'}</p>
                 </td>
                 <td>
                     <p>{ getNamePerfil(usuario.id_perfil)}</p>
@@ -223,7 +223,6 @@ function Usuarios() {
 
     const searchText = (e) => {
         const buscar = e.target.value;
-        console.log(buscar);
         setSearch(buscar);
     }
 
@@ -235,10 +234,17 @@ function Usuarios() {
         if (APIURL) {
             getAllPerfiles()
             getAllClientes()
-            getAllDataUsuarios();
+            //getAllDataUsuarios();
         }
         
     },[APIURL])
+
+    useEffect(()=>{
+        if (!showUpdate) {
+            console.log('se cierra');
+            getAllDataUsuarios();
+        }
+    }, [showUpdate])
 
     useEffect( (e)=>{
         //console.log(e);
@@ -312,10 +318,10 @@ function Usuarios() {
                 )
             }            
 
-            {   show &&
+            {/* {   show &&
                 <ModalCrearUsuario show={show} handleClose={handleClose}></ModalCrearUsuario>
-            }
-            {/* <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+            } */}
+            {<Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>Crear Nuevo Usuario</Modal.Title>
                 </Modal.Header>
@@ -326,7 +332,7 @@ function Usuarios() {
                     <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
                     <Button variant="primary" disabled={ btnEnable } onClick={sendDataPost}>Crear</Button>
                 </Modal.Footer>
-            </Modal> */}
+            </Modal>}
 
         </div>
     )

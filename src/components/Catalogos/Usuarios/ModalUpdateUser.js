@@ -10,7 +10,8 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
     const [listaPerfiles, setListaPerfiles] = useState([])
     const [ allClientes, setAllClientes ] = useState([])
     const [ user, setUser ] = useState(dataUser)
-    const [ formValid, setFormValid ] = useState(false)
+    const [ formValid, setFormValid ] = useState(true)
+    const [ dataUpdateUsuario ,setDataUpdateUsuario ] = useState(undefined)
     const APIURL = process.env.REACT_APP_API_URL
     const config = {
         headers: {
@@ -40,12 +41,15 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
     }
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        var { name, value } = e.target;
         console.log(name, value);
-        /* setDataPostUsuario(prevState => ({  
+        if (name === 'id_cliente' || name === 'id_perfil') {
+            value = parseInt(value,10)
+        }
+        setDataUpdateUsuario(prevState => ({  
             ...prevState,
             [name]: value
-        })); */
+        }));
 
         validateField(name,value)
 
@@ -53,9 +57,6 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
 
     const agregarOpcionesSelect = () => {
         return [
-            <option key="default" value="0" selected>
-                Seleccione uno
-            </option>,
             ...listaPerfiles.map((perfil) => (
                 <option key={perfil.id} value={`${perfil.id}`}>
                     {perfil.nombre}
@@ -65,7 +66,7 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
     }
 
     const renderFiltroClientes = () => {
-
+        
         return [...allClientes.map((cliente) => (
             <option key={cliente.id} value={`${cliente.id}`}>
                 { cliente.nombre }
@@ -86,11 +87,15 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
             case "id_perfil":
                 if(value === '0') errorMsg = "Debe seleccionar un perfil";
                 break
+            case "id_cliente":
+                if (value === '0') errorMsg = "Debe asignar un cliente al Usuario"
             default:
                 break;
         }
 
-        console.log(errorMsg);
+        if (errorMsg === "") {
+            setFormValid(false)
+        }
 
         setErrors(prevErrors => ({
             ...prevErrors,
@@ -99,15 +104,42 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
         
     };
 
+    const sendActualizarUsuario = () => {
+        
+        var dataUpdate = {
+            id: dataUpdateUsuario.id,
+            id_perfil: dataUpdateUsuario.id_perfil,
+            name: dataUpdateUsuario.name,
+            email: dataUpdateUsuario.email,
+            id_cliente: dataUpdateUsuario.id_cliente
+        }
+
+        console.log(dataUpdate);
+        if (dataUpdate.id_cliente === null || dataUpdate.id_cliente === undefined) {
+            setFormValid(false)
+            alert('Se debe asignar un cliente a Usuario')
+        } else {
+            axios.put(APIURL+'/usuarios',dataUpdate,config).then((resp)=>{
+                console.log(resp);
+                handleCloseModal()
+            }).catch((error)=>{
+                console.log(error);
+            })
+        }
+        
+
+    }
 
     useEffect(() => {
         getPerfilesList();
         getAllClientes();
     }, [APIURL]);
 
-
     useEffect(()=>{
         console.log(user);
+        if (!dataUpdateUsuario) {
+            setDataUpdateUsuario(user)
+        }
     },[])
     return(
         <Modal show={ show } onHide={ handleCloseModal }>
@@ -121,8 +153,11 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
                         name="id_cliente"
                         className="form-select mb-2" 
                         aria-label="Default select example"
-                        value={user.id_cliente}
+                        value={dataUpdateUsuario?.id_cliente ?? '0'}
                         onChange={handleInputChange}>
+                    { user.id_cliente === null &&
+                        <option key={'0'} value={'0'} selected={true}> Sin asignar </option>
+                    }
                     { renderFiltroClientes() }
                 </select>
                 {errors.id_perfil && <div className="text-danger fw-medium">{errors.id_perfil}</div>}
@@ -131,7 +166,7 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
                     <label htmlFor="inputName" className="form-label">Nombre:</label>
                     <input type="text" className="form-control mb-2" id="inputName" name="name"
                             placeholder="Nombre:"
-                            value={user.name}
+                            value={dataUpdateUsuario?.name ?? ''}
                             onChange={handleInputChange}/>
                     {errors.name && <div className="text-danger fw-medium">{errors.name}</div>}
                 </div>
@@ -139,7 +174,7 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
                     <label htmlFor="inputEmail" className="form-label">Email</label>
                     <input type="email" className="form-control" id="inputEmail" name="email"
                             placeholder="name@example.com"
-                            value={user.email}
+                            value={dataUpdateUsuario?.email ?? ''}
                             onChange={handleInputChange}/>
                     {errors.email && <div className="text-danger fw-medium">{errors.email}</div>}
                 </div>
@@ -189,7 +224,7 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
                             name="id_perfil"
                             className="form-select mb-2" 
                             aria-label="Default select example"
-                            value={user.id_perfil}
+                            value={dataUpdateUsuario?.id_perfil ?? '1'}
                             onChange={handleInputChange}>
                         { agregarOpcionesSelect() }
                     </select>
@@ -200,7 +235,7 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
                 <Button variant="secondary" onClick={handleCloseModal}>
                     Close
                 </Button>
-                <Button variant="primary" disabled={formValid}>
+                <Button variant="primary" disabled={formValid} onClick={ sendActualizarUsuario }>
                     Actualizar
                 </Button>
             </Modal.Footer>

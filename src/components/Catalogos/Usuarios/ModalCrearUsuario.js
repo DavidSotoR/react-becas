@@ -145,7 +145,8 @@ function ModalCrearUsuario({ show, handleClose }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         console.log(name, value);
-        if (name === 'name' || name === 'email' || name === 'password' || name === 'password_confirmation'){
+        console.log(name === 'email');
+        if (name === 'email' || name === 'password' || name === 'password_confirmation'){
             setDataPostUsuario(prevState => ({  
                 ...prevState,
                 [name]: value.trim()
@@ -163,7 +164,7 @@ function ModalCrearUsuario({ show, handleClose }) {
     };
 
     useEffect(() => {
-        if (!APIURL) {
+        if (APIURL) {
             getPerfilesList();
             getAllClientes();   
         }
@@ -181,6 +182,18 @@ function ModalCrearUsuario({ show, handleClose }) {
             </Modal.Header>
             <Modal.Body>
                 <div className="container">
+                    <div className="mb-3">
+                        <label htmlFor="inputPerfil" className="form-label">Perfil</label>
+                        <select id="inputPerfil" 
+                                name="id_perfil"
+                                className="form-select mb-2" 
+                                aria-label="Default select example"
+                                value={dataPostUsuario.id_perfil}
+                                onChange={handleInputChange}>
+                            { agregarOpcionesSelect() }
+                        </select>
+                        {errors.id_perfil && <div className="text-danger fw-medium">{errors.id_perfil}</div>}
+                    </div>
                     <div className="mb-3">
                     <label htmlFor="inputCliente" className="form-label">Cliente</label>
                     <select id="inputCliente" 
@@ -203,7 +216,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                     </div>
                     <div className="mb-3">
                         <label htmlFor="inputEmail" className="form-label">Email</label>
-                        <input type="email" className="form-control" id="inputEmail" name="email"
+                        <input type="text" className="form-control" id="email" name="email"
                                 placeholder="name@example.com"
                                 value={dataPostUsuario.email}
                                 onChange={handleInputChange}/>
@@ -249,18 +262,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                         </div>
                         {errors.password_confirmation && <div className="text-danger fw-medium">{errors.password_confirmation}</div>}
                     </div>
-                    <div className="mb-3">
-                        <label htmlFor="inputPerfil" className="form-label">Perfil</label>
-                        <select id="inputPerfil" 
-                                name="id_perfil"
-                                className="form-select mb-2" 
-                                aria-label="Default select example"
-                                value={dataPostUsuario.id_perfil}
-                                onChange={handleInputChange}>
-                            { agregarOpcionesSelect() }
-                        </select>
-                        {errors.id_perfil && <div className="text-danger fw-medium">{errors.id_perfil}</div>}
-                    </div>
+                    
                 </div>
             </Modal.Body>
             <Modal.Footer>
