@@ -140,3 +140,13 @@ mark {
   background-color: yellow;
   color: black;
 }
+.seccion-table-parametros{
+  display: flex;
+  justify-content: center;
+}
+.items-parametros{
+  max-width: 550px;
+}
+.items-parametros td{
+  border-top: none;
+}

@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AuthContext } from "./../../../../context/AuthContext";
 import ModalNuevoParametro from "./ModalNuevoParametro";
+import TablaParametrosItem from "./TablaParametrosItem";
 
 function TablaParametros() {
     const { ID } = useParams();
@@ -54,7 +55,7 @@ function TablaParametros() {
                     <div key={'pg-'+i} className="mb-3 p-3 border rounded border-opacity-75"> 
                         <div className="d-flex justify-content-between mb-3">
                             <div className="">
-                                    <h5>{a.nombre}</h5>
+                                    {a.id} - <h5>{a.nombre.toUpperCase()}: &nbsp;&nbsp; &nbsp;&nbsp; <i>{a.puntos_maximo} PUNTOS</i>  &nbsp;&nbsp; PREGUNTA(S):</h5>
                             </div>
                             <div className="">
                                 <div className="dropdown">
@@ -69,13 +70,12 @@ function TablaParametros() {
                                     </div>
                             </div>
                         </div>
-                        <hr/>
-                            <p>
-                                <b>Tipo de clasificacion:</b> {a?.tipo_parametro?.nombre}, <b>Puntuacion Maxima:</b> {a.puntos_maximo}
-                            </p>
-                        <hr/>
+                        <p>
+                            <b>Tipo de clasificacion:</b> {a?.tipo_parametro?.nombre}
+                        </p>
                         <div>
                             {a.descripcion}
+                            <TablaParametrosItem idParametro={a.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos}/>
                         </div>
                     </div>
                 ))}
