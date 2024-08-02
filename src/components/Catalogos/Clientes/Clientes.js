@@ -3,6 +3,8 @@ import { Button,Form, Modal } from "react-bootstrap";
 import ModalCliente from "./ModalCliente";
 import ResaltarTexto from "../../ResaltarTexto/ResaltarTexto";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import PathConstants from "../../../routes/pathsConstants";
 
 function Clientes() {
     const APIURL = process.env.REACT_APP_API_URL;
@@ -114,7 +116,8 @@ function Clientes() {
                     <h6 style={{ fontWeight:'bold' }}>Catalogo Clientes</h6>
                 </div>
                 <div className="">
-                    <button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Nuevo Cliente</button>
+                    <Link className="btn btn-primary btn-sm" to={PathConstants.CLIENTENUEVO}>Nuevo Cliente</Link>
+                    {/* <button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Nuevo Cliente</button> */}
                 </div>
             </div>
             <div className="mb-3 row">
