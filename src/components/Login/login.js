@@ -25,7 +25,7 @@ function Login() {
 
   const sendLogin = async () => {
     var dataPost = {
-      "email": inputEmail,
+      "login": inputEmail,
       "password": inputPass
     }
 

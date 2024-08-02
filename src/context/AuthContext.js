@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     var user = ''
     var loggedSuccess = false
     var body = {
-      "email": sendData.email,
+      "login": sendData.login,
       "password":sendData.password
     }
     var resp
