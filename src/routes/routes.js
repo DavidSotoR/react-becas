@@ -16,6 +16,7 @@ const CatPerfiles = React.lazy(()=> import('../components/Catalogos/Perfiles/Per
 const CatCiclosEscolares = React.lazy(()=> import('../components/Catalogos/CiclosEscolares/CiclosEscolares'))
 const CatClientes = React.lazy(()=> import('../components/Catalogos/Clientes/Clientes'))
 const ClienteNuevo = React.lazy(()=>import('../components/Catalogos/Clientes/PageNuevoCliente'))
+const ClienteActualizar = React.lazy(()=>import('../components/Catalogos/Clientes/PageActualizarCliente'))
 const CatColegiosComunes = React.lazy(()=> import('../components/Catalogos/ColegiosComunes/ColegiosComunes'))
 const CatTiposClientes = React.lazy(()=>import('../components/Catalogos/ClientesTipos/TiposClientes'))
 const FormBP2 = React.lazy(()=> import('../components/Formularios/ESEBP2/FormBP2'))
@@ -122,6 +123,11 @@ const routes = [
     { path: PathConstants.CLIENTENUEVO, element: (
       <Suspense fallback={<div>Loading...</div>}>
         <PrivateRoute path={PathConstants.CLIENTENUEVO} element={ <ClienteNuevo /> }/>
+      </Suspense>
+    )},
+    { path: PathConstants.CLIENTEACTUALIZAR, element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <PrivateRoute path={PathConstants.CLIENTEACTUALIZAR} element={ <ClienteActualizar /> }/>
       </Suspense>
     )},
     {path:PathConstants.COLEGIOSCOMUNES,perfil:'Administrador',element:(
