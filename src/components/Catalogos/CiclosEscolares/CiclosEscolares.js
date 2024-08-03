@@ -6,6 +6,7 @@ import { AuthContext } from "../../../context/AuthContext";
 
 function CiclosEscolares() {
     const { logout } = useContext(AuthContext);
+    const APIURL = process.env.REACT_APP_API_URL;
     const [ allCiclosEscolares, setAllCiclosEscolares ] = useState([])
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -17,12 +18,16 @@ function CiclosEscolares() {
     }
     const getCiclosEscolaresList = async () => {
         try {
-            const resp = await axios.get('http://localhost:8000/api/auth/ciclos', config);
+            const resp = await axios.get(APIURL+'/ciclos', config);
             setAllCiclosEscolares(resp.data);
         } catch (error) {
             console.error("Error fetching Ciclos Escolares:", error);
-            if (error.response.status === 401) {
+            if (error?.response.status === 401) {
                 logout()
+            } else {
+                alert('Ocurrio un ERROR en el REQUEST')
+                console.log(error);
+                
             }
         }
     }
