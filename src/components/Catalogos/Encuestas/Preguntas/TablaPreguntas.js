@@ -4,8 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import { AuthContext } from "../../../../context/AuthContext";
 import ModalNuevaPregunta from "./ModalNuevaPregunta";
 
-function TablaPreguntas() {
-    const { ID } = useParams();
+function TablaPreguntas({ ID }) {
+    //const { ID } = useParams();
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -41,7 +41,7 @@ function TablaPreguntas() {
 
     const renderBodyTablaPreguntas = () => {
         return allPreguntas.map((preguntas, index) => (
-            <tr key={'tr-'+index}>
+            <tr key={'rbtp-'+index}>
                 <td>
                     <p style={{ fontWeight: "bold" }}>{preguntas.id}</p>
                 </td>
@@ -106,7 +106,7 @@ function TablaPreguntas() {
                 </div>
             </div>
             
-            <ModalNuevaPregunta show={showModalNuevaPregunta} handleClose={handleCloseMNuevaPregunta}></ModalNuevaPregunta>
+            <ModalNuevaPregunta key={'mnp-'+ID} show={showModalNuevaPregunta} handleClose={handleCloseMNuevaPregunta}></ModalNuevaPregunta>
         </div>
 
     )

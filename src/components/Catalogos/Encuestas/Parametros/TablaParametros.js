@@ -6,8 +6,8 @@ import { AuthContext } from "./../../../../context/AuthContext";
 import ModalNuevoParametro from "./ModalNuevoParametro";
 import TablaParametrosItem from "./TablaParametrosItem";
 
-function TablaParametros() {
-    const { ID } = useParams();
+function TablaParametros({ ID }) {
+    //const { ID } = useParams();
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -15,6 +15,15 @@ function TablaParametros() {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+    const [isHovered, setIsHovered] = useState(null);
+
+    const handleMouseEnter = (index) => {
+        setIsHovered(index);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(null);
+    };
     const [ allParametros, setAllParametros ] = useState([]);
     const [search,setSearch] = useState("");
 
@@ -34,7 +43,6 @@ function TablaParametros() {
         item.nombre.toLowerCase().includes(search.toLowerCase())
     );
     useEffect(()=>{
-        getListaParametrosEncuensta()
         if(!showModalNuevoParametro){
             getListaParametrosEncuensta()
         }
@@ -52,10 +60,13 @@ function TablaParametros() {
             </div>
             <div className='tab-content'>
                 {allParametrosFiltrados.map((a,i) =>(
-                    <div key={'pg-'+i} className="mb-3 p-3 border rounded border-opacity-75"> 
+                    <div key={'pg-' + a.id} 
+                        onMouseEnter={() => handleMouseEnter(i)}
+                        onMouseLeave={handleMouseLeave} 
+                        className={`mb-3 p-3 rounded border-opacity-75 ${ (isHovered === i) ? 'border' : ''}`}> 
                         <div className="d-flex justify-content-between mb-3">
                             <div className="">
-                                    {a.id} - <h5>{a.nombre.toUpperCase()}: &nbsp;&nbsp; &nbsp;&nbsp; <i>{a.puntos_maximo} PUNTOS</i>  &nbsp;&nbsp; PREGUNTA(S):</h5>
+                                    <h5>{a.id} - {a.nombre.toUpperCase()}: &nbsp;&nbsp; &nbsp;&nbsp; <i>{a.puntos_maximo} PUNTOS</i>  &nbsp;&nbsp; PREGUNTA(S):</h5>
                             </div>
                             <div className="">
                                 <div className="dropdown">
@@ -75,12 +86,12 @@ function TablaParametros() {
                         </p>
                         <div>
                             {a.descripcion}
-                            <TablaParametrosItem idParametro={a.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos}/>
+                            <TablaParametrosItem key={'mtpi'+a.id} idParametro={a.id} idParametroTipo={a.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos}/>
                         </div>
                     </div>
                 ))}
             </div>
-            <ModalNuevoParametro show={showModalNuevoParametro} handleClose={handleCloseMNuevoParametro}></ModalNuevoParametro>
+            <ModalNuevoParametro key={'mnp-'+ID} show={showModalNuevoParametro} handleClose={handleCloseMNuevoParametro}></ModalNuevoParametro>
         </div>
     )
 }

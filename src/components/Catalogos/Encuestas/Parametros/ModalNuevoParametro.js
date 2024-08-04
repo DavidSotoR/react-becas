@@ -41,11 +41,9 @@ function ModalNuevoParametro({ show, handleClose }) {
             ...prevState,
             [name]: value
         }));
-
     }
 
     const validateFields = ()=>{
-        console.log(formData);
         var messageError = []
         if(formData.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos == 0){
             messageError.push('Campo Tipo de Parametro es OBLIGATORIO')
@@ -76,7 +74,6 @@ function ModalNuevoParametro({ show, handleClose }) {
         data.id_catalogo_encuesta = ID
 
         axios.post(APIURL+'/catalogos/encuestas/parametros',data,config).then((resp)=>{
-            console.log(resp);
             handleClose()
         }).catch((resp)=>{
             if (resp.status === 401) {
@@ -87,8 +84,8 @@ function ModalNuevoParametro({ show, handleClose }) {
     }
     
     const renderOpcionesParametrosTipos = () => {
-        return [<option value="0">Seleccione Tipo de Parametro</option>,...allParametrosTipos.map((param) => (
-            <option key="sapt-{param.id}" value={`${param.id}`}>
+        return [<option key='sapt-0' value="0">Seleccione Tipo de Parametro</option>,...allParametrosTipos.map((param) => (
+            <option key={'sapt-'+param.id} value={`${param.id}`}>
                 { param.nombre }
             </option>
         ))]
@@ -98,7 +95,7 @@ function ModalNuevoParametro({ show, handleClose }) {
          validateFields();
         /*getListaClientes() */
         getListaParametrosTipos();
-    }, [formData])
+    }, [show,formData])
 
     return (
         <Modal show={show} onHide={handleClose}>

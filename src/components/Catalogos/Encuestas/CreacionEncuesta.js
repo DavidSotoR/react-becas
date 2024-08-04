@@ -30,10 +30,10 @@ function CreacionEncuesta() {
 				</TabList>
  
 				<TabPanel>
-                    <TablaPreguntas />
+                    <TablaPreguntas ID={ID} />
 				</TabPanel>
 				<TabPanel>
-                    <TablaParametros/>
+                    <TablaParametros ID={ID}/>
 				</TabPanel>
 			</Tabs>
         </div>

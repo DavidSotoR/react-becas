@@ -53,7 +53,6 @@ function ModalNuevaPregunta({ show, handleClose }) {
             messageError.push('Campo Puntos Maximo debe ser igual o mayor a 0')
         }
 
-        console.log(messageError);
         if (messageError.length === 0) {
             setFormValid(false)
         } else {
@@ -62,12 +61,9 @@ function ModalNuevaPregunta({ show, handleClose }) {
     }
 
     const postDataNuevaPregunta = () =>{
-        //console.log(formData);
         var data = formData;
         data.id_catalogo_encuesta = ID
-        console.log(data);
         axios.post(APIURL+'/catalogos/encuestas/preguntas',data,config).then((resp)=>{
-            console.log(resp);
             handleClose()
         }).catch((resp)=>{
             if (resp.status === 401) {
@@ -79,16 +75,16 @@ function ModalNuevaPregunta({ show, handleClose }) {
 
     const renderOpcionesTipoPregunta = () => {
 
-        return [<option value="0">Seleccione un tipo de pregunta</option>,...allTiposPreguntas.map((tp) => (
-            <option key={tp.id} value={`${tp.id}`}>
+        return [<option key='mrotp-0' value="0">Seleccione un tipo de pregunta</option>,...allTiposPreguntas.map((tp) => (
+            <option key={'mrotp-'+tp.id} value={`${tp.id}`}>
                 { tp.nombre }
             </option>
         ))]
     }
 
     const renderOpcionesParametros = () => {
-        return [<option value="0">Parametro</option>,...allParametros.map((param) => (
-            <option key={param.id} value={`${param.id}`}>
+        return [<option key='mrop-0' value="0">Parametro</option>,...allParametros.map((param) => (
+            <option key={'mrop-'+param.id} value={`${param.id}`}>
                 { param.nombre }
             </option>
         ))]
@@ -96,7 +92,6 @@ function ModalNuevaPregunta({ show, handleClose }) {
 
     const getDatosOptions = () =>{
         axios.get(APIURL+'/catalogos/encuestas/preguntas/tipos',config).then((resp)=>{
-            console.log(resp.data);
             setAllTiposPreguntas(resp.data)
         }).catch((resp)=>{
             if (resp.response.status === 401) {
@@ -105,7 +100,6 @@ function ModalNuevaPregunta({ show, handleClose }) {
         })
 
         axios.get(APIURL+'/catalogos/encuestas/'+ID+'/parametros',config).then((resp)=>{
-            console.log(resp.data);
             setAllParametros(resp.data)
         }).catch((resp)=>{
             console.log(resp);

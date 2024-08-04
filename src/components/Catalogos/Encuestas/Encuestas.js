@@ -30,7 +30,7 @@ function Encuestas() {
 
     const renderFilasEncuestas = () => {
         return listaEncuestas.map((encuesta, index) => (
-            <tr key={'tr-'+index}>
+            <tr key={'trle-'+index}>
                 <td>
                     <p style={{ fontWeight: "bold" }}>{encuesta.id}</p>
                 </td>
