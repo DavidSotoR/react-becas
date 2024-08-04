@@ -100,7 +100,7 @@ function Clientes() {
                 </td>
                 <td>
                     <div className="d-flex justify-content-start">
-                        <button className="btn btn-primary mx-1 btn-sm">Editar</button>
+                        <Link to={'/clientes/'+cliente.id} className="btn btn-primary mx-1 btn-sm">Editar</Link>
                         <button className="btn btn-small btn-danger mx-1 btn-sm">X</button>
                     </div>
                 </td>
