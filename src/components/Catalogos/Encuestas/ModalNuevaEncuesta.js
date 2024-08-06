@@ -82,8 +82,11 @@ function ModalNuevaEncuesta({ show, handleClose }) {
     }
 
     useEffect(()=>{
-        validateFields()
         getListaClientes()
+    },[])
+
+    useEffect(()=>{
+        validateFields()
     }, [formData])
 
     return (
@@ -112,7 +115,7 @@ function ModalNuevaEncuesta({ show, handleClose }) {
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={sendDataEncuestaNuevo} disabled={formValid}>
+                <Button variant="primary" onClick={()=>sendDataEncuestaNuevo()} disabled={formValid}>
                     Crear
                 </Button>
             </Modal.Footer>

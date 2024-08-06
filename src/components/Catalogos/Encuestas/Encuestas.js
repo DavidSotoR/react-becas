@@ -21,7 +21,6 @@ function Encuestas() {
 
     const getListaEncuestas = () =>{
         axios.get(APIURL+'/catalogos/encuestas',config).then((resp)=>{
-            console.log(resp);
             setListasEncuestas(resp.data)
         }).catch((resp)=>{
             console.log(resp);
@@ -54,7 +53,6 @@ function Encuestas() {
 
     useEffect(()=>{
         if (!show) {
-            console.log('Se cerro, renderiza');
             getListaEncuestas()
         }
     },[show])

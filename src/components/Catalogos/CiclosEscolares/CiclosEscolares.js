@@ -48,7 +48,7 @@ function CiclosEscolares() {
                     <p>{ciclos.activo ? 'Si' : 'No' }</p>
                 </td>
                 <td>
-                    <p class="mb-0">{ciclos.inicio} / {ciclos.fin}</p>
+                    <p className="mb-0">{ciclos.inicio} / {ciclos.fin}</p>
                 </td>
             </tr>
         ));
@@ -72,7 +72,7 @@ function CiclosEscolares() {
                         <input type="text" className="form-control form-control-sm" placeholder="Buscar:"/>
                     </div>
                     <div className="col-3">
-                    <select class="form-select form-select-sm" aria-label="Default select example">
+                    <select className="form-select form-select-sm" aria-label="Default select example">
                         <option value="1">Activos</option>
                         <option value="0">Inactivos</option>
                     </select>

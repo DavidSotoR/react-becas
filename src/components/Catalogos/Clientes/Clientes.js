@@ -68,16 +68,16 @@ function Clientes() {
 
     useEffect(()=>{
         getDataTiposClientes();
+        
+    },[])
+    useEffect(()=>{
         if (!show) {
-            //console.log('Se cerro, renderiza');
             getDataClientes();
         }
-
-        if(tiposCliente){
+    },[show])
+    useEffect(()=>{
             getDataClientes();
-        }
-
-    },[show,tiposCliente])
+    },[tiposCliente])
 
 
     const renderFilasTablaClientes = () => {

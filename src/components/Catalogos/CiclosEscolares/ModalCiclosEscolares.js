@@ -113,10 +113,10 @@ function ModalCiclosEscolares({ show, handleClose }) {
                     <label> Fecha Fin: </label>
                     <input className="form-control" name="fin" type="date" onChange={(e) => {formInputChange(e)}}/>
                 </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" name="ciclo_activo" type="checkbox" checked={cicloActivo}
+                <div className="form-check form-switch">
+                    <input className="form-check-input" name="ciclo_activo" type="checkbox" checked={cicloActivo}
                     role="switch" value={'on'} id="flexSwitchCheckChecked" onChange={(e) => {formInputChange(e)}}/>
-                    <label class="form-check-label" for="flexSwitchCheckChecked">Ciclo Escolar Activo</label>
+                    <label className="form-check-label" for="flexSwitchCheckChecked">Ciclo Escolar Activo</label>
                 </div>
                 <div className="mb-3">
                     <p style={{ color:"red" }}> { msgError } </p>

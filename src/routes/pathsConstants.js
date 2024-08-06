@@ -16,7 +16,8 @@ const PathConstants = {
     FAMILIASFILES:'/familias/archivos',
     PERFILES: '/perfiles',
     USUARIOS: '/usuarios',
-    CICLOSESCOLARES: '/ciclos-escolares'
+    CICLOSESCOLARES: '/ciclos-escolares',
+    PROYECTOS: '/proyectos'
 }
 
 export default PathConstants

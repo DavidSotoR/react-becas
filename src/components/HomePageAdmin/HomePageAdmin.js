@@ -143,19 +143,19 @@ function HomePageAdmin() {
                   <input className="form-control  form-control-sm" placeholder="Buscar: "/>
               </div>
               <div className="col-4 col-md-3 mb-1">
-                  <select class="form-select form-select-sm" aria-label="Default select example">
+                  <select className="form-select form-select-sm" aria-label="Default select example">
                       <option selected>Escuelas y Empresas</option>
                       <option value="1">Escuelas</option>
                       <option value="2">Empresas</option>
                   </select>
               </div>
               <div className="col-4 col-md-3 mb-1">
-                  <select class="form-select form-select-sm" aria-label="Default select example">
+                  <select className="form-select form-select-sm" aria-label="Default select example">
                       <option selected>Cliente:</option>
                   </select>
               </div>
               <div className="col-4 col-md-3 mb-1">
-                  <select class="form-select form-select-sm" aria-label="Default select example">
+                  <select className="form-select form-select-sm" aria-label="Default select example">
                       <option selected>Asignado a:</option>
                   </select>
               </div>
