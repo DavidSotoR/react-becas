@@ -66,11 +66,16 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
         }
     }
 
+    const contieneEspaciosInvalidos = (cadena) => {
+        return /^\s|\s$|\s{2,}/.test(cadena);
+    }
+
     const validateField = (name, value) => {
         let errorMsg = "";
         switch (name) {
             case "name":
                 if (!value) errorMsg = "El nombre es requerido";
+                if (contieneEspaciosInvalidos(value)) errorMsg = "Campo no debe contener espacios vacios"
                 break;
             case "email":
                 if (!value) errorMsg = "El email es requerido";
@@ -112,7 +117,7 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         console.log(name, value);
-        if (name === 'name' || name === 'email' || name === 'password' || name === 'password_confirmation'){
+        if (name === 'email' || name === 'password' || name === 'password_confirmation'){
             setDataPostUsuario(prevState => ({  
                 ...prevState,
                 [name]: value.trim()
@@ -234,7 +239,7 @@ function UsuarioCrear({ onCreate, clearForm, clear }) {
                 </div>
                 <div className="mb-3">
                     <label htmlFor="inputEmail" className="form-label">Email</label>
-                    <input type="email" className="form-control" id="inputEmail" name="email"
+                    <input type="text" className="form-control" id="inputEmail" name="email"
                             placeholder="name@example.com"
                             value={dataPostUsuario.email}
                             onChange={handleInputChange}/>

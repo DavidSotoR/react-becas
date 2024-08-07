@@ -46,7 +46,7 @@ function Login() {
             <div className="d-flex justify-content-center">
               <img src="/img/logo_principal_colores.png" style={{ width:'150px', height:'150px' }}></img>
             </div>
-            <div className="d-flex" style={{ width: "100%" }}>
+            <div className="d-flex" >
               <h3 className="text-start">Inicio de Sesion</h3>
             </div>
             <div className="mb-3">
