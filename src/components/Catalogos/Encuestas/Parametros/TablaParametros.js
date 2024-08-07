@@ -18,7 +18,6 @@ function TablaParametros({ ID }) {
     const [isHovered, setIsHovered] = useState(null);
 
     const handleMouseEnter = (index) => setIsHovered(index);
-
     const handleMouseLeave = () =>  setIsHovered(null);
 
     const [ allParametros, setAllParametros ] = useState([]);

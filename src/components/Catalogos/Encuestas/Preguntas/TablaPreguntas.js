@@ -23,6 +23,9 @@ function TablaPreguntas({ ID }) {
         pregunta: '',
         puntos_maximos: 0
     })
+    const [isHovered, setIsHovered] = useState(null);
+    const handleMouseEnter = (index) => setIsHovered(index);
+    const handleMouseLeave = () =>  setIsHovered(null);
 
 
     const [ showModalNuevaPregunta, setShowModalNuevaPregunta ] = useState(false)
@@ -84,7 +87,7 @@ function TablaPreguntas({ ID }) {
                 <button className="btn btn-primary btn-sm fw-bold" onClick={handleShowMNuevaPregunta}>Agregar Pregunta</button>
                 </div>
             </div>
-            <div className="row">
+            {/*<div className="row">
                 <div className="col-12">
                     <div className="table-wrapper">
                         <table className="table">
@@ -104,8 +107,55 @@ function TablaPreguntas({ ID }) {
                         </table>
                     </div>
                 </div>
-            </div>
+            </div>*/}
             
+            <div className='tab-content'>
+                {allPreguntas.map((pregunta,i) =>(
+                    <div key={'pg-' + pregunta.id} 
+                        onMouseEnter={() => handleMouseEnter(i)}
+                        onMouseLeave={handleMouseLeave} 
+                        className={`mb-3 p-3 rounded border-opacity-75 ${ (isHovered === i) ? 'border' : ''}`}> 
+                        <div className="d-flex justify-content-between mb-3">
+                            <div className="">
+                                    <h5>{pregunta.id} - {pregunta.pregunta.toUpperCase()}</h5>
+                            </div>
+                            <div className="">
+                                <div className="dropdown">
+                                    <button className="btn btn-sm fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Acciones
+                                    </button>
+                                    <ul className="dropdown-menu">
+                                        <li><button className="dropdown-item" type="button">Editar</button></li>
+                                        <li><button className="dropdown-item" type="button">Eliminar</button></li>
+                                        <li><button className="dropdown-item" type="button">Desactivar</button></li>
+                                    </ul>
+                                    </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <p><b>PUNTOS MAXIMOS: </b>{pregunta.puntos_maximos} </p>
+                            </div>
+                            <div className="col-md-4">
+                                <p><b>PARAMETROS: </b>{pregunta.parametro_de_clasificacion.nombre}</p>
+                            </div>
+                            <div className="col-md-4">
+                                <p><b>TIPO DE PREGUNTA: </b>{pregunta.tipo_preguntas.nombre}</p>
+                            </div>
+                        </div>
+                        <hr/>
+                        {/*
+                        <p>
+                            <b>Tipo de clasificacion:</b> {a?.tipo_parametro?.nombre}
+                        </p>
+                        <div>
+                            {a.descripcion}
+                            <TablaParametrosItem key={'mtpi'+a.id} idParametro={a.id} idParametroTipo={a.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos}/>
+                        </div>*/}
+                    </div>
+                ))}
+            </div>
             <ModalNuevaPregunta key={'mnp-'+ID} show={showModalNuevaPregunta} handleClose={handleCloseMNuevaPregunta}></ModalNuevaPregunta>
         </div>
 
