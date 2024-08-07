@@ -176,10 +176,15 @@ function PageNuevoCliente() {
                 </div>
                 <div className="col-3 d-flex align-items-center">
                     {formData.id_tipo_cliente === "1" && (
-                    <div className="mb-3">
-                    <label for="es_colegio_comun">Es colegio Comun</label><br/>
-                        <input type="checkbox" id="es_colegio_comun" name="es_colegio_comun" value="1" checked={esColegioComun} onChange={(e)=> selectEsColegioComun(e)}/>
-                    </div>
+                        <div className="mb-3 d-grid">
+                            <Form.Check className="p-0">
+                                <Form.Check.Label >Es Colegio Comun</Form.Check.Label>
+                                <br></br>
+                                <div className="mt-2 d-flex justify-content-center align-items-center">
+                                <Form.Check.Input type='checkbox' name="es_colegio_comun" value="1" checked={esColegioComun} onChange={(e)=> selectEsColegioComun(e)}/>
+                                </div>
+                            </Form.Check>
+                        </div>
                     )}
                 </div>
                 <div className="col-5">

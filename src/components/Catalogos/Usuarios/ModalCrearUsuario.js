@@ -140,8 +140,6 @@ function ModalCrearUsuario({ show, handleClose }) {
         setBtnEnable(hasErrors, !allFieldsFilled);
     };
 
-    
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         console.log(name, value);
