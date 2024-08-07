@@ -6,6 +6,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import ModalNuevoColegioComun from "./ModalNuevoColegioComun";
 import ModalEnlazarColegioComun from "./ModalEnlazarColegioComun";
 import ModalEliminarColegioComun from "./ModalEliminarColegioComun";
+import { Button } from "react-bootstrap";
 
 function CatalogoFamilias() {
     const { logout } = useContext(AuthContext);
@@ -76,8 +77,12 @@ function CatalogoFamilias() {
 
     const renderListaHermanos = (lista) => {
         return [...lista.map((colegio,index) =>  (
-        <li key={'li-'+index}> 
-            <a onClick={() => handleShowEliminar(colegio.id,colegio.nombre)}>{colegio.nombre}</a>
+        <li key={'li-'+index} style={{display:'flex'}}> 
+            <ion-icon 
+            style={{ marginRight: "5px" ,marginTop: "2px",cursor: "pointer"}}
+            onClick={() => handleShowEliminar(colegio.id,colegio.nombre)} 
+            name="trash-outline"/>
+            <p>{colegio.nombre}</p>
         </li>
     ) )]
     };
@@ -93,7 +98,7 @@ function CatalogoFamilias() {
                 </td>
                 <td>
                     { familia?.lista.length > 0 && 
-                        <ul> 
+                        <ul style={{listStyle: 'none'}}> 
                             {renderListaHermanos(familia.lista)}
                         </ul>
                     }
@@ -115,16 +120,24 @@ function CatalogoFamilias() {
             console.log('Se cerro, renderiza');
             getDatosClientesHermanos()
         }
+        getClientesList()
+    },[show])
+    
+    useEffect(()=>{
         if(!showEnlazar){
             console.log('Se cerro, renderiza');
             getDatosClientesHermanos()
         }
+        getClientesList()
+    },[showEnlazar])
+    
+    useEffect(()=>{
         if(!showEliminar){
             console.log('Se cerro, renderiza');
             getDatosClientesHermanos()
         }
         getClientesList()
-    },[show,showEnlazar,showEliminar])
+    },[showEliminar])
 
     return (
        <div className="container mt-3">

@@ -96,10 +96,13 @@ function ModalEnlazarColegioComun({ showNuevoHemano, handleNuevoHemanoClose , id
 
     useEffect(()=>{
         validateFields()
+    }, [formData])
+    
+    useEffect(()=>{
         if(showNuevoHemano){
             getClientesNoHermanosList()
         }
-    }, [formData,showNuevoHemano])
+    }, [showNuevoHemano])
 
     
 
@@ -110,7 +113,7 @@ function ModalEnlazarColegioComun({ showNuevoHemano, handleNuevoHemanoClose , id
     return (
         <Modal show={showNuevoHemano} onHide={handleNuevoHemanoClose}>
             <Modal.Header closeButton>
-                <Modal.Title><div class="h5"><b>Añadir Colegio a:</b> {tituloColegioComun}</div> </Modal.Title>
+                <Modal.Title><div className="h5"><b>Añadir Colegio a:</b> {tituloColegioComun}</div> </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="mb-3">
