@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../../../context/AuthContext";
 
-function ModalNuevoParametrosItems({idParametro}){
+function ModalNuevoParametrosItems({idParametro,numberSave,setNumberSave}){
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -12,7 +12,6 @@ function ModalNuevoParametrosItems({idParametro}){
         }
     }
     
-    const [numberSave, setNumberSave] = useState(0);
     const [formValid, setFormValid] = useState(true)
     const [ parametroItem, setParametroItem ] = useState({
         id_catalogo_encuestas_preguntas_parametro_clasificacion: idParametro,
