@@ -48,7 +48,7 @@ function ModalNuevaEncuesta({ show, handleClose }) {
     }
 
     const sendDataEncuestaNuevo = () =>{
-        axios.post(APIURL+'/catalogos/encuestas',formData,config).then((resp)=>{
+        axios.post(`${APIURL}/catalogos/encuestas`,formData,config).then((resp)=>{
             console.log(resp);
             handleClose()
         }).catch((resp)=>{
@@ -61,7 +61,7 @@ function ModalNuevaEncuesta({ show, handleClose }) {
 
     const getListaClientes = async () => {
         try {
-            const resp = await axios.get(APIURL+'/clientes/tipos', config);
+            const resp = await axios.get(`${APIURL}/clientes/tipos`, config);
             console.log(resp);
             setAllTipoClientes(resp.data);
 
@@ -82,8 +82,10 @@ function ModalNuevaEncuesta({ show, handleClose }) {
     }
 
     useEffect(()=>{
-        getListaClientes()
-    },[])
+        if(show){
+            getListaClientes()
+        }
+    },[show])
 
     useEffect(()=>{
         validateFields()

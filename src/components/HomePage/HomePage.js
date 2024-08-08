@@ -1,23 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HomePageAdmin from "../HomePageAdmin/HomePageAdmin";
 import HomePageFamilia from "../HomePageFamilia/HomePageFamilia";
 import HomePageColaborador from "../HomePageColaborador/HomePageColaborador";
 
 function HomePage() {
-  const [roleUsuario, setRolUsuario] = useState(localStorage.getItem('role') ?? '')
-
+  const [roleUsuario, setRolUsuario] = useState(null)
+  
   const renderHomePage = () => {
     switch (roleUsuario) {
       case 'Administrador':
-        return <HomePageAdmin />;
+        return <HomePageAdmin key="hpa" />;
       case 'Familias':
-        return <HomePageFamilia />;
+        return <HomePageFamilia key="hpf" />;
       case 'Colaboradores':
-        return <HomePageColaborador/>
+        return <HomePageColaborador key="hpc"/>
       default:
-        return <div className="d-flex justify-content-center align-items-center">Usuario no válido</div>; // Caso por defecto si el rol no coincide
+        return <div className="d-flex justify-content-center align-items-center">Cargando usuario...</div>; // Caso por defecto si el rol no coincide
     }
   };
+
+  useEffect(()=>{
+    setRolUsuario(localStorage.getItem('role') ?? '');
+  },[]);
 
   return (
     <div>

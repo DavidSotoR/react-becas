@@ -23,7 +23,9 @@ function ModalNuevaPregunta({ show, handleClose }) {
         id_catalogo_encuestas_preguntas_tipo: 0,
         id_catalogo_encuestas_preguntas_parametro_clasificacion: 0,
         pregunta:"",
-        puntos_maximos: 0
+        puntos_maximos: 0,
+        longitud_respuesta: 0,
+        numero_pregunta: ""
     })
 
     const formInputChange =(e) => {
@@ -139,13 +141,18 @@ function ModalNuevaPregunta({ show, handleClose }) {
                     </select>
                 </div>  
                 <div className="mb-2">
+                    <label htmlFor="numero_pregunta" className="form-label">Numero de Pregunta:</label>
+                    <input id="numero_pregunta" type="text" className="form-control form-control-sm" onChange={(e)=> formInputChange(e)}
+                    placeholder="0" name="numero_pregunta"/>
+                </div>  
+                <div className="mb-2">
                     <label htmlFor="pregunta" className="form-label">Pregunta:</label>
                     <input id="pregunta" type="text" className="form-control form-control-sm" onChange={(e)=> formInputChange(e)}
                      placeholder="¿...?" name="pregunta"/>
                 </div>  
                 <div className="mb-2">
-                    <label htmlFor="pregunta" className="form-label">Puntuacion de la Pregunta:</label>
-                    <input id="pregunta" type="text" className="form-control form-control-sm" onChange={(e)=> formInputChange(e)}
+                    <label htmlFor="puntos_maximos" className="form-label">Puntuacion de la Pregunta:</label>
+                    <input id="puntos_maximos" type="text" className="form-control form-control-sm" onChange={(e)=> formInputChange(e)}
                     placeholder="0" name="puntos_maximos"/>
                 </div>  
 

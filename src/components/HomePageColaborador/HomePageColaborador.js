@@ -142,7 +142,7 @@ function HomePageColaborador() {
                 </div>
                 <div className="col">
                     <select class="form-select" aria-label="Default select example">
-                        <option selected>Escuelas y Empresas</option>
+                        <option defaultValue>Escuelas y Empresas</option>
                         <option value="1">Escuelas</option>
                         <option value="2">Empresas</option>
                     </select>

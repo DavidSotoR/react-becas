@@ -84,7 +84,6 @@ function HomePageAdmin() {
     ]}
   ])
   
-  console.log('Cargo HOME');
 
   const changeTab = () =>{
     if (activeTab === 'escuelas') {
@@ -125,6 +124,10 @@ function HomePageAdmin() {
   
 
   useEffect(() => {
+    console.log('Cargo HOME');
+  }, []);
+  
+  useEffect(() => {
     if (activeTab === 'escuelas') {
       setCatalogFolios(ESCUELAS);
     } else {
@@ -144,19 +147,19 @@ function HomePageAdmin() {
               </div>
               <div className="col-4 col-md-3 mb-1">
                   <select className="form-select form-select-sm" aria-label="Default select example">
-                      <option selected>Escuelas y Empresas</option>
+                      <option defaultValue>Escuelas y Empresas</option>
                       <option value="1">Escuelas</option>
                       <option value="2">Empresas</option>
                   </select>
               </div>
               <div className="col-4 col-md-3 mb-1">
                   <select className="form-select form-select-sm" aria-label="Default select example">
-                      <option selected>Cliente:</option>
+                      <option defaultValue>Cliente:</option>
                   </select>
               </div>
               <div className="col-4 col-md-3 mb-1">
                   <select className="form-select form-select-sm" aria-label="Default select example">
-                      <option selected>Asignado a:</option>
+                      <option defaultValue>Asignado a:</option>
                   </select>
               </div>
           </div>
