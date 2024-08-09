@@ -16,11 +16,37 @@ function CreacionEncuesta() {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+    const [encuestaID, setEncuestaId] = useState({});
+    
+    const getIdEncuesta = () =>{
+        axios.get(`${APIURL}/catalogos/encuestas/${ID}`,config).then((resp)=>{
+            setEncuestaId(resp.data)
+        }).catch((resp)=>{
+            console.log(resp);
+        })
+    }
+    
+    useEffect(()=>{
+        getIdEncuesta();
+    },[])
 
     return (
         <div className="container">
             <div>
                 <p className="fw-bold">Edicion de Encuesta</p>
+                
+                <div className="row">
+
+                    <div className="col-md-12">
+                        <b>Nombre: </b>{encuestaID.nombre}
+                    </div>
+                    <div className="col-md-12">
+                        <b>Descripccion: </b><i>{encuestaID.descripcion}</i>
+                    </div>
+                    <div className="col-md-12">
+                        <b>Tipo de Encuesta: </b>{(encuestaID?.tipo_cliente) ? encuestaID.tipo_cliente.nombre : ''}
+                    </div>
+                </div>
             </div>
             <br/>
 			<Tabs>
