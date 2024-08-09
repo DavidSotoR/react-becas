@@ -34,7 +34,7 @@ function ModalNuevaEncuesta({ show, handleClose }) {
         if (formData.id_tipo_cliente === '') {
             messageError.push('Campo Ciclo Escolar es OBLIGATORIO')
         }
-        if (formData.nombre.length <= 3 || formData.nombre === '') {
+        if (formData.nombre.length <= 1 || formData.nombre === '') {
             messageError.push('Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres')
         }
         if (formData.descripcion === '') {
