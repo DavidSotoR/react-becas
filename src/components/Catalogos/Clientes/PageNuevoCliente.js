@@ -40,6 +40,9 @@ function PageNuevoCliente() {
         rason_social: null
     })
 
+    const [ arrayErrors, setArrayErrors ] = useState([])
+    const [idSet, setIdSet] = useState(new Set());
+
     const formInputChange =(e) => {
         var name = e.target.name
         var value = (e.target.value === "null") ? null : e.target.value;
@@ -71,21 +74,267 @@ function PageNuevoCliente() {
             }));
             */
         }
-    } 
+    }
+    
+    const validateContieneEspacios = ( value ) =>{
+        return /^\s|\s$|\s{2,}/.test(value);
+    }
+    
+    const validateCorreo = (value) => {
+        const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return regexCorreo.test(value);
+    }
+
+    const removeInputValid = (value) => {
+        setArrayErrors(prevArrayErrors => prevArrayErrors.filter(error => error.id !== value));
+        setIdSet(prevIdSet => {
+            const nuevoIdSet = new Set(prevIdSet);
+            nuevoIdSet.delete(value);
+            return nuevoIdSet;
+        });
+    }
 
     const validateFields = (from) => {
-        var messageError = ''
-        if (from.id_tipo_cliente === '') {
-            messageError = 'Campo Tipo CLiente es OBLIGATORIO\n'
+        
+        if (from?.id_tipo_cliente === '' || from.id_tipo_cliente === 'null') {
+            var messageError = ''
+            var error = { msg: '', id: 0 }
+            messageError = 'Campo Tipo CLiente es OBLIGATORIO'
+            error.id = 1
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+
+        } else if (from.id_tipo_cliente !== '0' &&  from.id_tipo_cliente !== '') {
+            removeInputValid(1)
         }
-        if (from.nombre.length <= 3 || from.nombre === '') {
-            messageError += 'Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres\n'
+
+
+        if (from?.id_clientes_hermanos === '' || from.id_clientes_hermanos === 'null') {
+            var messageError = ''
+            var error = { msg: '', id: 0 }
+            messageError = 'Campo Tipo CLiente Hermano es OBLIGATORIO'
+            error.id = 2
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+
+        } else if (from?.id_clientes_hermanos !== '' || from.id_clientes_hermanos !== 'null') {
+            removeInputValid(2)
         }
-        if (messageError.length === 0) {
+        
+        if (from?.nombre.length <= 3 || from.nombre === '' || validateContieneEspacios(from.nombre)) {
+            var messageError = ''
+            var error = { msg: '', id: 0 }
+            messageError = 'Campo Nombre es OBLIGATORIO, debe contener mas de 3 caracteres, No debe contener espacios vacios al inicio o al final.'
+            error.id = 3
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        } else if (from.nombre.length > 3 && !validateContieneEspacios(from.nombre)) {
+            console.log('NOmbre es valido');
+            removeInputValid(3)
+            
+        }
+
+        if (from?.descripcion.length > 100 || validateContieneEspacios(from.descripcion)) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Descripcion debe contener menos de 100 caracteres y No debe contener espacios vacios al inicio o al final.'
+            error.id = 4
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        } else if (from?.descripcion.length < 100 || !validateContieneEspacios(from.descripcion)) {
+            removeInputValid(4)
+        }
+        
+        if (!validateCorreo(from.notificaciones_email)) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Noficicaciones Email debe contener un email valido.'
+            error.id = 5
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        } else if (validateCorreo(from.notificaciones_email)) {
+            removeInputValid(5)
+        }
+
+        if (from.rso === null || from?.rso.length <=3) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo RSO es obligatorio.'
+            error.id = 6
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        if (from.nombre_uno === null || from?.nombre_uno.length <=3) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Nombre 1 es obligatorio, debe contener mas de 3 caracteres.'
+            error.id = 7
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        if (from.telefono_uno === null || from?.telefono_uno.length !== 10) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Telefono 1 es obligatorio, debe contener 10 digitos.'
+            error.id = 8
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        if (from || from.nombre_dos !== null || from?.nombre_dos.length !== 0) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            if (from || from.nombre_uno.length <= 3) {
+                messageError = 'Campo Nombre 2 debe ser valido, debe contener mas de 3 caracteres.'
+                error.id = 9
+                error.msg = messageError
+                if (!idSet.has(error.id)) {
+                    setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                    setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+                }
+            }
+        }
+
+        if (from || from.telefono_dos !== null || from?.telefono_dos.length !== 0) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            if (from || from?.telefono_dos.length !== 10) {
+                messageError = 'Campo Telefono 2 debe contener 10 digitos.'
+                error.id = 10
+                error.msg = messageError
+                if (!idSet.has(error.id)) {
+                    setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                    setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+                }
+            }
+        }
+
+        if (from || from.telefono_mobil === null || from?.telefono_mobil.length !== 10) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Telefono Mobil es obligatorio, debe contener 10 digitos.'
+            error.id = 11
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        if (from || from.calle === null || from?.calle.length <= 3) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Calle es obligatorio.'
+            error.id = 12
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        if (from || from.entre_cale === null || from?.entre_cale.length <= 3) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Entre Calles es obligatorio.'
+            error.id = 13
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        if (from || from.colonia === null || from?.colonia.length <= 3) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Entre Calles es obligatorio.'
+            error.id = 14
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        if (from || from.codigo_postal === null || from?.codigo_postal.length < 5) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Codigo Postal es obligatorio.'
+            error.id = 15
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        if (from || from.ciudad === null || from?.ciudad.length < 3) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Ciudad es obligatorio.'
+            error.id = 16
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        if (from || from.estado === null || from?.estado.length < 3) {
+            var messageError = ''
+        var error = { msg: '', id: 0 }
+            messageError = 'Campo Ciudad es obligatorio.'
+            error.id = 17
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+        if (from || from.pais === null || from?.pais.length < 3) {
+            var messageError = ''
+            var error = { msg: '', id: 0 }
+            messageError = 'Campo Pais es obligatorio.'
+            error.id = 18
+            error.msg = messageError
+            if (!idSet.has(error.id)) {
+                setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+            }
+        }
+
+        /* if (arrayErrors.length === 0) {
             setFormValid(false)
         } else {
             setFormValid(true)
-        }
+        } */
     }
     
     const renderOptionsColegiosComunes = () =>{
@@ -139,11 +388,13 @@ function PageNuevoCliente() {
             "pais": formData.pais,
             "rason_social": formData.rason_social,
         }
-        /* console.log(dataPOST);
+        console.log(dataPOST);
+        console.log(arrayErrors);
+        
+        /* 
         navigate("/clientes") */
-        axios.post(APIURL+'/clientes',dataPOST,config).then((resp)=>{
+        /* axios.post(APIURL+'/clientes',dataPOST,config).then((resp)=>{
             console.log(resp);
-            //window.location.replace('http://localhost:3000/clientes')
             navigate("/clientes")
        
         }).catch((resp)=>{
@@ -152,13 +403,20 @@ function PageNuevoCliente() {
                 console.log(resp.response.data);
             }
             console.log(resp);
-        })
+        }) */
         
     }
 
     useEffect(()=>{
         validateFields(formData);
+        console.log(formData);
+        
     }, [formData])
+
+    useEffect(()=>{
+        console.log(arrayErrors);
+        
+    },[arrayErrors])
 
     return (
         <div className="container">
