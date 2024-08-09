@@ -16,7 +16,10 @@ function CreacionEncuesta() {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const [encuestaID, setEncuestaId] = useState({});
+    const [encuestaID, setEncuestaId] = useState({
+        nombre:"",
+        descripcion:""
+    });
     
     const getIdEncuesta = () =>{
         axios.get(`${APIURL}/catalogos/encuestas/${ID}`,config).then((resp)=>{
