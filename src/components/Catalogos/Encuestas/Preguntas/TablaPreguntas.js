@@ -81,7 +81,7 @@ function TablaPreguntas({ ID }) {
         setEditData({
             id_catalogo_encuesta: pregunta.id_catalogo_encuesta,
             id_catalogo_encuestas_preguntas_tipo: pregunta.id_catalogo_encuestas_preguntas_tipo,
-            id_catalogo_encuestas_preguntas_parametro_clasificacion: pregunta.id_catalogo_encuestas_preguntas_parametro_clasificacion,
+            id_catalogo_encuestas_preguntas_parametro_clasificacion: pregunta?.id_catalogo_encuestas_preguntas_parametro_clasificacion,
             pregunta: pregunta.pregunta,
             puntos_maximos: pregunta.puntos_maximos,
             longitud_respuesta: pregunta.longitud_respuesta,
@@ -145,7 +145,7 @@ function TablaPreguntas({ ID }) {
                                 </div>
                                 <div className="col-6">
                                     <select
-                                        value={editData.id_catalogo_encuestas_preguntas_parametro_clasificacion}
+                                        value={editData?.id_catalogo_encuestas_preguntas_parametro_clasificacion}
                                         onChange={(e) => setEditData({ ...editData, id_catalogo_encuestas_preguntas_parametro_clasificacion: e.target.value })}
                                         className="form-control">
                                         <option value="">Selecciona un parámetro</option>
@@ -212,7 +212,7 @@ function TablaPreguntas({ ID }) {
                         <p><b>PUNTOS MAXIMOS: </b>{pregunta.puntos_maximos} </p>
                     </div>
                     <div className="col-md-4">
-                        <p><b>PARAMETROS: </b>{pregunta.parametro_de_clasificacion.nombre}</p>
+                        <p><b>PARAMETROS: </b>{(pregunta?.parametro_de_clasificacion) ? pregunta.parametro_de_clasificacion.nombre : ''}</p>
                     </div>
                     <div className="col-md-4">
                         <p><b>TIPO DE PREGUNTA: </b>{pregunta.tipo_preguntas.nombre}</p>

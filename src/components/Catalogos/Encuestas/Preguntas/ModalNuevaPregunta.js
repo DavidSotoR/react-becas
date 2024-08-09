@@ -21,7 +21,7 @@ function ModalNuevaPregunta({ show, handleClose }) {
     const [formData, setFormData] = useState({
         id_catalogo_encuesta: 0,
         id_catalogo_encuestas_preguntas_tipo: 0,
-        id_catalogo_encuestas_preguntas_parametro_clasificacion: 0,
+        id_catalogo_encuestas_preguntas_parametro_clasificacion: "",
         pregunta:"",
         puntos_maximos: 0,
         longitud_respuesta: 0,
@@ -42,17 +42,11 @@ function ModalNuevaPregunta({ show, handleClose }) {
 
         var messageError = []
         
-        if (formData.id_catalogo_encuestas_preguntas_parametro_clasificacion === 0) {
-            messageError.push('Seleccione un tipo de pregunta')
-        }
         if (formData.id_catalogo_encuestas_preguntas_tipo === 0) {
             messageError.push('Seleccione un tipo de pregunta')
         }
         if (formData.pregunta.length <= 3 || formData.pregunta === '') {
             messageError.push('Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres')
-        }
-        if (formData.puntos_maximos < 0 || formData.puntos_maximos === '') {
-            messageError.push('Campo Puntos Maximo debe ser igual o mayor a 0')
         }
 
         if (messageError.length === 0) {
@@ -85,7 +79,7 @@ function ModalNuevaPregunta({ show, handleClose }) {
     }
 
     const renderOpcionesParametros = () => {
-        return [<option key='mrop-0' value="0">Parametro</option>,...allParametros.map((param) => (
+        return [<option key='mrop-0' value="">Sin parametro</option>,...allParametros.map((param) => (
             <option key={'mrop-'+param.id} value={`${param.id}`}>
                 { param.nombre }
             </option>
@@ -149,12 +143,7 @@ function ModalNuevaPregunta({ show, handleClose }) {
                     <label htmlFor="pregunta" className="form-label">Pregunta:</label>
                     <input id="pregunta" type="text" className="form-control form-control-sm" onChange={(e)=> formInputChange(e)}
                      placeholder="¿...?" name="pregunta"/>
-                </div>  
-                <div className="mb-2">
-                    <label htmlFor="puntos_maximos" className="form-label">Puntuacion de la Pregunta:</label>
-                    <input id="puntos_maximos" type="text" className="form-control form-control-sm" onChange={(e)=> formInputChange(e)}
-                    placeholder="0" name="puntos_maximos"/>
-                </div>  
+                </div>
 
             </Modal.Body>
             <Modal.Footer>
