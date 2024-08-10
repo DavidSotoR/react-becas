@@ -140,7 +140,7 @@ function TablaPreguntas({ ID }) {
                                 </div>
                                 <div className="col-6">
                                     <select
-                                        value={editData?.id_catalogo_encuestas_preguntas_parametro_clasificacion}
+                                        value={(editData?.id_catalogo_encuestas_preguntas_parametro_clasificacion) ? editData.id_catalogo_encuestas_preguntas_parametro_clasificacion :''}
                                         onChange={(e) => setEditData({ ...editData, id_catalogo_encuestas_preguntas_parametro_clasificacion: e.target.value })}
                                         className="form-control">
                                         <option value="">Selecciona un parámetro</option>
