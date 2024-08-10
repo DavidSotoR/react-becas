@@ -6,7 +6,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import ModalNuevoParametrosItems from "./ParametrosItems/ModalNuevoParametrosItems";
 import ModalEditarParametrosItems from "./ParametrosItems/ModalEditarParametrosItems";
 
-function TablaParametrosItem({idParametro,idParametroTipo}) {
+function TablaPreguntasParametrosItem({idParametro,idParametroTipo,idPregunta,IdPreguntaTipo}) {
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -22,7 +22,7 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
     const [itemToDelete, setItemToDelete] = useState(null);
     
     const getListaParametrosItem = () => {
-        axios.get(`${APIURL}/catalogos/encuestas/parametros/${idParametro}/items`,config)
+        axios.get(`${APIURL}/catalogos/encuestas/parametros/${idParametro}/preguntas/${idPregunta}/items`,config)
             .then((resp)=>{
                 setAllParametrosItem(resp.data);
             }).catch((error)=>{
@@ -68,7 +68,7 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
         getListaParametrosItem();
     },[idParametro,numberSave])
 
-    const listaTablaParametrosItem = () => {
+    const listaTablaPreguntasParametrosItem = () => {
         return allParametrosItem.map((pregunta_item, index) => (
             editingItemId === pregunta_item.id ? (
                 <ModalEditarParametrosItems
@@ -117,14 +117,14 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
     }
 
     return (<> 
-    {idParametroTipo === 1 && (
+    {idParametroTipo === 2 && (
         <>
         <div>
             <div className="seccion-table-parametros">
                 <table key={'tabpm-'+idParametroTipo} className="table items-parametros">
                     <tbody>
-                        {listaTablaParametrosItem()}
-                        <ModalNuevoParametrosItems idParametro={idParametro} idPregunta={null} numberSave={numberSave} setNumberSave={setNumberSave}/>
+                        {listaTablaPreguntasParametrosItem()}
+                        <ModalNuevoParametrosItems idParametro={idParametro} idPregunta={idPregunta} numberSave={numberSave} setNumberSave={setNumberSave}/>
                     </tbody>
                 </table>
             </div>
@@ -150,4 +150,4 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
     </>)
 }
 
-export default TablaParametrosItem;
+export default TablaPreguntasParametrosItem;

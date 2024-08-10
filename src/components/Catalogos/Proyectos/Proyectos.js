@@ -6,6 +6,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import { AuthContext } from "../../../context/AuthContext";
 import ResaltarTexto from "../../ResaltarTexto/ResaltarTexto";
+import { Link } from "react-router-dom";
 
 function Proyectos() {
     const { logout } = useContext(AuthContext);
@@ -104,6 +105,11 @@ function Proyectos() {
                 <td>{proyecto.id}</td>
                 <td>{proyecto.activo ? 'Sí' : 'No'}</td>
                 <td><p><ResaltarTexto texto={proyecto.nombre} reslatar={search}/></p></td>
+                <td>
+                    <div className="d-flex">
+                        <Link className="btn btn-primary btn-sm" to={`/encuestas/${proyecto.id}`}>Editar</Link>
+                    </div>
+                </td>
             </tr>
         ));
     };
@@ -152,6 +158,7 @@ function Proyectos() {
                                                 <th scope="col" className="col-id">#</th>
                                                 <th scope="col" className="col-activo">Activo</th>
                                                 <th scope="col">Nombre</th>
+                                                <th scope="col" className="col-1">Añadir</th>
                                             </tr>
                                         </thead>
                                         <tbody>

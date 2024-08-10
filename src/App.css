@@ -150,3 +150,11 @@ mark {
 .items-parametros td{
   border-top: none;
 }
+.border-static{
+  border-color: transparent;
+  border-width: 1px;
+  border-style: solid;
+}
+.border-static:hover{
+  border-color: #879eb4; 
+}

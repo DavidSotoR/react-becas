@@ -27,9 +27,6 @@ function TablaPreguntas({ ID }) {
         pregunta: '',
         puntos_maximos: 0
     })
-    const [isHovered, setIsHovered] = useState(null);
-    const handleMouseEnter = (index) => setIsHovered(index);
-    const handleMouseLeave = () =>  setIsHovered(null);
 
 
     const [ showModalNuevaPregunta, setShowModalNuevaPregunta ] = useState(false)
@@ -101,9 +98,7 @@ function TablaPreguntas({ ID }) {
     const renderBodyListaPreguntas = () => {
         return allPreguntas.map((pregunta,i) =>(
             <div key={'pg-' + pregunta.id} 
-                onMouseEnter={() => handleMouseEnter(i)}
-                onMouseLeave={handleMouseLeave} 
-                className={`mb-3 p-3 rounded border-opacity-75 ${ (isHovered === i) ? 'border' : 'm-1'}`}>
+                className={`mb-3 p-3 rounded border-opacity-75 border-static`}>
                 
                 {editingPregunta === pregunta.id ? (<>
                         <div className="d-flex justify-content-between mb-3">
