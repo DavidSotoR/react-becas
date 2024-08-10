@@ -45,9 +45,17 @@ function PageNuevoCliente() {
     const [idSet, setIdSet] = useState(new Set());
 
     const formInputChange =(e) => {
+        
         var name = e.target.name
         setInputSeleccionado(name)
         var value = (e.target.value === "null") ? null : e.target.value;
+
+        if (name === 'tipo_persona') {
+            return 0;
+        }
+        if (name === 'requiere_facturar') {
+            return 0;
+        }
         setFormData(prevState => ({
             ...prevState,
             [name]: value
@@ -85,6 +93,10 @@ function PageNuevoCliente() {
     const validateCorreo = (value) => {
         const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return regexCorreo.test(value);
+    }
+
+    const validateSoloNumeros = (tel) => {
+        return /^\d+$/.test(tel);
     }
 
     const contieneErrorInput = (id) => {
@@ -239,7 +251,7 @@ function PageNuevoCliente() {
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'telefono_uno') {
-            if (from.telefono_uno === null || from.telefono_uno.length !== 10) {
+            if (from.telefono_uno === null || from.telefono_uno.length !== 10 || !validateSoloNumeros(from.telefono_uno)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Telefono 1 es obligatorio, debe contener 10 digitos.'
@@ -249,7 +261,7 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.telefono_uno && from.telefono_uno.length === 10 && !validateContieneEspacios(from.telefono_uno)) {
+            } else if (from.telefono_uno && from.telefono_uno.length === 10 && !validateContieneEspacios(from.telefono_uno) && validateSoloNumeros(from.telefono_uno)) {
                 removeInputValid(9)
             }            
         }
@@ -276,7 +288,7 @@ function PageNuevoCliente() {
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'telefono_dos') {
             //if (from || from.telefono_dos !== null || from?.telefono_dos.length !== 0) {
-                if (from?.telefono_dos.length !== 10 && validateContieneEspacios(from.telefono_dos)) {
+                if (from?.telefono_dos.length !== 10 || validateContieneEspacios(from.telefono_dos) || !validateSoloNumeros(from.telefono_dos)) {
                     var messageError = ''
                     var error = { msg: '', id: 0 }
                     messageError = 'Campo Telefono 2 debe contener 10 digitos.'
@@ -286,7 +298,7 @@ function PageNuevoCliente() {
                         setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                         setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                     }
-                } else if (from.telefono_dos && from?.telefono_dos.length === 10 && !validateContieneEspacios(from.telefono_dos)) {
+                } else if (from.telefono_dos && from?.telefono_dos.length === 10 && !validateContieneEspacios(from.telefono_dos) && validateSoloNumeros(from.telefono_dos)) {
                     removeInputValid(11)
                 } 
             /* } else if (from.telefono_dos && from?.telefono_dos.length === 10) {
@@ -295,7 +307,7 @@ function PageNuevoCliente() {
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'telefono_mobil') {
-            if (from.telefono_mobil === null || from?.telefono_mobil.length !== 10 || validateContieneEspacios(from.telefono_mobil)) {
+            if (from.telefono_mobil === null || from?.telefono_mobil.length !== 10 || validateContieneEspacios(from.telefono_mobil) || !validateSoloNumeros(from.telefono_mobil)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Telefono Mobil es obligatorio, debe contener 10 digitos.'
@@ -305,7 +317,7 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.telefono_mobil && from?.telefono_mobil.length === 10 && !validateContieneEspacios(from.telefono_mobil)) {
+            } else if (from.telefono_mobil && from?.telefono_mobil.length === 10 && !validateContieneEspacios(from.telefono_mobil) && validateSoloNumeros(from.telefono_mobil)) {
                 removeInputValid(12)
             }
         }        
@@ -522,7 +534,7 @@ function PageNuevoCliente() {
             <div className="row">
                 <div className="col-5">
                     <div className="mb-3">
-                    <label>Tipo Cliente</label>
+                    <label className="fw-bold">Tipo Cliente</label>
                         <Form.Select aria-label="Default select example" name="id_tipo_cliente" onChange={(e)=> {formInputChange(e); changeTipoCliente(e);}}>
                             <option value="">Seleccione una Opción</option>
                             <option value="1">Escuela</option>
@@ -546,7 +558,7 @@ function PageNuevoCliente() {
                 <div className="col-5">
                     {formData.id_tipo_cliente === "1" && esColegioComun === true && (
                     <div className="mb-3" >
-                        <label>Colegios hermanos</label>
+                        <label className="fw-bold">Colegios hermanos</label>
                         <Form.Select name="id_clientes_hermanos" id="id_clientes_hermanos" onChange={(e)=> formInputChange(e)}>
                         {renderOptionsColegiosComunes()}
                         </Form.Select>
@@ -559,14 +571,14 @@ function PageNuevoCliente() {
             <div className="row">
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Nombre</label>
+                        <label className="fw-bold">Nombre</label>
                         <input type="text" className="form-control form-control-sm" name="nombre" onChange={(e)=> formInputChange(e)}/>
                           { contieneErrorInput(3) && <span className="error-msg"> {obtenerErrorMensaje(3)} </span> }
                     </div>
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Descripción</label>
+                        <label className="fw-bold">Descripción</label>
                         <input type="text" className="form-control form-control-sm" name="descripcion" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(4) && <span className="error-msg"> {obtenerErrorMensaje(4)} </span> }
                     </div>
@@ -574,25 +586,44 @@ function PageNuevoCliente() {
                 
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Notificaciones Email</label>
+                        <label className="fw-bold">Notificaciones Email</label>
                         <input type="email" className="form-control form-control-sm" name="notificaciones_email" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(5) && <span className="error-msg"> {obtenerErrorMensaje(5)} </span> }
                     </div>
                 </div>
+                
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>RSO</label>
+                        <label className="fw-bold">RSO</label>
                         <input type="text" className="form-control form-control-sm" name="rso" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(6) && <span className="error-msg"> {obtenerErrorMensaje(6)} </span> }
                     </div>
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Razón Social</label>
+                        <label className="fw-bold">Razón Social</label>
                         <input type="text" className="form-control form-control-sm" name="rason_social" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(7) && <span className="error-msg"> {obtenerErrorMensaje(7)} </span> }
                     </div>
-                </div>          
+                </div>   
+                <div className="col-12">
+                    <div className="row">
+                        <div className="col-2 pt-3">
+                            <Form.Check type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
+                            <Form.Check type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
+                        </div>
+                        <div className="col-5">
+                            <label className="fw-bold">RFC</label>
+                            <input type="text" className="form-control form-control-sm" name="rfc" onChange={(e)=> formInputChange(e)}/>
+                        </div>
+                        <div className="col" style={{ paddingTop: "2rem" }}>
+                            <Form.Check type="switch">
+                                <Form.Check.Input name="requiere_facturar" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere facturar </span></Form.Check.Label>
+                            </Form.Check>
+                        </div>
+                    </div>
+                </div>       
             </div>
 
             <hr></hr>
@@ -603,35 +634,35 @@ function PageNuevoCliente() {
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Nombre 1</label>
+                        <label className="fw-bold">Nombre 1</label>
                         <input type="text" className="form-control form-control-sm" name="nombre_uno" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(8) && <span className="error-msg"> {obtenerErrorMensaje(8)} </span> }
                     </div>
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Teléfono 1</label>
+                        <label className="fw-bold">Teléfono 1</label>
                         <input type="text" className="form-control form-control-sm" name="telefono_uno" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(9) && <span className="error-msg"> {obtenerErrorMensaje(9)} </span> }
                     </div>
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Nombre 2</label>
+                        <label className="fw-bold">Nombre 2</label>
                         <input type="text" className="form-control form-control-sm" name="nombre_dos" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(10) && <span className="error-msg"> {obtenerErrorMensaje(10)} </span> }
                     </div>
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Teléfono 2</label>
+                        <label className="fw-bold">Teléfono 2</label>
                         <input type="text" className="form-control form-control-sm" name="telefono_dos" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(11) && <span className="error-msg"> {obtenerErrorMensaje(11)} </span> }
                     </div>
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Teléfono Móvil</label>
+                        <label className="fw-bold">Teléfono Móvil</label>
                         <input type="text" className="form-control form-control-sm" name="telefono_mobil" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(12) && <span className="error-msg"> {obtenerErrorMensaje(12)} </span> }
                     </div>
@@ -646,49 +677,49 @@ function PageNuevoCliente() {
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Calle</label>
+                        <label className="fw-bold">Calle</label>
                         <input type="text" className="form-control form-control-sm" name="calle" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(13) && <span className="error-msg"> {obtenerErrorMensaje(13)} </span> }
                     </div>  
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Entre Calles</label>
+                        <label className="fw-bold">Entre Calles</label>
                         <input type="text" className="form-control form-control-sm" name="entre_cale" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(14) && <span className="error-msg"> {obtenerErrorMensaje(14)} </span> }
                     </div>  
                 </div>
                 <div className="col-5">
                     <div className="mb-3">
-                        <label>Colonia</label>
+                        <label className="fw-bold">Colonia</label>
                         <input type="text" className="form-control form-control-sm" name="colonia" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(15) && <span className="error-msg"> {obtenerErrorMensaje(15)} </span> }
                     </div> 
                 </div>
                 <div className="col-4">
                     <div className="mb-3">
-                        <label>Codigo Postal</label>
+                        <label className="fw-bold">Codigo Postal</label>
                         <input type="text" className="form-control form-control-sm" name="codigo_postal" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(16) && <span className="error-msg"> {obtenerErrorMensaje(16)} </span> }
                     </div>
                 </div>
                 <div className="col-4">
                     <div className="mb-3">
-                        <label>Ciudad</label>
+                        <label className="fw-bold">Ciudad</label>
                         <input type="text" className="form-control form-control-sm" name="ciudad" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(17) && <span className="error-msg"> {obtenerErrorMensaje(17)} </span> }
                     </div>
                 </div>
                 <div className="col-4">
                     <div className="mb-3">
-                        <label>Estado</label>
+                        <label className="fw-bold">Estado</label>
                         <input type="text" className="form-control form-control-sm" name="estado" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(18) && <span className="error-msg"> {obtenerErrorMensaje(18)} </span> }
                     </div>
                 </div>
                 <div className="col-4">
                     <div className="mb-3">
-                        <label>Pais</label>
+                        <label className="fw-bold">Pais</label>
                         <input type="text" className="form-control form-control-sm" name="pais" onChange={(e)=> formInputChange(e)}/>
                         { contieneErrorInput(19) && <span className="error-msg"> {obtenerErrorMensaje(19)} </span> }
                     </div>
