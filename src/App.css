@@ -12,6 +12,11 @@
   font-style: normal;
 }
 
+.error-msg{
+  color: red;
+  font-size: .6rem;
+}
+
 body {
   font-family: 'MiFuentePersonalizada', sans-serif;
   font-size: .8rem;
