@@ -163,3 +163,11 @@ mark {
 .border-static:hover{
   border-color: #879eb4; 
 }
+.tag-color{
+  width: .8em;
+  height: .8em;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 3px;
+  margin-right: 3px;;
+}

@@ -207,7 +207,15 @@ function TablaPreguntas({ ID }) {
                         <p><b>PUNTOS MAXIMOS: </b>{pregunta.puntos_maximos} </p>
                     </div>
                     <div className="col-md-4">
-                        <p><b>PARAMETROS: </b>{(pregunta?.parametro_de_clasificacion) ? pregunta.parametro_de_clasificacion.nombre : ''}</p>
+                        <p>
+                            <b>PARAMETROS: </b>
+                            {pregunta?.clasificacion_parametro && (
+                                <>
+                                    <div className="tag-color" style={{ backgroundColor: pregunta.clasificacion_parametro.color }}></div>
+                                    {pregunta.clasificacion_parametro.nombre}
+                                </>
+                            )}
+                        </p>
                     </div>
                     <div className="col-md-4">
                         <p><b>TIPO DE PREGUNTA: </b>{pregunta.tipo_preguntas.nombre}</p>
@@ -221,12 +229,12 @@ function TablaPreguntas({ ID }) {
             </div>
         ));
     };
-    
     return (
         <div>
             <div className="d-flex justify-content-between mb-3">
                 <div className="">
-                    <h3>Lista de preguntas</h3>
+                    <h3>Lista de preguntas:</h3>
+                    <span>Elementos añadidos: {allPreguntas.length}</span>
                 </div>
                 <div className="">
                 <button className="btn btn-primary btn-sm fw-bold" onClick={handleShowMNuevaPregunta}>Agregar Pregunta</button>

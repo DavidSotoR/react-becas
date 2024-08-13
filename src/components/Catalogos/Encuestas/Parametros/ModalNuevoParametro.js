@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../../context/AuthContext";
 import { useParams } from "react-router-dom";
 
@@ -13,7 +13,6 @@ function ModalNuevoParametro({ show, handleClose }) {
         }
     }
     const { logout } = useContext(AuthContext);
-    const [ allTipoClientes, setAllTipoClientes ] = useState([])
 
     
     const [ allParametrosTipos, setAllParametrosTipos ] = useState([]);
@@ -31,7 +30,8 @@ function ModalNuevoParametro({ show, handleClose }) {
         id_catalogo_encuesta:0,
         nombre:"",
         puntos_maximo:20,
-        id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos:0
+        id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos:'0',
+        color:'#00D5DF'
     })
 
     const formInputChange =(e) => {
@@ -45,7 +45,7 @@ function ModalNuevoParametro({ show, handleClose }) {
 
     const validateFields = ()=>{
         var messageError = []
-        if(formData.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos == 0){
+        if(formData.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos === '0'){
             messageError.push('Campo Tipo de Parametro es OBLIGATORIO')
         }
         if (formData.nombre === '') {
@@ -92,10 +92,12 @@ function ModalNuevoParametro({ show, handleClose }) {
     }
 
     useEffect(()=>{
-         validateFields();
-        /*getListaClientes() */
         getListaParametrosTipos();
-    }, [show,formData])
+    }, [])
+    
+    useEffect(()=>{
+        validateFields();
+    }, [formData])
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -109,7 +111,11 @@ function ModalNuevoParametro({ show, handleClose }) {
                     aria-label="Default select example" name="id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos">
                         { renderOpcionesParametrosTipos() }
                     </select>
-                </div>  
+                </div> 
+                <div>
+                    <label htmlFor="color" className="form-label">Color del Parametro:</label>
+                    <input type="color" className="form-control form-control-color" name="color" value={formData.color} onChange={(e)=> formInputChange(e)}/>
+                </div>
                 <div className="mb-2">
                     <label htmlFor="nombre_parametro" className="form-label">Nombre Parametro:</label>
                     <input id="nombre_parametro" type="text" className="form-control form-control-sm" placeholder="" name="nombre" onChange={(e)=> formInputChange(e)}/>
