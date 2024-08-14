@@ -18,6 +18,7 @@ function PageNuevoCliente() {
     const [showAlert, setShowAlert] = useState(false);
     const [showAlertError, setShowAlertError] = useState(false);
     const [formValid, setFormValid] = useState(true)
+    const [tipoPersona, setTipoPersona] = useState('')
     const [ inputSeleccionado, setInputSeleccionado ] = useState("")
     const [formData, setFormData] = useState({
         id_tipo_cliente: '',
@@ -38,7 +39,8 @@ function PageNuevoCliente() {
         ciudad: '',
         estado: '',
         pais: '',
-        rason_social: ''
+        rason_social: '',
+        rfc: ''
     })
 
     const [ arrayErrors, setArrayErrors ] = useState([])
@@ -51,9 +53,13 @@ function PageNuevoCliente() {
         var value = (e.target.value === "null") ? null : e.target.value;
 
         if (name === 'tipo_persona') {
+            setTipoPersona(value)
             return 0;
         }
         if (name === 'requiere_facturar') {
+            return 0;
+        }
+        if (name === 'documentacion_digital') {
             return 0;
         }
         setFormData(prevState => ({
@@ -93,6 +99,22 @@ function PageNuevoCliente() {
     const validateCorreo = (value) => {
         const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return regexCorreo.test(value);
+    }
+
+    const validarRFC = (valor) => {
+        if (tipoPersona === 'fisica') {
+            if (valor.length === 12) {
+                return true;
+            }
+        }
+
+        if (tipoPersona === 'moral') {
+            if (valor.length === 13) {
+                return true
+            }
+        }
+
+        return false
     }
 
     const validateSoloNumeros = (tel) => {
@@ -434,6 +456,22 @@ function PageNuevoCliente() {
             }   
         }
 
+        if (inputSeleccionado !== '' && inputSeleccionado === 'rfc') {
+            if (!validarRFC(from.rfc)) {
+                var messageError = ''
+                var error = { msg: '', id: 0 }
+                messageError = 'Campo RFC debe ser valido.'
+                error.id = 20
+                error.msg = messageError
+                if (!idSet.has(error.id)) {
+                    setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                    setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+                }
+            } else if (validarRFC(from.rfc)) {
+                removeInputValid(20)
+            }   
+        }
+
         /* if (arrayErrors.length === 0) {
             setFormValid(false)
         } else {
@@ -515,6 +553,19 @@ function PageNuevoCliente() {
     }
 
     useEffect(()=>{
+        console.log(tipoPersona);
+        if (tipoPersona === 'fisica' || tipoPersona === 'moral') {
+            if (validarRFC(formData.rfc)) {
+                console.log('es valido');
+                
+            } else {
+                console.log('es invalido');
+            }
+        }
+        
+    }, [ tipoPersona ])
+
+    useEffect(()=>{
         validateFields(formData);        
     }, [formData])
 
@@ -592,6 +643,22 @@ function PageNuevoCliente() {
                     </div>
                 </div>
                 
+                  
+            </div>
+            <div className="row">
+                <div className="col-12 pt-3">
+                    <p className="fw-bold pb-1 mb-1"> Seleccione el tipo de persona fiscal al que pertenece: </p>
+                    <div className="d-flex pb-3">
+                        <Form.Check className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
+                        <Form.Check type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
+                    </div>
+                    
+                </div>
+                <div className="col-5">
+                    <label className="fw-bold">RFC</label>
+                    <input type="text" className="form-control form-control-sm" name="rfc" onChange={(e)=> formInputChange(e)}/>
+                    { contieneErrorInput(20) && <span className="error-msg"> {obtenerErrorMensaje(20)} </span> }
+                </div>
                 <div className="col-5">
                     <div className="mb-3">
                         <label className="fw-bold">RSO</label>
@@ -606,24 +673,25 @@ function PageNuevoCliente() {
                         { contieneErrorInput(7) && <span className="error-msg"> {obtenerErrorMensaje(7)} </span> }
                     </div>
                 </div>   
-                <div className="col-12">
+                <div className="col-12 mt-2">
                     <div className="row">
-                        <div className="col-2 pt-3">
-                            <Form.Check type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
-                            <Form.Check type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
-                        </div>
-                        <div className="col-5">
-                            <label className="fw-bold">RFC</label>
-                            <input type="text" className="form-control form-control-sm" name="rfc" onChange={(e)=> formInputChange(e)}/>
-                        </div>
-                        <div className="col" style={{ paddingTop: "2rem" }}>
-                            <Form.Check type="switch">
-                                <Form.Check.Input name="requiere_facturar" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
-                                <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere facturar </span></Form.Check.Label>
-                            </Form.Check>
+                        <div className="col-7">
+                            <div className="d-flex">
+                                <Form.Check className="me-5" type="switch">
+                                    <Form.Check.Input name="requiere_facturar" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere facturar </span></Form.Check.Label>
+                                </Form.Check>
+                                <Form.Check type="switch">
+                                    <Form.Check.Input name="documentacion_digital" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Documentos Digital </span></Form.Check.Label>
+                                </Form.Check>
+                            </div>
+                            
                         </div>
                     </div>
-                </div>       
+                </div> 
+            
+                    
             </div>
 
             <hr></hr>
