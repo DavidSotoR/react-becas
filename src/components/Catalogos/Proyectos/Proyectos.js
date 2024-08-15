@@ -17,12 +17,12 @@ function Proyectos() {
         }
     }
     
-    const [activos,setActivos] = useState(1);
+    const [ activos,setActivos ] = useState(1);
     const [ tipoCliente, setTipoCliente ] = useState("Escuelas")
     const [ idTipoCliente, setIdTipoCliente ] = useState(1)
     const [ allTiposClientes, setAllTiposClientes ] = useState([])
     const [ allProyectos, setAllProyectos ] = useState([])
-    const [show, setShow] = useState(false);
+    const [ show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [search,setSearch] = useState("");
@@ -41,6 +41,7 @@ function Proyectos() {
         setIdTipoCliente(id);
         setAllProyectos([]);
     }
+
     const getTiposClientes = async () => {
         try {
             const resp = await axios.get(APIURL+'/clientes/tipos', config);
@@ -55,21 +56,21 @@ function Proyectos() {
             }
         }
     }
+
     const getProyectosList = async () => {
         try {
             const resp = await axios.get(APIURL+`/proyectos?id_tipo_cliente=${idTipoCliente}&activo=${activos}`, config);
             setAllProyectos(resp.data);
         } catch (error) {
-            console.error("Error fetching Ciclos Escolares:", error);
             if (error?.response.status === 401) {
                 logout()
             } else {
-                alert('Ocurrio un ERROR en el REQUEST')
                 console.log(error);
-                
+                alert('Error al solicitar información');
             }
         }
     }
+
     useEffect( ()=>{
         getTiposClientes();
         getProyectosList();
@@ -78,10 +79,7 @@ function Proyectos() {
     useEffect( ()=>{
         getProyectosList();
         setSearch("");
-    }, [idTipoCliente])
-    useEffect( ()=>{
-        getProyectosList();
-    }, [activos])
+    }, [activos,idTipoCliente])
 
     useEffect( ()=>{
         if (!show) {
@@ -107,7 +105,7 @@ function Proyectos() {
                 <td><p><ResaltarTexto texto={proyecto.nombre} reslatar={search}/></p></td>
                 <td>
                     <div className="d-flex">
-                        <Link className="btn btn-primary btn-sm" to={`/encuestas/${proyecto.id}`}>Editar</Link>
+                        <Link className="btn btn-primary btn-sm" to={`/proyectos/${proyecto.id}`}>Editar</Link>
                     </div>
                 </td>
             </tr>
