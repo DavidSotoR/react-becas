@@ -27,7 +27,7 @@ export const ModalActivarUsuario = ({ show ,onHide ,p_usuario, activar_desactiva
     },[])
     return (
         <Modal show={show} onHide={onHide}>
-            <Modal.Header> { usuario && usuario.active ? 'Desactivar' : 'Activar' } al usuario: </Modal.Header>
+            <Modal.Header className="fw-bold"> { usuario && usuario.active ? 'Desactivar' : 'Activar' } al usuario: </Modal.Header>
             <Modal.Body>
                 Se Deshabilitara el usuario: <span className="fw-bold">{ usuario && usuario.email }</span>
             </Modal.Body>
