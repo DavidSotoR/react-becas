@@ -12,6 +12,10 @@
   font-style: normal;
 }
 
+.table-col-switch{
+  position: relative !important;
+}
+
 .error-msg{
   color: red;
   font-size: .6rem;

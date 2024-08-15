@@ -51,7 +51,15 @@ function PageActualizarCliente() {
 
     const formInputChange =(e) => {
         var name = e.target.name
+        setInputSeleccionado(name)
         var value = (e.target.value === "null") ? null : e.target.value;
+
+        if (name === 'tipo_persona') {
+            return 0;
+        }
+        if (name === 'requiere_facturar') {
+            return 0;
+        }
         setFormData(prevState => ({
             ...prevState,
             [name]: value

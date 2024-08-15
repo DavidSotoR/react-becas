@@ -1,10 +1,11 @@
 import axios from "axios";
 import React,{ useContext, useEffect, useState } from "react";
 import UsuarioCrear from "./UsuarioCrear";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 import ModalUpdateUser from "./ModalUpdateUser";
 import ModalCrearUsuario from "./ModalCrearUsuario";
+import { ModalActivarUsuario } from "./ModalActivarUsuario";
 
 function Usuarios() {
     const APIURL = process.env.REACT_APP_API_URL
@@ -18,6 +19,11 @@ function Usuarios() {
     const [show, setShow] = useState(false); 
     const handleClose = () => setShow(false); 
     const handleShow = () => setShow(true);
+
+    const [showActivar, setShowActivar] = useState(false); 
+    const handleCloseActivar = () => setShowActivar(false); 
+    const handleShowActivar = () => setShowActivar(true);
+    const [userToActive, setUserToActive] = useState(null);
 
     const [search,setSearch] = useState("");
     const [searchPorPerfil,setSearchPorPerfil] = useState(null);
@@ -53,6 +59,29 @@ function Usuarios() {
                 logout()
             }
         }   
+    }
+
+    const returnValorSwitch = (nuevoValor) => {
+        var nuevoEstado = nuevoValor
+        setAllUsuarios(prevState =>
+            prevState.map(user => 
+                user.id === userToActive.id ? { ...user, active: nuevoEstado } : user
+            )
+        );
+    }
+
+    const switchActiveChange = (e, usuario) => {
+        console.log(e.target);
+        console.log(usuario);
+        handleShowActivar()
+        setUserToActive(usuario)
+        /* const nuevoEstado = e.target.checked ? 1 : 0;
+        setAllUsuarios(prevState =>
+            prevState.map(user => 
+                user.id === usuario.id ? { ...user, active: nuevoEstado } : user
+            )
+        ); */
+        
     }
 
     const getAllDataUsuarios = async () => {
@@ -158,6 +187,7 @@ function Usuarios() {
         setDataPostUsuario(data)
         setBtnEnable(pbtnEnable)
         console.log(btnEnable);
+        
     }
 
     const sendDataPost = () => {
@@ -191,9 +221,6 @@ function Usuarios() {
     const renderFilasTablaUsuarios = () => {
         return allUsuariosFiltrados.map((usuario, index) => (
             <tr key={'tr-usuario-'+index}>
-                <td className="col-id">
-                    <p>{usuario.id}</p>
-                </td>
                 <td className="col-nombre">
                     <p>{usuario.name}</p>
                 </td>
@@ -207,9 +234,21 @@ function Usuarios() {
                     <p>{ getNamePerfil(usuario.id_perfil)}</p>
                 </td>
                 <td>
+                    <div className="d-flex justify-content-start align-items-center">
+                    <Form.Check type="switch">
+                        <Form.Check.Input onChange={ (e) => { switchActiveChange(e, usuario) } } checked={ usuario.active === 1 } className="table-col-switch" name="documentacion_digital" type="checkbox" />
+                    </Form.Check>
+                    </div>
+                    
+                </td>
+                <td>
                     <div className="d-flex justify-content-start">
-                        <button className="btn btn-primary mx-1 btn-sm" onClick={ ()=>{ selectUserToUpdate(usuario) }  }>Editar</button>
-                        <button className="btn btn-small btn-danger mx-1 btn-sm">X</button>
+                        <button className="btn btn-outline-secondary mx-1 btn-sm p-1 pb-0" style={{ borderColor: "rgba(0,0,0,0)" }} onClick={ ()=>{ selectUserToUpdate(usuario) }  }>
+                            <ion-icon style={{ fontWeight: "bolder!important", fontSize:"x-large" }} name="create"></ion-icon>
+                        </button>
+                        <button className="btn btn-outline-danger mx-1 btn-sm p-1 pb-0" style={{ borderColor: "rgba(0,0,0,0)" }}>
+                            <ion-icon style={{ fontWeight: "bolder!important", fontSize:"x-large" }} name="trash"></ion-icon>
+                        </button>
                     </div>
                 </td>
             </tr>
@@ -297,12 +336,12 @@ function Usuarios() {
                     <table className="table">
                         <thead>
                             <tr>
-                            <th scope="col" className="col-id">#</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Cuenta</th>
-                            <th scope="col">Cliente</th>
-                            <th scope="col">Perfil</th>
-                            <th scope="col">Opciones</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Cuenta</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Perfil</th>
+                                <th scope="col">Activo</th>
+                                <th scope="col">Opciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -313,10 +352,20 @@ function Usuarios() {
                 
                 </div>
             </div>
+                {
+                    showActivar && (
+                        <ModalActivarUsuario 
+                        show={showActivar} 
+                        onHide={handleCloseActivar} 
+                        p_usuario={ userToActive }
+                        activar_desactivar={ returnValorSwitch }></ModalActivarUsuario>
+                    )
+                }
+
                 {showUpdate && (
                     <ModalUpdateUser show={ showUpdate } handleCloseModal={ handleCloseUpdate } dataUser={ userSelected }></ModalUpdateUser>
                 )
-            }            
+                }            
 
             {/* {   show &&
                 <ModalCrearUsuario show={show} handleClose={handleClose}></ModalCrearUsuario>

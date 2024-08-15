@@ -14,10 +14,12 @@ function PageNuevoCliente() {
         }
     }
     const [allColegiosHermanos,setAllColegiosHermanos] = useState([]);
+    const [ allOptionsSelectEncuestas, setAllOptionsSelectEncuestas ] = useState([])
     const [esColegioComun, setEsColegioComun] = useState(false)
     const [showAlert, setShowAlert] = useState(false);
     const [showAlertError, setShowAlertError] = useState(false);
     const [formValid, setFormValid] = useState(true)
+    const [tipoPersona, setTipoPersona] = useState('')
     const [ inputSeleccionado, setInputSeleccionado ] = useState("")
     const [formData, setFormData] = useState({
         id_tipo_cliente: '',
@@ -25,6 +27,8 @@ function PageNuevoCliente() {
         descripcion: '',
         notificaciones_email: '',
         id_clientes_hermanos: null,
+        id_catalogo_encuesta: '',
+        documentacion_digital: false,
         rso: '',
         nombre_uno: '',
         telefono_uno: '',
@@ -38,7 +42,8 @@ function PageNuevoCliente() {
         ciudad: '',
         estado: '',
         pais: '',
-        rason_social: ''
+        rason_social: '',
+        rfc: ''
     })
 
     const [ arrayErrors, setArrayErrors ] = useState([])
@@ -50,10 +55,23 @@ function PageNuevoCliente() {
         setInputSeleccionado(name)
         var value = (e.target.value === "null") ? null : e.target.value;
 
+        console.log(name);
+
         if (name === 'tipo_persona') {
+            setTipoPersona(value)
             return 0;
         }
         if (name === 'requiere_facturar') {
+            return 0;
+        }
+        if (name === 'documentacion_digital') {
+            console.log('entra');
+            
+            var newValue = !formData.documentacion_digital
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: newValue
+            }));
             return 0;
         }
         setFormData(prevState => ({
@@ -95,6 +113,22 @@ function PageNuevoCliente() {
         return regexCorreo.test(value);
     }
 
+    const validarRFC = (valor) => {
+        if (tipoPersona === 'fisica') {
+            if (valor.length === 12) {
+                return true;
+            }
+        }
+
+        if (tipoPersona === 'moral') {
+            if (valor.length === 13) {
+                return true
+            }
+        }
+
+        return false
+    }
+
     const validateSoloNumeros = (tel) => {
         return /^\d+$/.test(tel);
     }
@@ -118,6 +152,23 @@ function PageNuevoCliente() {
     }
 
     const validateFields = (from) => {
+        if (inputSeleccionado !== '' && inputSeleccionado === 'id_catalogo_encuesta') {
+            if (from?.id_catalogo_encuesta === '0' || from.id_catalogo_encuesta === 'null') {
+                var messageError = ''
+                var error = { msg: '', id: 0 }
+                messageError = 'Campo Encuesta a Aplicar es OBLIGATORIO'
+                error.id = 21
+                error.msg = messageError
+                if (!idSet.has(error.id)) {
+                    setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                    setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+                }
+    
+            } else if (from.id_catalogo_encuesta !== '0' &&  from.id_catalogo_encuesta !== '' &&  from.id_catalogo_encuesta !== 'null') {
+                removeInputValid(21)
+            }
+        }
+
         if (inputSeleccionado !== '' && inputSeleccionado === 'id_tipo_cliente') {
             if (from?.id_tipo_cliente === '' || from.id_tipo_cliente === 'null') {
                 var messageError = ''
@@ -434,6 +485,22 @@ function PageNuevoCliente() {
             }   
         }
 
+        if (inputSeleccionado !== '' && inputSeleccionado === 'rfc') {
+            if (!validarRFC(from.rfc)) {
+                var messageError = ''
+                var error = { msg: '', id: 0 }
+                messageError = 'Campo RFC debe ser valido.'
+                error.id = 20
+                error.msg = messageError
+                if (!idSet.has(error.id)) {
+                    setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
+                    setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
+                }
+            } else if (validarRFC(from.rfc)) {
+                removeInputValid(20)
+            }   
+        }
+
         /* if (arrayErrors.length === 0) {
             setFormValid(false)
         } else {
@@ -446,6 +513,25 @@ function PageNuevoCliente() {
             <option key={ch.id} value={ch.id}> {ch.nombre} </option>
         ))]
     }
+
+    const getOptionsEncuestas = () => {
+        axios.get(APIURL+"/catalogos/encuestas", config).then((resp) => {
+            setAllOptionsSelectEncuestas(resp.data)
+            
+        }).catch((error)=>{
+            if (error.response.status === 401) {
+                logout()
+            }
+        })
+    }
+
+    const renderOptionsEncuestas = () =>{
+        console.log('render Datos');
+        return [<option value="0">Seleccione una Opción</option>,...allOptionsSelectEncuestas.map((ch) => (
+            <option key={ch.id} value={ch.id}> {ch.nombre} </option>
+        ))]
+            
+    }
     
     const getAllColegiosHermanos = async (id_tipo_cliente) => {
         
@@ -457,7 +543,6 @@ function PageNuevoCliente() {
 
         try {
             const resp = await axios.get(APIURL+'/clientes/hermanos', config)
-            console.log(resp.data);
             setAllColegiosHermanos(resp.data);
         } catch (resp) {
             if (resp?.response) {
@@ -465,7 +550,6 @@ function PageNuevoCliente() {
                     logout()
                 }
             }
-            console.log(resp);
         }
     }
 
@@ -491,13 +575,15 @@ function PageNuevoCliente() {
             "estado": formData.estado,
             "pais": formData.pais,
             "rason_social": formData.rason_social,
+            "documentacion_digital": formData.documentacion_digital,
+            "id_catalogo_encuesta": formData.id_catalogo_encuesta
         }
-        /* console.log(dataPOST);
-        console.log(arrayErrors); */
+        console.log(dataPOST);
+        console.log(arrayErrors);
         
         /* 
         navigate("/clientes") */
-        axios.post(APIURL+'/clientes',dataPOST,config).then((resp)=>{
+        /* axios.post(APIURL+'/clientes',dataPOST,config).then((resp)=>{
             console.log(resp);
             navigate("/clientes")
        
@@ -506,13 +592,25 @@ function PageNuevoCliente() {
             if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
                 console.log(resp.response.data);
             }
-        })
+        }) */
         
     }
 
     const validarValoresBtn = (form) =>{
         return Object.values(form).every(valor => valor !== '' && valor !== null);
     }
+
+    useEffect(()=>{
+        if (tipoPersona === 'fisica' || tipoPersona === 'moral') {
+            if (validarRFC(formData.rfc)) {
+                console.log('es valido');
+                
+            } else {
+                console.log('es invalido');
+            }
+        }
+        
+    }, [ tipoPersona ])
 
     useEffect(()=>{
         validateFields(formData);        
@@ -528,13 +626,17 @@ function PageNuevoCliente() {
         
     },[arrayErrors])
 
+    useEffect(()=>{
+        getOptionsEncuestas()
+    },[])
+
     return (
         <div className="container">
             <p className="fw-bold">CREAR CLIENTE</p>
             <div className="row">
                 <div className="col-5">
                     <div className="mb-3">
-                    <label className="fw-bold">Tipo Cliente</label>
+                        <label className="fw-bold">Tipo Cliente</label>
                         <Form.Select aria-label="Default select example" name="id_tipo_cliente" onChange={(e)=> {formInputChange(e); changeTipoCliente(e);}}>
                             <option value="">Seleccione una Opción</option>
                             <option value="1">Escuela</option>
@@ -542,28 +644,37 @@ function PageNuevoCliente() {
                         </Form.Select>
                     </div>
                 </div>
+                {formData.id_tipo_cliente === "1" && (
                 <div className="col-3 d-flex align-items-center">
-                    {formData.id_tipo_cliente === "1" && (
-                        <div className="mb-3 d-grid">
-                            <Form.Check className="p-0">
-                                <Form.Check.Label >Es Colegio Comun</Form.Check.Label>
-                                <br></br>
-                                <div className="mt-2 d-flex justify-content-center align-items-center">
-                                <Form.Check.Input type='checkbox' name="es_colegio_comun" value="1" checked={esColegioComun} onChange={(e)=> selectEsColegioComun(e)}/>
-                                </div>
-                            </Form.Check>
-                        </div>
-                    )}
+                    <div className="mb-3 d-grid">
+                        <Form.Check className="p-0">
+                            <Form.Check.Label >Es Colegio Comun</Form.Check.Label>
+                            <br></br>
+                            <div className="mt-2 d-flex justify-content-center align-items-center">
+                            <Form.Check.Input type='checkbox' name="es_colegio_comun" value="1" checked={esColegioComun} onChange={(e)=> selectEsColegioComun(e)}/>
+                            </div>
+                        </Form.Check>
+                    </div>
                 </div>
+                )}
+                {formData.id_tipo_cliente === "1" && esColegioComun === true && (
                 <div className="col-5">
-                    {formData.id_tipo_cliente === "1" && esColegioComun === true && (
                     <div className="mb-3" >
                         <label className="fw-bold">Colegios hermanos</label>
                         <Form.Select name="id_clientes_hermanos" id="id_clientes_hermanos" onChange={(e)=> formInputChange(e)}>
-                        {renderOptionsColegiosComunes()}
+                            {renderOptionsColegiosComunes()}
                         </Form.Select>
                     </div>
-                    )}
+                </div>
+                )}
+                <div className="col-5">
+                    <div className="mb-3">
+                        <label className="fw-bold">Encuesta a aplicar:</label>
+                        <Form.Select aria-label="Default select example" name="id_catalogo_encuesta" onChange={(e)=> {formInputChange(e); changeTipoCliente(e);}}>
+                            { renderOptionsEncuestas() }
+                        </Form.Select>
+                        { contieneErrorInput(21) && <span className="error-msg"> {obtenerErrorMensaje(21)} </span> }
+                    </div>
                 </div>
             </div>
             <hr></hr>
@@ -592,38 +703,60 @@ function PageNuevoCliente() {
                     </div>
                 </div>
                 
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">RSO</label>
-                        <input type="text" className="form-control form-control-sm" name="rso" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(6) && <span className="error-msg"> {obtenerErrorMensaje(6)} </span> }
+                  
+            </div>
+            <div className="row">
+                <div className="col-12 pt-3">
+                    <p className="fw-bold pb-1 mb-1"> Seleccione el tipo de persona fiscal al que pertenece: </p>
+                    <div className="d-flex pb-3">
+                        <Form.Check className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
+                        <Form.Check type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
                     </div>
+                    
                 </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Razón Social</label>
-                        <input type="text" className="form-control form-control-sm" name="rason_social" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(7) && <span className="error-msg"> {obtenerErrorMensaje(7)} </span> }
+                { tipoPersona !== '' &&
+                    <>
+                    <div className="col-5">
+                        <label className="fw-bold">RFC</label>
+                        <input type="text" className="form-control form-control-sm" name="rfc" onChange={(e)=> formInputChange(e)}/>
+                        { contieneErrorInput(20) && <span className="error-msg"> {obtenerErrorMensaje(20)} </span> }
                     </div>
-                </div>   
-                <div className="col-12">
+                    <div className="col-5">
+                        <div className="mb-3">
+                            <label className="fw-bold">RSO</label>
+                            <input type="text" className="form-control form-control-sm" name="rso" onChange={(e)=> formInputChange(e)}/>
+                            { contieneErrorInput(6) && <span className="error-msg"> {obtenerErrorMensaje(6)} </span> }
+                        </div>
+                    </div>
+                    <div className="col-5">
+                        <div className="mb-3">
+                            <label className="fw-bold">Razón Social</label>
+                            <input type="text" className="form-control form-control-sm" name="rason_social" onChange={(e)=> formInputChange(e)}/>
+                            { contieneErrorInput(7) && <span className="error-msg"> {obtenerErrorMensaje(7)} </span> }
+                        </div>
+                    </div>
+                    </>
+                }
+                   
+                <div className="col-12 mt-2">
                     <div className="row">
-                        <div className="col-2 pt-3">
-                            <Form.Check type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
-                            <Form.Check type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
-                        </div>
-                        <div className="col-5">
-                            <label className="fw-bold">RFC</label>
-                            <input type="text" className="form-control form-control-sm" name="rfc" onChange={(e)=> formInputChange(e)}/>
-                        </div>
-                        <div className="col" style={{ paddingTop: "2rem" }}>
-                            <Form.Check type="switch">
-                                <Form.Check.Input name="requiere_facturar" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
-                                <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere facturar </span></Form.Check.Label>
-                            </Form.Check>
+                        <div className="col-7">
+                            <div className="d-flex">
+                                <Form.Check className="me-5" type="switch">
+                                    <Form.Check.Input name="requiere_facturar" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere facturar </span></Form.Check.Label>
+                                </Form.Check>
+                                <Form.Check type="switch">
+                                    <Form.Check.Input name="documentacion_digital" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Documentos Digital </span></Form.Check.Label>
+                                </Form.Check>
+                            </div>
+                            
                         </div>
                     </div>
-                </div>       
+                </div> 
+            
+                    
             </div>
 
             <hr></hr>
