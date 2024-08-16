@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Alert, Form } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ function PageNuevoCliente() {
         nombre:'',
         descripcion: '',
         notificaciones_email: '',
-        id_clientes_hermanos: null,
+        id_clientes_hermanos: 'null',
         id_catalogo_encuesta: '',
         documentacion_digital: false,
         rso: '',
@@ -53,9 +53,19 @@ function PageNuevoCliente() {
         
         var name = e.target.name
         setInputSeleccionado(name)
-        var value = (e.target.value === "null") ? null : e.target.value;
+        var value = e.target.value //(e.target.value === "null") ? null : e.target.value;
 
-        console.log(name);
+        console.log(name, value);
+
+        if (name === 'id_tipo_cliente' && value === '1') {
+            console.log('Se ejecuta get colegios hermanos');
+            getAllColegiosHermanos()
+        }
+
+        if (name === 'id_tipo_cliente' && value === '2') {
+            setEsColegioComun(false)
+            return 0;
+        }
 
         if (name === 'tipo_persona') {
             setTipoPersona(value)
@@ -79,10 +89,6 @@ function PageNuevoCliente() {
             [name]: value
         }));
 
-    }
-
-    const changeTipoCliente = (e) =>{
-        getAllColegiosHermanos(e.target.value);
     }
 
     const selectEsColegioComun = (e) => {
@@ -170,10 +176,10 @@ function PageNuevoCliente() {
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'id_tipo_cliente') {
-            if (from?.id_tipo_cliente === '' || from.id_tipo_cliente === 'null') {
+            if (from?.id_tipo_cliente === 'null' || from.id_tipo_cliente === 'null' || from?.id_tipo_cliente === '') {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
-                messageError = 'Campo Tipo CLiente es OBLIGATORIO'
+                messageError = 'Campo Tipo Cliente es OBLIGATORIO'
                 error.id = 1
                 error.msg = messageError
                 if (!idSet.has(error.id)) {
@@ -500,17 +506,11 @@ function PageNuevoCliente() {
                 removeInputValid(20)
             }   
         }
-
-        /* if (arrayErrors.length === 0) {
-            setFormValid(false)
-        } else {
-            setFormValid(true)
-        } */
     }
     
     const renderOptionsColegiosComunes = () =>{
-        return [<option value="null">Seleccione una Opción</option>,...allColegiosHermanos.map((ch) => (
-            <option key={ch.id} value={ch.id}> {ch.nombre} </option>
+        return [<option key={'colegioh-0'} value="null">Seleccione una Opción</option>,...allColegiosHermanos.map((ch) => (
+            <option key={ 'colegioh'+ch.id} value={ch.id}> {ch.nombre} </option>
         ))]
     }
 
@@ -525,22 +525,16 @@ function PageNuevoCliente() {
         })
     }
 
-    const renderOptionsEncuestas = () =>{
+    const renderOptionsEncuestas = useMemo(() =>{
         console.log('render Datos');
-        return [<option value="0">Seleccione una Opción</option>,...allOptionsSelectEncuestas.map((ch) => (
-            <option key={ch.id} value={ch.id}> {ch.nombre} </option>
+        return [<option key={'encuesta-0'} value="0">Seleccione una Opción</option>,...allOptionsSelectEncuestas.map((ch) => (
+            <option key={'encuestas-'+ch.id} value={ch.id}> {ch.nombre} </option>
         ))]
             
-    }
+    }, [allOptionsSelectEncuestas])
     
-    const getAllColegiosHermanos = async (id_tipo_cliente) => {
-        
+    const getAllColegiosHermanos = async () => {
         setAllColegiosHermanos([]);
-
-        if(id_tipo_cliente !== "1"){
-            return true;
-        }
-
         try {
             const resp = await axios.get(APIURL+'/clientes/hermanos', config)
             setAllColegiosHermanos(resp.data);
@@ -560,7 +554,7 @@ function PageNuevoCliente() {
             "nombre": formData.nombre,
             "descripcion": formData.descripcion,
             "notificaciones_email": formData.notificaciones_email,
-            "id_clientes_hermanos": parseInt(formData.id_clientes_hermanos,10),
+            "id_clientes_hermanos": formData.id_tipo_cliente === '1' ? parseInt(formData.id_clientes_hermanos,10) : null,
             "rso": formData.rso,
             "nombre_uno": formData.nombre_uno,
             "telefono_uno": formData.telefono_uno,
@@ -580,10 +574,15 @@ function PageNuevoCliente() {
         }
         console.log(dataPOST);
         console.log(arrayErrors);
+
+        if (dataPOST.id_tipo_cliente === 1 && dataPOST.id_clientes_hermanos === 'null' && esColegioComun) {
+            alert('El campo Colegio Hermanos es obligatorio.')
+            return 0
+        }
         
-        /* 
-        navigate("/clientes") */
-        /* axios.post(APIURL+'/clientes',dataPOST,config).then((resp)=>{
+        
+        //navigate("/clientes")
+        axios.post(APIURL+'/clientes',dataPOST,config).then((resp)=>{
             console.log(resp);
             navigate("/clientes")
        
@@ -592,7 +591,7 @@ function PageNuevoCliente() {
             if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
                 console.log(resp.response.data);
             }
-        }) */
+        })
         
     }
 
@@ -616,12 +615,28 @@ function PageNuevoCliente() {
         validateFields(formData);        
     }, [formData])
 
+    /* useEffect(()=>{
+        if (esColegioComun && formData.id_tipo_cliente === '1') {
+            log
+        }
+    }, [esColegioComun]) */
+
     useEffect(()=>{
+        console.log(arrayErrors);
+        
         if (arrayErrors.length === 0 && validarValoresBtn(formData)) {
-            
             setFormValid(false)
         } else {
-            setFormValid(true)
+            console.log(formData);
+
+            if (formData.id_tipo_cliente === '1' && arrayErrors.length === 0 && (formData.id_clientes_hermanos === null || formData.id_clientes_hermanos === 'null')) {
+                setFormValid(false)
+            } else{
+                setFormValid(true)
+                console.log('algo esta mal');
+                
+            }
+            
         }
         
     },[arrayErrors])
@@ -637,11 +652,12 @@ function PageNuevoCliente() {
                 <div className="col-5">
                     <div className="mb-3">
                         <label className="fw-bold">Tipo Cliente</label>
-                        <Form.Select aria-label="Default select example" name="id_tipo_cliente" onChange={(e)=> {formInputChange(e); changeTipoCliente(e);}}>
-                            <option value="">Seleccione una Opción</option>
+                        <Form.Select aria-label="Default select example" name="id_tipo_cliente" onChange={(e)=> {formInputChange(e);}}>
+                            <option value="null">Seleccione una Opción</option>
                             <option value="1">Escuela</option>
                             <option value="2">Empresa</option>
                         </Form.Select>
+                        { contieneErrorInput(1) && <span className="error-msg"> {obtenerErrorMensaje(1)} </span> }
                     </div>
                 </div>
                 {formData.id_tipo_cliente === "1" && (
@@ -657,7 +673,7 @@ function PageNuevoCliente() {
                     </div>
                 </div>
                 )}
-                {formData.id_tipo_cliente === "1" && esColegioComun === true && (
+                {(formData.id_tipo_cliente === "1" && esColegioComun === true )&& (
                 <div className="col-5">
                     <div className="mb-3" >
                         <label className="fw-bold">Colegios hermanos</label>
@@ -670,8 +686,8 @@ function PageNuevoCliente() {
                 <div className="col-5">
                     <div className="mb-3">
                         <label className="fw-bold">Encuesta a aplicar:</label>
-                        <Form.Select aria-label="Default select example" name="id_catalogo_encuesta" onChange={(e)=> {formInputChange(e); changeTipoCliente(e);}}>
-                            { renderOptionsEncuestas() }
+                        <Form.Select aria-label="Default select example" name="id_catalogo_encuesta" onChange={(e)=> {formInputChange(e);}}>
+                            { renderOptionsEncuestas }
                         </Form.Select>
                         { contieneErrorInput(21) && <span className="error-msg"> {obtenerErrorMensaje(21)} </span> }
                     </div>
