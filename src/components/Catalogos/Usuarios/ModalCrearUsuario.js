@@ -6,12 +6,13 @@ import { AuthContext } from "../../../context/AuthContext";
 import ControllerUsuarios from "./ControllersUsuarios";
 
 function ModalCrearUsuario({ show, handleClose }) {
-    const [ formValid, setFormValid ] = useState(null)
-    const [errors, setErrors] = useState({});
+    const [ formValid, setFormValid ] = useState(false);
+    const [ inputChanged, setInputChanged ] = useState('')
+    const [errorsArray, setErrorsArray] = useState([]);
     const APIURL = process.env.REACT_APP_API_URL
     const { GenerarPassword } = ControllerUsuarios();
     const { logout } = useContext(AuthContext);
-    const [ btnEnable, setBtnEnable ] = useState(true)
+    const [ btnDisable, setBtnDisable ] = useState(true)
     const [listaPerfiles, setListaPerfiles] = useState([])
     const [ allClientes, setAllClientes ] = useState([])
     const [ showPassword, setShowPassword ] = useState(false)
@@ -20,7 +21,8 @@ function ModalCrearUsuario({ show, handleClose }) {
         email:"",
         password:"",
         password_confirmation:"",
-        id_perfil: "0"
+        id_perfil: "0",
+        id_cliente: "0"
     })
 
     const config = {
@@ -79,7 +81,9 @@ function ModalCrearUsuario({ show, handleClose }) {
     }
 
     const renderFiltroClientes = () => {
-        return [...allClientes.map((cliente) => (
+        return [<option key="cliente-0" value="0" selected>
+            Seleccione uno
+        </option>,,...allClientes.map((cliente) => (
             <option key={cliente.id} value={`${cliente.id}`}>
                 { cliente.nombre }
             </option>
@@ -93,8 +97,8 @@ function ModalCrearUsuario({ show, handleClose }) {
         data.password_confirmation = newPass
 
         setDataPostUsuario(data)
-        validateField('password',newPass)
-        validateField('password_confirmation',newPass)
+        /* validateField('password',newPass)
+        validateField('password_confirmation',newPass) */
         console.log(dataPostUsuario);
     }
 
@@ -102,77 +106,216 @@ function ModalCrearUsuario({ show, handleClose }) {
         setShowPassword(!showPassword)
     }
 
-    const validateField = (name, value) => {
-        let errorMsg = "";
-        switch (name) {
-            case "name":
-                if (!value) errorMsg = "El nombre es requerido";
-                break;
-            case "email":
-                if (!value) errorMsg = "El email es requerido";
-                else if (!/\S+@\S+\.\S+/.test(value)) errorMsg = "El email no es válido";
-                else if (value.includes(" ")) errorMsg = "El campo email no debe contener espacios vacios."
-                break;
-            case "password":
-                if (!value) errorMsg = "La contraseña es requerida";
-                else if (!/(?=.*[A-Z])(?=.*\d)/.test(value)) errorMsg = "La contraseña debe contener al menos una letra mayúscula y un número";
-                break;
-            case "password_confirmation":
-                if (value !== dataPostUsuario.password) errorMsg = "Las contraseñas no coinciden";
-                break;
-            case "id_perfil":
-                if(value === '0') errorMsg = "Debe seleccionar un perfil";
-                break
-            default:
-                break;
+    const contieneError = (idError)=>{
+        var exists = errorsArray?.some(function(error) {
+            return error.idError === idError;
+        });
+        return exists;
+    }
+
+    const eliminarErrorDelArray = (idError) => {
+        var newArray = errorsArray.filter((error)=>{
+            return error.idError !== idError
+        })
+
+        return newArray
+    }
+
+    const validateCorreo = (value) => {
+        const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return regexCorreo.test(value);
+    }
+
+    const validateContieneEspacios = ( value ) =>{
+        return /^\s|\s$|\s{2,}/.test(value);
+    }
+
+    const validatePassword = (value) => {
+        const tieneMayuscula = /[A-Z]/.test(value);
+        const tieneNumero = /\d/.test(value);
+        const tieneLongitudMinima = value.length >= 12;
+        const sinEspacios = !/\s/.test(value);
+
+        if (sinEspacios && tieneMayuscula && tieneNumero && tieneLongitudMinima) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    const getErrorMsg = (idError) => {
+        var index = errorsArray.findIndex(function(error) {
+            return error.idError === idError;
+        });
+
+        return errorsArray[index].msg
+    }
+
+    const validateDataFormBtn = (obj) => {
+        for (let key in obj) {
+            // Verifica si alguna propiedad del objeto tiene un valor "" o "0"
+            if (obj[key] === "" || obj[key] === "0") {
+                return false; // El objeto es inválido
+            }
+        }
+        return true; // El objeto es válido
+    }
+
+    const validateForm = (dataForm) => {
+        var errorObject = { idError: null, msg: null}
+
+        if (inputChanged === 'id_perfil') {
+            if (dataForm.id_perfil === '0') {
+                errorObject.idError = 1
+                errorObject.msg = 'Perfil es Obligario, seleccione una opcion.'
+                if (!contieneError(errorObject.idError)) {
+                    setErrorsArray([ ...errorsArray, errorObject ])
+                }
+
+            } else {
+                if (contieneError(1)) {
+                    setErrorsArray(eliminarErrorDelArray(1))
+                }
+            }
         }
 
-        console.log(errorMsg);
+        if (inputChanged === 'id_cliente') {
+            if( dataForm.id_cliente === '0' ){                
+                errorObject.idError = 2
+                errorObject.msg = "El campo CLIENTE es obligatorio. Seleccione una opcion."
+                if (!contieneError(errorObject.idError)) {
+                    setErrorsArray([ ...errorsArray, errorObject ])
+                }
 
-        setErrors(prevErrors => ({
-            ...prevErrors,
-            [name]: errorMsg
-        }));
+            } else {
+                if (contieneError(2)) {
+                    setErrorsArray(eliminarErrorDelArray(2))
+                }
+            }
+        }
         
-        const hasErrors = Object.values(errors).some(err => err !== "") || errorMsg !== "";
-        const allFieldsFilled = Object.values(dataPostUsuario).every(val => val !== "");
-        console.log('El valor allfieldsfilled: ', allFieldsFilled);
-        setBtnEnable(hasErrors, !allFieldsFilled);
-    };
+        if (inputChanged === 'name') {
+            if (dataForm.name === '' || validateContieneEspacios(dataForm.name)) {
+                errorObject.idError = 3
+                errorObject.msg = "El campo NOMBRE es obligatorio. No debe contener espaciones vacios seguidos."
+                if (!contieneError(errorObject.idError)) {
+                    setErrorsArray([ ...errorsArray, errorObject ])
+                }
+            } else {
+                if (contieneError(3)) {
+                    setErrorsArray(eliminarErrorDelArray(3))
+                }
+            }
+        }
+
+        if (inputChanged === 'email') {
+            if (!validateCorreo(dataForm.email)) {
+                errorObject.idError = 4
+                errorObject.msg = "El campo EMAIL es obligatorio. Debe ingresar un correo valido."
+                if (!contieneError(errorObject.idError)) {
+                    setErrorsArray([ ...errorsArray, errorObject ])
+                }
+            } else {
+                if (contieneError(4)) {
+                    setErrorsArray(eliminarErrorDelArray(4))
+                }
+            }
+        }
+        
+        if (inputChanged === 'password') {
+            let errorObjectP = { idError: null, msg: null }
+            if (!validatePassword(dataForm.password)) {
+                errorObjectP.idError = 5
+                errorObjectP.msg = "El campo PASSWORD es obligatorio. No debe contener espacios. Minimo 12 caracteres."
+                if (!contieneError(5)) {
+                    setErrorsArray([ ...errorsArray, errorObjectP ])
+                }
+
+            } else {
+                if (contieneError(5)) {
+                    setErrorsArray(eliminarErrorDelArray(5))
+                }
+            }
+            let errorObjectE = { idError: null, msg: null }
+            if (dataForm.password !== dataForm.password_confirmation) {
+                errorObjectE.idError = 0
+                errorObjectE.msg = "El campo PASSWORD y CONFIRMAR deben ser iguales."
+                if (!contieneError(0)) {
+                    setErrorsArray([ ...errorsArray, errorObjectE ])
+                }
+
+            } else {
+                if (contieneError(0)) {
+                    setErrorsArray(eliminarErrorDelArray(0))
+                }
+            }
+        }
+
+        if (inputChanged === 'password_confirmation') {
+            let errorObjectPC = { idError: null, msg: null }
+            if (!validatePassword(dataForm.password_confirmation)) {
+                errorObjectPC.idError = 6
+                errorObjectPC.msg = "El campo Confirmar PASSWORD es obligatorio. No debe contener espacios. Minimo 12 caracteres."
+                if (!contieneError(6)) {
+                    setErrorsArray([ ...errorsArray, errorObjectPC ])
+                }
+
+            } else {
+                if (contieneError(6)) {
+                    setErrorsArray(eliminarErrorDelArray(6))
+                }
+            }
+            let errorObjectE = { idError: null, msg: null }
+            if (dataForm.password !== dataForm.password_confirmation) {
+                errorObjectE.idError = 0
+                errorObjectE.msg = "El campo PASSWORD y CONFIRMAR deben ser iguales."
+                if (!contieneError(0)) {
+                    setErrorsArray([ ...errorsArray, errorObjectE ])
+                }
+
+            } else {
+                if (contieneError(0)) {
+                    setErrorsArray(eliminarErrorDelArray(0))
+                }
+            }
+            
+        }
+
+    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log(name, value);
-        console.log(name === 'email');
-        if (name === 'email' || name === 'password' || name === 'password_confirmation'){
-            setDataPostUsuario(prevState => ({  
-                ...prevState,
-                [name]: value.trim()
-            }));
-        } else {
-            setDataPostUsuario(prevState => ({  
-                ...prevState,
-                [name]: value
-            }));
-        }
-        
-
-        validateField(name,value)
-
+        setInputChanged(name)
+        setDataPostUsuario(prevState => ({  
+            ...prevState,
+            [name]: value
+        }));
+    
     };
 
     useEffect(() => {
-        if (APIURL) {
             getPerfilesList();
             getAllClientes();   
-        }
-    }, [APIURL]);
+    }, []);
     
     useEffect(()=>{
+        console.log(errorsArray);
+        if (errorsArray.length === 0 && validateDataFormBtn(dataPostUsuario) ) {
+            setBtnDisable(false)
+        } else {
+            setBtnDisable(true)
+        }
+    }, [errorsArray])
+
+    useEffect(() =>{
+        validateForm( dataPostUsuario )
+    },[dataPostUsuario])
+
+    /* useEffect(()=>{
         if (!formValid) {
             setFormValid(true)
         }
-    },[formValid])
+    },[formValid]) */
     return ( 
         <Modal show={ show } onHide={handleClose}>
             <Modal.Header closeButton>
@@ -190,19 +333,19 @@ function ModalCrearUsuario({ show, handleClose }) {
                                 onChange={handleInputChange}>
                             { agregarOpcionesSelect() }
                         </select>
-                        {errors.id_perfil && <div className="text-danger fw-medium">{errors.id_perfil}</div>}
+                        {contieneError(1) && <div className="text-danger fw-medium">{getErrorMsg(1)}</div>}
                     </div>
                     <div className="mb-3">
-                    <label htmlFor="inputCliente" className="form-label">Cliente</label>
-                    <select id="inputCliente" 
-                            name="id_cliente"
-                            className="form-select mb-2" 
-                            aria-label="Default select example"
-                            value={dataPostUsuario.id_cliente}
-                            onChange={handleInputChange}>
-                        { renderFiltroClientes() }
-                    </select>
-                    {errors.id_perfil && <div className="text-danger fw-medium">{errors.id_perfil}</div>}
+                        <label htmlFor="inputCliente" className="form-label">Cliente</label>
+                        <select id="inputCliente" 
+                                name="id_cliente"
+                                className="form-select mb-2" 
+                                aria-label="Default select example"
+                                value={dataPostUsuario.id_cliente}
+                                onChange={handleInputChange}>
+                            { renderFiltroClientes() }
+                        </select>
+                        {contieneError(2) && <div className="text-danger fw-medium">{ getErrorMsg(2) }</div>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="inputName" className="form-label">Nombre:</label>
@@ -210,7 +353,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                                 placeholder="Nombre:"
                                 value={dataPostUsuario.name}
                                 onChange={handleInputChange}/>
-                        {errors.name && <div className="text-danger fw-medium">{errors.name}</div>}
+                        {contieneError(3) && <div className="text-danger fw-medium">{ getErrorMsg(3) }</div>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="inputEmail" className="form-label">Email</label>
@@ -218,7 +361,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                                 placeholder="name@example.com"
                                 value={dataPostUsuario.email}
                                 onChange={handleInputChange}/>
-                        {errors.email && <div className="text-danger fw-medium">{errors.email}</div>}
+                        {contieneError(4) && <div className="text-danger fw-medium">{ getErrorMsg(4) }</div>}
                     </div>
                     <div className="mb-3">
                             <div className="row d-flex justify-content-start align-items-center m-0">
@@ -237,7 +380,8 @@ function ModalCrearUsuario({ show, handleClose }) {
                                     
                                 </div>
                             </div>
-                            {errors.password && <div className="text-danger fw-medium">{errors.password}</div>}
+                            {contieneError(5) && <div className="text-danger fw-medium">{getErrorMsg(5)}</div>}
+                            {contieneError(0) && <div className="text-danger fw-medium">{ getErrorMsg(0) }</div>}
                     </div>
                     <div className="mb-3">
                         <div className="row d-flex justify-content-start align-items-center m-0">
@@ -248,7 +392,6 @@ function ModalCrearUsuario({ show, handleClose }) {
                                     aria-describedby="passwordHelpBlock"
                                     value={dataPostUsuario.password_confirmation}
                                     onChange={handleInputChange}/>
-                                    
                             </div>
                             <div className="col-1 m-0 ps-0 mt-4 pt-1">
                             <OverlayTrigger trigger={'hover'} overlay={popoverContraseña}>
@@ -258,7 +401,8 @@ function ModalCrearUsuario({ show, handleClose }) {
                             </OverlayTrigger>
                             </div>
                         </div>
-                        {errors.password_confirmation && <div className="text-danger fw-medium">{errors.password_confirmation}</div>}
+                        {contieneError(6) && <div className="text-danger fw-medium">{ getErrorMsg(6) }</div>}
+                        {contieneError(0) && <div className="text-danger fw-medium">{ getErrorMsg(0) }</div>}
                     </div>
                     
                 </div>
@@ -267,7 +411,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                 <Button variant="secondary" onClick={handleClose}>
                     Cerrar
                 </Button>
-                <Button variant="primary" disabled={formValid}>
+                <Button variant="primary" disabled={btnDisable}>
                     Crear
                 </Button>
             </Modal.Footer>

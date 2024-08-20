@@ -367,10 +367,10 @@ function Usuarios() {
                 )
                 }            
 
-            {/* {   show &&
+            {   show &&
                 <ModalCrearUsuario show={show} handleClose={handleClose}></ModalCrearUsuario>
-            } */}
-            {<Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+            }
+            {/* {<Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>Crear Nuevo Usuario</Modal.Title>
                 </Modal.Header>
@@ -381,7 +381,7 @@ function Usuarios() {
                     <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
                     <Button variant="primary" disabled={ btnEnable } onClick={sendDataPost}>Crear</Button>
                 </Modal.Footer>
-            </Modal>}
+            </Modal>} */}
 
         </div>
     )
