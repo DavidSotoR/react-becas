@@ -86,43 +86,43 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute path={PathConstants.PERFILES} element={<CatPerfiles />} />
         </Suspense>
-      )},
+    )},
     { path: PathConstants.FAMILIAS, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute path={PathConstants.FAMILIAS} element={<CatFamilia />} />
         </Suspense>
-      )},
+    )},
     { path: PathConstants.FAMILIASALTA, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute path={PathConstants.FAMILIASALTA} element={<CatFamiliaAlta />} />
         </Suspense>
-      )},
+    )},
     { path: PathConstants.FAMILIASFILES, perfil:'familias',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute path={PathConstants.FAMILIASFILES} element={<FormFamilaFiles />} />
         </Suspense>
-      )},
-      { path: PathConstants.CICLOSESCOLARES, perfil:'Administrador',
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <PrivateRoute path={PathConstants.CICLOSESCOLARES} element={<CatCiclosEscolares />} />
-          </Suspense>
-        )},
-        { path: PathConstants.PROYECTOS, perfil:'Administrador',
+    )},
+    { path: PathConstants.CICLOSESCOLARES, perfil:'Administrador',
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PrivateRoute path={PathConstants.CICLOSESCOLARES} element={<CatCiclosEscolares />} />
+        </Suspense>
+    )},
+    { path: PathConstants.PROYECTOS, perfil:'Administrador',
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <PrivateRoute path={PathConstants.PROYECTOS} element={<CatProyectos />} />
             </Suspense>
-          )},
-          { path: PathConstants.PROYECTO, perfil:'Administrador',
+    )},
+    { path: PathConstants.PROYECTO, perfil:'Administrador',
             element: (
               <Suspense fallback={<div>Loading...</div>}>
                 <PrivateRoute path={PathConstants.PROYECTO} element={<CatProyecto />} />
               </Suspense>
-            )},
+    )},
     { path: PathConstants.ESEBP2,perfil:'Administrador', element: ( 
       <Suspense fallback={<div>Loading...</div>}>
         <PrivateRoute path={PathConstants.ESEBP2} element={<FormBP2 />} />

@@ -236,41 +236,15 @@ function ModalCrearUsuario({ show, handleClose }) {
                     setErrorsArray(eliminarErrorDelArray(5))
                 }
             }
-            let errorObjectE = { idError: null, msg: null }
-            if (dataForm.password !== dataForm.password_confirmation) {
-                errorObjectE.idError = 0
-                errorObjectE.msg = "El campo PASSWORD y CONFIRMAR deben ser iguales."
-                if (!contieneError(0)) {
-                    setErrorsArray([ ...errorsArray, errorObjectE ])
-                }
-
-            } else {
-                if (contieneError(0)) {
-                    setErrorsArray(eliminarErrorDelArray(0))
-                }
-            }
         }
 
         if (inputChanged === 'password_confirmation') {
             let errorObjectPC = { idError: null, msg: null }
-            if (!validatePassword(dataForm.password_confirmation)) {
-                errorObjectPC.idError = 6
-                errorObjectPC.msg = "El campo Confirmar PASSWORD es obligatorio. No debe contener espacios. Minimo 12 caracteres."
-                if (!contieneError(6)) {
-                    setErrorsArray([ ...errorsArray, errorObjectPC ])
-                }
-
-            } else {
-                if (contieneError(6)) {
-                    setErrorsArray(eliminarErrorDelArray(6))
-                }
-            }
-            let errorObjectE = { idError: null, msg: null }
             if (dataForm.password !== dataForm.password_confirmation) {
-                errorObjectE.idError = 0
-                errorObjectE.msg = "El campo PASSWORD y CONFIRMAR deben ser iguales."
+                errorObjectPC.idError = 0
+                errorObjectPC.msg = "El campo PASSWORD y CONFIRMAR deben ser iguales."
                 if (!contieneError(0)) {
-                    setErrorsArray([ ...errorsArray, errorObjectE ])
+                    setErrorsArray([ ...errorsArray, errorObjectPC ])
                 }
 
             } else {
@@ -292,6 +266,26 @@ function ModalCrearUsuario({ show, handleClose }) {
         }));
     
     };
+
+    const postCrearUsuario = async () => {
+        var data = {
+            name: dataPostUsuario.name,
+            email: dataPostUsuario.email,
+            password: dataPostUsuario.password,
+            password_confirmation: dataPostUsuario.password_confirmation,
+            id_perfil: parseInt(dataPostUsuario.id_perfil,10) 
+        }
+        try {
+            const resp = await axios.post('http://localhost:8000/api/auth/register', data, config)
+            console.log(resp);
+            handleClose()
+        } catch (error) {
+            console.log(error);
+            if (error.response.status === 401) {
+                logout()
+            }
+        }   
+    }
 
     useEffect(() => {
             getPerfilesList();
@@ -411,7 +405,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                 <Button variant="secondary" onClick={handleClose}>
                     Cerrar
                 </Button>
-                <Button variant="primary" disabled={btnDisable}>
+                <Button variant="primary" disabled={btnDisable} onClick={ postCrearUsuario}>
                     Crear
                 </Button>
             </Modal.Footer>
