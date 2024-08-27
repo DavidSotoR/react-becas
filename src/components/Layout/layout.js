@@ -13,7 +13,6 @@ export default function Layout() {
         window.location.replace('/')
       }
     useEffect(()=>{
-      console.log(collapsed);
       if (collapsed) {
         
       }

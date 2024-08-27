@@ -25,7 +25,6 @@ const FormFamilaFiles = React.lazy(()=> import('../components/Formularios/Famili
 //const Details = React.lazy(() => import("../pages/details/details"))
 
 const isAuthenticated = () => {
-  console.log('islogged?');
   return localStorage.getItem('login') === 'true';
 };
   
@@ -33,7 +32,6 @@ const PrivateRoute = ({ path ,element }) => {
   const { logout,roleSession } = useContext(AuthContext);
   const [cookieValue, setCookieValue] = useState('');
   const value = Cookies.get('localhost');
-  console.log(value);
   var role = localStorage.getItem('role') ?? ''
   if (isAuthenticated()) {
     if (role === '' || role !== roleSession) {
