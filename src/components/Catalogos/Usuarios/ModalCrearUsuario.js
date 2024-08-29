@@ -6,6 +6,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import ControllerUsuarios from "./ControllersUsuarios";
 
 function ModalCrearUsuario({ show, handleClose }) {
+    const [esExterno, setEsExterno] = useState(false);
     const [ formValid, setFormValid ] = useState(false);
     const [ inputChanged, setInputChanged ] = useState('')
     const [errorsArray, setErrorsArray] = useState([]);
@@ -153,10 +154,15 @@ function ModalCrearUsuario({ show, handleClose }) {
 
     const validateDataFormBtn = (obj) => {
         for (let key in obj) {
-            // Verifica si alguna propiedad del objeto tiene un valor "" o "0"
-            if (obj[key] === "" || obj[key] === "0") {
-                return false; // El objeto es inválido
-            }
+            // Ignora la validación de 'id_cliente' si 'isExterno' es false
+        if ((key === "id_cliente" && !esExterno) || (obj[key] !== "" && obj[key] !== "0")) {
+            continue; // Continúa con la siguiente iteración del bucle
+        }
+        
+        // Verifica si alguna propiedad del objeto tiene un valor "" o "0"
+        if (obj[key] === "" || obj[key] === "0") {
+            return false; // El objeto es inválido
+        }
         }
         return true; // El objeto es válido
     }
@@ -165,6 +171,15 @@ function ModalCrearUsuario({ show, handleClose }) {
         var errorObject = { idError: null, msg: null}
 
         if (inputChanged === 'id_perfil') {
+            if (dataForm.id_perfil === '5' || dataForm.id_perfil === '6') {
+                setEsExterno(true)
+            } else {
+                setEsExterno(false)
+                if (contieneError(2)) {
+                    setErrorsArray(eliminarErrorDelArray(2))
+                }
+            }
+            
             if (dataForm.id_perfil === '0') {
                 errorObject.idError = 1
                 errorObject.msg = 'Perfil es Obligario, seleccione una opcion.'
@@ -273,10 +288,11 @@ function ModalCrearUsuario({ show, handleClose }) {
             email: dataPostUsuario.email,
             password: dataPostUsuario.password,
             password_confirmation: dataPostUsuario.password_confirmation,
+            id_cliente: esExterno ? dataPostUsuario.id_cliente : null,
             id_perfil: parseInt(dataPostUsuario.id_perfil,10) 
         }
         try {
-            const resp = await axios.post('http://localhost:8000/api/auth/register', data, config)
+            const resp = await axios.post(APIURL+'/register', data, config)
             console.log(resp);
             handleClose()
         } catch (error) {
@@ -305,11 +321,6 @@ function ModalCrearUsuario({ show, handleClose }) {
         validateForm( dataPostUsuario )
     },[dataPostUsuario])
 
-    /* useEffect(()=>{
-        if (!formValid) {
-            setFormValid(true)
-        }
-    },[formValid]) */
     return ( 
         <Modal show={ show } onHide={handleClose}>
             <Modal.Header closeButton>
@@ -329,7 +340,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                         </select>
                         {contieneError(1) && <div className="text-danger fw-medium">{getErrorMsg(1)}</div>}
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-3" style={ esExterno ? { display: "block" } : { display: "none" } }>
                         <label htmlFor="inputCliente" className="form-label">Cliente</label>
                         <select id="inputCliente" 
                                 name="id_cliente"
