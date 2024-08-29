@@ -18,7 +18,11 @@ const PathConstants = {
     USUARIOS: '/usuarios',
     CICLOSESCOLARES: '/ciclos-escolares',
     PROYECTOS: '/proyectos',
-    PROYECTO: '/proyectos/:ID'
+    PROYECTO: '/proyectos/:ID',
+    SERVICIOESTUDIO: '/servicio-estudio',
+    ESTUDIOSOCIOECONOMICO: '/estudio-socioeconomico',
+    ESTUDIOSOCIOECONOMICONUEVO: '/estudio-socioeconomico/nuevo/:idProyecto/:idCliente/:idOrdenServicio',
+    ESTUDIOLABORAL: '/estudio-laboral',
 }
 
 export default PathConstants

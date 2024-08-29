@@ -22,6 +22,9 @@ const CatColegiosComunes = React.lazy(()=> import('../components/Catalogos/Coleg
 const CatTiposClientes = React.lazy(()=>import('../components/Catalogos/ClientesTipos/TiposClientes'))
 const FormBP2 = React.lazy(()=> import('../components/Formularios/ESEBP2/FormBP2'))
 const FormFamilaFiles = React.lazy(()=> import('../components/Formularios/FamiliaSubirArchivos/FAmiliaFormSubirArchivos'))
+const ServicioEstudio = React.lazy(()=> import("../components/Catalogos/ServicioEstudio/ServicioEstudio"))
+const EstudioSocioeconomico = React.lazy(()=> import("../components/Catalogos/ServicioEstudio/EstudioSocioeconomico"))
+const AltaEstudioSocioeconomico = React.lazy(()=> import("../components/Catalogos/ServicioEstudio/AltaEstudioSocioeconomico"))
 //const Details = React.lazy(() => import("../pages/details/details"))
 
 const isAuthenticated = () => {
@@ -110,6 +113,24 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute path={PathConstants.CICLOSESCOLARES} element={<CatCiclosEscolares />} />
         </Suspense>
+    )},
+    { path: PathConstants.SERVICIOESTUDIO, perfil:'Administrador',
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <PrivateRoute path={PathConstants.SERVICIOESTUDIO} element={<ServicioEstudio />} />
+            </Suspense>
+    )},
+    { path: PathConstants.ESTUDIOSOCIOECONOMICO, perfil:'Administrador',
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <PrivateRoute path={PathConstants.ESTUDIOSOCIOECONOMICO} element={<EstudioSocioeconomico />} />
+            </Suspense>
+    )},
+    { path: PathConstants.ESTUDIOSOCIOECONOMICONUEVO, perfil:'Administrador',
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <PrivateRoute path={PathConstants.ESTUDIOSOCIOECONOMICONUEVO} element={<AltaEstudioSocioeconomico />} />
+            </Suspense>
     )},
     { path: PathConstants.PROYECTOS, perfil:'Administrador',
           element: (

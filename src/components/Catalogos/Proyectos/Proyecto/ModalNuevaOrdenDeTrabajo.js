@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
-function ModalNuevaOrdenDeTrabajo({ show, handleClose ,idProyecto}) {
+function ModalNuevaOrdenDeTrabajo({ show, handleClose , idProyecto, idCliente = 0}) {
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -13,6 +13,7 @@ function ModalNuevaOrdenDeTrabajo({ show, handleClose ,idProyecto}) {
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
         id_proyecto: idProyecto,
+        id_cliente: idCliente,
         descripcion: '',
         notas:'',
         fecha_estimada_entrega: '',
@@ -57,7 +58,7 @@ function ModalNuevaOrdenDeTrabajo({ show, handleClose ,idProyecto}) {
     }
 
     const sendData = () => {        
-        axios.post(`${APIURL}/proyectos/ordenes-servicio`,formData,config).then((resp)=>{
+        axios.post(`${APIURL}/proyectos/clientes/ordenes-servicio`,formData,config).then((resp)=>{
             handleClose()
         }).catch((resp)=>{
             console.log(resp);

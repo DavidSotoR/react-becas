@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AuthContext } from "../../../../context/AuthContext";
 import ModalNuevaPregunta from "./ModalNuevaPregunta";
+import TablaRespuestas from "./TablaRespuestas";
 
 function TablaPreguntas({ ID }) {
     const { logout } = useContext(AuthContext);
@@ -226,6 +227,7 @@ function TablaPreguntas({ ID }) {
                 </div>
                 </>)}
                 <hr/>
+                <TablaRespuestas idPregunta={pregunta.id} idPreguntaTipo={pregunta.id_catalogo_encuestas_preguntas_tipo}/>
             </div>
         ));
     };
@@ -237,7 +239,7 @@ function TablaPreguntas({ ID }) {
                     <span>Elementos añadidos: {allPreguntas.length}</span>
                 </div>
                 <div className="">
-                <button className="btn btn-primary btn-sm fw-bold" onClick={handleShowMNuevaPregunta}>Agregar Pregunta</button>
+                    <button className="btn btn-primary btn-sm fw-bold" onClick={handleShowMNuevaPregunta}>Agregar Pregunta</button>
                 </div>
             </div>
             
@@ -246,7 +248,6 @@ function TablaPreguntas({ ID }) {
             </div>
             <ModalNuevaPregunta key={'mnp-'+ID} show={showModalNuevaPregunta} handleClose={handleCloseMNuevaPregunta}></ModalNuevaPregunta>
         </div>
-
     )
 
 }

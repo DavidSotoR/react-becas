@@ -3,7 +3,7 @@ import ModalNuevaOrdenDeTrabajo from "./ModalNuevaOrdenDeTrabajo";
 import axios from "axios";
 import { AuthContext } from "../../../../context/AuthContext";
 
-function TablaOrdenesDeTrabajo({ ID , idTipoCliente}) {
+function TablaOrdenesDeTrabajo({ ID ,idCliente, idTipoCliente}) {
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -19,7 +19,7 @@ function TablaOrdenesDeTrabajo({ ID , idTipoCliente}) {
     const [ allOrdenesServicio, setAllOrdenesServicio] = useState([]);
 
     const getOrdenesServicioProyectoID = () =>{
-        axios.get(`${APIURL}/proyectos/${ID}/ordenes-servicio`,config).then((resp)=>{
+        axios.get(`${APIURL}/proyectos/${ID}/clientes/${idCliente}/ordenes-servicio`,config).then((resp)=>{
             setAllOrdenesServicio(resp.data)
         }).catch((error)=>{
             if (error?.response.status === 401) {
@@ -44,7 +44,7 @@ function TablaOrdenesDeTrabajo({ ID , idTipoCliente}) {
         return allOrdenesServicio.map((odp, index) => (
             <tr key={'tr-odp-'+index}>
                 <td>
-                    <p>{index}</p>
+                    <p>{odp.id}</p>
                 </td>
                 <td>
                     <p>{odp.descripcion}</p>
@@ -75,7 +75,7 @@ function TablaOrdenesDeTrabajo({ ID , idTipoCliente}) {
         <div>
         <div className="d-flex justify-content-between mb-3">
             <div className="">
-            <h3>Lista de Ordenes de trabajo:</h3>
+            <h5>Lista de Ordenes de servicio:</h5>
             </div>
             <div className="">
             <button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Nueva Orden</button>
@@ -85,7 +85,7 @@ function TablaOrdenesDeTrabajo({ ID , idTipoCliente}) {
                 <table className="table">
                 <thead>
                     <tr>
-                        <th scope="col" className="col-id">#</th>
+                        <th scope="col">No. Orden</th>
                         <th scope="col">Descriocion</th>
                         <th scope="col">Notas</th>
                         <th scope="col">Fecha estamada de entrega</th>
@@ -100,7 +100,7 @@ function TablaOrdenesDeTrabajo({ ID , idTipoCliente}) {
                 </tbody>
                 </table>
             </div>
-            <ModalNuevaOrdenDeTrabajo show={show} handleClose={handleClose} idProyecto={ID}></ModalNuevaOrdenDeTrabajo>
+            <ModalNuevaOrdenDeTrabajo show={show} handleClose={handleClose} idProyecto={ID} idCliente={idCliente}></ModalNuevaOrdenDeTrabajo>
         </div>)
 }
 

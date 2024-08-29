@@ -60,14 +60,14 @@ function Proyecto() {
             <Tabs>
                 <TabList>
                     <Tab>Clientes</Tab>
-                    <Tab>Ordenes de trabajo</Tab>
+                    <Tab>Cronograma ordenes de servicio</Tab>
                 </TabList>
 
                 <TabPanel>
                     <TablaClientesProyecto ID={ID} idTipoCliente={proyecto.id_tipo_cliente}></TablaClientesProyecto>
                 </TabPanel>
                 <TabPanel>
-                    <TablaOrdenesDeTrabajo ID={ID} idTipoCliente={proyecto.id_tipo_cliente}></TablaOrdenesDeTrabajo>
+                    Plan Ordenes de servicio
                 </TabPanel>
             </Tabs>
         </div>

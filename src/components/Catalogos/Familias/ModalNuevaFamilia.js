@@ -13,7 +13,6 @@ function ModalNuevaFamilia({ show, handleClose }) {
     const [ allCiclosEscolares, setAllCiclosEscolares ] = useState([])
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
-        id_ciclo_escolar: '',
         nombre:'',
         situacion_beca: '',
     })
@@ -30,9 +29,6 @@ function ModalNuevaFamilia({ show, handleClose }) {
 
     const validateFields = ()=>{
         var messageError = ''
-        if (formData.id_ciclo_escolar === '') {
-            messageError = 'Campo Ciclo Escolar es OBLIGATORIO\n'
-        }
         if (formData.nombre.length <= 3 || formData.nombre === '') {
             messageError += 'Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres\n'
         }
@@ -85,13 +81,6 @@ function ModalNuevaFamilia({ show, handleClose }) {
                 <Modal.Title>Nueva Familia</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                    <div className="mb-3">
-                        <label>Ciclo Escolar</label>
-                        <Form.Select aria-label="Default select example" name="id_ciclo_escolar" onChange={(e)=> formInputChange(e)}>
-                            <option>Seleccione una Opción</option>
-                            { renderOptionsCiclos() }
-                        </Form.Select>
-                    </div>
                     <div className="mb-3">
                         <label>Nombre</label>
                         <input type="text" className="form-control" name="nombre" onChange={(e)=> formInputChange(e)}/>

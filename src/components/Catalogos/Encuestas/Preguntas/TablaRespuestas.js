@@ -1,40 +1,57 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../context/AuthContext";
-import { useParams } from "react-router-dom";
 import { Button, Form, Modal } from "react-bootstrap";
-import ModalNuevoParametrosItems from "./ParametrosItems/ModalNuevoParametrosItems";
-import ModalEditarParametrosItems from "./ParametrosItems/ModalEditarParametrosItems";
 
-function TablaParametrosItem({idParametro,idParametroTipo}) {
+function TablaRespuestas({idPregunta,idPreguntaTipo}){
+    const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const { logout } = useContext(AuthContext);
-    const [numberSave, setNumberSave] = useState(0);
-    const [ allParametrosItem, setAllParametrosItem ] = useState([]);
-    const [error, setError] = useState(null);
-    const [editingItemId, setEditingItemId] = useState(null);
+    const [ allRespuestas, setAllRespuestas ] = useState([]);
+    const [editRespuestaID, setEditRespuestaID] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [error, setError] = useState(null);
+
     
-    const getListaParametrosItem = () => {
-        axios.get(`${APIURL}/catalogos/encuestas/parametros/${idParametro}/items`,config)
+    const handleEditClick = (itemId) => {
+        setEditRespuestaID(itemId);
+    };
+
+    const handleSave = () => {
+        setEditRespuestaID(null);
+        getListaRespuestas();
+    };
+
+    const handleShowDeleteModal = (item) => {
+        setItemToDelete(item);
+        setShowDeleteModal(true);
+    };
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+        setItemToDelete(null);
+    };
+
+    const getListaRespuestas = () => {
+        axios.get(`${APIURL}/catalogos/encuestas/preguntas/${idPregunta}/items`,config)
             .then((resp)=>{
-                setAllParametrosItem(resp.data);
+                setAllRespuestas(resp.data);
             }).catch((error)=>{
                 setError(error.response);
                 console.log(error.response);
             })
     }
-
-    const deleteParametroItem = () => {
+    
+    const deleteRespuestaID= () => {
+        alert("Eliminar Respuesta Item")
+        return true;
         axios.delete(`${APIURL}/catalogos/encuestas/parametros/items/${itemToDelete.id}`, config)
             .then(() => {
-                getListaParametrosItem();
+                getListaRespuestas();
                 setShowDeleteModal(false);
                 setItemToDelete(null);
             })
@@ -45,38 +62,10 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
             });
     }
 
-    const handleEditClick = (itemId) => {
-        setEditingItemId(itemId);
-    };
-
-    const handleSave = () => {
-        setEditingItemId(null);
-        getListaParametrosItem();
-    };
-
-    const handleShowDeleteModal = (item) => {
-        setItemToDelete(item);
-        setShowDeleteModal(true);
-    };
-
-    const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
-        setItemToDelete(null);
-    };
-
-    useEffect(()=>{
-        getListaParametrosItem();
-    },[idParametro,numberSave])
-
-    const listaTablaParametrosItem = () => {
-        return allParametrosItem.map((pregunta_item, index) => (
-            editingItemId === pregunta_item.id ? (
-                <ModalEditarParametrosItems
-                    key={pregunta_item.id}
-                    item={pregunta_item}
-                    idParametro={idParametro}
-                    onSave={handleSave}
-                />
+    const listaTablaRespuestas = () => {
+        return allRespuestas.map((pregunta_item, index) => (
+            editRespuestaID === pregunta_item.id ? (
+                <p>Aqui va un modal de editar</p>
             ) : (
                 <tr key={'pitr-'+index}>
                     <td>
@@ -117,24 +106,14 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
     }
 
     return (<> 
-    {idParametroTipo === 1 && (
-        <>
         <div>
             <div className="seccion-table-parametros">
-                <table key={'tabpm-'+idParametroTipo} className="table items-parametros">
-                    <thead>
-                        <tr>
-                            <th>Rango Inferiro</th>
-                            <th></th>
-                            <th>Rango superiro</th>
-                            <th></th>
-                            <th>Puntos</th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                <table key={'tabpm-'+idPreguntaTipo} className="table items-parametros">
                     <tbody>
-                        {listaTablaParametrosItem()}
-                        <ModalNuevoParametrosItems idParametro={idParametro} idPregunta={null} numberSave={numberSave} setNumberSave={setNumberSave}/>
+                        {listaTablaRespuestas()}
+                        {/*
+                         <ModalNuevaRespesuta idPregunta={idPregunta} numberSave={numberSave} setNumberSave={setNumberSave}/>
+                         */}
                     </tbody>
                 </table>
             </div>
@@ -150,14 +129,12 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
                 <Button variant="secondary" onClick={handleCloseDeleteModal}>
                     Cancelar
                 </Button>
-                <Button variant="primary" onClick={deleteParametroItem}>
+                <Button variant="primary" onClick={deleteRespuestaID}>
                     Eliminar
                 </Button>
             </Modal.Footer>
         </Modal>
-        </>
-    )}
     </>)
 }
 
-export default TablaParametrosItem;
+export default TablaRespuestas;

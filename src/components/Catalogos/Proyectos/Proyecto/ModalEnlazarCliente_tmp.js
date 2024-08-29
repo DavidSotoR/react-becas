@@ -14,13 +14,10 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const [ allOrdenesServicio, setAllOrdenesServicio] = useState([]);
     const [clientesNoEnlazados,setClientesNoEnlazados] = useState([]);
     const [ optionsClientes, setOptionsClientes ] = useState([])
-    const [ optionsOrdenesDeTrabajo, setOptionsOrdenesDeTrabajo ] = useState([{ value: 1, label: "ODP 1" },{ value: 2, label: "ODP 2" }])
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
-        id_orden_trabajo:'',
         lista_clientes:[]
     })
     const animatedComponents = makeAnimated;
@@ -29,11 +26,6 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
     const formatOptionsClientes = (opciones) =>{
         const lista_opciones = opciones.map(h => ({ value: h.id, label: h.nombre }));
         setOptionsClientes(lista_opciones);
-    }
-
-    const formatOptionsOrdenesDeTrabajo = (opciones) => {
-        const lista_opciones = opciones.map(a => ({ value: a.id, label: a.descripcion }));
-        setOptionsOrdenesDeTrabajo(lista_opciones);
     }
 
     const handlerChangeSelectClientes = (e) =>{
@@ -69,16 +61,6 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
         }
     }
 
-    const formInputChange =(e) => {
-        console.log(e)
-        var value = e.value
-        setFormData(prevState => ({  
-            ...prevState,
-            id_orden_trabajo: value
-        }));
-
-    }
-
     const validateFields = ()=>{
         var messageError = ''
         if ( formData.id_orden_trabajo === '' && idTipoCliente === 1) {
@@ -97,13 +79,12 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
     }
 
     const sendData = () =>{
-        axios.post(APIURL+'/proyectos/clientes',formData,config).then((resp)=>{
+        axios.post(`${APIURL}/proyectos/${idProyecto}/clientes`,formData,config).then((resp)=>{
             console.log(resp);
             handleClose()
         }).catch((resp)=>{
             console.log(resp);
         })
-        
     }
     
     const getClientesNotInProyectoID = () =>{
@@ -121,22 +102,8 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
         
     }
     
-    const getOrdenesServicioProyectoID = () =>{
-        axios.get(`${APIURL}/proyectos/${idProyecto}/ordenes-servicio`,config).then((resp)=>{
-            formatOptionsOrdenesDeTrabajo(resp.data)
-        }).catch((error)=>{
-            if (error?.response.status === 401) {
-                logout()
-            } else {
-                console.log(error);
-                alert('Error al solicitar información');
-            }
-        });
-    }
-
     useEffect(()=>{
         getClientesNotInProyectoID()
-        getOrdenesServicioProyectoID()
     },[])
 
 
@@ -149,15 +116,7 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
             <Modal.Header closeButton>
                 <Modal.Title>Nuevo grupo de colegios</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                    <div className="mb-3">
-                        <label>Orden de Trabajo</label>                   
-                        <Select options={ optionsOrdenesDeTrabajo } onChange={(e)=>formInputChange(e)}
-                        closeMenuOnSelect={true}
-                        components={animatedComponents}>
-                        </Select>
-                    </div>
-                    
+            <Modal.Body>                    
                     <div className="mb-3">
                         <label>Lista de clientes no enlazados a proyecto</label>
                         <Select options={ optionsClientes } onChange={(e)=>handlerChangeSelectClientes(e)}

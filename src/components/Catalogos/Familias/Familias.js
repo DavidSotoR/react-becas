@@ -50,9 +50,6 @@ function CatalogoFamilias() {
                     <p style={{ fontWeight: "bold" }}>{familia.nombre}</p>
                 </td>
                 <td>
-                    <p style={{ fontWeight: "bold" }}>{getAnioCicloEscolar(familia.id_ciclo_escolar)}</p>
-                </td>
-                <td>
                     <p style={{ fontWeight: "bold" }}>{familia.situacion_beca}</p>
                 </td>
                 <td>
@@ -121,7 +118,6 @@ function CatalogoFamilias() {
                                 <tr>
                                     <th scope="col" className="col-id">ID</th>
                                     <th scope="col">Familia</th>
-                                    <th scope="col">Ciclo Escolar</th>
                                     <th scope="col">Situacion Beca</th>
                                     <th scope="col">Opciones</th>
                                 </tr>
