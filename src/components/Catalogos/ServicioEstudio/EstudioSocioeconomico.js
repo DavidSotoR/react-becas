@@ -90,6 +90,10 @@ function ServicioEstudio(){
         })
     }        
     const getEstudiosSocioeconomicos = () => {
+        if(!preyecto){
+            setAllEstudiosSocioeconomicos([]);
+            return true;
+        }
         axios.get(`${APIURL}/estudio/socioeconomico`,{params:fromData,headers:config.headers}).then((resp)=>{
             setAllEstudiosSocioeconomicos(resp.data);
         }).catch((resp)=>{
