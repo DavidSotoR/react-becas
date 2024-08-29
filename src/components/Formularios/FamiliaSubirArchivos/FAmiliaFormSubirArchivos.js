@@ -241,11 +241,14 @@ function FamiliaSubirArchivos() {
                                 </div>
                             </div>
                             <div className="ms-2 me-auto">
-                            <div className="mb-3">
-                                <label htmlFor="formFileMultipleIngresos" className="form-label">Cargar archivos Ingresos:</label>
-                                <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'ingresos') } } accept="application/pdf" type="file" id="formFileMultipleIngresos" multiple />
-                                <button className="btn btn-primary mt-2" onClick={subirArchivosIngresos}> Subir Archivos </button>
-                            </div>
+                                <div className="mb-3">
+                                    <label htmlFor="formFileMultipleIngresos" className="form-label">Cargar archivos Ingresos:</label>
+                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'ingresos') } } accept="application/pdf" type="file" id="formFileMultipleIngresos" multiple />
+                                    <button className="btn btn-primary mt-2" onClick={subirArchivosIngresos}> Subir Archivos </button>
+                                </div>
+                                <div className="mb-3">
+                                    <p> Archivo:  </p>
+                                </div>
                             </div>
                         </li>
                         <li className="list-group-item">
