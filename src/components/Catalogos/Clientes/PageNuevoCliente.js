@@ -26,9 +26,10 @@ function PageNuevoCliente() {
         nombre:'',
         descripcion: '',
         notificaciones_email: '',
-        id_clientes_hermanos: 'null',
+        id_clientes_hermanos: '',
         id_catalogo_encuesta: '',
         documentacion_digital: false,
+        requiere_facturar: false,
         rso: '',
         nombre_uno: '',
         telefono_uno: '',
@@ -49,6 +50,7 @@ function PageNuevoCliente() {
     const [ arrayErrors, setArrayErrors ] = useState([])
     const [idSet, setIdSet] = useState(new Set());
 
+
     const formInputChange =(e) => {
         
         var name = e.target.name
@@ -64,7 +66,7 @@ function PageNuevoCliente() {
 
         if (name === 'id_tipo_cliente' && value === '2') {
             setEsColegioComun(false)
-            return 0;
+            //return 0;
         }
 
         if (name === 'tipo_persona') {
@@ -72,6 +74,11 @@ function PageNuevoCliente() {
             return 0;
         }
         if (name === 'requiere_facturar') {
+            var newValue = !formData.requiere_facturar
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: newValue
+            }));
             return 0;
         }
         if (name === 'documentacion_digital') {
@@ -99,14 +106,6 @@ function PageNuevoCliente() {
                 ...prevFormData,
                 id_clientes_hermanos: null
             }));
-            //formData.id_tipo_cliente == 1 && esColegioComun == 1
-            //formData.id_tipo_cliente == 1 && esColegioComun == 1
-            /*
-            setFormData(prevState => ({
-                ...prevState,
-                [id_clientes_hermanos]: null
-            }));
-            */
         }
     }
     
@@ -595,8 +594,25 @@ function PageNuevoCliente() {
         
     }
 
-    const validarValoresBtn = (form) =>{
-        return Object.values(form).every(valor => valor !== '' && valor !== null);
+    const validarValoresBtn = (form) =>{        
+        if (form.id_tipo_cliente === '1') {
+            return Object.entries(form).every(([key, valor]) => {
+                if (key === 'id_clientes_hermanos' && !esColegioComun) {
+                    return true; // Ignora este campo y continúa
+                }
+                return valor !== '' && valor !== null && valor !== '0';
+            });
+        } else if (formData.id_tipo_cliente === '2') {
+            return Object.entries(form).every(([key, valor]) => {
+                if (key === 'id_clientes_hermanos') {
+                    return true; // Ignora este campo y continúa
+                }
+                return valor !== '' && valor !== null && valor !== '0';
+            });
+        }
+    
+        return false;
+        
     }
 
     useEffect(()=>{
@@ -615,29 +631,21 @@ function PageNuevoCliente() {
         validateFields(formData);        
     }, [formData])
 
-    /* useEffect(()=>{
-        if (esColegioComun && formData.id_tipo_cliente === '1') {
-            log
-        }
-    }, [esColegioComun]) */
 
     useEffect(()=>{
-        console.log(arrayErrors);
         
-        if (arrayErrors.length === 0 && validarValoresBtn(formData)) {
-            setFormValid(false)
-        } else {
-            console.log(formData);
-
-            if (formData.id_tipo_cliente === '1' && arrayErrors.length === 0 && (formData.id_clientes_hermanos === null || formData.id_clientes_hermanos === 'null')) {
+        if (arrayErrors.length === 0 ) {
+            console.log("entro bien pero hay que validar ");
+            
+            if (formData.id_tipo_cliente === '1' && validarValoresBtn(formData)) {
                 setFormValid(false)
-            } else{
+            } else if (formData.id_tipo_cliente === '2' && validarValoresBtn(formData)) {
+                setFormValid(false)
+            } else {
                 setFormValid(true)
-                console.log('algo esta mal');
-                
             }
             
-        }
+        } 
         
     },[arrayErrors])
 
