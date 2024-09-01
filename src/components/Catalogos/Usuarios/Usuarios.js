@@ -228,7 +228,7 @@ function Usuarios() {
                     <p>{usuario.email}</p>
                 </td>
                 <td>
-                    <p>{usuario?.id_cliente ? usuario.cliente.nombre : 'Sin asignar'}</p>
+                    <p>{usuario?.id_cliente ? usuario.cliente.nombre : ''}</p>
                 </td>
                 <td>
                     <p>{ getNamePerfil(usuario.id_perfil)}</p>
@@ -370,18 +370,6 @@ function Usuarios() {
             {   show &&
                 <ModalCrearUsuario show={show} handleClose={handleClose}></ModalCrearUsuario>
             }
-            {/* {<Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Crear Nuevo Usuario</Modal.Title>
-                </Modal.Header>
-                <Modal.Body style={{ height: '50vh', overflowY: 'scroll' }}>
-                    <UsuarioCrear onCreate={getDatosPost} clear={ defaultValuesForm } clearForm={ clearForm } />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
-                    <Button variant="primary" disabled={ btnEnable } onClick={sendDataPost}>Crear</Button>
-                </Modal.Footer>
-            </Modal>} */}
 
         </div>
     )
