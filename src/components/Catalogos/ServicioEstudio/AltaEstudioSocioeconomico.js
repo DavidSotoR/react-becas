@@ -26,8 +26,7 @@ function AltaEstudioSocioeconomico(){
     
     const animatedComponents = makeAnimated;
 
-
-    const [fromData,setFormData] = useState({
+    const nuevoUsuario = {
         id_servicio_estado:'1',
         id_proyecto:idProyecto,
         id_cliente:idCliente,
@@ -44,7 +43,7 @@ function AltaEstudioSocioeconomico(){
             id_familias_padres_tipo:'1',
             nombre:'',
             edad:'',
-            vive:'',
+            vive:false,
             direccion:'',
             ocupacion_actual:'',
             empresa_trabajo:'',
@@ -53,10 +52,10 @@ function AltaEstudioSocioeconomico(){
             contecto_principal:false,
         },
         madre:{
-            id_familias_padres_tipo:'1',
+            id_familias_padres_tipo:'2',
             nombre:'',
             edad:'',
-            vive:'',
+            vive:false,
             direccion:'',
             ocupacion_actual:'',
             empresa_trabajo:'',
@@ -64,7 +63,17 @@ function AltaEstudioSocioeconomico(){
             telefono_casa:'',
             contecto_principal:false,
         }
-    })
+    };
+
+
+    const [fromData,setFormData] = useState(nuevoUsuario)
+
+    const [fromDataError,setFormDataError] = useState({})
+
+    const[listaEstudiosCreados,setListaEstudiosCreados] = useState([{
+        candidato:'Aguilar carranza',
+        situacion:'Prueba de desarrollo',
+    }])
 
     /*
     const[fromDataPapa,setFromDataPapa] = useState({
@@ -124,9 +133,21 @@ function AltaEstudioSocioeconomico(){
     
     const sendDataEstudioSocioeconomico = () =>{
         axios.post(`${APIURL}/estudio/socioeconomico`,fromData,config).then((resp)=>{
+            const {message,data} = resp.data
             console.log(resp);
-        }).catch((resp)=>{
-            console.log(resp);
+            
+            setListaEstudiosCreados((prevLista) => [data, ...prevLista]);
+
+            setFormData(nuevoUsuario);
+
+        }).catch((err)=>{
+            if(err.code === "ERR_BAD_REQUEST"){
+                const data =err.response.data;
+                if(data?.errors){
+                    setFormDataError(data.errors);
+                }
+            }
+            console.log(err);
         })
     }
     
@@ -177,13 +198,6 @@ function AltaEstudioSocioeconomico(){
         }
     }
 
-
-    const renderOptionTiposClientes = () => {
-        return [...tiposClientes.map((option) => (
-            <option key={'select-tc-'+option.id} value={option.id}> {option.nombre} </option>
-        ))]
-    }
-    
     const renderOptionClientesComunes  = (opciones) =>{
         var opcionesColegios = []
         
@@ -196,24 +210,12 @@ function AltaEstudioSocioeconomico(){
         setClientesComunes (opcionesColegios)
     }
     
-/*
-    useEffect(()=>{
-        getProyectos();
-    },[])
-    
-    useEffect(() => {
-        getProyectoClientes();
-    },[preyecto])
-
-    useEffect(() => {
-        getOrdenesServicio();
-    },[fromData.id_cliente])
-*/
     useEffect(()=>{
         getProyecto();
         getCliente();
         getOrdenServicio();
     },[])
+
     useEffect(() => {
         if(fromData.es_cliente_comun === true){
             getListaClientesHermanos();
@@ -221,6 +223,31 @@ function AltaEstudioSocioeconomico(){
             setClientesComunes([]);
         }
     },[fromData.id_cliente,fromData.es_cliente_comun])
+
+    const ultimasFamiliasAñadidas = () => {
+        return (
+            <div>
+                <div>
+                    <p>Familias recentemente añadidas</p>
+                </div>
+                <hr/>
+                <div className="row flex-nowrap overflow-auto">
+                {listaEstudiosCreados.map((estudio,index) => (
+                    <div  key={'ufa-'+index} className="col-4 p-2">
+                        <div className="border rounded-1 p-2">
+                            <div>
+                                <p>Familia: <span>{estudio.candidato}</span></p>
+                            </div>
+                            <div>
+                                <p>Situacion: <span>{estudio.situacion}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                </div>
+            </div>
+        )
+    }
     
     
     const formularioFamilia = (familiar = '') => {
@@ -361,7 +388,7 @@ function AltaEstudioSocioeconomico(){
                 <p className="col-sm-2 col-form-label">
                     Contacto Principal:
                 </p>
-                <div className="col-sm-10 pt-1">
+                <div className="col-sm-10 pt-1 needs-validation">
                     <div className="form-switch">
                         <input 
                             className="form-check-input" 
@@ -374,6 +401,14 @@ function AltaEstudioSocioeconomico(){
                             />
                         <label className="form-check-label">{(fromData[familiar].contecto_principal) ? 'Si' : 'No'}</label>
                     </div>
+                    <div className="invalid-feedback">
+                        Seleccione un contacto principal
+                    </div>
+                    {(
+                    <div className="invalid-feedback" >
+                        Seleccione un contacto principal
+                    </div>
+                    )}
                 </div>
             </div>
             <br/>
@@ -420,6 +455,8 @@ function AltaEstudioSocioeconomico(){
             <div className="row">
                 <div className="col-md-2"/>
                 <div className="col-md-8">
+
+                {ultimasFamiliasAñadidas()}
 
                     <h4>Familia:</h4>
                     <hr/>
@@ -490,6 +527,8 @@ function AltaEstudioSocioeconomico(){
 
                     {formularioFamilia('madre')}
 
+                    {JSON.stringify(fromDataError)}
+                    <br></br>
                     <div className="d-flex" style={{ flexDirection: 'row-reverse'}}>
                         <button className="btn btn-primary btn-sm fw-bold " onClick={sendDataEstudioSocioeconomico}>Guardar</button>
                     </div>

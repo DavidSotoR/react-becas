@@ -27,7 +27,7 @@ function ServicioEstudio(){
     const [tipoClienteSeleccionado] = useState('1')
     const [preyecto,setProyecto] = useState('')
     const [cliente,setCliente] = useState('')
-    const [search,setSearch] = useState('')
+    const [search,setSearch] = useState("")
     const animatedComponents = makeAnimated;
 
 
@@ -39,6 +39,10 @@ function ServicioEstudio(){
         id_colaborador:'',
     })
 
+    const searchText = (e) => {
+        const buscar = e.target.value;
+        setSearch(buscar);
+    }
 
     const handelNavegate = () => {
         navigate(`/estudio-socioeconomico/nuevo/${fromData.id_proyecto}/${fromData.id_cliente}/${fromData.id_orden_servicio}`);
@@ -155,8 +159,12 @@ function ServicioEstudio(){
 
     
 
+    const allEstudiosSocioeconomicosFiltrados = allEstudiosSocioeconomicos.filter(item =>
+        item.candidato.toLowerCase().includes(search.toLowerCase())
+    );
+
     const renderFilasTablaEstudiosSocioeconomicos = () => {
-        return allEstudiosSocioeconomicos.map((estudio, index) => (
+        return allEstudiosSocioeconomicosFiltrados.map((estudio, index) => (
             <tr key={'tr-cliente-'+index}>
                 <td>
                     <p>#{estudio.id}</p>
@@ -254,6 +262,13 @@ function ServicioEstudio(){
             </div>
             <hr/>
             
+            <div className="col-4 row">
+                <label htmlFor="search" className="col-sm-2 col-form-label">Buscar:</label>
+                <div className="col-10">
+                    <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
+                </div>
+            </div>
+
             <table className="table">
                 <thead>
                     <tr>
