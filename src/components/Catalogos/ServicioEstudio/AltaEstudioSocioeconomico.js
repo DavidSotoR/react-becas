@@ -65,7 +65,6 @@ function AltaEstudioSocioeconomico(){
         }
     };
 
-
     const [fromData,setFormData] = useState(nuevoUsuario)
 
     const [fromDataError,setFormDataError] = useState({})
@@ -137,7 +136,6 @@ function AltaEstudioSocioeconomico(){
             console.log(resp);
             
             setListaEstudiosCreados((prevLista) => [data, ...prevLista]);
-
             setFormData(nuevoUsuario);
 
         }).catch((err)=>{
@@ -465,6 +463,11 @@ function AltaEstudioSocioeconomico(){
                         <div className="col-sm-10">
                             <input type="text" className="form-control" id="candidato" name="candidato" onChange={(e)=> formInputChange(e)}/>
                         </div>
+                        {fromDataError?.candidato && (
+                        <div>
+                            {fromDataError.candidato.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                        </div>
+                        )}
                     </div>
 
                     <div className="mb-3 row">
@@ -481,6 +484,11 @@ function AltaEstudioSocioeconomico(){
                                 style={{ width: '100%' }}
                             />
                         </div>
+                        {fromDataError?.situacion && (
+                        <div>
+                            {fromDataError.situacion.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                        </div>
+                        )}
                     </div>
 
                     <div className="mb-3 row">
@@ -527,15 +535,12 @@ function AltaEstudioSocioeconomico(){
 
                     {formularioFamilia('madre')}
 
-                    {JSON.stringify(fromDataError)}
                     <br></br>
                     <div className="d-flex" style={{ flexDirection: 'row-reverse'}}>
                         <button className="btn btn-primary btn-sm fw-bold " onClick={sendDataEstudioSocioeconomico}>Guardar</button>
                     </div>
                     
                     <br/>
-                    {JSON.stringify(fromData)}
-                    
                 </div>
             </div>
        </div> 

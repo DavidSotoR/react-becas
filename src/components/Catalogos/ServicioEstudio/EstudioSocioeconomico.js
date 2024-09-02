@@ -268,7 +268,7 @@ function ServicioEstudio(){
                     <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
                 </div>
             </div>
-
+            <br/>
             <table className="table">
                 <thead>
                     <tr>
