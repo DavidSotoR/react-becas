@@ -65,7 +65,7 @@ function AltaEstudioLaboral(){
         })
     }
     const getOrdenesServicio = () => {
-        axios.get(`${APIURL}/proyectos/${preyecto}/clientes/${cliente}/ordenes-servicio`,config).then((resp)=>{
+        axios.get(`${APIURL}/clientes/${cliente}/ordenes-servicio`,config).then((resp)=>{
             setOrdenesServicio(resp.data);
         }).catch((resp)=>{
             console.log(resp);
