@@ -110,7 +110,7 @@ function AltaEstudioLaboral(){
         ))]
     }
     const renderOptionOrdenesServicios = () => {
-        return [<option key={'select-p-0'} value=''> Seleccione una orden de servicio </option>,...ordenesServicio.map((option) => (
+        return [<option key={'select-p-0'} value=''> Sin Orden de servicio </option>,...ordenesServicio.map((option) => (
             <option key={'select-pc-'+option.id} value={option.id}> {option.descripcion} </option>
         ))]
     }
