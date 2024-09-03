@@ -69,39 +69,22 @@ function AltaEstudioSocioeconomico(){
 
     const [fromDataError,setFormDataError] = useState({})
 
-    const[listaEstudiosCreados,setListaEstudiosCreados] = useState([{
+    const[listaEstudiosCreados,setListaEstudiosCreados] = useState([])
+    /*datos de prueba: {
+        id:'120',
         candidato:'Aguilar carranza',
         situacion:'Prueba de desarrollo',
-    }])
-
-    /*
-    const[fromDataPapa,setFromDataPapa] = useState({
-        id_familias_padres_tipo:'1',
-        nombre:'',
-        edad:'',
-        vive:'',
-        direccion:'',
-        ocupacion_actual:'',
-        empresa_trabajo:'',
         email:'',
-        telefono_casa:'',
-        contecto_principal:false,
-    })
-
-    const[fromDataMama,setFromDataMama] = useState({
-        id_familias_padres_tipo:'2',
-        nombre:'',
-        edad:'',
-        vive:'',
-        direccion:'',
-        ocupacion_actual:'',
-        empresa_trabajo:'',
-        email:'',
-        telefono_casa:'',
-        contecto_principal:false,
-    })
+        padre:{
+            contecto_principal:false,
+            email:'padre@email.com',
+        },
+        madre:{
+            contecto_principal:true,
+            email:'madre@email.com',
+        },
+    }
     */
-
 
     const formInputChange =(e) => {
         var {name, value, type, checked } = e.target;
@@ -207,6 +190,22 @@ function AltaEstudioSocioeconomico(){
         })
         setClientesComunes (opcionesColegios)
     }
+
+    const getNumeroContactoPrincipal = (estudio) => {
+        if(estudio?.email){
+            if(estudio.email.length > 0)
+                return estudio.email;
+        }
+        if(estudio?.padre){
+            if(estudio.padre.contecto_principal)
+                return estudio.padre.email;
+        }
+        if(estudio?.madre){
+            if(estudio.madre.contecto_principal)
+                return estudio.madre.email;
+        }
+        return '';
+    }
     
     useEffect(()=>{
         getProyecto();
@@ -226,7 +225,7 @@ function AltaEstudioSocioeconomico(){
         return (
             <div>
                 <div>
-                    <p>Familias recentemente añadidas</p>
+                    <p><b>Familias recentemente añadidas: {listaEstudiosCreados.length}</b></p>
                 </div>
                 <hr/>
                 <div className="row flex-nowrap overflow-auto">
@@ -234,10 +233,13 @@ function AltaEstudioSocioeconomico(){
                     <div  key={'ufa-'+index} className="col-4 p-2">
                         <div className="border rounded-1 p-2">
                             <div>
-                                <p>Familia: <span>{estudio.candidato}</span></p>
+                                <p><b>Estudio:</b> <span>{(estudio.id) ? '#'+estudio.id : ''}</span></p>
                             </div>
                             <div>
-                                <p>Situacion: <span>{estudio.situacion}</span></p>
+                                <p><b>Familia:</b> <span>{estudio.candidato}</span></p>
+                            </div>
+                            <div>
+                                <p><b>Situacion:</b> <span>{getNumeroContactoPrincipal(estudio)}</span></p>
                             </div>
                         </div>
                     </div>

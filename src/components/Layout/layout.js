@@ -100,7 +100,7 @@ export default function Layout() {
                                 },
                               }}>
                                 <MenuItem component={<Link to={PathConstants.ESTUDIOSOCIOECONOMICO} />}> SOCIOECONOMICO</MenuItem>
-                                <MenuItem component={<Link to={PathConstants.SERVICIOESTUDIO} />}> LABORAL</MenuItem>
+                                <MenuItem component={<Link to={PathConstants.ESTUDIOLABORAL} />}> LABORAL</MenuItem>
                             </SubMenu>
                               
                               

@@ -7,7 +7,7 @@ import makeAnimated from 'react-select/animated';
 import ResaltarTexto from "../../ResaltarTexto/ResaltarTexto";
 import { useNavigate } from 'react-router-dom';
 
-function ServicioEstudio(){
+function EstudioLaboral(){
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -16,13 +16,10 @@ function ServicioEstudio(){
     }
     const navigate = useNavigate();
 
-    const [tiposClientes,setTiposClientes] = useState([])
-
-    const [proyectos,setProyectos] = useState([])
-    const [proyectoClientes,setProyectoClientes] = useState([])
+    const [clientes,setClientes] = useState([])
     const [ordenesServicio,setOrdenesServicio] = useState([])
     const [colaboradores,setColaboradores] = useState([])
-    const [allEstudiosSocioeconomicos,setAllEstudiosSocioeconomicos] =useState([])
+    const [allEstudios,setAllEstudios] =useState([])
 
     const [tipoClienteSeleccionado] = useState('1')
     const [preyecto,setProyecto] = useState('')
@@ -33,7 +30,6 @@ function ServicioEstudio(){
 
     const [fromData,setFormData] = useState({
         id_servicio_estado:'1',
-        id_proyecto:'',
         id_cliente:'',
         id_orden_servicio:'',
         id_colaborador:'',
@@ -45,7 +41,7 @@ function ServicioEstudio(){
     }
 
     const handelNavegate = () => {
-        navigate(`/estudio-socioeconomico/nuevo/${fromData.id_proyecto}/${fromData.id_cliente}/${fromData.id_orden_servicio}`);
+        navigate(`/estudio-laboral/nuevo/${fromData.id_cliente}/${fromData.id_orden_servicio}`);
     }
 
     const formInputChange =(e) => {
@@ -62,44 +58,30 @@ function ServicioEstudio(){
             }));
         }
     }
-    
-    const getProyectos = () => {
-        axios.get(`${APIURL}/proyectos?activo=1&id_tipo_cliente=${tipoClienteSeleccionado}`,config).then((resp)=>{
-            setProyectos(resp.data);
-        }).catch((resp)=>{
-            console.log(resp);
-        })
-    }
-    const getProyectoClientes = () => {
-        if(preyecto === ''){
-            return true;
-        }
-        axios.get(`${APIURL}/proyectos/${preyecto}/clientes`,config).then((resp)=>{
-            setProyectoClientes(resp.data);
+    const getClientes = () => {
+        axios.get(`${APIURL}/clientes?id_tipo_cliente=2`,config).then((resp)=>{
+            setClientes(resp.data);
         }).catch((resp)=>{
             console.log(resp);
         })
     }
     const getOrdenesServicio = () => {
-        if(preyecto === ''){
-            return true;
-        }
         if((!cliente) || (cliente === '')){
             return true;
         }
-        axios.get(`${APIURL}/proyectos/${preyecto}/clientes/${cliente}/ordenes-servicio`,config).then((resp)=>{
+        axios.get(`${APIURL}/clientes/${cliente}/ordenes-servicio`,config).then((resp)=>{
             setOrdenesServicio(resp.data);
         }).catch((resp)=>{
             console.log(resp);
         })
     }        
-    const getEstudiosSocioeconomicos = () => {
+    const getEstudios = () => {
         if(!preyecto){
-            setAllEstudiosSocioeconomicos([]);
+            setAllEstudios([]);
             return true;
         }
-        axios.get(`${APIURL}/estudio/socioeconomico`,{params:fromData,headers:config.headers}).then((resp)=>{
-            setAllEstudiosSocioeconomicos(resp.data);
+        axios.get(`${APIURL}/estudio/laboral`,{params:fromData,headers:config.headers}).then((resp)=>{
+            setAllEstudios(resp.data);
         }).catch((resp)=>{
             console.log(resp);
         })
@@ -121,13 +103,8 @@ function ServicioEstudio(){
         }
     }
 
-    const renderOptionProyectos = () => {
-        return [<option key={'select-p-0'} value=''> Seleccione un proyecto </option>,...proyectos.map((option) => (
-            <option key={'select-tcp-'+option.id} value={option.id}> {option.nombre} </option>
-        ))]
-    }
-    const renderOptionProyectoClientes = () => {
-        return [<option key={'select-p-0'} value=''> Seleccione una Cliente</option>,...proyectoClientes.map((option) => (
+    const renderOptionClientes = () => {
+        return [<option key={'select-p-0'} value=''> Seleccione una Cliente</option>,...clientes.map((option) => (
             <option key={'select-pc-'+option.id} value={option.id}> {option.nombre} </option>
         ))]
     }
@@ -137,13 +114,9 @@ function ServicioEstudio(){
         ))]
     }
     
-    useEffect(()=>{
-        getProyectos();
-    },[])
-    
     useEffect(() => {
-        getProyectoClientes();
-    },[preyecto])
+        getClientes();
+    },[])
 
     useEffect(() => {
         getOrdenesServicio();
@@ -151,20 +124,20 @@ function ServicioEstudio(){
 
     useEffect(() => {
         if(fromData.id_proyecto){
-            getEstudiosSocioeconomicos();
+            getEstudios();
         }else{
-            getEstudiosSocioeconomicos([]);
+            getEstudios([]);
         }
-    },[fromData.id_proyecto,fromData.id_cliente,fromData.id_orden_servicio])
+    },[fromData.id_cliente,fromData.id_orden_servicio])
 
     
 
-    const allEstudiosSocioeconomicosFiltrados = allEstudiosSocioeconomicos.filter(item =>
+    const allEstudiosFiltrados = allEstudios.filter(item =>
         item.candidato.toLowerCase().includes(search.toLowerCase())
     );
 
-    const renderFilasTablaEstudiosSocioeconomicos = () => {
-        return allEstudiosSocioeconomicosFiltrados.map((estudio, index) => (
+    const renderFilasTablaEstudios = () => {
+        return allEstudiosFiltrados.map((estudio, index) => (
             <tr key={'tr-cliente-'+index}>
                 <td>
                     <p>#{estudio.id}</p>
@@ -199,30 +172,6 @@ function ServicioEstudio(){
             <div className="row">
                 <div className="col-md-3">
                     <label 
-                        htmlFor="id_proyecto" 
-                        className="form-label"
-                        style={{marginBottom: "1px",color: "darkolivegreen"}}
-                    >Proyecto:
-                    </label>
-                    <Form.Select 
-                        className="form-select form-select-sm" 
-                        name="id_proyecto" 
-                        id="id_proyecto" 
-                        value={preyecto}
-                        onChange={
-                            (e)=> {
-                                setProyecto(e.target.value);
-                                setFormData(prevState => ({
-                                    ...prevState,
-                                    id_proyecto: e.target.value
-                                })); 
-                            }
-                        }>
-                        {renderOptionProyectos()}
-                    </Form.Select>
-                </div>
-                <div className="col-md-3">
-                    <label 
                         htmlFor="id_cliente" 
                         className="form-label"
                         style={{marginBottom: "1px",color: "darkolivegreen"}}
@@ -234,7 +183,7 @@ function ServicioEstudio(){
                         id="id_cliente" 
                         value={fromData.id_cliente}
                         onChange={(e)=> {formInputChange(e); setCliente(e.target.value)}}>
-                        {renderOptionProyectoClientes()}
+                        {renderOptionClientes()}
                     </Form.Select>
                 </div>
                 <div className="col-md-3">
@@ -254,9 +203,9 @@ function ServicioEstudio(){
                     </Form.Select>
                 </div>
                 
-                { fromData.id_orden_servicio && (
+                { fromData.id_cliente && (
                 <div className="col-md-3 d-flex align-self-end">
-                    <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {handelNavegate()}} >Nueva Familia</Button>
+                    <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {handelNavegate()}} >Nuevo</Button>
                 </div>
                 )}
             </div>
@@ -273,7 +222,7 @@ function ServicioEstudio(){
                 <thead>
                     <tr>
                         <th scope="col" className="col-id">#</th>
-                        <th scope="col">Familia</th>
+                        <th scope="col">Candidato</th>
                         <th scope="col">Descripción</th>
                         <th scope="col">Email</th>
                         <th scope="col">Colaborador</th>
@@ -281,11 +230,11 @@ function ServicioEstudio(){
                     </tr>
                 </thead>
                 <tbody>
-                    { renderFilasTablaEstudiosSocioeconomicos() }
+                    { renderFilasTablaEstudios() }
                 </tbody>
                 </table>
        </div> 
     </>)
 }
 
-export default ServicioEstudio
+export default EstudioLaboral
