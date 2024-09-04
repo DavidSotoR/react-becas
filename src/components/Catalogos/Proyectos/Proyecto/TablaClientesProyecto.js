@@ -32,6 +32,12 @@ function TablaClientesProyecto({ ID , idTipoCliente}) {
     const handleEditClick = (cliente) =>{
         alert(cliente.nombre)
     }
+    
+    const searchText = (e) => {
+        const buscar = e.target.value;
+        setSearch(buscar);
+    }
+
     useEffect(()=>{
         getClientesProyectoID();
     },[]);
@@ -66,11 +72,21 @@ function TablaClientesProyecto({ ID , idTipoCliente}) {
         <div>
         <div className="d-flex justify-content-between mb-3">
             <div className="">
-            <h3>Lista de clientes enalzados al proyecto:</h3>
+            <h4>Lista de clientes:</h4>
             </div>
             <div className="">
             <button className="btn btn-primary btn-sm fw-bold" onClick={handleShow}>Agregar Clientes</button>
             </div>
+        </div>
+        <div>
+            <hr/>
+            <div className="col-4 row">
+                <label htmlFor="search" className="col-sm-2 col-form-label">Buscar:</label>
+                <div className="col-10">
+                    <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
+                </div>
+            </div>
+            <hr/>
         </div>
         {/*<div className="table-wrapper">
             <table className="table">
@@ -96,7 +112,7 @@ function TablaClientesProyecto({ ID , idTipoCliente}) {
                         <div className="d-flex justify-content-between mb-3">
                             <div className="">
                                     <h5>
-                                        {a.cliente.nombre}
+                                        <ResaltarTexto texto={a.cliente.nombre} reslatar={search}/>
                                     </h5>
                             </div>
                             <div className="">
