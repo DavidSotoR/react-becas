@@ -98,10 +98,12 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo}){
         }
     }
     return (
-        <>
-        Seccion Preguntas ID: {idPregunta} Tipo {idPreguntaTipo}
-        {preguntaPorTipoPregunta()}
-        </>
+        <div className="row justify-content-md-center">
+            <div className="col-md-8">
+                Seccion Preguntas ID: {idPregunta} Tipo {idPreguntaTipo}
+                {preguntaPorTipoPregunta()}
+            </div>
+        </div>
     )
 }
 

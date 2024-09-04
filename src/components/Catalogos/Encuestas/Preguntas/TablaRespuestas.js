@@ -111,9 +111,11 @@ function TablaRespuestas({idPregunta,idPreguntaTipo}){
                 <table key={'tabpm-'+idPreguntaTipo} className="table items-parametros">
                     <tbody>
                         {listaTablaRespuestas()}
-                         <ModalNuevaRespesuta idPregunta={idPregunta} idPreguntaTipo={idPreguntaTipo}/>
                     </tbody>
                 </table>
+            </div>
+            <div className="container text-center">
+                <ModalNuevaRespesuta key={'tabpr-'+idPreguntaTipo} show={true} idPregunta={idPregunta} idPreguntaTipo={idPreguntaTipo}/>
             </div>
         </div>
         <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
