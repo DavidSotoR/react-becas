@@ -19,6 +19,42 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo}){
     // 4 .-  Número de Hijos
     // 5 .-  Orfandad
     // 6 .-  Dependientes Económicos
+    const dependientesEconomicamente = () => {
+        return (
+            <div>
+            <div className="row">
+                <div className="col-sm-2"></div>
+                <div className="col-sm-3 p-1">PARENTESCO</div>
+                <div className="col-sm-3 p-1">NOMBRE</div>
+            </div>
+            <div className="row text-start">
+                <div className="col-sm-2"></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+            </div>
+            <div className="row text-start">
+                <div className="col-sm-2"></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+            </div>
+            <div className="row text-start">
+                <div className="col-sm-2"></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+            </div>
+            <div className="row text-start">
+                <div className="col-sm-2"></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+            </div>
+            <div className="row text-start">
+                <div className="col-sm-2"></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+            </div>
+            </div>
+        )
+    }
     // 7 .-  Económicamente activo
     const familiaEconomicameteActiva = ()=>{
         return (
@@ -51,6 +87,26 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo}){
         )
     }
     // 8 .-  Ingreso mensual
+    const ingresoNetoMensual = () => {
+        return (
+            <div>
+            <div className="row">
+                <div className="col-sm-3 p-1">INGRESO NETO</div>
+                <div className="col-sm-3 p-1">PADRE</div>
+                <div className="col-sm-3 p-1">MADRE</div>
+                <div className="col-sm-3 p-1">OTROS</div>
+            </div>
+            <div className="row text-start">
+                <div className="col-sm-3">
+                    <input type="text"/>
+                </div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
+                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
+            </div>
+            </div>
+        )
+    }
     // 9 .-  Ahorro
     // 10 .-  Inversiones
     // 11 .-  Vehículos
@@ -74,11 +130,17 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo}){
             // 4 .-  Número de Hijos
             // 5 .-  Orfandad
             // 6 .-  Dependientes Económicos
+            case 6:
+                return dependientesEconomicamente();
+            break;
             // 7 .-  Económicamente activo
             case 7:
                 return familiaEconomicameteActiva();
             break;
             // 8 .-  Ingreso mensual
+            case 8:
+                return ingresoNetoMensual();
+            break;
             // 9 .-  Ahorro
             // 10 .-  Inversiones
             // 11 .-  Vehículos
