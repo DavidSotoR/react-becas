@@ -88,7 +88,7 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
     }
     
     const getClientesNotInProyectoID = () =>{
-        axios.get(`${APIURL}/proyectos/${idProyecto}/clientes?no_enlazados=true`,config).then((resp)=>{
+        axios.get(`${APIURL}/proyectos/${idProyecto}/clientes?no_enlazados=true&id_tipo_cliente=${idTipoCliente}`,config).then((resp)=>{
             setClientesNoEnlazados(resp.data);
             formatOptionsClientes(resp.data);
         }).catch((error)=>{
