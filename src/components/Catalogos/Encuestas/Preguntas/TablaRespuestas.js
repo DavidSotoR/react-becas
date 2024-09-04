@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../context/AuthContext";
 import { Button, Form, Modal } from "react-bootstrap";
+import ModalNuevaRespesuta from "./ModalNuevaRespesuta";
 
 function TablaRespuestas({idPregunta,idPreguntaTipo}){
     const { logout } = useContext(AuthContext);
@@ -17,7 +18,6 @@ function TablaRespuestas({idPregunta,idPreguntaTipo}){
     const [itemToDelete, setItemToDelete] = useState(null);
     const [error, setError] = useState(null);
 
-    
     const handleEditClick = (itemId) => {
         setEditRespuestaID(itemId);
     };
@@ -111,9 +111,7 @@ function TablaRespuestas({idPregunta,idPreguntaTipo}){
                 <table key={'tabpm-'+idPreguntaTipo} className="table items-parametros">
                     <tbody>
                         {listaTablaRespuestas()}
-                        {/*
-                         <ModalNuevaRespesuta idPregunta={idPregunta} numberSave={numberSave} setNumberSave={setNumberSave}/>
-                         */}
+                         <ModalNuevaRespesuta idPregunta={idPregunta} idPreguntaTipo={idPreguntaTipo}/>
                     </tbody>
                 </table>
             </div>
