@@ -67,13 +67,27 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo}){
                 </div>
                 <div className="row">
                     <div className="col-sm-2">PADRE</div>
-                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">SI / NO</div></div>
+                    <div className="col-sm-2 p-1">
+                        <div className=" row">
+                            <div className="col-3">SI</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                            <div className="col-3">NO</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                        </div>
+                    </div>
                     <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
                     <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
                 </div>
                 <div className="row">
                     <div className="col-sm-2">MADRE</div>
-                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">SI / NO</div></div>
+                    <div className="col-sm-2 p-1">
+                        <div className=" row">
+                            <div className="col-3">SI</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                            <div className="col-3">NO</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                        </div>
+                    </div>
                     <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
                     <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
                 </div>
@@ -110,10 +124,113 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo}){
     // 9 .-  Ahorro
     // 10 .-  Inversiones
     // 11 .-  Vehículos
+    const preguntaVeiculos = ()=>{
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-sm-3">TIPO</div>
+                    <div className="col-sm-3">MARCA / MODELO</div>
+                    <div className="col-sm-1">AÑO</div>
+                    <div className="col-sm-3">PROPIETARIO</div>
+                    <div className="col-sm-2">VALOR APROXIMADO</div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                
+                <div className="row">
+                    <div className="col-sm-3"><b>TOTAL:</b></div>
+                    <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                </div>
+            </div>
+        )
+    }
     // 12 .-  Propiedades Hipotecarias
     // 13 .-  Distribución de la casa
+    const distrubucionDeLaCasa = () => {
+        return (
+            <div>
+            <div className="row">
+                <div className="col-sm-4 p-1 text-start">CONCEPTO</div>
+                <div className="col-sm-2 p-1">SI / NO</div>
+            </div>
+            <div className="row text-start">
+                <div className="col-sm-4">
+                    <input type="text"/>
+                </div>
+                <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+            </div>
+            </div>
+        )
+    }
     // 14 .-  Deudas
+    const deudasMensuales = () => {
+        return (
+            <div>
+            <div className="row">
+                <div className="col-sm-4 p-1">CONCEPTO</div>
+                <div className="col-sm-4 p-1">TOTAL A DEBER</div>
+                <div className="col-sm-4 p-1">MENSUALIDAD</div>
+            </div>
+            <div className="row text-start">
+                <div className="col-sm-4">
+                    <input type="text"/>
+                </div>
+                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
+                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
+            </div>
+            </div>
+        )
+    }
     // 15 .-  Gastos familiares
+    const gastosFamiliares = () => {
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-sm-4 p-1">CONCEPTO</div>
+                    <div className="col-sm-4 p-1">MENSUALIDAD</div>
+                </div>
+                <div className="row text-start">
+                    <div className="col-sm-4">
+                        <input type="text"/>
+                    </div>
+                    <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
+                </div>
+            </div>
+        )
+    }
     // 16 .-  Situación Especial
     // 17 .-  Cursos cicles escolares
     // 18 .-  Salto de Hoja
@@ -144,10 +261,21 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo}){
             // 9 .-  Ahorro
             // 10 .-  Inversiones
             // 11 .-  Vehículos
+            case 11:
+                return preguntaVeiculos();
+            break;
             // 12 .-  Propiedades Hipotecarias
             // 13 .-  Distribución de la casa
+            case 13:
+                return distrubucionDeLaCasa();
             // 14 .-  Deudas
+            case 14:
+                return deudasMensuales();
+            break;
             // 15 .-  Gastos familiares
+            case 15:
+                return gastosFamiliares();
+            break;
             // 16 .-  Situación Especial
             // 17 .-  Cursos cicles escolares
             // 18 .-  Salto de Hoja
