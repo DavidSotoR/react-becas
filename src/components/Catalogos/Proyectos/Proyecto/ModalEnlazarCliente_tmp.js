@@ -114,9 +114,16 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Nuevo grupo de colegios</Modal.Title>
+                <Modal.Title>Añadir colegios a proyecto</Modal.Title>
             </Modal.Header>
-            <Modal.Body>                    
+            <Modal.Body>
+                    <div className="mb-3">
+                        <p>
+                            <i>
+                                *Solo apareces colegios con un formato seleccionado en el catálogo de clientes
+                            </i>
+                        </p>
+                    </div>
                     <div className="mb-3">
                         <label>Lista de clientes no enlazados a proyecto</label>
                         <Select options={ optionsClientes } onChange={(e)=>handlerChangeSelectClientes(e)}
@@ -125,7 +132,6 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
                         isMulti>
                         </Select>
                     </div>
-                    {JSON.stringify(formData)}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
