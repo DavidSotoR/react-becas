@@ -571,8 +571,8 @@ function PageActualizarCliente() {
     }
     
     const renderOptionsColegiosComunes = () =>{
-        return [<option value="null">Seleccione una Opción</option>,...allColegiosHermanos.map((ch) => (
-            <option key={ch.id} value={ch.id}> {ch.nombre} </option>
+        return [<option key={ "colegio-hermanos-0" } value="null">Seleccione una Opción</option>,...allColegiosHermanos.map((ch) => (
+            <option key={"colegio-hermanos-"+ch.id} value={ch.id}> {ch.nombre} </option>
         ))]
     }
 
