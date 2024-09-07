@@ -738,7 +738,8 @@ function PageActualizarCliente() {
 
     return (
         <div className="container">
-            <p className="fw-bold">CREAR CLIENTE</p>
+            <p className="fw-bold title-forms">ACTUALIZAR CLIENTE</p>
+            <p className="fw-bold">DATOS DEL CLIENTE:</p>
             <div className="row">
                 <div className="col-5">
                     <div className="mb-3">
@@ -774,18 +775,9 @@ function PageActualizarCliente() {
                     </div>
                 </div>
                 )}
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Encuesta a aplicar:</label>
-                        <Form.Select aria-label="Default select example" value={ formData.id_catalogo_encuesta } name="id_catalogo_encuesta" onChange={(e)=> {formInputChange(e);}}>
-                            { renderOptionsEncuestas }
-                        </Form.Select>
-                        { contieneErrorInput(21) && <span className="error-msg"> {obtenerErrorMensaje(21)} </span> }
-                    </div>
-                </div>
+                
             </div>
-            <hr></hr>
-            <p className="fw-bold">DATOS DEL CLIENTE:</p>
+            
             <div className="row">
                 <div className="col-5">
                     <div className="mb-3">
@@ -842,21 +834,33 @@ function PageActualizarCliente() {
                             { contieneErrorInput(7) && <span className="error-msg"> {obtenerErrorMensaje(7)} </span> }
                         </div>
                     </div>
+                    <div className="col-5">
+                        <Form.Check className="mx-2 mt-4" type="switch">
+                            <Form.Check.Input name="requiere_facturar" checked={ formData.requiere_facturar } onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                            <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere facturar </span></Form.Check.Label>
+                        </Form.Check>
+                    </div>
                     </>
                 }
                    
                 <div className="col-12 mt-2">
                     <div className="row">
-                        <div className="col-7">
+                        <div className="col-4">
+                            <div className="mb-3">
+                                <label className="fw-bold">Encuesta a aplicar:</label>
+                                <Form.Select aria-label="Default select example" value={ formData.id_catalogo_encuesta } name="id_catalogo_encuesta" onChange={(e)=> {formInputChange(e);}}>
+                                    { renderOptionsEncuestas }
+                                </Form.Select>
+                                { contieneErrorInput(21) && <span className="error-msg"> {obtenerErrorMensaje(21)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-7 mt-4">
                             <div className="d-flex">
-                                <Form.Check className="me-5" type="switch">
-                                    <Form.Check.Input name="requiere_facturar" checked={ formData.requiere_facturar } onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
-                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere facturar </span></Form.Check.Label>
-                                </Form.Check>
-                                <Form.Check type="switch">
+                                <Form.Check className="mx-2" type="switch">
                                     <Form.Check.Input name="documentacion_digital" checked={formData.documentacion_digital} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                     <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Documentos Digital </span></Form.Check.Label>
                                 </Form.Check>
+                                                                
                             </div>
                             
                         </div>

@@ -75,12 +75,6 @@ function Usuarios() {
         console.log(usuario);
         handleShowActivar()
         setUserToActive(usuario)
-        /* const nuevoEstado = e.target.checked ? 1 : 0;
-        setAllUsuarios(prevState =>
-            prevState.map(user => 
-                user.id === usuario.id ? { ...user, active: nuevoEstado } : user
-            )
-        ); */
         
     }
 
@@ -284,6 +278,13 @@ function Usuarios() {
             getAllDataUsuarios();
         }
     }, [showUpdate])
+
+    useEffect(()=>{
+        if (!showActivar) {
+            console.log('se cierra');
+            getAllDataUsuarios();
+        }
+    }, [showActivar])
 
     useEffect( (e)=>{
         //console.log(e);

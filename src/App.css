@@ -12,6 +12,10 @@
   font-style: normal;
 }
 
+.title-forms{
+  font-size: x-large;
+}
+
 .table-col-switch{
   position: relative !important;
 }
