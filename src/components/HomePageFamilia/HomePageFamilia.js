@@ -1,8 +1,44 @@
 import { Link } from "react-router-dom";
 import PathConstants from "../../routes/pathsConstants";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
 
 
 function HomePageFamilia() {
+    const { logout, userID } = useContext(AuthContext);
+    const [ tieneSE, setTieneSE ] = useState(false);
+    const [ idSE, setIdSE ] = useState(0);
+    const APIURL = process.env.REACT_APP_API_URL;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    }
+
+    const getDataEstudioSocioeconomico = () =>{
+        //mandar user ID
+        axios.get(APIURL+'/familias/'+ userID +'/estudio/socioeconomico', config).then((resp)=>{
+            console.log(resp);
+            if (resp.data.id) {
+                console.log('contiene datos');
+                setTieneSE(true)
+                setIdSE(resp.data.id)
+                
+            } else {
+                console.log('mo contiene datps');
+                setTieneSE(false)
+            }
+            
+        }).catch((err)=>{
+            console.log(err);
+            setTieneSE(false)
+        })
+    }
+
+    useEffect(()=>{
+        getDataEstudioSocioeconomico()
+    },[])
     
     return (
         <div className="container mt-5">
@@ -25,7 +61,7 @@ function HomePageFamilia() {
                                 </ul>
                             </div>
                         </li>
-                        <li class="list-group-item">
+                        <li className="list-group-item">
                             <span className="fw-bold">DESEMPLEO</span> 
                             <div className="ms-2 me-auto">
                                 <ul>
@@ -33,7 +69,7 @@ function HomePageFamilia() {
                                 </ul>
                             </div>
                         </li>
-                        <li class="list-group-item">
+                        <li className="list-group-item">
                         <span className="fw-bold">CASA HABITACION</span> 
                             <div className="ms-2 me-auto">
                                 <ul>
@@ -50,7 +86,7 @@ function HomePageFamilia() {
                                 </ul>
                             </div>
                         </li>
-                        <li class="list-group-item">
+                        <li className="list-group-item">
                             <span className="fw-bold">AUTOMÓVILES</span> (propios, de la empresa o prestados) comprobar con:
                             <div className="ms-2 me-auto">
                                 <ul>
@@ -58,7 +94,7 @@ function HomePageFamilia() {
                                 </ul>
                             </div>
                         </li>
-                        <li class="list-group-item">
+                        <li className="list-group-item">
                             <span className="fw-bold">COMPROBANTES DE</span>
                             <div className="ms-2 me-auto">
                                 <ul>
@@ -79,7 +115,15 @@ function HomePageFamilia() {
                     ENTREGAR 1 JUEGO DE COPIAS Y TENER PARA EL MOMENTO DEL ESTUDIO LOS ORIGINALES</p>
                 </div>
                 <div className="col-12 d-flex justify-content-center pb-5">
-                    <Link className="btn btn-primary" to={ PathConstants.FAMILIASFILES }>Subir Archivos</Link>
+                    { tieneSE ? (<Link className="btn btn-primary" to={`${PathConstants.FAMILIASFILES}?idse=${idSE}` }>Subir Archivos</Link>): (
+                        <div className="red-dotted-border p-3">
+                            <p className="fw-bold text-danger p-0 mb-2"> Familia no cuenta con un Estudio Socioeconomico activo asginado. </p>
+                            <p className="fw-bold text-danger p-0 mb-2"> Contactar: info@sinergia.com </p>
+                            <p className="fw-bold text-danger p-0 mb-2"> Tel.: +52 1111 1111 </p>
+                        </div>
+                        
+                    ) }
+                    
                 </div>
             </div>
         </div>

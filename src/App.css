@@ -11,6 +11,15 @@
   font-weight: normal;
   font-style: normal;
 }
+.red-dotted-border {
+  display: grid;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border: 2px dotted red; /* Borde de 2px de grosor, estilo punteado (dotted) y color rojo */
+  width: 50vw; /* Ajusta el ancho según sea necesario */
+  height: 15vh; /* Ajusta la altura según sea necesario */
+}
 
 .title-forms{
   font-size: x-large;

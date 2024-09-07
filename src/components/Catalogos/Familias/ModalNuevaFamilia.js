@@ -5,6 +5,7 @@ import { AuthContext } from "../../../context/AuthContext";
 
 function ModalNuevaFamilia({ show, handleClose }) {
     const { logout } = useContext(AuthContext);
+    const APIURL = process.env.REACT_APP_API_URL
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -15,6 +16,7 @@ function ModalNuevaFamilia({ show, handleClose }) {
     const [formData, setFormData] = useState({
         nombre:'',
         situacion_beca: '',
+        id_ciclo_escolar: '',
     })
 
     const formInputChange =(e) => {
@@ -43,7 +45,7 @@ function ModalNuevaFamilia({ show, handleClose }) {
     }
 
     const sendDataFamiliaNuevo = () =>{
-        axios.post('http://localhost:8000/api/auth/familias',formData,config).then((resp)=>{
+        axios.post(APIURL+'/familias',formData,config).then((resp)=>{
             console.log(resp);
             handleClose()
         }).catch((resp)=>{
@@ -54,7 +56,7 @@ function ModalNuevaFamilia({ show, handleClose }) {
 
     const getCiclosEscolaresList = async () => {
         try {
-            const resp = await axios.get('http://localhost:8000/api/auth/ciclos', config);
+            const resp = await axios.get(APIURL+'/proyectos', config);
             setAllCiclosEscolares(resp.data);
 
         } catch (error) {
@@ -63,9 +65,9 @@ function ModalNuevaFamilia({ show, handleClose }) {
     }
 
     const renderOptionsCiclos = () =>{
-        return [...allCiclosEscolares.map((ciclo) => (
+        return [<option key={'ciclo-0'} value="0">Seleccione una Opción</option>,...allCiclosEscolares.map((ciclo) => (
             <option key={ciclo.id} value={`${ciclo.id}`}>
-                {`${ciclo.inicio.slice(0, -6)} a ${ciclo.fin.slice(0,-6)}`}
+                {`${ ciclo.nombre }`}
             </option>
         ))]
     }
@@ -88,7 +90,13 @@ function ModalNuevaFamilia({ show, handleClose }) {
                     <div className="mb-3">
                         <label>Situacion Beca</label>
                         <input type="text" className="form-control" name="situacion_beca" onChange={(e)=> formInputChange(e)}/>
-                    </div>              
+                    </div>      
+                    <div className="mb-3" >
+                        <label className="fw-bold">Proyecto</label>
+                        <Form.Select name="id_ciclo_escolar" id="id_ciclo_escolar" onChange={(e)=> formInputChange(e)}>
+                            {renderOptionsCiclos()}
+                        </Form.Select>
+                    </div>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>

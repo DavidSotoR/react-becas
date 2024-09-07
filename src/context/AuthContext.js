@@ -5,13 +5,17 @@ import React, { createContext, useState } from 'react';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const APIURL = process.env.REACT_APP_API_URL;
+
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('login') === 'true');
   const [roleSession, setRoleSession] = useState(localStorage.getItem('role'))
   const [userSession, setUserSession] = useState(localStorage.getItem('user'))
+  const [userID, setUserID] = useState(localStorage.getItem('id'))
   const login = async (sendData) => {
     var token = ''
     var role = ''
     var user = ''
+    var id
     var loggedSuccess = false
     var body = {
       "login": sendData.login,
@@ -19,17 +23,20 @@ export const AuthProvider = ({ children }) => {
     }
     var resp
     try {
-       resp = await axios.post('http://localhost:8000/api/auth/login', body)
+       resp = await axios.post(APIURL+'/login', body)
        console.log(resp);
        token = resp.data.access_token
        role = resp.data.data.perfil.nombre
        user = resp.data.data.email
+       id = resp.data.data.id
        console.log(user);
        setIsLoggedIn(true);
        localStorage.setItem('role', role)
        localStorage.setItem('user', user)
+       localStorage.setItem('id', id)
        setRoleSession(role)
        setUserSession(user)
+       setUserID(id)
        loggedSuccess = true
        localStorage.setItem('login', 'true');
        localStorage.setItem('token', token);
@@ -62,7 +69,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession,userID, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

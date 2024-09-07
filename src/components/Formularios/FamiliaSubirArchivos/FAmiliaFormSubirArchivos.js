@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import { useSearchParams } from "react-router-dom";
 
 function FamiliaSubirArchivos() {
     const { logout } = useContext(AuthContext);
+    const [searchParams] = useSearchParams();
+
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -28,7 +31,8 @@ function FamiliaSubirArchivos() {
     const dataPOST = {
         id_familia : '1',
         id_familias_documentos_tipo: '1',
-        id_ciclo_escolar: '1'
+        id_ciclo_escolar: '1',
+        id_servicio_estudio : null
     }
 
     const getFilesDeFamilia = () => {
@@ -67,6 +71,7 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', dataPOST.id_familia)
         formData.append('id_familias_documentos_tipo', 1)
         formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
+        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
         formData.append('file', file)
 
 
@@ -94,6 +99,7 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', dataPOST.id_familia)
         formData.append('id_familias_documentos_tipo', 2)
         formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
+        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
         formData.append('file', fileD)
 
 
@@ -121,6 +127,7 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', dataPOST.id_familia)
         formData.append('id_familias_documentos_tipo', 3)
         formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
+        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
         formData.append('file', fileCH)
 
 
@@ -148,6 +155,7 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', dataPOST.id_familia)
         formData.append('id_familias_documentos_tipo', 4)
         formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
+        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
         formData.append('file', fileAutos)
 
 
@@ -174,6 +182,7 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', dataPOST.id_familia)
         formData.append('id_familias_documentos_tipo', 5)
         formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
+        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
         formData.append('file', fileDomicilio)
 
 
@@ -213,6 +222,7 @@ function FamiliaSubirArchivos() {
 
     useEffect(()=>{
         getFilesDeFamilia()
+        //getDataEstudioSocioeconomico()
     },[])
 
     useEffect(()=>{
@@ -242,7 +252,8 @@ function FamiliaSubirArchivos() {
                             <div className="ms-2 me-auto">
                                 <div className="mb-3">
                                     <label htmlFor="formFileMultipleIngresos" className="form-label">Cargar archivos Ingresos:</label>
-                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'ingresos') } } accept="application/pdf" type="file" id="formFileMultipleIngresos" multiple />
+                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'ingresos') } } accept=".pdf, .jpg, .jpeg, .png, .txt, .doc, .docx, .xls, .xlsx" 
+                                     type="file" id="formFileMultipleIngresos" multiple />
                                     <button className="btn btn-primary mt-2" onClick={subirArchivosIngresos}> Subir Archivos </button>
                                 </div>
                                 <div className="mb-3">

@@ -6,8 +6,9 @@ import { Alert, Button } from "react-bootstrap";
 
 function FamiliaAlta() {
     const { logout } = useContext(AuthContext);
-    const { IDFAMILIA } = useParams();
     const APIURL = process.env.REACT_APP_API_URL
+    const { IDFAMILIA } = useParams();
+    
 
     const [alumnos, setAlumnos] = useState([
         { alumno: ''}
