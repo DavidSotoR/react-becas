@@ -18,7 +18,7 @@ function AltaEstudioSocioeconomico(){
     const [tiposClientes,setTiposClientes] = useState([])
 
     const [proyecto,setProyecto] = useState({nombre:''})
-    const [proyectoCliente,setProyectoCliente] = useState({nomre:''})
+    const [proyectoCliente,setProyectoCliente] = useState({nomre:'',documentacion_digital:false})
     const [ordenServicio,setOrdenServicio] = useState({descripcion:''})
     const [colaboradores,setColaboradores] = useState([])
     const [tipoClienteSeleccionado] = useState('1')
@@ -39,6 +39,7 @@ function AltaEstudioSocioeconomico(){
         email:'',
         telefono_movil:'',
         telefono_contacto:'',
+        generar_usuario_automaticamente: false,
         padre:{
             id_familias_padres_tipo:'1',
             nombre:'',
@@ -528,6 +529,28 @@ function AltaEstudioSocioeconomico(){
                             </div>
                         </div>
                     )}
+                    
+                    {proyectoCliente.documentacion_digital && (
+                    <div className="mb-3 row">
+                        <p className="col-sm-2 col-form-label">Generar usuario para estudio:</p>
+                        <div className="col-sm-10 pt-1">
+                            <div className="form-switch">
+                                <input 
+                                    className="form-check-input" 
+                                    name="generar_usuario_automaticamente" 
+                                    type="checkbox" 
+                                    checked={fromData.generar_usuario_automaticamente}
+                                    role="switch" id="generar_usuario_automaticamente" 
+                                    onChange={(e) => {formInputChange(e)}}
+                                    />
+                                <label className="form-check-label">{(fromData.generar_usuario_automaticamente) ? 'Si' : 'No'}</label>
+                            </div>
+                        </div>
+                    </div>
+                    )}
+
+                    {JSON.stringify(proyectoCliente)}
+
 
                     <br/>
 

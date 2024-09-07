@@ -54,6 +54,7 @@ function Proyecto() {
                 <div className="">
                     <h6><b>Proyecto:</b> {proyecto.nombre}</h6>
                     <p><b>Tipo: </b> {(proyecto?.tipo_cliente) ? proyecto.tipo_cliente.nombre: ''} </p>
+                    {JSON.stringify(proyecto)}
                 </div>
             </div>
             
@@ -64,7 +65,7 @@ function Proyecto() {
                 </TabList>
 
                 <TabPanel>
-                    <TablaClientesProyecto ID={ID} idTipoCliente={proyecto.id_tipo_cliente}></TablaClientesProyecto>
+                    <TablaClientesProyecto ID={ID} idTipoCliente={1}></TablaClientesProyecto>
                 </TabPanel>
                 <TabPanel>
                     Plan Ordenes de servicio
