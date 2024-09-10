@@ -274,7 +274,70 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
             </div>
         )
     }
-    // 12 .-  Propiedades Hipotecarias
+    // 12 .-  Propiedades Hipotecarias / casa Habitacion
+    const casaHabitacion = () => {
+        return (
+            <div className="row">
+                <div className="row col-12">
+                    <div className="row col-md-6 text-start">
+                        <div className="col-sm-6 p-1 text-start">SITUACION DE LA VIVIENDA</div>
+                        <div className="col-sm-6 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    </div>
+                </div>
+                <div className="row col-12">
+                    <div className="row col-md-6 text-start">
+                        <div className="col-sm-6 p-1 text-start">MONTO DE LA RENTA O MENSUALIDAD</div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                    </div>
+                    <div className="row col-md-6 text-start">
+                        <div className="col-sm-6 p-1 text-start">VALOR APROXIMADO</div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                    </div>
+                </div>
+                <div className="row col-12">
+                    <div className="row col-md-6 text-start">
+                        <div className="col-sm-6 p-1 text-start">METROS DE CONTRUCCION</div>
+                        <div className="col-sm-6 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    </div>
+                    <div className="row col-md-6 text-start">
+                        <div className="col-sm-6 p-1 text-start">METRO DE TERRENO</div>
+                        <div className="col-sm-6 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    </div>
+                </div>
+                <div className="row col-12 mt-4">
+                    <div className="col-12 p-1 text-start">
+                        ESPESIFICAR SI CUENTA CON TROA CASA HABITACION, TERRENO, DEPARTAMENTO, LOCALES, ETC.
+                    </div>
+                </div>
+                <div className="row col-12">
+                    <div className="row col-md-12 text-start">
+                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                    </div>
+                    <div className="row col-md-12 text-start">
+                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                    </div>
+                    <div className="row col-md-12 text-start">
+                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                    </div>
+                </div>
+                <div className="row col-12">
+                    <div className="row col-md-6 text-start">
+                        <div className="col-sm-6 p-1 text-start"><b>B) TOTAL:</b></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                    </div>
+                </div>
+                <div className="row col-12">
+                    <div className="row col-md-6 text-start">
+                        <div className="col-sm-6 p-1 text-start"><b>A +B TOTAL:</b></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
     // 13 .-  Distribución de la casa
     const distrubucionDeLaCasa = () => {
         return (
@@ -535,7 +598,10 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
             case 11:
                 return preguntaVeiculos();
             break;
-            // 12 .-  Propiedades Hipotecarias
+            // 12 .-  Propiedades Hipotecarias  / casa Habitacion
+            case 12:
+                return casaHabitacion();
+            break;
             // 13 .-  Distribución de la casa
             case 13:
                 return distrubucionDeLaCasa();
