@@ -29,7 +29,7 @@ function FamiliaSubirArchivos() {
     const [fileDomicilio, setFileDomicilio] = useState(null);
 
     const dataPOST = {
-        id_familia : '1',
+        id_familia : '5',
         id_familias_documentos_tipo: '1',
         id_ciclo_escolar: '1',
         id_servicio_estudio : null

@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 import ControllerUsuarios from "./ControllersUsuarios";
 
 function ModalCrearUsuario({ show, handleClose }) {
     const [esExterno, setEsExterno] = useState(false);
+    const [listExterno, setListExterno] = useState([]);
+    const [listInterno, setListInterno] = useState([]);
     const [ formValid, setFormValid ] = useState(false);
     const [ inputChanged, setInputChanged ] = useState('')
     const [errorsArray, setErrorsArray] = useState([]);
@@ -51,6 +53,18 @@ function ModalCrearUsuario({ show, handleClose }) {
         try {
             const resp = await axios.get('http://localhost:8000/api/auth/perfiles', config);
             setListaPerfiles(resp.data);
+            var listExt = resp.data;
+            var int = []
+            var ext = []
+            listExt.forEach(element => {
+                if (element.interno) {
+                    int.push(element)
+                } else {
+                    ext.push(element)
+                }
+            });
+            setListExterno(ext)
+            setListInterno(int)
         } catch (error) {
             setListaPerfiles([])
             console.error("Error fetching perfiles:", error);
@@ -84,7 +98,16 @@ function ModalCrearUsuario({ show, handleClose }) {
     const renderFiltroClientes = () => {
         return [<option key="cliente-0" value="0" selected>
             Seleccione uno
-        </option>,,...allClientes.map((cliente) => (
+        </option>,,...listInterno.map((cliente) => (
+            <option key={cliente.id} value={`${cliente.id}`}>
+                { cliente.nombre }
+            </option>
+        ))]
+    }
+    const renderFiltroClientesExt = () => {
+        return [<option key="cliente-0" value="0" selected>
+            Seleccione uno
+        </option>,,...listExterno.map((cliente) => (
             <option key={cliente.id} value={`${cliente.id}`}>
                 { cliente.nombre }
             </option>
@@ -272,8 +295,14 @@ function ModalCrearUsuario({ show, handleClose }) {
 
     }
 
+
+    const changeIsExterno = ()=> {
+        setEsExterno(!esExterno)
+    }
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
         setInputChanged(name)
         setDataPostUsuario(prevState => ({  
             ...prevState,
@@ -329,6 +358,13 @@ function ModalCrearUsuario({ show, handleClose }) {
             <Modal.Body>
                 <div className="container">
                     <div className="mb-3">
+                        <Form.Check type="switch" className="mx-2">
+                            <Form.Check.Input name="externo" onChange={()=> { changeIsExterno() }} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                            <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Es externo </span></Form.Check.Label>
+                        </Form.Check>
+                        
+                    </div>
+                    <div className="mb-3">
                         <label htmlFor="inputPerfil" className="form-label">Perfil</label>
                         <select id="inputPerfil" 
                                 name="id_perfil"
@@ -336,10 +372,11 @@ function ModalCrearUsuario({ show, handleClose }) {
                                 aria-label="Default select example"
                                 value={dataPostUsuario.id_perfil}
                                 onChange={handleInputChange}>
-                            { agregarOpcionesSelect() }
+                            { esExterno ? renderFiltroClientesExt() : renderFiltroClientes() }
                         </select>
                         {contieneError(1) && <div className="text-danger fw-medium">{getErrorMsg(1)}</div>}
                     </div>
+                    
                     <div className="mb-3" style={ esExterno ? { display: "block" } : { display: "none" } }>
                         <label htmlFor="inputCliente" className="form-label">Cliente</label>
                         <select id="inputCliente" 
