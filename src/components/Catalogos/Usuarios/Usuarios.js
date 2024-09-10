@@ -6,6 +6,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import ModalUpdateUser from "./ModalUpdateUser";
 import ModalCrearUsuario from "./ModalCrearUsuario";
 import { ModalActivarUsuario } from "./ModalActivarUsuario";
+import Avatar from 'react-avatar';
 
 function Usuarios() {
     const APIURL = process.env.REACT_APP_API_URL
@@ -216,7 +217,16 @@ function Usuarios() {
         return allUsuariosFiltrados.map((usuario, index) => (
             <tr key={'tr-usuario-'+index}>
                 <td className="col-nombre">
-                    <p>{usuario.name}</p>
+                    <div className="d-flex">
+                        <div>
+                            <Avatar name={usuario.name} size="30" round={true} />
+                        </div>
+                        <div className="ps-1 align-self-center">
+                            <span>
+                            {usuario.name}
+                            </span>
+                        </div>
+                    </div>
                 </td>
                 <td className="col-cuenta">
                     <p>{usuario.email}</p>

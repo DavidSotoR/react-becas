@@ -5,6 +5,12 @@ import { Button,Form, Modal } from "react-bootstrap";
 import Select from "react-select";
 import makeAnimated from 'react-select/animated';
 import { useParams } from "react-router-dom";
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 function AltaEstudioSocioeconomico(){
     const APIURL = process.env.REACT_APP_API_URL;
@@ -40,6 +46,8 @@ function AltaEstudioSocioeconomico(){
         telefono_movil:'',
         telefono_contacto:'',
         generar_usuario_automaticamente: false,
+        latitud:25.67507,
+        longitud:-100.31847,
         padre:{
             id_familias_padres_tipo:'1',
             nombre:'',
@@ -71,6 +79,24 @@ function AltaEstudioSocioeconomico(){
     const [fromDataError,setFormDataError] = useState({})
 
     const[listaEstudiosCreados,setListaEstudiosCreados] = useState([])
+    //Map Icon
+    const customIcon = L.icon({
+        iconUrl: '/public/img/ping-map.png',
+        iconSize: [38, 95], // size of the icon
+        iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+        popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+      });
+    let DefaultIcon = L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow
+    });
+    
+    L.Marker.prototype.options.icon = DefaultIcon;
+
+    const [listaColaboradores,setListaColaboradores] = useState([
+        {nombre:"Jesus Aguilar", latitud:25.67507, longitud:-100.31847},
+        {nombre:"David Soto", latitud:25.77507, longitud:-100.31847}
+    ])
     /*datos de prueba: {
         id:'120',
         candidato:'Aguilar carranza',
@@ -549,8 +575,6 @@ function AltaEstudioSocioeconomico(){
                     </div>
                     )}
 
-                    {JSON.stringify(proyectoCliente)}
-
 
                     <br/>
 
@@ -560,7 +584,59 @@ function AltaEstudioSocioeconomico(){
 
                     {formularioFamilia('madre')}
 
-                    <br></br>
+                    <br/>
+
+                    <h4>Ubicacion:</h4>
+                    <hr/>
+
+                    <div className="mb-3 row">
+                        <label htmlFor="latitud" className="col-sm-2 col-form-label">Latitud:</label>
+                        <div className="col-sm-10">
+                            <input type="number" className="form-control" id="latitud" name="latitud" value={fromData.latitud} onChange={(e)=> formInputChange(e)}/>
+                        </div>
+                        {fromDataError?.latitud && (
+                        <div>
+                            {fromDataError.latitud.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                        </div>
+                        )}
+                    </div>
+
+                    <div className="mb-3 row">
+                        <label htmlFor="longitud" className="col-sm-2 col-form-label">Longitud:</label>
+                        <div className="col-sm-10">
+                            <input type="number" className="form-control" id="longitud" name="longitud" value={fromData.longitud} onChange={(e)=> formInputChange(e)}/>
+                        </div>
+                        {fromDataError?.longitud && (
+                        <div>
+                            {fromDataError.longitud.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                        </div>
+                        )}
+                    </div>
+
+                    <MapContainer center={[fromData.latitud, fromData.longitud]} zoom={13} style={{ height: "50vh", width: "100%" }}>
+                    <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        icon={customIcon}
+                    />
+                    <Marker position={[fromData.latitud, fromData.longitud]}>
+                        <Popup>
+                        ¡Hola! Este es un cuadro de texto en un popup.
+                        </Popup>
+                    </Marker>
+                    <Circle center={[fromData.latitud, fromData.longitud]} radius="200" pathOptions={{ color: 'blue' }}>
+                        <Popup>
+                        Jesus Aguilar
+                        </Popup>
+                    </Circle>
+                    <Circle center={[25.67807, -100.31847]} radius="200" pathOptions={{ color: 'blue' }}>
+                        <Popup>
+                        David Soto
+                        </Popup>
+                    </Circle>
+                    </MapContainer>
+                    <br/>
+
                     <div className="d-flex" style={{ flexDirection: 'row-reverse'}}>
                         <button className="btn btn-primary btn-sm fw-bold " onClick={sendDataEstudioSocioeconomico}>Guardar</button>
                     </div>

@@ -227,7 +227,7 @@ function TablaPreguntas({ ID }) {
                 </div>
                 </>)}
                 <hr/>
-                <TablaRespuestas idPregunta={pregunta.id} idPreguntaTipo={pregunta.id_catalogo_encuestas_preguntas_tipo}/>
+                <TablaRespuestas idPregunta={pregunta.id} idPreguntaTipo={pregunta.id_catalogo_encuestas_preguntas_tipo} dataPregunta={pregunta}/>
             </div>
         ));
     };

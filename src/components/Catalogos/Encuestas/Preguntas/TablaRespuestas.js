@@ -4,7 +4,7 @@ import { AuthContext } from "../../../../context/AuthContext";
 import { Button, Form, Modal } from "react-bootstrap";
 import ModalNuevaRespesuta from "./ModalNuevaRespesuta";
 
-function TablaRespuestas({idPregunta,idPreguntaTipo}){
+function TablaRespuestas({idPregunta,idPreguntaTipo,dataPregunta}){
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -115,7 +115,7 @@ function TablaRespuestas({idPregunta,idPreguntaTipo}){
                 </table>
             </div>
             <div className="container text-center">
-                <ModalNuevaRespesuta key={'tabpr-'+idPreguntaTipo} show={true} idPregunta={idPregunta} idPreguntaTipo={idPreguntaTipo}/>
+                <ModalNuevaRespesuta key={'tabpr-'+idPreguntaTipo} show={true} idPregunta={idPregunta} idPreguntaTipo={idPreguntaTipo} dataPregunta={dataPregunta}/>
             </div>
         </div>
         <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
