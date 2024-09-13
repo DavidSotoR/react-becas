@@ -12,20 +12,18 @@ import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-function AltaEstudioSocioeconomico(){
+function EditarEstudioSocioeconomico(){
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const {idProyecto, idCliente,idOrdenServicio } = useParams()
+    const { idEstudio } = useParams()
 
     const [tiposClientes,setTiposClientes] = useState([])
 
-    const [proyecto,setProyecto] = useState({nombre:''})
     const [proyectoCliente,setProyectoCliente] = useState({nomre:'',documentacion_digital:false})
-    const [ordenServicio,setOrdenServicio] = useState({descripcion:''})
     const [colaboradores,setColaboradores] = useState([])
     const [tipoClienteSeleccionado] = useState('1')
     const [clientesComunes,setClientesComunes] = useState([])
@@ -34,9 +32,9 @@ function AltaEstudioSocioeconomico(){
 
     const nuevoUsuario = {
         id_servicio_estado:'1',
-        id_proyecto:idProyecto,
-        id_cliente:idCliente,
-        id_orden_servicio:idOrdenServicio,
+        id_proyecto:'',
+        id_cliente:'',
+        id_orden_servicio:'',
         id_colaborador:'',
         es_cliente_comun:false,
         colegios_comunes:[],
@@ -97,21 +95,6 @@ function AltaEstudioSocioeconomico(){
         {nombre:"Jesus Aguilar", latitud:25.67507, longitud:-100.31847},
         {nombre:"David Soto", latitud:25.77507, longitud:-100.31847}
     ])
-    /*datos de prueba: {
-        id:'120',
-        candidato:'Aguilar carranza',
-        situacion:'Prueba de desarrollo',
-        email:'',
-        padre:{
-            contecto_principal:false,
-            email:'padre@email.com',
-        },
-        madre:{
-            contecto_principal:true,
-            email:'madre@email.com',
-        },
-    }
-    */
 
     const formInputChange =(e) => {
         var {name, value, type, checked } = e.target;
@@ -158,28 +141,21 @@ function AltaEstudioSocioeconomico(){
             console.log(err);
         })
     }
+
+    const getEsrudioSocioeconomico = () => {
+        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}`,config).then((resp)=>{
+            console.log(resp.data);
+            let data =  resp.data;
+            data.latitud = '25.67507';
+            data.longitud = '-100.31847';
+            setFormData(data);
+            // setProyectoCliente(resp.data);
+        }).catch((resp)=>{
+            setClientesComunes([]);
+            console.log(resp);
+        })
+    }
     
-    const getProyecto = () => {
-        axios.get(`${APIURL}/proyectos/${idProyecto}`,config).then((resp)=>{
-            setProyecto(resp.data);
-        }).catch((resp)=>{
-            console.log(resp);
-        })
-    }
-    const getCliente = () => {
-        axios.get(`${APIURL}/clientes/${idCliente}`,config).then((resp)=>{
-            setProyectoCliente(resp.data);
-        }).catch((resp)=>{
-            console.log(resp);
-        })
-    }
-    const getOrdenServicio = () => {
-        axios.get(`${APIURL}/proyectos/clientes/ordenes-servicio/${idOrdenServicio}`,config).then((resp)=>{
-            setOrdenServicio(resp.data);
-        }).catch((resp)=>{
-            console.log(resp);
-        })
-    }
 
     const getListaClientesHermanos= () => {
         axios.get(`${APIURL}/clientes/${fromData.id_cliente}/hermanos`,config).then((resp)=>{
@@ -235,9 +211,7 @@ function AltaEstudioSocioeconomico(){
     }
     
     useEffect(()=>{
-        getProyecto();
-        getCliente();
-        getOrdenServicio();
+        getEsrudioSocioeconomico();
     },[])
 
     useEffect(() => {
@@ -279,8 +253,12 @@ function AltaEstudioSocioeconomico(){
     
     const formularioFamilia = (familiar = '') => {
         if(familiar === '') {
-            return ''
+            return '';
         }
+        if(!fromData.hasOwnProperty(familiar)) {
+            return '';
+        }
+
         return (
             <>
             <h4>{familiar.charAt(0).toUpperCase() + familiar.slice(1)}</h4>
@@ -300,12 +278,6 @@ function AltaEstudioSocioeconomico(){
                         onChange={(e)=> formInputChangeFamiliar(e,familiar)}
                     />
                 </div>
-                
-                {fromDataError[familiar+'.nombre'] && Array.isArray(fromDataError[familiar + '.nombre'])  && (
-                <div>
-                    {fromDataError[familiar+'.nombre'].map((message => (<p><span className="error-msg"> {message} </span></p>)))}
-                </div>
-                )}
             </div>
             
             <div className="mb-3 row">
@@ -342,11 +314,6 @@ function AltaEstudioSocioeconomico(){
                         <label className="form-check-label">{(fromData[familiar].vive) ? 'Si' : 'No'}</label>
                     </div>
                 </div>
-                {fromDataError[familiar+'.vive'] && Array.isArray(fromDataError[familiar + '.vive'])  && (
-                <div>
-                    {fromDataError[familiar+'.vive'].map((message => (<p><span className="error-msg"> {message} </span></p>)))}
-                </div>
-                )}
             </div>
             
             <div className="mb-3 row">
@@ -365,11 +332,6 @@ function AltaEstudioSocioeconomico(){
                         style={{ width: '100%' }}
                     />
                 </div>
-                {fromDataError[familiar+'.direccion'] && Array.isArray(fromDataError[familiar + '.direccion'])  && (
-                <div>
-                    {fromDataError[familiar+'.direccion'].map((message => (<p><span className="error-msg"> {message} </span></p>)))}
-                </div>
-                )}
             </div>
             
             <div className="mb-3 row">
@@ -409,11 +371,6 @@ function AltaEstudioSocioeconomico(){
                 <div className="col-sm-10">
                     <input type="text" className="form-control" id="email" name="email" onChange={(e)=> formInputChangeFamiliar(e,familiar)}/>
                 </div>
-                {fromDataError[familiar+'.email'] && Array.isArray(fromDataError[familiar + '.email'])  && (
-                <div>
-                    {fromDataError[familiar+'.email'].map((message => (<p><span className="error-msg"> {message} </span></p>)))}
-                </div>
-                )}
             </div>
             
             <div className="mb-3 row">
@@ -430,11 +387,6 @@ function AltaEstudioSocioeconomico(){
                         onChange={(e)=> formInputChangeFamiliar(e,familiar)}
                     />
                 </div>
-                {fromDataError[familiar+'.telefono_casa'] && Array.isArray(fromDataError[familiar + '.telefono_casa'])  && (
-                <div>
-                    {fromDataError[familiar+'.telefono_casa'].map((message => (<p><span className="error-msg"> {message} </span></p>)))}
-                </div>
-                )}
             </div>
             
             <div className="mb-3 row">
@@ -463,11 +415,6 @@ function AltaEstudioSocioeconomico(){
                     </div>
                     )}
                 </div>
-                {fromDataError[familiar+'.contecto_principal'] && Array.isArray(fromDataError[familiar + '.contecto_principal'])  && (
-                <div>
-                    {fromDataError[familiar+'.contecto_principal'].map((message => (<p><span className="error-msg"> {message} </span></p>)))}
-                </div>
-                )}
             </div>
             <br/>
             </>
@@ -484,30 +431,6 @@ function AltaEstudioSocioeconomico(){
             </div>
             <hr/>
             <div className="row">
-                <div className="col-md-3">
-                    <label 
-                        htmlFor="id_proyecto" 
-                        className="form-label"
-                        style={{marginBottom: "1px",color: "darkolivegreen"}}
-                    >Proyecto: {proyecto.nombre}
-                    </label>
-                </div>
-                <div className="col-md-3">
-                    <label 
-                        htmlFor="id_cliente" 
-                        className="form-label"
-                        style={{marginBottom: "1px",color: "darkolivegreen"}}
-                    >Cliente: {proyectoCliente.nombre}
-                    </label>
-                </div>
-                <div className="col-md-3">
-                    <label 
-                        htmlFor="id_orden_servicio" 
-                        className="form-label"
-                        style={{marginBottom: "1px",color: "darkolivegreen"}}
-                    >Orden de servicio: {ordenServicio.descripcion}
-                    </label>
-                </div>
             </div>
             <hr/>
             <div className="row">
@@ -521,7 +444,7 @@ function AltaEstudioSocioeconomico(){
                     <div className="mb-3 row">
                         <label htmlFor="candidato" className="col-sm-2 col-form-label">Nombre de Familia:</label>
                         <div className="col-sm-10">
-                            <input type="text" className="form-control" id="candidato" name="candidato" onChange={(e)=> formInputChange(e)}/>
+                            <input type="text" className="form-control" id="candidato" name="candidato" value={fromData.candidato} onChange={(e)=> formInputChange(e)}/>
                         </div>
                         {fromDataError?.candidato && (
                         <div>
@@ -609,11 +532,15 @@ function AltaEstudioSocioeconomico(){
 
                     <br/>
 
-                    {formularioFamilia('padre')}
+                    {
+                    formularioFamilia('padre')
+                    }
 
                     <br/>
 
-                    {formularioFamilia('madre')}
+                    {
+                    formularioFamilia('madre')
+                    }
 
                     <br/>
 
@@ -679,4 +606,4 @@ function AltaEstudioSocioeconomico(){
     </>)
 }
 
-export default AltaEstudioSocioeconomico
+export default EditarEstudioSocioeconomico

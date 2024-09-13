@@ -341,17 +341,217 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
     // 13 .-  Distribución de la casa
     const distrubucionDeLaCasa = () => {
         return (
-            <div>
             <div className="row">
-                <div className="col-sm-4 p-1 text-start">CONCEPTO</div>
-                <div className="col-sm-2 p-1">SI / NO</div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-4">
-                    <input type="text"/>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        COCHERA AUTOS
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
                 </div>
-                <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-            </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        PATIO
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        SALA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        COMEDOR
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        COCINA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        RECAMARAS
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        BAÑOS
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        PANTALLA DE TV
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        REFRIGERADOR
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        PARRILLA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        LAVADORA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        SECADORA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        CUARTO DE LAVANDERIA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        CUARTO DE SERVICIO
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        RECIBIDOR
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        ESTANCIA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        JARDIN
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        JUEGOS
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        MINISPLIT
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        ESTUDIO
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        BODEGA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        ROOF GARDEN
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        ALBERCA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        CUARZO
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        MARMOL
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        GRANITO
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        AREA SOCIAL
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        CANTERA
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        PANELES SOLARES
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        CLIMA CENTRAL
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        GIMNASIO
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-sm-3">
+                    <div className="col-8 p-1 text-start">
+                        CUARZO
+                    </div>
+                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-12">
+                    <div className="col-sm-3 p-1 text-start">
+                        CLASIFICACION
+                    </div>
+                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-12">
+                    <div className="col-sm-3 p-1 text-start">
+                        DESCRIBIR LO OBSERVADO
+                    </div>
+                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-12">
+                    <div className="col-sm-12 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row col-12">
+                    <div className="col-sm-12 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
             </div>
         )
     }
@@ -569,6 +769,54 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
     // 17 .-  Cursos cicles escolares
     // 18 .-  Salto de Hoja
     // 19 .-  Espacio en blanco
+    // 20 .- Actualemte con empleo
+    const actualmenteConEmpleo = ()=>{
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-3">ACTIVO LABORALEMNTE</div>
+                    <div className="col-sm-5">EMPRESA</div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-2">PADRE</div>
+                    <div className="col-sm-3 p-1">
+                        <div className=" row">
+                            <div className="col-3">SI</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                            <div className="col-3">NO</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                        </div>
+                    </div>
+                    <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-2">MADRE</div>
+                    <div className="col-sm-3 p-1">
+                        <div className=" row">
+                            <div className="col-3">SI</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                            <div className="col-3">NO</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                        </div>
+                    </div>
+                    <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-2">OTRO</div>
+                    <div className="col-sm-3 p-1">
+                        <div className=" row">
+                            <div className="col-3">SI</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                            <div className="col-3">NO</div>
+                            <div className="col-2 border-bottom border-secondary"></div>
+                        </div>
+                    </div>
+                    <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+            </div>
+        )
+    }
 
     const preguntaPorTipoPregunta = () => {
         switch(idPreguntaTipo){
@@ -617,6 +865,10 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
             // 17 .-  Cursos cicles escolares
             // 18 .-  Salto de Hoja
             // 19 .-  Espacio en blanco
+            // 20 .- Actualemte con empleo
+            case 20:
+                return actualmenteConEmpleo();
+            break;
             
             
             default:

@@ -17,8 +17,8 @@ function ModalEditarParametrosItems({ item, idParametro, onSave }) {
         id: item.id,
         id_catalogo_encuestas_preguntas_parametro_clasificacion: idParametro,
         texto: item.texto || "",
-        limite_superior: item.limite_superior || "",
-        limiten_inferior: item.limiten_inferior || "",
+        limite_superior: item.limite_superior || "0",
+        limiten_inferior: item.limiten_inferior || "0",
         valor: item.valor || "",
     });
 

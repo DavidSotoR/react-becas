@@ -5,7 +5,7 @@ import { Button,Form, Modal } from "react-bootstrap";
 import Select from "react-select";
 import makeAnimated from 'react-select/animated';
 import ResaltarTexto from "../../ResaltarTexto/ResaltarTexto";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function ServicioEstudio(){
     const APIURL = process.env.REACT_APP_API_URL;
@@ -182,7 +182,9 @@ function ServicioEstudio(){
                     <p></p>
                 </td>
                 <td>
-                    <p></p>
+                    <div className="d-flex">
+                        <Link className="btn btn-primary btn-sm" to={`/estudio-socioeconomico/${estudio.id}`}>Ver</Link>
+                    </div>
                 </td>
             </tr>
         ));

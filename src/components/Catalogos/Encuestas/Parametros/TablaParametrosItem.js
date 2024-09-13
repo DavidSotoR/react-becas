@@ -64,6 +64,21 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
         setItemToDelete(null);
     };
 
+    const numeroFormato = ( number = 0, limite_nombre = '') => {
+
+        if(!number && limite_nombre === '') {
+            return 0;
+        }
+        if(!number && limite_nombre === 'inferior') {
+            return 'O MENOS';
+        }
+        if(!number && limite_nombre === 'superior') {
+            return 'O MAS';
+        }
+
+        return  new Intl.NumberFormat().format(number)
+    }
+
     useEffect(()=>{
         getListaParametrosItem();
     },[idParametro,numberSave])
@@ -80,13 +95,13 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
             ) : (
                 <tr key={'pitr-'+index}>
                     <td>
-                        <span style={{ fontWeight: "bold" }}>{pregunta_item.limiten_inferior}</span>
+                        <span style={{ fontWeight: "bold" }}>{numeroFormato(pregunta_item.limiten_inferior)}</span>
                     </td>
                     <td>
                         <span style={{ fontWeight: "bold" }}>-</span>
                     </td>
                     <td>
-                        <span style={{ fontWeight: "bold" }}>{pregunta_item.limite_superior}</span>
+                        <span style={{ fontWeight: "bold" }}>{numeroFormato(pregunta_item.limite_superior,'superior')}</span>
                     </td>
                     <td>
                         <span style={{ fontWeight: "bold" }}>=</span>
