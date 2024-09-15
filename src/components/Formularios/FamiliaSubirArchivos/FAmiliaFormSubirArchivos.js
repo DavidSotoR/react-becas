@@ -21,6 +21,12 @@ function FamiliaSubirArchivos() {
     const [ successComprobante, setSuccessComprobante ] = useState(false)
 
     const [ filesDeFamilia, setFilesDeFamilia ] = useState([])
+    const [ files1DeFamilia, setFiles1DeFamilia ] = useState([])
+    const [ files2DeFamilia, setFiles2DeFamilia ] = useState([])
+    const [ files3DeFamilia, setFiles3DeFamilia ] = useState([])
+    const [ files4DeFamilia, setFiles4DeFamilia ] = useState([])
+    const [ files5DeFamilia, setFiles5DeFamilia ] = useState([])
+    const [ files6DeFamilia, setFiles6DeFamilia ] = useState([])
 
     const [file, setFile] = useState(null);
     const [fileD, setFileD] = useState(null);
@@ -29,18 +35,18 @@ function FamiliaSubirArchivos() {
     const [fileDomicilio, setFileDomicilio] = useState(null);
 
     const dataPOST = {
-        id_familia : '5',
-        id_familias_documentos_tipo: '1',
-        id_ciclo_escolar: '1',
-        id_servicio_estudio : null
+        id_familia : '',
+        id_familias_documentos_tipo: '',
     }
 
     const getFilesDeFamilia = () => {
-        axios.get(APIURL+"/familias/1/documentos",config).then((resp)=>{
+        var id = localStorage.getItem('id')
+        axios.get(APIURL+"/familias/"+ id +"/documentos",config).then((resp)=>{
             setFilesDeFamilia(resp.data)
+            console.log(resp.data);
+            
         }).catch((err)=>{
             if (err.response.status === 401) {
-                debugger
                 logout()
             }            
         })
@@ -63,25 +69,25 @@ function FamiliaSubirArchivos() {
     }
 
     const subirArchivosIngresos = () => {
+        var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!file) {
             alert("Please select a file first.");
             return;
         }
-        formData.append('id_familia', dataPOST.id_familia)
+        formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 1)
-        formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
-        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
+        formData.append('id_servicio_estudio', searchParams.get('idse'))
         formData.append('file', file)
 
 
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
             console.log(resp);
             setSuccessIngresos(true)
+            getFilesDeFamilia()
         }).catch((err)=>{
             console.log(err);
             if (err.response.status === 401) {
-                debugger
                 logout()
             }
             
@@ -90,26 +96,26 @@ function FamiliaSubirArchivos() {
     }
 
     const subirArchivosDesempleo = () => {
+        var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!fileD) {
             alert("Please select a file first.");
             return;
         }
 
-        formData.append('id_familia', dataPOST.id_familia)
+        formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 2)
-        formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
-        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
+        formData.append('id_servicio_estudio', searchParams.get('idse'))
         formData.append('file', fileD)
 
 
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
             console.log(resp);
             setSuccessDesempleo(true)
+            getFilesDeFamilia()
         }).catch((err)=>{
             console.log(err);
             if (err.response.status === 401) {
-                debugger
                 logout()
             }
             
@@ -118,26 +124,26 @@ function FamiliaSubirArchivos() {
     }
 
     const subirArchivosCasaHabitacion = () => {
+        var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!fileCH) {
             alert("Please select a file first.");
             return;
         }
 
-        formData.append('id_familia', dataPOST.id_familia)
+        formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 3)
-        formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
-        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
+        formData.append('id_servicio_estudio', searchParams.get('idse'))
         formData.append('file', fileCH)
 
 
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
             console.log(resp);
             setSuccessCasa(true)
+            getFilesDeFamilia()
         }).catch((err)=>{
             console.log(err);
             if (err.response.status === 401) {
-                debugger
                 logout()
             }
             
@@ -146,24 +152,23 @@ function FamiliaSubirArchivos() {
     }
 
     const subirArchivosAutomoviles = () => {
+        var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!fileAutos) {
             alert("Please select a file first.");
             return;
         }
 
-        formData.append('id_familia', dataPOST.id_familia)
+        formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 4)
-        formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
-        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
+        formData.append('id_servicio_estudio', searchParams.get('idse'))
         formData.append('file', fileAutos)
-
 
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
             console.log(resp);
             setSuccessAuto(true)
+            getFilesDeFamilia()
         }).catch((err)=>{
-            console.log(err);
             if (err.response.status === 401) {
                 logout()
             }
@@ -173,26 +178,26 @@ function FamiliaSubirArchivos() {
     }
 
     const subirArchivosComprobantes = () => {
+        var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!fileDomicilio) {
             alert("Please select a file first.");
             return;
         }
 
-        formData.append('id_familia', dataPOST.id_familia)
+        formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 5)
-        formData.append('id_ciclo_escolar', dataPOST.id_ciclo_escolar)
-        formData.append('id_servicio_estudio', dataPOST.id_servicio_estudio ?? searchParams.get('idse'))
+        formData.append('id_servicio_estudio', searchParams.get('idse'))
         formData.append('file', fileDomicilio)
 
 
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
             console.log(resp);
             setSuccessComprobante(true)
+            getFilesDeFamilia()
         }).catch((err)=>{
             console.log(err);
             if (err.response.status === 401) {
-                debugger
                 logout()
             }
             
@@ -220,6 +225,88 @@ function FamiliaSubirArchivos() {
         }
     }
 
+    const addFiles = (id_tipo) => {
+        var filtro = []
+        filesDeFamilia.forEach((item) =>{
+            if (item.id_familias_documentos_tipo === id_tipo) {
+                filtro.push(item)
+            }
+        })
+
+        if (id_tipo === 1) {
+            setFiles1DeFamilia(filtro);
+        }
+
+        if (id_tipo === 2) {
+            setFiles2DeFamilia(filtro);
+        }
+
+        if (id_tipo === 3) {
+            setFiles3DeFamilia(filtro);
+        }
+
+        if (id_tipo === 4) {
+            setFiles4DeFamilia(filtro);
+        }
+
+        if (id_tipo === 5) {
+            setFiles5DeFamilia(filtro);
+        }
+
+        if (id_tipo === 6) {
+            setFiles6DeFamilia(filtro);
+        }
+        
+
+        /* return [...filtro1.map((file) => (
+            <li> {file.nombre} </li>
+        ))] */
+    }
+
+    const renderFilesDeFamilia = (tipo) => {
+        
+        switch (tipo) {
+            case 1:
+                return [...files1DeFamilia.map((ch) => (
+                    <li > {ch.nombre} </li>
+                ))]
+                break;
+            case 2:
+                return [...files2DeFamilia.map((ch) => (
+                    <li > {ch.nombre} </li>
+                ))]
+                break;
+            
+            case 3:
+                return [...files3DeFamilia.map((ch) => (
+                    <li > {ch.nombre} </li>
+                ))]
+                break;
+
+            case 4:
+                return [...files4DeFamilia.map((ch) => (
+                    <li > {ch.nombre} </li>
+                ))]
+                break;
+
+            case 5:
+                return [...files5DeFamilia.map((ch) => (
+                    <li > {ch.nombre} </li>
+                ))]
+                break;
+
+            case 6:
+                return [...files6DeFamilia.map((ch) => (
+                    <li > {ch.nombre} </li>
+                ))]
+                break;
+            default:
+                break;
+        }
+
+        
+    }
+
     useEffect(()=>{
         getFilesDeFamilia()
         //getDataEstudioSocioeconomico()
@@ -229,6 +316,13 @@ function FamiliaSubirArchivos() {
         if (filesDeFamilia.length > 0) {
             console.log(contieneArchivoTipoID(1));
         }
+        addFiles(1)
+        addFiles(2)
+        addFiles(3)
+        addFiles(4)
+        addFiles(5)
+        addFiles(6)
+
         
         
     },[ filesDeFamilia ])
@@ -258,6 +352,9 @@ function FamiliaSubirArchivos() {
                                 </div>
                                 <div className="mb-3">
                                     <p> Archivo:  </p>
+                                    <ul>
+                                        { renderFilesDeFamilia(1) }
+                                    </ul>
                                 </div>
                             </div>
                         </li>
@@ -273,11 +370,18 @@ function FamiliaSubirArchivos() {
                                 </div>
                             </div>
                             <div className="ms-2 me-auto">
-                            <div className="mb-3">
-                                <label htmlFor="formFileMultipleDesempleo" className="form-label">Cargar archivos Desempleo:</label>
-                                <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'desempleo') } } accept="application/pdf" type="file" id="formFileMultipleDesempleo" multiple />
-                                <button className="btn btn-primary mt-2" onClick={ subirArchivosDesempleo }> Subir Archivos </button>
-                            </div>
+                                <div className="mb-3">
+                                    <label htmlFor="formFileMultipleDesempleo" className="form-label">Cargar archivos Desempleo:</label>
+                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'desempleo') } } accept="application/pdf" type="file" id="formFileMultipleDesempleo" multiple />
+                                    <button className="btn btn-primary mt-2" onClick={ subirArchivosDesempleo }> Subir Archivos </button>
+                                </div>
+
+                                <div className="mb-3">
+                                    <p> Archivo:  </p>
+                                    <ul>
+                                        { renderFilesDeFamilia(2) }
+                                    </ul>
+                                </div>
                             </div>
                         </li>
                         <li className="list-group-item">
@@ -292,11 +396,17 @@ function FamiliaSubirArchivos() {
                             </div>
                             </div>
                             <div className="ms-2 me-auto">
-                            <div className="mb-3">
-                                <label htmlFor="formFileMultipleCasaHabitacion" className="form-label">Cargar archivos Casa/Habitacion:</label>
-                                <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'casahabitacion') } } accept="application/pdf" type="file" id="formFileMultipleCasaHabitacion" multiple />
-                                <button className="btn btn-primary mt-2" onClick={subirArchivosCasaHabitacion }> Subir Archivos </button>
-                            </div>
+                                <div className="mb-3">
+                                    <label htmlFor="formFileMultipleCasaHabitacion" className="form-label">Cargar archivos Casa/Habitacion:</label>
+                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'casahabitacion') } } accept="application/pdf" type="file" id="formFileMultipleCasaHabitacion" multiple />
+                                    <button className="btn btn-primary mt-2" onClick={subirArchivosCasaHabitacion }> Subir Archivos </button>
+                                </div>
+                                <div className="mb-3">
+                                    <p> Archivo:  </p>
+                                    <ul>
+                                        { renderFilesDeFamilia(3) }
+                                    </ul>
+                                </div>
                             </div>
                         </li>
                         <li className="list-group-item">
@@ -311,11 +421,17 @@ function FamiliaSubirArchivos() {
                                 </div>
                             </div>
                             <div className="ms-2 me-auto">
-                            <div className="mb-3">
-                                <label htmlFor="formFileMultipleAutos" className="form-label">Cargar archivos Automóviles:</label>
-                                <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'autos') } } accept="application/pdf" type="file" id="formFileMultipleAutos" multiple />
-                                <button className="btn btn-primary mt-2" onClick={ subirArchivosAutomoviles }> Subir Archivos </button>
-                            </div>
+                                <div className="mb-3">
+                                    <label htmlFor="formFileMultipleAutos" className="form-label">Cargar archivos Automóviles:</label>
+                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'autos') } } accept="application/pdf" type="file" id="formFileMultipleAutos" multiple />
+                                    <button className="btn btn-primary mt-2" onClick={ subirArchivosAutomoviles }> Subir Archivos </button>
+                                </div>
+                                <div className="mb-3">
+                                    <p> Archivo:  </p>
+                                    <ul>
+                                        { renderFilesDeFamilia(4) }
+                                    </ul>
+                                </div>
                             </div>
                         </li>
                         <li className="list-group-item">
@@ -332,6 +448,12 @@ function FamiliaSubirArchivos() {
                                     <label htmlFor="formFileMultipleComprobantes" className="form-label">Cargar archivos Comprobantes:</label>
                                     <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'comprobantes') } } accept="application/pdf" type="file" id="formFileMultipleComprobantes" multiple />
                                     <button className="btn btn-primary mt-2" onClick={ subirArchivosComprobantes }> Subir Archivos </button>
+                                </div>
+                                <div className="mb-3">
+                                    <p> Archivo:  </p>
+                                    <ul>
+                                        { renderFilesDeFamilia(5) }
+                                    </ul>
                                 </div>
                             </div>
                         </li>

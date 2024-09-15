@@ -98,6 +98,16 @@ function ModalCrearUsuario({ show, handleClose }) {
     const renderFiltroClientes = () => {
         return [<option key="cliente-0" value="0" selected>
             Seleccione uno
+        </option>,,...allClientes.map((cliente) => (
+            <option key={cliente.id} value={`${cliente.id}`}>
+                { cliente.nombre }
+            </option>
+        ))]
+    }
+
+    const renderFiltroClientesInt = () => {
+        return [<option key="cliente-0" value="0" selected>
+            Seleccione uno
         </option>,,...listInterno.map((cliente) => (
             <option key={cliente.id} value={`${cliente.id}`}>
                 { cliente.nombre }
@@ -318,8 +328,11 @@ function ModalCrearUsuario({ show, handleClose }) {
             password: dataPostUsuario.password,
             password_confirmation: dataPostUsuario.password_confirmation,
             id_cliente: esExterno ? dataPostUsuario.id_cliente : null,
-            id_perfil: parseInt(dataPostUsuario.id_perfil,10) 
+            id_perfil: parseInt(dataPostUsuario.id_perfil,10),
+            externo: esExterno,
         }
+        console.log(data);
+        
         try {
             const resp = await axios.post(APIURL+'/register', data, config)
             console.log(resp);
@@ -372,7 +385,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                                 aria-label="Default select example"
                                 value={dataPostUsuario.id_perfil}
                                 onChange={handleInputChange}>
-                            { esExterno ? renderFiltroClientesExt() : renderFiltroClientes() }
+                            { esExterno ? renderFiltroClientesExt() : renderFiltroClientesInt() }
                         </select>
                         {contieneError(1) && <div className="text-danger fw-medium">{getErrorMsg(1)}</div>}
                     </div>

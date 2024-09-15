@@ -82,7 +82,7 @@ body {
 }
 
 .table-wrapper {
-  max-height: 400px; /* Altura máxima de la tabla */
+  max-height: 60vh;/*400px;  Altura máxima de la tabla */
   overflow-y: auto; /* Scroll vertical */
   overflow-x: auto; /* Scroll horizontal si es necesario */
 }

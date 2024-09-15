@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 
 function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
     const { logout } = useContext(AuthContext);
+    const [esExterno, setEsExterno] = useState(false);
+
     const [errors, setErrors] = useState({});
     const [ btnEnable, setBtnEnable ] = useState(true)
     const [listaPerfiles, setListaPerfiles] = useState([])
@@ -72,6 +74,10 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
                 { cliente.nombre }
             </option>
         ))]
+    }
+
+    const changeIsExterno = ()=> {
+        setEsExterno(!esExterno)
     }
 
     const validateField = (name, value) => {
@@ -148,6 +154,13 @@ function ModalUpdateUser({ show, handleCloseModal, dataUser }) {
             </Modal.Header>
             <Modal.Body>
             <div className="mb-3">
+                <div className="mb-3">
+                    <Form.Check type="switch" className="mx-2">
+                        <Form.Check.Input name="externo" onChange={()=> { changeIsExterno() }} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                        <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Es externo </span></Form.Check.Label>
+                    </Form.Check>
+                    
+                </div>
                 <label htmlFor="inputCliente" className="form-label">Cliente</label>
                 <select id="inputCliente" 
                         name="id_cliente"

@@ -250,9 +250,6 @@ function Usuarios() {
                         <button className="btn btn-outline-secondary mx-1 btn-sm p-1 pb-0" style={{ borderColor: "rgba(0,0,0,0)" }} onClick={ ()=>{ selectUserToUpdate(usuario) }  }>
                             <ion-icon style={{ fontWeight: "bolder!important", fontSize:"x-large" }} name="create"></ion-icon>
                         </button>
-                        <button className="btn btn-outline-danger mx-1 btn-sm p-1 pb-0" style={{ borderColor: "rgba(0,0,0,0)" }}>
-                            <ion-icon style={{ fontWeight: "bolder!important", fontSize:"x-large" }} name="trash"></ion-icon>
-                        </button>
                     </div>
                 </td>
             </tr>
@@ -295,6 +292,12 @@ function Usuarios() {
             getAllDataUsuarios();
         }
     }, [showActivar])
+
+    useEffect(()=>{
+        if (!show) {
+            getAllDataUsuarios()
+        }
+    },[show])
 
     useEffect( (e)=>{
         //console.log(e);
