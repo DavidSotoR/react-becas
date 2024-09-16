@@ -257,9 +257,9 @@ function PageNuevoCliente() {
                 removeInputValid(5)
             }
         }
-
+        /////// Validaciones Facturaciones
         if (inputSeleccionado !== '' && inputSeleccionado === 'rso') {
-            if (from?.rso.length <=3 || validateContieneEspacios(from.rso)) {
+            if (/* from?.rso.length < 1 || */ validateContieneEspacios(from.rso)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo RSO es obligatorio.'
@@ -269,13 +269,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from?.rso.length >= 3 && !validateContieneEspacios(from.rso)) {
+            } else if (/* from?.rso.length >= 3 &&  */!validateContieneEspacios(from.rso)) {
                 removeInputValid(6)
             }   
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'rason_social') {
-            if (from?.rason_social.length <=3 || validateContieneEspacios(from.rason_social)) {
+            if (/* from?.rason_social.length <=3 || */ validateContieneEspacios(from.rason_social)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Razón Social es obligatorio.'
@@ -285,13 +285,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from?.rason_social.length >= 3 && !validateContieneEspacios(from.rason_social)) {
+            } else if (/* from?.rason_social.length >= 3 &&  */!validateContieneEspacios(from.rason_social)) {
                 removeInputValid(7)
             }   
         }
         
         if (inputSeleccionado !== '' && inputSeleccionado === 'nombre_uno') {
-            if (from.nombre_uno === null || from?.nombre_uno.length <= 3 || validateContieneEspacios(from.nombre_uno)) {
+            if (/* from.nombre_uno === null || from?.nombre_uno.length <= 3 ||  */validateContieneEspacios(from.nombre_uno)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Nombre 1 es obligatorio, debe contener mas de 3 caracteres.'
@@ -301,13 +301,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.nombre_uno && from.nombre_uno.length >= 3 && !validateContieneEspacios(from.nombre_uno)) {
+            } else if (/* from.nombre_uno && from.nombre_uno.length >= 3 &&  */!validateContieneEspacios(from.nombre_uno)) {
                 removeInputValid(8)
             }            
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'telefono_uno') {
-            if (from.telefono_uno === null || from.telefono_uno.length !== 10 || !validateSoloNumeros(from.telefono_uno)) {
+            if (/* from.telefono_uno === null || from.telefono_uno.length !== 10 ||  */!validateSoloNumeros(from.telefono_uno)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Telefono 1 es obligatorio, debe contener 10 digitos.'
@@ -324,7 +324,7 @@ function PageNuevoCliente() {
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'nombre_dos') {
             //if (from || from.nombre_dos !== null || from?.nombre_dos.length !== 0) {
-                if (from.nombre_dos === null || from.nombre_dos.length <= 3 || validateContieneEspacios(from.nombre_dos)) {
+                if (/* from.nombre_dos === null || from.nombre_dos.length <= 3 ||  */validateContieneEspacios(from.nombre_dos)) {
                     var messageError = ''
                     var error = { msg: '', id: 0 }
                     messageError = 'Campo Nombre 2 debe ser valido, debe contener mas de 3 caracteres.'
@@ -334,7 +334,7 @@ function PageNuevoCliente() {
                         setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                         setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                     }
-                } if (from.nombre_dos && from?.nombre_dos.length > 0 && !validateContieneEspacios(from.nombre_dos)) {
+                } if (from.nombre_dos /* && from?.nombre_dos.length > 0 */ && !validateContieneEspacios(from.nombre_dos)) {
                     removeInputValid(10)
                 }   
             /* } else if (from.nombre_dos && from?.nombre_dos.length > 0) {
@@ -344,7 +344,7 @@ function PageNuevoCliente() {
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'telefono_dos') {
             //if (from || from.telefono_dos !== null || from?.telefono_dos.length !== 0) {
-                if (from?.telefono_dos.length !== 10 || validateContieneEspacios(from.telefono_dos) || !validateSoloNumeros(from.telefono_dos)) {
+                if (/* from?.telefono_dos.length !== 10 ||  */validateContieneEspacios(from.telefono_dos) || !validateSoloNumeros(from.telefono_dos)) {
                     var messageError = ''
                     var error = { msg: '', id: 0 }
                     messageError = 'Campo Telefono 2 debe contener 10 digitos.'
@@ -354,7 +354,7 @@ function PageNuevoCliente() {
                         setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                         setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                     }
-                } else if (from.telefono_dos && from?.telefono_dos.length === 10 && !validateContieneEspacios(from.telefono_dos) && validateSoloNumeros(from.telefono_dos)) {
+                } else if (/* from.telefono_dos && from?.telefono_dos.length === 10 &&  */!validateContieneEspacios(from.telefono_dos) && validateSoloNumeros(from.telefono_dos)) {
                     removeInputValid(11)
                 } 
             /* } else if (from.telefono_dos && from?.telefono_dos.length === 10) {
@@ -363,7 +363,7 @@ function PageNuevoCliente() {
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'telefono_mobil') {
-            if (from.telefono_mobil === null || from?.telefono_mobil.length !== 10 || validateContieneEspacios(from.telefono_mobil) || !validateSoloNumeros(from.telefono_mobil)) {
+            if (/* from.telefono_mobil === null || from?.telefono_mobil.length !== 10 || */ validateContieneEspacios(from.telefono_mobil) || !validateSoloNumeros(from.telefono_mobil)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Telefono Mobil es obligatorio, debe contener 10 digitos.'
@@ -373,13 +373,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.telefono_mobil && from?.telefono_mobil.length === 10 && !validateContieneEspacios(from.telefono_mobil) && validateSoloNumeros(from.telefono_mobil)) {
+            } else if (/* from.telefono_mobil && from?.telefono_mobil.length === 10 && */ !validateContieneEspacios(from.telefono_mobil) && validateSoloNumeros(from.telefono_mobil)) {
                 removeInputValid(12)
             }
         }        
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'calle') {
-            if (from.calle === null || from?.calle.length <= 3 || validateContieneEspacios(from.calle)) {
+            if (/* from.calle === null || from?.calle.length <= 3 ||  */validateContieneEspacios(from.calle)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Calle es obligatorio.'
@@ -389,13 +389,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.calle && from?.calle.length >= 3 && !validateContieneEspacios(from.calle)) {
+            } else if (/* from.calle && from?.calle.length >= 3 && */ !validateContieneEspacios(from.calle)) {
                 removeInputValid(13)
             }
         }        
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'entre_cale') {
-            if (from.entre_cale === null || from?.entre_cale.length <= 3 || validateContieneEspacios(from.entre_cale)) {
+            if (/* from.entre_cale === null || from?.entre_cale.length <= 3 ||  */validateContieneEspacios(from.entre_cale)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Entre Calles es obligatorio.'
@@ -405,13 +405,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.entre_cale && from?.entre_cale.length >= 3 && !validateContieneEspacios(from.entre_cale)) {
+            } else if (/* from.entre_cale && from?.entre_cale.length >= 3 &&  */!validateContieneEspacios(from.entre_cale)) {
                 removeInputValid(14)
             }
         }        
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'colonia') {
-            if (from.colonia === null || from?.colonia.length <= 3 || validateContieneEspacios(from.colonia)) {
+            if (/* from.colonia === null || from?.colonia.length <= 3 ||  */validateContieneEspacios(from.colonia)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Entre Calles es obligatorio.'
@@ -421,13 +421,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.colonia && from?.colonia.length >= 3 && !validateContieneEspacios(from.colonia)) {
+            } else if (/* from.colonia && from?.colonia.length >= 3 &&  */!validateContieneEspacios(from.colonia)) {
                 removeInputValid(15)
             }    
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'codigo_postal') {
-            if (from.codigo_postal === null || from?.codigo_postal.length < 5 || validateContieneEspacios(from.codigo_postal)) {
+            if (/* from.codigo_postal === null || from?.codigo_postal.length < 5 ||  */validateContieneEspacios(from.codigo_postal)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Codigo Postal es obligatorio.'
@@ -437,13 +437,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.codigo_postal && from?.codigo_postal.length > 5 && !validateContieneEspacios(from.codigo_postal)) {
+            } else if (/* from.codigo_postal && from?.codigo_postal.length > 5 &&  */!validateContieneEspacios(from.codigo_postal)) {
                 removeInputValid(16)
             }
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'ciudad') {
-            if (from.ciudad === null || from?.ciudad.length < 3 || validateContieneEspacios(from.ciudad)) {
+            if (/* from.ciudad === null || from?.ciudad.length < 3 ||  */validateContieneEspacios(from.ciudad)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Ciudad es obligatorio.'
@@ -453,13 +453,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.ciudad && from?.ciudad.length > 3 && !validateContieneEspacios(from.ciudad)) {
+            } else if (/* from.ciudad && from?.ciudad.length > 3 &&  */!validateContieneEspacios(from.ciudad)) {
                 removeInputValid(17)
             }   
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'estado') {
-            if (from.estado === null || from?.estado.length < 3 || validateContieneEspacios(from.estado)) {
+            if (/* from.estado === null || from?.estado.length < 3 || */ validateContieneEspacios(from.estado)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Ciudad es obligatorio.'
@@ -469,13 +469,13 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.estado && from?.estado.length > 3 && !validateContieneEspacios(from.estado)) {
+            } else if (/* from.estado && from?.estado.length > 3 &&  */!validateContieneEspacios(from.estado)) {
                 removeInputValid(18)
             }
         }
 
         if (inputSeleccionado !== '' && inputSeleccionado === 'pais') {
-            if (from.pais === null || from?.pais.length < 3 || validateContieneEspacios(from.pais)) {
+            if (/* from.pais === null || from?.pais.length < 3 ||  */validateContieneEspacios(from.pais)) {
                 var messageError = ''
                 var error = { msg: '', id: 0 }
                 messageError = 'Campo Pais es obligatorio.'
@@ -485,7 +485,7 @@ function PageNuevoCliente() {
                     setArrayErrors([...arrayErrors, error]);  // Agregar el nuevo objeto al array
                     setIdSet(new Set(idSet).add(error.id));  // Agregar el nuevo ID al Set
                 }
-            } else if (from.pais && from?.pais.length > 3 && !validateContieneEspacios(from.pais)) {
+            } else if (/* from.pais && from?.pais.length > 3 &&  */!validateContieneEspacios(from.pais)) {
                 removeInputValid(19)
             }   
         }
@@ -594,17 +594,46 @@ function PageNuevoCliente() {
         
     }
 
-    const validarValoresBtn = (form) =>{        
+    const validarValoresBtn = (form) =>{
+         
         if (form.id_tipo_cliente === '1') {
             return Object.entries(form).every(([key, valor]) => {
-                if (key === 'id_clientes_hermanos' && !esColegioComun) {
+                if ((key === 'id_clientes_hermanos' || key === "rso" ||
+                    key === "nombre_uno" ||
+                    key === "telefono_uno" ||
+                    key === "nombre_dos" ||
+                    key === "telefono_dos" ||
+                    key === "telefono_mobil" ||
+                    key === "calle" ||
+                    key === "entre_cale" ||
+                    key === "colonia" ||
+                    key === "codigo_postal" ||
+                    key === "ciudad" ||
+                    key === "estado" ||
+                    key === "pais" ||
+                    key === "rason_social" ||
+                    key === "rfc") && !esColegioComun) {
                     return true; // Ignora este campo y continúa
                 }
                 return valor !== '' && valor !== null && valor !== '0';
             });
         } else if (formData.id_tipo_cliente === '2') {
             return Object.entries(form).every(([key, valor]) => {
-                if (key === 'id_clientes_hermanos') {
+                if (key === 'id_clientes_hermanos' || key === "rso" ||
+                    key === "nombre_uno" ||
+                    key === "telefono_uno" ||
+                    key === "nombre_dos" ||
+                    key === "telefono_dos" ||
+                    key === "telefono_mobil" ||
+                    key === "calle" ||
+                    key === "entre_cale" ||
+                    key === "colonia" ||
+                    key === "codigo_postal"||
+                    key === "ciudad" ||
+                    key === "estado" ||
+                    key === "pais" ||
+                    key === "rason_social" ||
+                    key === "rfc") {
                     return true; // Ignora este campo y continúa
                 }
                 return valor !== '' && valor !== null && valor !== '0';
@@ -635,8 +664,7 @@ function PageNuevoCliente() {
     useEffect(()=>{
         
         if (arrayErrors.length === 0 ) {
-            console.log("entro bien pero hay que validar ");
-            
+
             if (formData.id_tipo_cliente === '1' && validarValoresBtn(formData)) {
                 setFormValid(false)
             } else if (formData.id_tipo_cliente === '2' && validarValoresBtn(formData)) {
