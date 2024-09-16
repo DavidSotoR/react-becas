@@ -69,7 +69,12 @@ function EditarEstudioSocioeconomico(){
             email:'',
             telefono_casa:'',
             contecto_principal:false,
-        }
+        },
+        proyecto:{id:0,nombre:''},
+        cliente:{id:0,nombre:''},
+        orden_servicio:{id:0,descripcion:''},
+        colaborador: {id:0,nombre:''},
+        familia: {id:0,nombre:''},
     };
 
     const [fromData,setFormData] = useState(nuevoUsuario)
@@ -222,34 +227,6 @@ function EditarEstudioSocioeconomico(){
         }
     },[fromData.id_cliente,fromData.es_cliente_comun])
 
-    const ultimasFamiliasAñadidas = () => {
-        return (
-            <div>
-                <div>
-                    <p><b>Familias recentemente añadidas: {listaEstudiosCreados.length}</b></p>
-                </div>
-                <hr/>
-                <div className="row flex-nowrap overflow-auto">
-                {listaEstudiosCreados.map((estudio,index) => (
-                    <div  key={'ufa-'+index} className="col-4 p-2">
-                        <div className="border rounded-1 p-2">
-                            <div>
-                                <p><b>Estudio:</b> <span>{(estudio.id) ? '#'+estudio.id : ''}</span></p>
-                            </div>
-                            <div>
-                                <p><b>Familia:</b> <span>{estudio.candidato}</span></p>
-                            </div>
-                            <div>
-                                <p><b>Situacion:</b> <span>{getNumeroContactoPrincipal(estudio)}</span></p>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-                </div>
-            </div>
-        )
-    }
-    
     
     const formularioFamilia = (familiar = '') => {
         if(familiar === '') {
@@ -258,9 +235,13 @@ function EditarEstudioSocioeconomico(){
         if(!fromData.hasOwnProperty(familiar)) {
             return '';
         }
+        if(!fromData[familiar]?.nombre) {
+            return '';
+        }
 
         return (
             <>
+            <br/>
             <h4>{familiar.charAt(0).toUpperCase() + familiar.slice(1)}</h4>
             <hr/>
             
@@ -421,6 +402,30 @@ function EditarEstudioSocioeconomico(){
         )
     }
 
+    const elementoColaborador = (colaborador) => {
+
+        if(!colaborador){
+            return (
+                <div className="mb-3 row">
+                    <p className="col-sm-2">Colaborador:</p>
+                    <div className="col-sm-10">
+                        <button className="btn btn-sm btn-light ml-2" onClick={() => alert('Seccion añadir colaborador')}><ion-icon name="create-outline"></ion-icon></button>
+                    </div>
+                </div>
+            )
+        }
+        
+        {colaborador?.id && (
+            <div className="mb-3 row">
+                <p className="col-sm-2">Colaborador:</p>
+                <div className="col-sm-10">
+                    <button className="btn btn-sm btn-light ml-2" onClick={() => alert(colaborador.id)}><ion-icon name="create-outline"></ion-icon></button>
+                    <p>{colaborador?.nombre}</p>
+                </div>
+            </div>
+        )}
+    }
+
 
     return(<>
         <div className="container mt-3">
@@ -437,7 +442,38 @@ function EditarEstudioSocioeconomico(){
                 <div className="col-md-2"/>
                 <div className="col-md-8">
 
-                {ultimasFamiliasAñadidas()}
+
+                    <div>
+                        <div>
+                            <h4>Estudio: #{fromData.id}</h4>
+                        </div>
+                        <hr/>
+                        <div className="mb-3 row">
+                            <p className="col-sm-2">Proyecto:</p>
+                            <div className="col-sm-10">
+                                <p>{fromData?.proyecto.nombre}</p>
+                            </div>
+                        </div>
+                        <div className="mb-3 row">
+                            <p className="col-sm-2">Cliente:</p>
+                            <div className="col-sm-10">
+                                <p>{fromData?.cliente.nombre}</p>
+                            </div>
+                        </div>
+                        <div className="mb-3 row">
+                            <p className="col-sm-2">Orden de servicio:</p>
+                            <div className="col-sm-10">
+                                <p>{fromData?.orden_servicio.descripcion}</p>
+                            </div>
+                        </div>
+                        {elementoColaborador(fromData.colaborador)}
+                        <div className="mb-3 row">
+                            <p className="col-sm-2">Familia Usuario:</p>
+                            <div className="col-sm-10">
+                                <p>{fromData.familia?.email}</p>
+                            </div>
+                        </div>
+                    </div>
 
                     <h4>Familia:</h4>
                     <hr/>
@@ -473,16 +509,9 @@ function EditarEstudioSocioeconomico(){
                         </div>
                         )}
                     </div>
-
-                    <div className="mb-3 row">
-                        <label htmlFor="email" className="col-sm-2 col-form-label">Correo:</label>
-                        <div className="col-sm-10">
-                            <input type="text" className="form-control" id="email" name="email" onChange={(e)=> formInputChange(e)}/>
-                        </div>
-                    </div>
                     
                     <div className="mb-3 row">
-                        <p className="col-sm-2 col-form-label">Familia consegios comunes</p>
+                        <p className="col-sm-2 col-form-label">Familia con colegios comunes</p>
                         <div className="col-sm-10 pt-1">
                             <div className="form-switch">
                                 <input 
@@ -497,6 +526,7 @@ function EditarEstudioSocioeconomico(){
                             </div>
                         </div>
                     </div>
+
                     {fromData.es_cliente_comun && (
                         <div className="mb-3 row">
                             <label htmlFor="colegios_comunes" className="col-sm-2 col-form-label">Familia colegios relacionados:</label>
@@ -530,20 +560,11 @@ function EditarEstudioSocioeconomico(){
                     )}
 
 
-                    <br/>
+                    {formularioFamilia('padre')}
 
-                    {
-                    formularioFamilia('padre')
-                    }
+                    {formularioFamilia('madre')}
 
                     <br/>
-
-                    {
-                    formularioFamilia('madre')
-                    }
-
-                    <br/>
-
                     <h4>Ubicacion:</h4>
                     <hr/>
 

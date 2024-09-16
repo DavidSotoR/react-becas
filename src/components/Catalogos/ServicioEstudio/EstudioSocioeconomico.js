@@ -5,7 +5,7 @@ import { Button,Form, Modal } from "react-bootstrap";
 import Select from "react-select";
 import makeAnimated from 'react-select/animated';
 import ResaltarTexto from "../../ResaltarTexto/ResaltarTexto";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 
 function ServicioEstudio(){
     const APIURL = process.env.REACT_APP_API_URL;
@@ -15,6 +15,7 @@ function ServicioEstudio(){
         }
     }
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [tiposClientes,setTiposClientes] = useState([])
 
@@ -25,17 +26,17 @@ function ServicioEstudio(){
     const [allEstudiosSocioeconomicos,setAllEstudiosSocioeconomicos] =useState([])
 
     const [tipoClienteSeleccionado] = useState('1')
-    const [preyecto,setProyecto] = useState('')
-    const [cliente,setCliente] = useState('')
+    const [preyecto,setProyecto] = useState(location.state?.idProyecto || '')
+    const [cliente,setCliente] = useState(location.state?.idCliente || '')
     const [search,setSearch] = useState("")
     const animatedComponents = makeAnimated;
 
 
     const [fromData,setFormData] = useState({
         id_servicio_estado:'1',
-        id_proyecto:'',
-        id_cliente:'',
-        id_orden_servicio:'',
+        id_proyecto: location.state?.idProyecto || '',
+        id_cliente: location.state?.idCliente || '',
+        id_orden_servicio: location.state?.idOrdenServicio || '',
         id_colaborador:'',
     })
 

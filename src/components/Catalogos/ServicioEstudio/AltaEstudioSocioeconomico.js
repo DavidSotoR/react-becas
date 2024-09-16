@@ -4,7 +4,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { Button,Form, Modal } from "react-bootstrap";
 import Select from "react-select";
 import makeAnimated from 'react-select/animated';
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate  } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -20,7 +20,10 @@ function AltaEstudioSocioeconomico(){
         }
     }
     const {idProyecto, idCliente,idOrdenServicio } = useParams()
-
+    const navigate = useNavigate();
+    const backPage = () => {
+      navigate('/estudio-socioeconomico', { state: { idProyecto: idProyecto,idCliente: idCliente,idOrdenServicio: idOrdenServicio } });
+    };
     const [tiposClientes,setTiposClientes] = useState([])
 
     const [proyecto,setProyecto] = useState({nombre:''})
@@ -97,21 +100,6 @@ function AltaEstudioSocioeconomico(){
         {nombre:"Jesus Aguilar", latitud:25.67507, longitud:-100.31847},
         {nombre:"David Soto", latitud:25.77507, longitud:-100.31847}
     ])
-    /*datos de prueba: {
-        id:'120',
-        candidato:'Aguilar carranza',
-        situacion:'Prueba de desarrollo',
-        email:'',
-        padre:{
-            contecto_principal:false,
-            email:'padre@email.com',
-        },
-        madre:{
-            contecto_principal:true,
-            email:'madre@email.com',
-        },
-    }
-    */
 
     const formInputChange =(e) => {
         var {name, value, type, checked } = e.target;
@@ -127,6 +115,8 @@ function AltaEstudioSocioeconomico(){
         if(familiar ===''){
             return false;
         }
+        
+        casosEspeciales(e,familiar);
 
         var {name, value, type, checked } = e.target;
         const updatedValue = type === 'checkbox' ? checked : value;
@@ -138,6 +128,40 @@ function AltaEstudioSocioeconomico(){
                 [name]: updatedValue
             }
         }));
+
+    }
+
+    const casosEspeciales = (e,familiar='') => {
+        
+        var {name, value, type, checked } = e.target;
+        const updatedValue = type === 'checkbox' ? checked : value;
+        if(name==='contecto_principal'){
+            if(familiar==='padre'){
+                if(updatedValue===true){
+                    setFormData(prevState => ({
+                        ...prevState,
+                        ['madre']:{
+                            ...prevState['madre'],
+                            ['contecto_principal']: false
+                        }
+                    }));
+                }
+            }
+            if(familiar==='madre'){
+                if(updatedValue===true){
+                    setFormData(prevState => ({
+                        ...prevState,
+                        ['padre']:{
+                            ...prevState['padre'],
+                            ['contecto_principal']: false
+                        }
+                    }));
+                }
+            }
+        }
+
+        
+        console.log(updatedValue+' '+familiar);
     }
     
     const sendDataEstudioSocioeconomico = () =>{
@@ -283,6 +307,7 @@ function AltaEstudioSocioeconomico(){
         }
         return (
             <>
+            <br/>
             <h4>{familiar.charAt(0).toUpperCase() + familiar.slice(1)}</h4>
             <hr/>
             
@@ -322,6 +347,11 @@ function AltaEstudioSocioeconomico(){
                         onChange={(e)=> formInputChangeFamiliar(e,familiar)}
                     />
                 </div>
+                {fromDataError[familiar+'.edad'] && Array.isArray(fromDataError[familiar + '.edad'])  && (
+                <div>
+                    {fromDataError[familiar+'.edad'].map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                </div>
+                )}
             </div>
             
             <div className="mb-3 row">
@@ -407,7 +437,7 @@ function AltaEstudioSocioeconomico(){
             <div className="mb-3 row">
                 <label htmlFor="email" className="col-sm-2 col-form-label">Correo:</label>
                 <div className="col-sm-10">
-                    <input type="text" className="form-control" id="email" name="email" onChange={(e)=> formInputChangeFamiliar(e,familiar)}/>
+                    <input type="text" className="form-control" value={fromData[familiar].email} id="email" name="email" onChange={(e)=> formInputChangeFamiliar(e,familiar)}/>
                 </div>
                 {fromDataError[familiar+'.email'] && Array.isArray(fromDataError[familiar + '.email'])  && (
                 <div>
@@ -454,15 +484,8 @@ function AltaEstudioSocioeconomico(){
                             />
                         <label className="form-check-label">{(fromData[familiar].contecto_principal) ? 'Si' : 'No'}</label>
                     </div>
-                    <div className="invalid-feedback">
-                        Seleccione un contacto principal
-                    </div>
-                    {(
-                    <div className="invalid-feedback" >
-                        Seleccione un contacto principal
-                    </div>
-                    )}
                 </div>
+                
                 {fromDataError[familiar+'.contecto_principal'] && Array.isArray(fromDataError[familiar + '.contecto_principal'])  && (
                 <div>
                     {fromDataError[familiar+'.contecto_principal'].map((message => (<p><span className="error-msg"> {message} </span></p>)))}
@@ -484,6 +507,12 @@ function AltaEstudioSocioeconomico(){
             </div>
             <hr/>
             <div className="row">
+                <div className="col-md-2">
+                    <Button variant="light" style={{ marginLeft: "5px" }} className="d-flex align-items-center" onClick={() => backPage()}>
+                        <ion-icon name="chevron-back-outline"></ion-icon>
+                        Regresar
+                    </Button>
+                </div>
                 <div className="col-md-3">
                     <label 
                         htmlFor="id_proyecto" 
@@ -521,7 +550,7 @@ function AltaEstudioSocioeconomico(){
                     <div className="mb-3 row">
                         <label htmlFor="candidato" className="col-sm-2 col-form-label">Nombre de Familia:</label>
                         <div className="col-sm-10">
-                            <input type="text" className="form-control" id="candidato" name="candidato" onChange={(e)=> formInputChange(e)}/>
+                            <input key={"AES-candidato"} type="text" className="form-control" id="candidato" name="candidato" value={fromData.candidato} onChange={(e)=> formInputChange(e)}/>
                         </div>
                         {fromDataError?.candidato && (
                         <div>
@@ -549,13 +578,6 @@ function AltaEstudioSocioeconomico(){
                             {fromDataError.situacion.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
                         </div>
                         )}
-                    </div>
-
-                    <div className="mb-3 row">
-                        <label htmlFor="email" className="col-sm-2 col-form-label">Correo:</label>
-                        <div className="col-sm-10">
-                            <input type="text" className="form-control" id="email" name="email" onChange={(e)=> formInputChange(e)}/>
-                        </div>
                     </div>
                     
                     <div className="mb-3 row">
@@ -606,17 +628,11 @@ function AltaEstudioSocioeconomico(){
                     </div>
                     )}
 
-
-                    <br/>
-
                     {formularioFamilia('padre')}
-
-                    <br/>
 
                     {formularioFamilia('madre')}
 
                     <br/>
-
                     <h4>Ubicacion:</h4>
                     <hr/>
 
@@ -668,8 +684,13 @@ function AltaEstudioSocioeconomico(){
                     </MapContainer>
                     <br/>
 
-                    <div className="d-flex" style={{ flexDirection: 'row-reverse'}}>
-                        <button className="btn btn-primary btn-sm fw-bold " onClick={sendDataEstudioSocioeconomico}>Guardar</button>
+                    <div className="d-flex">
+                        <div class="p-2 bd-highlight">
+                            <button className="btn btn-primary btn-sm fw-bold " onClick={() =>setFormData(nuevoUsuario)}>Cancelar</button>
+                        </div>
+                        <div class="ms-auto p-2 bd-highlight">
+                            <button className="btn btn-primary btn-sm fw-bold " onClick={sendDataEstudioSocioeconomico}>Guardar</button>
+                        </div>
                     </div>
                     
                     <br/>
