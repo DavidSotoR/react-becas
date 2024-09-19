@@ -7,6 +7,8 @@ import ModalUpdateUser from "./ModalUpdateUser";
 import ModalCrearUsuario from "./ModalCrearUsuario";
 import { ModalActivarUsuario } from "./ModalActivarUsuario";
 import Avatar from 'react-avatar';
+import PathConstants from "../../../routes/pathsConstants";
+import { Link } from "react-router-dom";
 
 function Usuarios() {
     const APIURL = process.env.REACT_APP_API_URL
@@ -318,7 +320,8 @@ function Usuarios() {
                     <h6 style={{ fontWeight: 'bold' }}>Catalogo de Usuarios</h6>
                 </div>
                 <div className="">
-                    <Button className="btn btn-primary btn-sm" onClick={handleShow}>Agregar Usuario</Button>
+                    {/* <Button className="btn btn-primary btn-sm" onClick={handleShow}>Agregar Usuario</Button> */}
+                    <Link className="btn btn-primary btn-sm" to={PathConstants.USUARIOCREAR}>Agregar Usuario</Link>
                 </div>
             </div>
             <div className="mb-3 d-flex">

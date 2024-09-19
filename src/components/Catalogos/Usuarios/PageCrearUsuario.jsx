@@ -1,18 +1,22 @@
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
-import { OverlayTrigger, Popover } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 import ControllerUsuarios from "./ControllersUsuarios";
+import { Button, Form, OverlayTrigger, Popover } from "react-bootstrap";
+import axios from "axios";
+import PathConstants from "../../../routes/pathsConstants";
+import { Link } from "react-router-dom";
 
-function ModalCrearUsuario({ show, handleClose }) {
-    const APIURL = process.env.REACT_APP_API_URL
+export default function PageCrearUsuario () {
     const { logout } = useContext(AuthContext);
-
+    const APIURL = process.env.REACT_APP_API_URL
+    const config = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    }
     const [esExterno, setEsExterno] = useState(false);
     const [listExterno, setListExterno] = useState([]);
     const [listInterno, setListInterno] = useState([]);
-    const [ formValid, setFormValid ] = useState(false);
     const [ inputChanged, setInputChanged ] = useState('')
     const [errorsArray, setErrorsArray] = useState([]);
     const { GenerarPassword } = ControllerUsuarios();
@@ -28,12 +32,7 @@ function ModalCrearUsuario({ show, handleClose }) {
         id_perfil: "0",
         id_cliente: "0"
     })
-
-    const config = {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-    }
+    
 
     const popoverContraseña = (
         <Popover id="popover-basic">
@@ -43,11 +42,11 @@ function ModalCrearUsuario({ show, handleClose }) {
         </Popover>
       );
     const popoverGenerarContraseña = (
-    <Popover id="popover-basic">
-        <Popover.Body>
-        Generar Contraseña
-        </Popover.Body>
-    </Popover>
+        <Popover id="popover-basic">
+            <Popover.Body>
+            Generar Contraseña
+            </Popover.Body>
+        </Popover>
     );
 
     const getPerfilesList = async () => {
@@ -332,12 +331,10 @@ function ModalCrearUsuario({ show, handleClose }) {
             id_perfil: parseInt(dataPostUsuario.id_perfil,10),
             externo: esExterno,
         }
-        console.log(data);
-        
+
         try {
             const resp = await axios.post(APIURL+'/register', data, config)
             console.log(resp);
-            handleClose()
         } catch (error) {
             console.log(error);
             if (error.response.status === 401) {
@@ -364,21 +361,22 @@ function ModalCrearUsuario({ show, handleClose }) {
         validateForm( dataPostUsuario )
     },[dataPostUsuario])
 
-    return ( 
-        <Modal show={ show } onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>Crear Usuario</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <div className="container">
-                    <div className="mb-3">
+    return (
+            <div className="container">
+                <div className="">
+                    <h6 style={{ fontWeight: 'bold' }}>Crear Usuarios</h6>
+                </div>
+                <div className="row mb-3">
+
+                    <div className="col-12 mb-3">
                         <Form.Check type="switch" className="mx-2">
                             <Form.Check.Input name="externo" onChange={()=> { changeIsExterno() }} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                             <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Es externo </span></Form.Check.Label>
                         </Form.Check>
                         
                     </div>
-                    <div className="mb-3">
+
+                    <div className="col-5 mb-3">
                         <label htmlFor="inputPerfil" className="form-label">Perfil</label>
                         <select id="inputPerfil" 
                                 name="id_perfil"
@@ -390,8 +388,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                         </select>
                         {contieneError(1) && <div className="text-danger fw-medium">{getErrorMsg(1)}</div>}
                     </div>
-                    
-                    <div className="mb-3" style={ esExterno ? { display: "block" } : { display: "none" } }>
+                    <div className="col-5 mb-3" style={ esExterno ? { display: "block" } : { display: "none" } }>
                         <label htmlFor="inputCliente" className="form-label">Cliente</label>
                         <select id="inputCliente" 
                                 name="id_cliente"
@@ -403,7 +400,7 @@ function ModalCrearUsuario({ show, handleClose }) {
                         </select>
                         {contieneError(2) && <div className="text-danger fw-medium">{ getErrorMsg(2) }</div>}
                     </div>
-                    <div className="mb-3">
+                    <div className="col-5 mb-3">
                         <label htmlFor="inputName" className="form-label">Nombre:</label>
                         <input type="text" className="form-control mb-2" id="inputName" name="name"
                                 placeholder="Nombre:"
@@ -411,7 +408,8 @@ function ModalCrearUsuario({ show, handleClose }) {
                                 onChange={handleInputChange}/>
                         {contieneError(3) && <div className="text-danger fw-medium">{ getErrorMsg(3) }</div>}
                     </div>
-                    <div className="mb-3">
+
+                    <div className="col-5 mb-3">
                         <label htmlFor="inputEmail" className="form-label">Email</label>
                         <input type="text" className="form-control" id="email" name="email"
                                 placeholder="name@example.com"
@@ -419,61 +417,81 @@ function ModalCrearUsuario({ show, handleClose }) {
                                 onChange={handleInputChange}/>
                         {contieneError(4) && <div className="text-danger fw-medium">{ getErrorMsg(4) }</div>}
                     </div>
-                    <div className="mb-3">
+
+                    <div className="col-12 row">
+                        <div className="col-5 mb-3">
+                                <div className="row d-flex justify-content-start align-items-center m-0">
+                                    <div className="col m-0 ps-0">
+                                        <label htmlFor="inputPassword" className="form-label">Password</label>
+                                        <input type={ showPassword ? ('text') : ('password') } id="inputPassword" className="form-control" 
+                                        aria-describedby="passwordHelpBlock" name="password" value={dataPostUsuario.password}
+                                        onChange={handleInputChange}/>
+                                    </div>
+                                    <div className="col-1 m-0 ps-0 mt-4 pt-1">
+                                        <OverlayTrigger trigger={'hover'} overlay={popoverGenerarContraseña}>
+                                            <button className="btn btn-primary btn-sm btn-icon-fix btn-icon-style" onClick={ asignarContraseñaAutomatico }>
+                                                <ion-icon name="reload-outline"></ion-icon>
+                                            </button>
+                                        </OverlayTrigger>
+                                        
+                                    </div>
+                                </div>
+                                {contieneError(5) && <div className="text-danger fw-medium">{getErrorMsg(5)}</div>}
+                                {contieneError(0) && <div className="text-danger fw-medium">{ getErrorMsg(0) }</div>}
+                        </div>
+                        <div className="col-5 mb-3">
                             <div className="row d-flex justify-content-start align-items-center m-0">
                                 <div className="col m-0 ps-0">
-                                    <label htmlFor="inputPassword" className="form-label">Password</label>
-                                    <input type={ showPassword ? ('text') : ('password') } id="inputPassword" className="form-control" 
-                                    aria-describedby="passwordHelpBlock" name="password" value={dataPostUsuario.password}
-                                    onChange={handleInputChange}/>
+                                    <label htmlFor="inputPasswordConfirmar" className="form-label">Confirmar Password</label>
+                                    <input type={ showPassword ? ('text') : ('password') } id="inputPasswordConfirmar" name="password_confirmation"
+                                        className="form-control" 
+                                        aria-describedby="passwordHelpBlock"
+                                        value={dataPostUsuario.password_confirmation}
+                                        onChange={handleInputChange}/>
                                 </div>
                                 <div className="col-1 m-0 ps-0 mt-4 pt-1">
-                                    <OverlayTrigger trigger={'hover'} overlay={popoverGenerarContraseña}>
-                                        <button className="btn btn-primary btn-sm btn-icon-fix btn-icon-style" onClick={ asignarContraseñaAutomatico }>
-                                            <ion-icon name="reload-outline"></ion-icon>
-                                        </button>
-                                    </OverlayTrigger>
-                                    
+                                <OverlayTrigger trigger={'hover'} overlay={popoverContraseña}>
+                                    <button className="btn btn-primary btn-sm btn-icon-fix btn-icon-style" onClick={ changeShowPassword }>
+                                        { !showPassword ? (<ion-icon name="eye-off-outline"></ion-icon>) : (<ion-icon name="eye-outline"></ion-icon>)}
+                                    </button>
+                                </OverlayTrigger>
                                 </div>
                             </div>
-                            {contieneError(5) && <div className="text-danger fw-medium">{getErrorMsg(5)}</div>}
+                            {contieneError(6) && <div className="text-danger fw-medium">{ getErrorMsg(6) }</div>}
                             {contieneError(0) && <div className="text-danger fw-medium">{ getErrorMsg(0) }</div>}
+                        </div>
                     </div>
-                    <div className="mb-3">
-                        <div className="row d-flex justify-content-start align-items-center m-0">
-                            <div className="col m-0 ps-0">
-                                <label htmlFor="inputPasswordConfirmar" className="form-label">Confirmar Password</label>
-                                <input type={ showPassword ? ('text') : ('password') } id="inputPasswordConfirmar" name="password_confirmation"
-                                    className="form-control" 
-                                    aria-describedby="passwordHelpBlock"
-                                    value={dataPostUsuario.password_confirmation}
-                                    onChange={handleInputChange}/>
+                    <div className="col-12">
+                        <h6 className="fw-bold"> Ubicacion del Usuario </h6>
+                        <div className="row">
+                            <div className="col-5">
+                                <label htmlFor="inputLong" className="form-label">Longitud:</label>
+                                <input type="text" className="form-control mb-2" id="inputLong" name="longitud"
+                                        placeholder="Longitud:"
+                                        onChange={handleInputChange}/>
                             </div>
-                            <div className="col-1 m-0 ps-0 mt-4 pt-1">
-                            <OverlayTrigger trigger={'hover'} overlay={popoverContraseña}>
-                                <button className="btn btn-primary btn-sm btn-icon-fix btn-icon-style" onClick={ changeShowPassword }>
-                                    { !showPassword ? (<ion-icon name="eye-off-outline"></ion-icon>) : (<ion-icon name="eye-outline"></ion-icon>)}
-                                </button>
-                            </OverlayTrigger>
+                            <div className="col-5">
+                                <label htmlFor="inputLat" className="form-label">Latitud:</label>
+                                <input type="text" className="form-control mb-2" id="inputLat" name="latitud"
+                                        placeholder="Latitud:"
+                                        onChange={handleInputChange}/>
                             </div>
                         </div>
-                        {contieneError(6) && <div className="text-danger fw-medium">{ getErrorMsg(6) }</div>}
-                        {contieneError(0) && <div className="text-danger fw-medium">{ getErrorMsg(0) }</div>}
                     </div>
-                    
                 </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Cerrar
-                </Button>
-                <Button variant="primary" disabled={btnDisable} onClick={ postCrearUsuario}>
-                    Crear
-                </Button>
-            </Modal.Footer>
-        </Modal>
+                
 
-     )
+                <div className="d-flex">
+                    {/* <Button variant="secondary">
+                        Cancelar
+                    </Button> */}
+                    <Link className="btn btn-secondary mx-2" to={PathConstants.USUARIOS}>Cancelar</Link>
+                    <Button className="mx-2" variant="primary" disabled={btnDisable} onClick={ postCrearUsuario}>
+                        Crear Usuario
+                    </Button>
+                </div>
+                
+            </div>
+    )
+
 }
-
-export default ModalCrearUsuario;
