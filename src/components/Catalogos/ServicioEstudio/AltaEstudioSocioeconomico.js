@@ -24,6 +24,7 @@ function AltaEstudioSocioeconomico(){
     const backPage = () => {
       navigate('/estudio-socioeconomico', { state: { idProyecto: idProyecto,idCliente: idCliente,idOrdenServicio: idOrdenServicio } });
     };
+
     const [tiposClientes,setTiposClientes] = useState([])
 
     const [proyecto,setProyecto] = useState({nombre:''})
@@ -32,6 +33,9 @@ function AltaEstudioSocioeconomico(){
     const [colaboradores,setColaboradores] = useState([])
     const [tipoClienteSeleccionado] = useState('1')
     const [clientesComunes,setClientesComunes] = useState([])
+    const [direcciones,direccionesSet] = useState([])
+    const [placeId,placeIdSet] = useState('')
+    const [colaboradorPreAsignado,colaboradorPreAsignadoSet] = useState({id:'',name:''})
     
     const animatedComponents = makeAnimated;
 
@@ -49,6 +53,7 @@ function AltaEstudioSocioeconomico(){
         telefono_movil:'',
         telefono_contacto:'',
         generar_usuario_automaticamente: false,
+        direccion:'',
         latitud:25.67507,
         longitud:-100.31847,
         padre:{
@@ -96,14 +101,9 @@ function AltaEstudioSocioeconomico(){
     
     L.Marker.prototype.options.icon = DefaultIcon;
 
-    const [listaColaboradores,setListaColaboradores] = useState([
-        {nombre:"Jesus Aguilar", latitud:25.67507, longitud:-100.31847},
-        {nombre:"David Soto", latitud:25.77507, longitud:-100.31847}
-    ])
-
     const formInputChange =(e) => {
         var {name, value, type, checked } = e.target;
-        const updatedValue = type === 'checkbox' ? checked : value;
+        const updatedValue = type === 'checkbox' ? checked : convertirAMayusculas(value);
         
         setFormData(prevState => ({
             ...prevState,
@@ -119,7 +119,7 @@ function AltaEstudioSocioeconomico(){
         casosEspeciales(e,familiar);
 
         var {name, value, type, checked } = e.target;
-        const updatedValue = type === 'checkbox' ? checked : value;
+        let updatedValue = type === 'checkbox' ? checked : name === 'email' ? value :  convertirAMayusculas(value);
         
         setFormData(prevState => ({
             ...prevState,
@@ -134,7 +134,8 @@ function AltaEstudioSocioeconomico(){
     const casosEspeciales = (e,familiar='') => {
         
         var {name, value, type, checked } = e.target;
-        const updatedValue = type === 'checkbox' ? checked : value;
+        let updatedValue = type === 'checkbox' ? checked : name === 'email' ? value :  convertirAMayusculas(value);
+
         if(name==='contecto_principal'){
             if(familiar==='padre'){
                 if(updatedValue===true){
@@ -204,10 +205,20 @@ function AltaEstudioSocioeconomico(){
             console.log(resp);
         })
     }
-
     const getListaClientesHermanos= () => {
         axios.get(`${APIURL}/clientes/${fromData.id_cliente}/hermanos`,config).then((resp)=>{
             renderOptionClientesComunes(resp.data);
+        }).catch((resp)=>{
+            setClientesComunes([]);
+            console.log(resp);
+        })
+    }
+    const getDireccionGSP = () => {
+        if(fromData.direccion.length<5){
+            direccionesSet()
+        }
+        axios.get(`https://nominatim.openstreetmap.org/search?q=${fromData.direccion}&format=json&addressdetails=1`,config).then((resp)=>{
+            direccionesSet(resp.data);
         }).catch((resp)=>{
             setClientesComunes([]);
             console.log(resp);
@@ -241,6 +252,15 @@ function AltaEstudioSocioeconomico(){
         })
         setClientesComunes (opcionesColegios)
     }
+    
+    const getListaColaboradores = () =>{
+        axios.get(APIURL+'/estudio/colaboradores',config).then((resp)=>{
+            setColaboradores(resp.data)
+        }).catch((resp)=>{
+            //(resp.response.status === 401) ?? logout();
+            console.log(resp);
+        })
+    }
 
     const getNumeroContactoPrincipal = (estudio) => {
         if(estudio?.email){
@@ -257,11 +277,69 @@ function AltaEstudioSocioeconomico(){
         }
         return '';
     }
+
+    const seleccionarUbicacion = (direccion) => {
+        placeIdSet(direccion.place_id);
+        
+        setFormData(prevState => ({
+            ...prevState,
+            latitud: direccion.lat,
+            longitud: direccion.lon
+        }));
+    }
     
+    const convertirAMayusculas = (texto) => {
+        return texto.toUpperCase();
+    }
+    const obtenerUbicacionMasCercana = (lat, lon, ubicaciones) => {
+        const radianes = (grados) => (grados * Math.PI) / 180;
+      
+        // Función para calcular la distancia entre dos puntos usando la fórmula de Haversine
+        const calcularDistancia = (lat1, lon1, lat2, lon2) => {
+          const R = 6371; // Radio de la Tierra en km
+          const dLat = radianes(lat2 - lat1);
+          const dLon = radianes(lon2 - lon1);
+          const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(radianes(lat1)) * Math.cos(radianes(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          return R * c; // Distancia en km
+        };
+      
+        let ubicacionMasCercana = null;
+        let distanciaMinima = Infinity;
+      
+        // Iterar sobre las ubicaciones para encontrar la más cercana
+        ubicaciones.forEach((ubicacion) => {
+          const distancia = calcularDistancia(lat, lon, ubicacion.latitud, ubicacion.longitud);
+          if (distancia < distanciaMinima) {
+            distanciaMinima = distancia;
+            ubicacionMasCercana = ubicacion;
+          }
+        });
+      
+        return ubicacionMasCercana;
+      }
+      
+    const cambiarCaloborador= () => {
+        const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
+        if(colaboradoresFiltro.length){
+            const colaborador = obtenerUbicacionMasCercana(fromData.latitud, fromData.longitud, colaboradoresFiltro);
+            console.log(colaborador);        
+            setFormData(prevState => ({
+                ...prevState,
+                id_colaborador: colaborador.id
+            }));
+            colaboradorPreAsignadoSet(colaborador);
+        }
+    }
+
     useEffect(()=>{
         getProyecto();
         getCliente();
         getOrdenServicio();
+        getListaColaboradores();
     },[])
 
     useEffect(() => {
@@ -272,6 +350,16 @@ function AltaEstudioSocioeconomico(){
         }
     },[fromData.id_cliente,fromData.es_cliente_comun])
 
+    useEffect(()=>{
+        getDireccionGSP();
+    },[fromData.direccion])
+
+    
+    useEffect(()=>{
+        cambiarCaloborador();
+    },[fromData.latitud])
+
+    
     const ultimasFamiliasAñadidas = () => {
         return (
             <div>
@@ -300,6 +388,43 @@ function AltaEstudioSocioeconomico(){
         )
     }
     
+    const cricleColaboradores = () => {
+        console.log(colaboradores);
+        const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
+        console.log(colaboradoresFiltro);
+        return <>{colaboradoresFiltro.map((colaborador,index) => 
+            (<Circle key={'cum-'+index} center={[colaborador.latitud, colaborador.longitud]} radius="200" pathOptions={{ color: 'blue' }}>
+                <Popup>
+                {colaborador.name}
+                </Popup>
+            </Circle>)
+            )} </>
+    }
+    
+    
+    const seccionUbicaciones = () => {
+        {JSON.stringify(direcciones)}
+        return (
+          <div>
+            {Array.isArray(direcciones) && direcciones.slice(0, 5).map((direccion, index) => (
+              <div 
+                key={'asu-' + index} 
+                className="row rounded border mt-1 p-1" 
+                style={{ backgroundColor: (direccion.place_id === placeId) ? '#47E58A' : '' , cursor:'pointer' }}
+                onClick={() => seleccionarUbicacion(direccion)}
+              >
+                <div className="col-1">
+                    <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                </div>
+                <div className="col-10">
+                  <div>{direccion.display_name}</div>
+                  <div style={{fontSize:'.8em'}}>{direccion.lat}, {direccion.lon}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+    }
     
     const formularioFamilia = (familiar = '') => {
         if(familiar === '') {
@@ -637,6 +762,20 @@ function AltaEstudioSocioeconomico(){
                     <hr/>
 
                     <div className="mb-3 row">
+                        <label htmlFor="direccion" className="col-sm-2 col-form-label">
+                            Direccion:
+                        </label>
+                        <div className="col-sm-10">
+                            <input type="text" className="form-control" id="direccion" name="direccion" value={fromData.direccion} onChange={(e)=> formInputChange(e)} placeholder="Dirección..."/>
+                        </div>
+                        {fromDataError?.direccion && (
+                        <div>
+                            {fromDataError.direccion.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                        </div>
+                        )}
+                    </div>
+
+                    <div className="mb-3 row">
                         <label htmlFor="latitud" className="col-sm-2 col-form-label">Latitud:</label>
                         <div className="col-sm-10">
                             <input type="number" className="form-control" id="latitud" name="latitud" value={fromData.latitud} onChange={(e)=> formInputChange(e)}/>
@@ -659,6 +798,19 @@ function AltaEstudioSocioeconomico(){
                         </div>
                         )}
                     </div>
+                    {colaboradorPreAsignado.name &&(
+                        
+                    <div className="mb-3 row">
+                        <label htmlFor="longitud" className="col-sm-2 col-form-label">Preasignacion Colaborador:</label>
+                        <div className="col-sm-10">
+                            <input type="text" className="form-control" id="longitud" name="longitud" disabled value={colaboradorPreAsignado.name}/>
+                        </div>
+                    </div>
+                    )}
+
+                    <div className="mb-3 row">
+                        {seccionUbicaciones()}
+                    </div>
 
                     <MapContainer center={[fromData.latitud, fromData.longitud]} zoom={13} style={{ height: "50vh", width: "100%" }}>
                     <TileLayer
@@ -671,24 +823,15 @@ function AltaEstudioSocioeconomico(){
                         ¡Hola! Este es un cuadro de texto en un popup.
                         </Popup>
                     </Marker>
-                    <Circle center={[fromData.latitud, fromData.longitud]} radius="200" pathOptions={{ color: 'blue' }}>
-                        <Popup>
-                        Jesus Aguilar
-                        </Popup>
-                    </Circle>
-                    <Circle center={[25.67807, -100.31847]} radius="200" pathOptions={{ color: 'blue' }}>
-                        <Popup>
-                        David Soto
-                        </Popup>
-                    </Circle>
+                    {cricleColaboradores()}
                     </MapContainer>
                     <br/>
 
                     <div className="d-flex">
-                        <div class="p-2 bd-highlight">
+                        <div className="p-2 bd-highlight">
                             <button className="btn btn-primary btn-sm fw-bold " onClick={() =>setFormData(nuevoUsuario)}>Cancelar</button>
                         </div>
-                        <div class="ms-auto p-2 bd-highlight">
+                        <div className="ms-auto p-2 bd-highlight">
                             <button className="btn btn-primary btn-sm fw-bold " onClick={sendDataEstudioSocioeconomico}>Guardar</button>
                         </div>
                     </div>

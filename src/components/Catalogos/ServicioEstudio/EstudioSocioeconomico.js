@@ -6,6 +6,7 @@ import Select from "react-select";
 import makeAnimated from 'react-select/animated';
 import ResaltarTexto from "../../ResaltarTexto/ResaltarTexto";
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import Avatar from 'react-avatar';
 
 function ServicioEstudio(){
     const APIURL = process.env.REACT_APP_API_URL;
@@ -138,6 +139,7 @@ function ServicioEstudio(){
         ))]
     }
     
+    
     useEffect(()=>{
         getProyectos();
     },[])
@@ -164,6 +166,27 @@ function ServicioEstudio(){
         item.candidato.toLowerCase().includes(search.toLowerCase())
     );
 
+    const avatarColaborador = (colaborador) => {
+        if(!colaborador){
+            return '';
+        }
+        return (<>
+            <div className="d-flex">
+                <div className="align-self-center">
+                    <Avatar name={colaborador.name} size="30" round={true} />
+                </div>
+                <div className="ps-1 align-self-center">
+                    <span>
+                    {colaborador.name}
+                    </span><br/>
+                    <span>
+                    {colaborador.email}
+                    </span>
+                </div>
+            </div>
+        </>);
+    }
+
     const renderFilasTablaEstudiosSocioeconomicos = () => {
         return allEstudiosSocioeconomicosFiltrados.map((estudio, index) => (
             <tr key={'tr-cliente-'+index}>
@@ -180,10 +203,10 @@ function ServicioEstudio(){
                     <p>{ estudio.email }</p>
                 </td>
                 <td>
-                    <p></p>
+                    {estudio?.colaborador && avatarColaborador(estudio.colaborador)}
                 </td>
                 <td>
-                    <div className="d-flex">
+                    <div className="d-flex flex-row-reverse bd-highlight">
                         <Link className="btn btn-primary btn-sm" to={`/estudio-socioeconomico/${estudio.id}`}>Ver</Link>
                     </div>
                 </td>
