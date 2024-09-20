@@ -2,7 +2,8 @@ import axios from "axios";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Alert, Form } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import PathConstants from "../../../routes/pathsConstants";
 
 function PageActualizarCliente() {
     const { logout } = useContext(AuthContext);
@@ -195,7 +196,7 @@ function PageActualizarCliente() {
                     key === "estado" ||
                     key === "pais" ||
                     key === "rason_social" ||
-                    key === "rfc") && !esColegioComun) {
+                    key === "rfc") && esColegioComun) {
                     return true; // Ignora este campo y continúa
                 }
                 return valor !== '' && valor !== null && valor !== '0' && valor !== 'null';
@@ -733,6 +734,8 @@ function PageActualizarCliente() {
             } else if ((formData.id_tipo_cliente === '2' || formData.id_tipo_cliente === 2) && validarValoresBtn(formData)) {
                 setFormValid(false)
             } else {
+                console.log('btn disable');
+                
                 setFormValid(true)
             }
             
@@ -751,6 +754,7 @@ function PageActualizarCliente() {
 
     return (
         <div className="container">
+            <p><Link className="btn btn-primary btn-sm" to={PathConstants.CLIENTES}>Regresar a Catalogo Clientes</Link></p>
             <p className="fw-bold title-forms">ACTUALIZAR CLIENTE</p>
             <p className="fw-bold">DATOS DEL CLIENTE:</p>
             <div className="row">

@@ -14,6 +14,7 @@ const CatFamiliaAlta = React.lazy(()=> import('../components/Catalogos/Familias/
 
 const CatUsuarios = React.lazy(()=> import('../components/Catalogos/Usuarios/Usuarios'))
 const CatUsuariosCrear = React.lazy(()=> import('../components/Catalogos/Usuarios/PageCrearUsuario'))
+const CatUsuariosActualizar = React.lazy(()=> import('../components/Catalogos/Usuarios/PageUpdateUsuario'))
 
 const CatPerfiles = React.lazy(()=> import('../components/Catalogos/Perfiles/Perfiles'))
 const CatCiclosEscolares = React.lazy(()=> import('../components/Catalogos/CiclosEscolares/CiclosEscolares'))
@@ -79,10 +80,16 @@ const routes = [
       )},
       { path: PathConstants.USUARIOCREAR, perfil:'Administrador',
         element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PrivateRoute path={PathConstants.USUARIOCREAR} element={<CatUsuariosCrear />} />
+        </Suspense>
+      )},
+      { path: PathConstants.USUARIOACTUALIZAR, perfil:'Administrador',
+        element: (
           <Suspense fallback={<div>Loading...</div>}>
-            <PrivateRoute path={PathConstants.USUARIOCREAR} element={<CatUsuariosCrear />} />
+            <PrivateRoute path={PathConstants.USUARIOACTUALIZAR} element={<CatUsuariosActualizar />} />
           </Suspense>
-        )},
+      )},
     { path: PathConstants.ENCUESTASID, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>

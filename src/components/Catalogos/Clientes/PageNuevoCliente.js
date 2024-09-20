@@ -2,7 +2,8 @@ import axios from "axios";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Alert, Form } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import PathConstants from "../../../routes/pathsConstants";
 
 function PageNuevoCliente() {
     const { logout } = useContext(AuthContext);
@@ -595,8 +596,11 @@ function PageNuevoCliente() {
     }
 
     const validarValoresBtn = (form) =>{
+         console.log(form);
          
         if (form.id_tipo_cliente === '1') {
+            console.log('tipo 1');
+            
             return Object.entries(form).every(([key, valor]) => {
                 if ((key === 'id_clientes_hermanos' || key === "rso" ||
                     key === "nombre_uno" ||
@@ -612,12 +616,13 @@ function PageNuevoCliente() {
                     key === "estado" ||
                     key === "pais" ||
                     key === "rason_social" ||
-                    key === "rfc") && !esColegioComun) {
+                    key === "rfc") && esColegioComun) {
                     return true; // Ignora este campo y continúa
                 }
                 return valor !== '' && valor !== null && valor !== '0';
             });
         } else if (formData.id_tipo_cliente === '2') {
+            console.log('tipo 2');
             return Object.entries(form).every(([key, valor]) => {
                 if (key === 'id_clientes_hermanos' || key === "rso" ||
                     key === "nombre_uno" ||
@@ -657,11 +662,13 @@ function PageNuevoCliente() {
     }, [ tipoPersona ])
 
     useEffect(()=>{
-        validateFields(formData);        
+        validateFields(formData);
+             
     }, [formData])
 
 
     useEffect(()=>{
+        console.log(arrayErrors);
         
         if (arrayErrors.length === 0 ) {
 
@@ -683,6 +690,7 @@ function PageNuevoCliente() {
 
     return (
         <div className="container">
+            <p><Link className="btn btn-primary btn-sm" to={PathConstants.CLIENTES}> Regresar a Catalogo Clientes</Link></p>
             <p className="fw-bold title-forms">CREAR CLIENTE</p>
             <p className="fw-bold">DATOS DEL CLIENTE:</p>
             <div className="row">
