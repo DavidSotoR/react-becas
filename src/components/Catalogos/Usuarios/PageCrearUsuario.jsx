@@ -25,6 +25,7 @@ export default function PageCrearUsuario () {
     const [listaPerfiles, setListaPerfiles] = useState([])
     const [ allClientes, setAllClientes ] = useState([])
     const [ showPassword, setShowPassword ] = useState(false)
+    const [ cuentaConUbicacion, setCuentaConUbicacion ] = useState(false)
     const [ dataPostUsuario, setDataPostUsuario ] = useState({
         name:"",
         email:"",
@@ -191,16 +192,19 @@ export default function PageCrearUsuario () {
     }
 
     const validateDataFormBtn = (obj) => {
+        console.log(obj);
+        
         for (let key in obj) {
             // Ignora la validación de 'id_cliente' si 'isExterno' es false
-        if ((key === "id_cliente" && !esExterno) || (obj[key] !== "" && obj[key] !== "0")) {
-            continue; // Continúa con la siguiente iteración del bucle
-        }
-        
-        // Verifica si alguna propiedad del objeto tiene un valor "" o "0"
-        if (obj[key] === "" || obj[key] === "0") {
-            return false; // El objeto es inválido
-        }
+            if ((key === "longitud" && !esExterno) || (key === "latitud" && !esExterno) ||
+                (key === "longitud" && esExterno) || (key === "latitud" && esExterno) || (key === "id_cliente" && !esExterno) || (obj[key] !== "" && obj[key] !== "0")) {
+                continue; // Continúa con la siguiente iteración del bucle
+            }
+            
+            // Verifica si alguna propiedad del objeto tiene un valor "" o "0"
+            if (obj[key] === "" || obj[key] === "0") {
+                return false; // El objeto es inválido
+            }
         }
         return true; // El objeto es válido
     }
@@ -315,6 +319,10 @@ export default function PageCrearUsuario () {
         setEsExterno(!esExterno)
     }
 
+    const changeCuentaUbicacion = ()=> {
+        setCuentaConUbicacion(!cuentaConUbicacion)
+    }
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
@@ -334,7 +342,7 @@ export default function PageCrearUsuario () {
             password_confirmation: dataPostUsuario.password_confirmation,
             id_cliente: esExterno ? dataPostUsuario.id_cliente : null,
             id_perfil: parseInt(dataPostUsuario.id_perfil,10),
-            externo: esExterno,
+            externo: esExterno ? 1 : 0,
             latitud: dataPostUsuario.latitud,
             longitud: dataPostUsuario.longitud
         }
@@ -470,22 +478,33 @@ export default function PageCrearUsuario () {
                             {contieneError(0) && <div className="text-danger fw-medium">{ getErrorMsg(0) }</div>}
                         </div>
                     </div>
-                    <div className="col-12">
+                    <div className="col-12" style={{ display: !esExterno ? 'block' : 'none' }}>
                         <h6 className="fw-bold"> Ubicacion del Usuario </h6>
-                        <div className="row">
-                            <div className="col-5">
-                                <label htmlFor="inputLong" className="form-label">Longitud:</label>
-                                <input type="text" className="form-control mb-2" id="inputLong" name="longitud"
-                                        placeholder="Longitud:"
-                                        onChange={handleInputChange}/>
-                            </div>
-                            <div className="col-5">
-                                <label htmlFor="inputLat" className="form-label">Latitud:</label>
-                                <input type="text" className="form-control mb-2" id="inputLat" name="latitud"
-                                        placeholder="Latitud:"
-                                        onChange={handleInputChange}/>
-                            </div>
+                        <div className="mb-3">
+                            <Form.Check type="switch" className="mx-2">
+                                <Form.Check.Input name="ubicacion" onChange={()=> { changeCuentaUbicacion() }} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Usuario cuenta con ubicación </span></Form.Check.Label>
+                            </Form.Check>
+                            
                         </div>
+                        { cuentaConUbicacion &&
+                            <div className="row">
+                                <div className="col-5">
+                                    <label htmlFor="inputLong" className="form-label">Longitud:</label>
+                                    <input type="text" className="form-control mb-2" id="inputLong" name="longitud"
+                                            placeholder="Longitud:"
+                                            onChange={handleInputChange}/>
+                                </div>
+                                <div className="col-5">
+                                    <label htmlFor="inputLat" className="form-label">Latitud:</label>
+                                    <input type="text" className="form-control mb-2" id="inputLat" name="latitud"
+                                            placeholder="Latitud:"
+                                            onChange={handleInputChange}/>
+                                </div>
+                            </div>
+                        
+                        }
+                        
                     </div>
                 </div>
                 
