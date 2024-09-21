@@ -4,9 +4,10 @@ import ControllerUsuarios from "./ControllersUsuarios";
 import { Button, Form, OverlayTrigger, Popover } from "react-bootstrap";
 import axios from "axios";
 import PathConstants from "../../../routes/pathsConstants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PageCrearUsuario () {
+    const navigate = useNavigate()
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL
     const config = {
@@ -30,7 +31,9 @@ export default function PageCrearUsuario () {
         password:"",
         password_confirmation:"",
         id_perfil: "0",
-        id_cliente: "0"
+        id_cliente: "0",
+        latitud: '',
+        longitud: ''
     })
     
 
@@ -76,6 +79,8 @@ export default function PageCrearUsuario () {
             const resp = await axios.get(APIURL+'/clientes', config)
             setAllClientes(resp.data)
         } catch (error) {
+            console.log(error);
+            
             if (error.response.status === 401) {
                 logout()
             }
@@ -330,13 +335,17 @@ export default function PageCrearUsuario () {
             id_cliente: esExterno ? dataPostUsuario.id_cliente : null,
             id_perfil: parseInt(dataPostUsuario.id_perfil,10),
             externo: esExterno,
+            latitud: dataPostUsuario.latitud,
+            longitud: dataPostUsuario.longitud
         }
 
         try {
             const resp = await axios.post(APIURL+'/register', data, config)
             console.log(resp);
+            navigate(PathConstants.USUARIOS);
         } catch (error) {
             console.log(error);
+
             if (error.response.status === 401) {
                 logout()
             }

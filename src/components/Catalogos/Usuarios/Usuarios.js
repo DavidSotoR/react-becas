@@ -8,10 +8,11 @@ import ModalCrearUsuario from "./ModalCrearUsuario";
 import { ModalActivarUsuario } from "./ModalActivarUsuario";
 import Avatar from 'react-avatar';
 import PathConstants from "../../../routes/pathsConstants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Usuarios() {
     const APIURL = process.env.REACT_APP_API_URL
+    const navigate = useNavigate();
     const { logout } = useContext(AuthContext);
     const [ clearForm, setClearForm ] = useState(false)
     const [ btnEnable, setBtnEnable ] = useState(true)
@@ -211,8 +212,12 @@ function Usuarios() {
     }
 
     const selectUserToUpdate = (usuario) => {
-        setUserSelected(usuario)
-        setShowUpdate(!showUpdate)
+        console.log(usuario.id);
+
+        navigate('/usuarios/'+usuario.id+'/actualizar');
+        
+       // setUserSelected(usuario)
+        //setShowUpdate(!showUpdate)
     }
 
     const renderFilasTablaUsuarios = () => {

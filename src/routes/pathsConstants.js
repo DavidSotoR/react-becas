@@ -17,6 +17,7 @@ const PathConstants = {
     PERFILES: '/perfiles',
     USUARIOS: '/usuarios',
     USUARIOCREAR: '/usuarios/crear',
+    USUARIOACTUALIZAR: '/usuarios/:id/actualizar',
     CICLOSESCOLARES: '/ciclos-escolares',
     PROYECTOS: '/proyectos',
     PROYECTO: '/proyectos/:ID',
