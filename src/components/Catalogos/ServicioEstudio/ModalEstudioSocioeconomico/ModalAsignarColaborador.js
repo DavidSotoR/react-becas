@@ -22,8 +22,6 @@ function ModalAsignarColaborador({ show, handleClose,idEstudio,colaborador }){
     })
 
     const [opcionesColaboradores,setSpcionesColaboradores] = useState([])
-    const [opcionesColaboradoresDefault,setSpcionesColaboradoresDefault]= useState([]);
-
     const renderOpcionesColaboradores  = (opciones) =>{
         var opcioneslista = []
         
@@ -36,6 +34,7 @@ function ModalAsignarColaborador({ show, handleClose,idEstudio,colaborador }){
         setSpcionesColaboradores(opcioneslista)
     }
 
+    const [opcionesColaboradoresDefault,setSpcionesColaboradoresDefault]= useState([]);
     const renderOptionColaboradoresDefault = (opcion) =>{
         let opcionDefault = { value: '', label:'' }
         const {id , name } = opcion;

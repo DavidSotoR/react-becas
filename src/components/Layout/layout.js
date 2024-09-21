@@ -67,15 +67,17 @@ export default function Layout() {
                             
                             
                             <div className="d-flex justify-content-center align-items-center">
-                              <img src='/img/logo_principal_blanco.png' style={{ width:'200px' }} alt="Descripción de la imagen" />
+                              <img src='/img/logo_principal_blanco.png' style={{ width:'200px', maxWidth:'100%' }} alt="Descripción de la imagen" />
                             </div>
                           
                           <MenuItem component={<Link to={PathConstants.HOME} />}> 
-                              { collapsed ?
-                                (<div className="ion-text-center"><ion-icon name="home" size="large"/></div>):(<p>INICIO</p>)
-                              }
-                              
+                              { collapsed ? (<div className="ion-text-center"><ion-icon name="home" size="large"/></div>):(<p>INICIO</p>)}
                           </MenuItem>
+                          
+                          <MenuItem component={<Link to={PathConstants.ESTUDIOS} />}> 
+                              { collapsed ? (<div className="ion-text-center"><ion-icon name="folder-open-outline" size="large"/></div>):(<p>ASIGNACIONES</p>)}
+                          </MenuItem>
+
                           { roleSession === 'Administrador' &&
                             <>
                               {/*<MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> 
@@ -83,22 +85,13 @@ export default function Layout() {
                               </MenuItem>*/}
                             <SubMenu 
                               label="NUEVO ESTUDIO"  
-                              icon={ collapsed && (
-                                                    <div className="d-flex justify-content-center align-items-center">
-                                                    <ion-icon size="large" name="file-tray-full"/></div>
-                              )}
+                              icon={ collapsed && ( <div className="d-flex justify-content-center align-items-center"> <ion-icon size="large" name="documents-outline"/></div> )}
                               rootStyles={{
                                 color:"white",
-                                ['& > .' + menuClasses.button]: {
-                                  backgroundColor: '#47D1D6',
-                                  color: 'white',
-                                  '&:hover': { backgroundColor: '#47D1D6',},
-                                },
-                                ['.' + menuClasses.subMenuContent]: {
-                                  backgroundColor: '#47D1D6',
-                                  fontWeight: 'bold'
-                                },
-                              }}>
+                                ['& > .' + menuClasses.button]: { backgroundColor: '#47D1D6', color: 'white', '&:hover': { backgroundColor: '#47D1D6',},},
+                                ['.' + menuClasses.subMenuContent]: { backgroundColor: '#47D1D6', fontWeight: 'bold'},
+                              }}
+                            >
                                 <MenuItem component={<Link to={PathConstants.ESTUDIOSOCIOECONOMICO} />}> SOCIOECONOMICO</MenuItem>
                                 <MenuItem component={<Link to={PathConstants.ESTUDIOLABORAL} />}> LABORAL</MenuItem>
                             </SubMenu>
@@ -107,31 +100,22 @@ export default function Layout() {
                               {/*<MenuItem component={<Link to={PathConstants.SERVICIOESTUDIO} />}> 
                                 {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>NUEVO ESTUDIO</p>)}
                               </MenuItem>*/}
-                              <MenuItem component={<Link to={PathConstants.PROYECTOS} />}> 
-                                {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>PROYECTOS</p>)}
-                              </MenuItem>
-                              <MenuItem component={<Link to={PathConstants.ENCUESTAS} />}> 
-                                {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="clipboard"/></div>):(<p>ENCUESTAS</p>)}
-                              </MenuItem>
-                            <SubMenu label="CATALOGOS"  icon={ collapsed && (<div className="d-flex justify-content-center align-items-center"><ion-icon size="large" name="file-tray-full"/></div>) }
+
+                            <SubMenu 
+                              label="CATALOGOS"  
+                              icon={ collapsed && (<div className="d-flex justify-content-center align-items-center"><ion-icon size="large" name="file-tray-full"/></div>) }
                               rootStyles={{
-                              color:"white",
-                              ['& > .' + menuClasses.button]: {
-                                backgroundColor: '#47D1D6',
-                                color: 'white',
-                                '&:hover': {
-                                  backgroundColor: '#47D1D6',
-                                },
-                              },
-                              ['.' + menuClasses.subMenuContent]: {
-                                backgroundColor: '#47D1D6',
-                                fontWeight: 'bold'
-                              },
-                            }}>
-                                <MenuItem component={<Link to={PathConstants.USUARIOS} />}> USUARIOS</MenuItem>
-                                <MenuItem component={<Link to={PathConstants.PERFILES} />}> PERFILES</MenuItem>
-                                <MenuItem component={<Link to={PathConstants.FAMILIAS} />}> FAMILIAS</MenuItem>
-                                <MenuItem component={<Link to={PathConstants.CLIENTES} />}> CLIENTES</MenuItem>
+                                color:"white",
+                                ['& > .' + menuClasses.button]: { backgroundColor: '#47D1D6', color: 'white', '&:hover': { backgroundColor: '#47D1D6',},},
+                                ['.' + menuClasses.subMenuContent]: { backgroundColor: '#47D1D6', fontWeight: 'bold' },
+                              }}
+                            >
+                                <MenuItem component={<Link to={PathConstants.PROYECTOS} />}> PROYECTOS</MenuItem>
+                                <MenuItem component={<Link to={PathConstants.ENCUESTAS} />}> ENCUESTAS</MenuItem>
+                                <MenuItem component={<Link to={PathConstants.USUARIOS}  />}> USUARIOS</MenuItem>
+                                <MenuItem component={<Link to={PathConstants.PERFILES}  />}> PERFILES</MenuItem>
+                                {/*<MenuItem component={<Link to={PathConstants.FAMILIAS}  />}> FAMILIAS</MenuItem>*/}
+                                <MenuItem component={<Link to={PathConstants.CLIENTES}  />}> CLIENTES</MenuItem>
                                 <MenuItem component={<Link to={PathConstants.COLEGIOSCOMUNES} />}> COLEGIOS COMUNES</MenuItem>
                             </SubMenu>
                             </>
