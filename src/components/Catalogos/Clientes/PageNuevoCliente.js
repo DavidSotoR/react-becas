@@ -105,7 +105,7 @@ function PageNuevoCliente() {
 
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                id_clientes_hermanos: null
+                id_clientes_hermanos: ''
             }));
         }
     }
@@ -509,7 +509,7 @@ function PageNuevoCliente() {
     }
     
     const renderOptionsColegiosComunes = () =>{
-        return [<option key={'colegioh-0'} value="null">Seleccione una Opción</option>,...allColegiosHermanos.map((ch) => (
+        return [<option key={'colegioh-0'} value="">Seleccione una Opción</option>,...allColegiosHermanos.map((ch) => (
             <option key={ 'colegioh'+ch.id} value={ch.id}> {ch.nombre} </option>
         ))]
     }
@@ -599,10 +599,13 @@ function PageNuevoCliente() {
          console.log(form);
          
         if (form.id_tipo_cliente === '1') {
-            console.log('tipo 1');
+            //console.log('tipo 1');
             
             return Object.entries(form).every(([key, valor]) => {
-                if ((key === 'id_clientes_hermanos' || key === "rso" ||
+                
+                //console.log(key);
+                
+                if (key.trim() === 'id_clientes_hermanos' || key === "rso" ||
                     key === "nombre_uno" ||
                     key === "telefono_uno" ||
                     key === "nombre_dos" ||
@@ -616,9 +619,14 @@ function PageNuevoCliente() {
                     key === "estado" ||
                     key === "pais" ||
                     key === "rason_social" ||
-                    key === "rfc") && esColegioComun) {
+                    key === "rfc" /* && esColegioComun */) {
+                        
                     return true; // Ignora este campo y continúa
                 }
+                //console.log(esColegioComun);
+                
+                console.log(`[${key}]`);
+                
                 return valor !== '' && valor !== null && valor !== '0';
             });
         } else if (formData.id_tipo_cliente === '2') {
@@ -788,7 +796,7 @@ function PageNuevoCliente() {
                         </div>
                     </div>
                     <div className="col-5 pt-4">
-                        <Form.Check className="mx-2" type="switch">
+                        <Form.Check className="mx-2 pt-2" type="switch">
                             <Form.Check.Input name="requiere_facturar" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                             <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere facturar </span></Form.Check.Label>
                         </Form.Check>
@@ -809,7 +817,7 @@ function PageNuevoCliente() {
                     </div>
                         <div className="col-7 mt-4">
                             <div className="d-flex">
-                                <Form.Check type="switch" className="mx-2">
+                                <Form.Check type="switch" className="mx-2 pt-2">
                                     <Form.Check.Input name="documentacion_digital" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                     <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Documentos Digital </span></Form.Check.Label>
                                 </Form.Check>                                
@@ -921,8 +929,9 @@ function PageNuevoCliente() {
                     </div>
                 </div>
                 <div className="col-12 mt-3 d-flex justify-content-center align-items-center">
-                    <div className="mb-3">
-                        <button onClick={ sendDataClienteNuevo } className="btn btn-primary" disabled={ formValid }>GUARDAR DATOS</button>
+                    <div className="mb-3 d-flex">
+                    <Link className="btn btn-secondary mx-2" to={PathConstants.CLIENTES}>Cancelar</Link>
+                        <button onClick={ sendDataClienteNuevo } className="btn btn-primary mx-2" disabled={ formValid }>GUARDAR DATOS</button>
                     </div>
                 </div>
             </div>
