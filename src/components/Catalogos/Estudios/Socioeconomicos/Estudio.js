@@ -8,6 +8,7 @@ import EstudioSeccionEstudio from "./Proceso/EstudioSeccionEstudio";
 import EstudioSeccionFamilia from "./Proceso/EstudioSeccionFamilia";
 import EstudioSeccionPadres from "./Proceso/EstudioSeccionPadres";
 import EstudioSeccionUbicacion from "./Proceso/EstudioSeccionUbicacion";
+import EstudioSeccionEncuesta from "./Proceso/EstudioSeccionEncuesta";
 
 function Estudio(){
     const APIURL = process.env.REACT_APP_API_URL;
@@ -110,11 +111,10 @@ function Estudio(){
             console.log(resp.data);
             let data =  resp.data;
             if(data?.latitud){
-                data.latitud = '25.67507';
-                data.longitud = '-100.31847';
+                data.latitud = '';
+                data.longitud = '';
             }
             setFormData(data);
-            // setProyectoCliente(resp.data);
         }).catch((resp)=>{
             setClientesComunes([]);
             console.log(resp);
@@ -224,6 +224,9 @@ function Estudio(){
                 fromDataError={fromDataError}
                 editarSeccion={editarSeccion}
                 setEditarSeccion={setEditarSeccion}
+                />
+            <EstudioSeccionEncuesta 
+                idEstudio={idEstudio}
                 />
 
        </div> 
