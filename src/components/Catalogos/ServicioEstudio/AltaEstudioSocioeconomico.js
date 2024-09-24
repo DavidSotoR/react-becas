@@ -403,10 +403,28 @@ function AltaEstudioSocioeconomico(){
     
     
     const seccionUbicaciones = () => {
-        {JSON.stringify(direcciones)}
+
+        if (!Array.isArray(direcciones) || direcciones.length === 0) {
+            // Si `direcciones` no es un array válido o está vacío, mostramos un mensaje
+            return (<div>
+                        <div 
+                        className="row rounded border mt-1 p-1" 
+                        style={{cursor:'pointer' }}
+                        >
+                            <div className="col-1">
+                                <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                            </div>
+                            <div className="col-10">
+                                <div>No se encontraron ubicaciones.</div>
+                                <div style={{fontSize:'.8em'}}>Introduzca otra dirección</div>
+                            </div>
+                        </div>
+                    </div>);
+        }
+
         return (
           <div>
-            {Array.isArray(direcciones) && direcciones.slice(0, 5).map((direccion, index) => (
+            {direcciones.slice(0, 5).map((direccion, index) => (
               <div 
                 key={'asu-' + index} 
                 className="row rounded border mt-1 p-1" 

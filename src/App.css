@@ -188,3 +188,14 @@ mark {
   margin-left: 3px;
   margin-right: 3px;;
 }
+/* Estilos para animación de expansión */
+.subseccion {
+  max-height: 0; /* Contraída por defecto */
+  overflow: hidden;
+  transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+}
+
+.subseccion.expandida {
+  max-height: 500px; /* Expansión */
+  padding: 10px;
+}

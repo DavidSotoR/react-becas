@@ -1,9 +1,12 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Button,Form, Modal } from "react-bootstrap";
 import makeAnimated from 'react-select/animated';
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Select from "react-select";
+import Avatar from 'react-avatar';
+import ResaltarTexto from "../ResaltarTexto/ResaltarTexto";
 
 
 export default function SeccionEstudios(){
@@ -15,17 +18,19 @@ export default function SeccionEstudios(){
     }
     const [roleSession, setRoleSession] = useState(localStorage.getItem('role'))
     const { logout } = useContext(AuthContext);
-    const navigate = useNavigate();
-    const location = useLocation();
 
     const [tiposClientes,setTiposClientes] = useState([])
 
     const [allEstudios,setAllEstudios] =useState([])
 
     const [tipoClienteSeleccionado] = useState('1')
-    const [preyecto,setProyecto] = useState(location.state?.idProyecto || '')
-    const [cliente,setCliente] = useState(location.state?.idCliente || '')
+    const [preyecto,setProyecto] = useState( '')
+    const [cliente,setCliente] = useState('')
     const animatedComponents = makeAnimated;
+    const [filaSeleccionada, setFilaSeleccionada] = useState(null);
+    const seleccionarFila = (id) => {
+        setFilaSeleccionada(filaSeleccionada === id ? null : id);
+    };
 
     const [opcionesProyectos,setOpcionesProyectos] = useState([])
     const renderOpcionesProyectos  = (opciones) =>{
@@ -39,6 +44,20 @@ export default function SeccionEstudios(){
             opcioneslista.push(option)
         })
         setOpcionesProyectos(opcioneslista)
+    }
+    
+    const [opcionesEstados,setOpcionesEstados] = useState([])
+    const renderOpcionesEstados  = (opciones) =>{
+        var opcioneslista = []
+        opcioneslista.push({ value: '', label:'Todos' })
+        
+        opciones.forEach((h)=>{
+            var option = { value: '', label:'' }
+            option.label = h.nombre
+            option.value = h.id
+            opcioneslista.push(option)
+        })
+        setOpcionesEstados(opcioneslista)
     }
 
     const [opcionesClientes,setOpcionesClientes] = useState([])
@@ -96,11 +115,10 @@ export default function SeccionEstudios(){
     const isRowSelected = (id) => selectedRows.includes(id);
 
     const [fromData,setFormData] = useState({
-        id_servicio_estado:'1',
-        id_proyecto: location.state?.idProyecto || '',
-        id_cliente: location.state?.idCliente || '',
-        id_orden_servicio: location.state?.idOrdenServicio || '',
-        id_colaborador:'',
+        id_servicio_estado:'',
+        id_proyecto: '',
+        id_cliente: '',
+        id_orden_servicio: '',
     })
     
     const [selectedOption, setSelectedOption] = useState(null);
@@ -117,9 +135,6 @@ export default function SeccionEstudios(){
     const allEstudiosFiltrados = allEstudios.filter(item =>
         item.candidato.toLowerCase().includes(search.toLowerCase())
     );
-    const handelNavegate = (id) => {
-        navigate(`/estudio/${id}`);
-    }
 
     const getProyectos = () => {
         axios.get(`${APIURL}/proyectos?activo=1&id_tipo_cliente=${tipoClienteSeleccionado}`,config).then((resp)=>{
@@ -128,6 +143,15 @@ export default function SeccionEstudios(){
             console.log(resp);
         })
     }
+    
+    const getFiltroEstadosEstudios= () => {
+        axios.get(`${APIURL}/estudios/enproceso/estados`,config).then((resp)=>{
+            renderOpcionesEstados(resp.data);
+        }).catch((resp)=>{
+            console.log(resp);
+        })
+    }
+
     const getProyectoClientes = () => {
         if(preyecto === ''){
             return true;
@@ -151,32 +175,19 @@ export default function SeccionEstudios(){
             console.log(resp);
         })
     }
-    const getListaColaboradores = () =>{
-        axios.get(APIURL+'/estudio/colaboradores',config).then((resp)=>{
-            renderOpcionesColaboradores(resp.data)
-        }).catch((resp)=>{
-            if (resp.response.status === 401) {
-                logout()
-            }
-        })
-    }   
-    const getEstudiosSocioeconomicos = () => {
-        /*if(!preyecto){
-            setAllEstudios([]);
-            return true;
-        }*/
-        axios.get(`${APIURL}/estudio/socioeconomico`,{params:fromData,headers:config.headers}).then((resp)=>{
+    const getListaEstudiosEnProceso = () => {
+        axios.get(`${APIURL}/estudios/enproceso`,{params:fromData,headers:config.headers}).then((resp)=>{
             setAllEstudios(resp.data);
         }).catch((resp)=>{
             console.log(resp);
         })
     }
-    const postDataEditarColaborador = () =>{
+    const postDataEnviarACalidad = () =>{
         axios.post(`${APIURL}/estudio/colaboradores`,fromAsignarColaborador,config).then((resp)=>{
             console.log(resp.data);
             setSelectedRows([]);
             setSelectedOption(null);
-            getEstudiosSocioeconomicos();
+            getListaEstudiosEnProceso();
         }).catch((resp)=>{
             if (resp.status === 401) {
                 logout()
@@ -187,7 +198,8 @@ export default function SeccionEstudios(){
 
     useEffect(()=> {
         getProyectos();
-        getListaColaboradores();
+        getFiltroEstadosEstudios();
+        getListaEstudiosEnProceso();
     } ,[])
     
     useEffect(() => {getProyectoClientes()} ,[preyecto])
@@ -196,9 +208,9 @@ export default function SeccionEstudios(){
 
     useEffect(() => {
         if(fromData.id_proyecto){
-            getEstudiosSocioeconomicos();
+            getListaEstudiosEnProceso();
         }else{
-            getEstudiosSocioeconomicos([]);
+            getListaEstudiosEnProceso([]);
         }
     },[fromData.id_proyecto,fromData.id_cliente,fromData.id_orden_servicio,fromData.id_colaborador])
 
@@ -208,28 +220,6 @@ export default function SeccionEstudios(){
             id_servicios_estudio: selectedRows
         })); 
     },[selectedRows])
-
-
-    const avatarColaborador = (colaborador) => {
-        if(!colaborador){
-            return '';
-        }
-        return (<>
-            <div className="d-flex">
-                <div className="align-self-center">
-                    <Avatar name={colaborador.name} size="30" round={true} />
-                </div>
-                <div className="ps-1 align-self-center">
-                    <span>
-                    {colaborador.name}
-                    </span><br/>
-                    <span>
-                    {colaborador.email}
-                    </span>
-                </div>
-            </div>
-        </>);
-    }
     
     const contactoPrincipalDireccion = (colaborador) => {
         if(!colaborador){
@@ -262,7 +252,8 @@ export default function SeccionEstudios(){
 
     const renderFilasTablaEstudiosSocioeconomicos = () => {
         return allEstudiosFiltrados.map((estudio, index) => (
-            <tr key={'tr-cliente-'+index}>
+            <React.Fragment key={'tr-cliente-'+index}>
+            <tr onClick={() => seleccionarFila(estudio.id)} style={{ cursor: "pointer" }}>
                 <td className="align-middle">
                         <input
                             type="checkbox"
@@ -293,15 +284,30 @@ export default function SeccionEstudios(){
                     {estudio.orden_servicio.descripcion}
                 </td>
                 <td>
-                    {estudio?.colaborador && avatarColaborador(estudio.colaborador)}
-                </td>
-                <td>
                     <div className="d-flex flex-row-reverse bd-highlight">
                         
                         <Link className="btn btn-primary btn-sm" to={`/estudio/${estudio.id}`}>Ver</Link>
                     </div>
                 </td>
             </tr>
+            {filaSeleccionada === estudio.id && (
+                <tr>
+                <td colSpan="8"  className={`subseccion ${filaSeleccionada === estudio.id ? 'expandida' : ''}`}>
+                    <div style={{ backgroundColor: "#f9f9f9", padding: "10px" }}>
+                    <strong>Detalles:</strong> {JSON.stringify(estudio)}
+                    <div style={{ marginTop: "10px" }}>
+                        <strong>Subsección:</strong>
+                        <ul>
+                        {[{nombre:'uno'},{nombre:'dos'},{nombre:'tres'}].map((subItem, index) => (
+                            <li key={index}>{subItem.nombre}</li>
+                        ))}
+                        </ul>
+                    </div>
+                    </div>
+                </td>
+                </tr>
+            )}
+        </React.Fragment>
         ));
     }
 
@@ -379,21 +385,21 @@ export default function SeccionEstudios(){
                 </div>
                 <div className="col-md-3">
                     <label 
-                        htmlFor="id_colaborador" 
+                        htmlFor="id_servicio_estado" 
                         className="form-label"
                         style={{marginBottom: "1px",color: "darkolivegreen"}}
-                    >Colaborador:
+                    >Estados:
                     </label>
                     <Select 
-                        name="id_colaborador" 
-                        id="id_colaborador" 
+                        name="id_servicio_estado" 
+                        id="id_servicio_estado" 
                         components={animatedComponents}
-                        options={ opcionesColaboradores }
+                        options={ opcionesEstados }
                         onChange={
                             (e)=> {
                                 setFormData(prevState => ({
                                     ...prevState,
-                                    id_colaborador: e.value
+                                    id_servicio_estado: e.value
                                 })); 
                             }
                         }>
@@ -436,7 +442,7 @@ export default function SeccionEstudios(){
                         </div>
                     </div> 
                     <div className="col-2">
-                        <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataEditarColaborador()}} >Guardar</Button>
+                        <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataEnviarACalidad()}} >Enviar a calidad</Button>
                     </div>
                 </>
                 )}
@@ -446,7 +452,18 @@ export default function SeccionEstudios(){
         </>)
     }
 
-    return(<section>
+    const mostrarSeccion = () => {
+        if(roleSession === 'Colaboradores'){
+            return true
+        }else if(roleSession === 'Calidad'){
+            return true
+        }else if(roleSession === 'Administrador'){
+            return true
+        }
+        return false
+    }
+
+    return (mostrarSeccion() && (<section>
         <div className="container mt-3">
             <div className="d-flex justify-content-between mb-3">
                 <div className="">
@@ -474,7 +491,6 @@ export default function SeccionEstudios(){
                             <th scope="col">Proyecto</th>
                             <th scope="col">Cliente</th>
                             <th scope="col">Orden de servicio</th>
-                            <th scope="col">Colaborador</th>
                             <th scope="col">Opciones</th>
                         </tr>
                     </thead>
@@ -484,13 +500,5 @@ export default function SeccionEstudios(){
                 </table>
             </div>
        </div> 
-    </section>)
-
-    return (<section>
-        <div>
-            <h4>
-                Estudios Asignados:
-            </h4>
-        </div>
-    </section>)
+    </section>));
 }

@@ -173,7 +173,20 @@ export default function Estudios(){
         })
     }
     const postDataEditarColaborador = () =>{
-        axios.post(`${APIURL}/estudio/colaboradores`,fromAsignarColaborador,config).then((resp)=>{
+        axios.post(`${APIURL}/estudio/preasignacion`,fromAsignarColaborador,config).then((resp)=>{
+            console.log(resp.data);
+            setSelectedRows([]);
+            setSelectedOption(null);
+            getEstudiosSocioeconomicos();
+        }).catch((resp)=>{
+            if (resp.status === 401) {
+                logout()
+            }
+        })
+        
+    }
+    const postDataAsignarColaboradores = () =>{
+        axios.post(`${APIURL}/estudio/asignar`,fromAsignarColaborador,config).then((resp)=>{
             console.log(resp.data);
             setSelectedRows([]);
             setSelectedOption(null);
@@ -439,6 +452,11 @@ export default function Estudios(){
                     <div className="col-2">
                         <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataEditarColaborador()}} >Guardar</Button>
                     </div>
+                    
+                    <div className="col-2">
+                        <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataAsignarColaboradores()}} >Pasar a asignado</Button>
+                    </div>
+                    
                 </>
                 )}
             </div>
