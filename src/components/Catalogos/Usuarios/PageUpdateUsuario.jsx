@@ -4,12 +4,25 @@ import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PathConstants from "../../../routes/pathsConstants";
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 export default function PageUpdateUsuario() {
     const { id } = useParams();
     const { logout } = useContext(AuthContext);
     const [esExterno, setEsExterno] = useState(false);
     const navigate = useNavigate()
+
+    const [direcciones,direccionesSet] = useState([])
+    const [placeId,placeIdSet] = useState('')
+    const [direccionUser, setDireccionUser] = useState('')
+
+    const [latUser, setLatUser] = useState('')
+    const [lonUser, setLonUser] = useState('')
 
 
     const [errors, setErrors] = useState({});
@@ -24,6 +37,8 @@ export default function PageUpdateUsuario() {
     const [listInterno, setListInterno] = useState([]);
     const [ btnDisable, setBtnDisable ] = useState(true)
     const [ cuentaConUbicacion, setCuentaConUbicacion ] = useState(false)
+    const [colaboradores,setColaboradores] = useState([])
+
 
     const [ dataUpdateUsuario, setDataUpdateUsuario ] = useState({
         id: 0,
@@ -35,7 +50,8 @@ export default function PageUpdateUsuario() {
         id_cliente: "0",
         externo: false,
         latitud: '',
-        longitud: ''
+        longitud: '',
+        direccion: ''
     })
 
 
@@ -47,6 +63,20 @@ export default function PageUpdateUsuario() {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+
+    //Map Icon
+    const customIcon = L.icon({
+        iconUrl: '/public/img/ping-map.png',
+        iconSize: [38, 95], // size of the icon
+        iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+        popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+      });
+    let DefaultIcon = L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow
+    });
+    
+    L.Marker.prototype.options.icon = DefaultIcon;
 
     const getPerfilesList = async () => {
         try {
@@ -152,15 +182,16 @@ export default function PageUpdateUsuario() {
     const validateDataFormBtn = (obj) => {
         for (let key in obj) {
             // Ignora la validación de 'id_cliente' si 'isExterno' es false
-        if ((key === "longitud" && !esExterno) || (key === "latitud" && !esExterno) ||
-            (key === "longitud" && esExterno) || (key === "latitud" && esExterno) || (key === "id_cliente" && !esExterno) || (obj[key] !== "" && obj[key] !== "0")) {
-            continue; // Continúa con la siguiente iteración del bucle
-        }
-        
-        // Verifica si alguna propiedad del objeto tiene un valor "" o "0"
-        if (obj[key] === "" || obj[key] === "0") {
-            return false; // El objeto es inválido
-        }
+            if ((key === "longitud" && !esExterno) || (key === "latitud" && !esExterno) ||
+                (key === "longitud" && esExterno) || (key === "latitud" && esExterno) || 
+                (key === "id_cliente" && !esExterno) || key === 'direccion' /* || (obj[key] !== "" && obj[key] !== "0") */) {
+                continue; // Continúa con la siguiente iteración del bucle
+            }
+            
+            // Verifica si alguna propiedad del objeto tiene un valor "" o "0"
+            if (obj[key] === "" || obj[key] === "0") {
+                return false; // El objeto es inválido
+            }
         }
         return true; // El objeto es válido
     }
@@ -193,6 +224,46 @@ export default function PageUpdateUsuario() {
         } else {
             return false;
         }
+    }
+
+    const changeDireccion = (e)=>{
+        var dir = e.target.value
+        setDireccionUser(dir)
+    }
+
+    const seleccionarUbicacion = (direccion) => {
+        placeIdSet(direccion.place_id);
+        setLatUser(direccion.lat)
+        setLonUser(direccion.lon)
+        setDataUpdateUsuario(prevState => ({
+            ...prevState,
+            latitud: direccion.lat,
+            longitud: direccion.lon
+        }));
+    }
+
+    const seccionUbicaciones = () => {
+        {JSON.stringify(direcciones)}
+        return (
+          <div>
+            {Array.isArray(direcciones) && direcciones.slice(0, 5).map((direccion, index) => (
+              <div 
+                key={'asu-' + index} 
+                className="row rounded border mt-1 p-1" 
+                style={{ backgroundColor: (direccion.place_id === placeId) ? '#47E58A' : '' , cursor:'pointer' }}
+                onClick={() => seleccionarUbicacion(direccion)}
+              >
+                <div className="col-1">
+                    <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                </div>
+                <div className="col-10">
+                  <div>{direccion.display_name}</div>
+                  <div style={{fontSize:'.8em'}}>{direccion.lat}, {direccion.lon}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
     }
     
     const validateForm = (dataForm) => {
@@ -309,9 +380,10 @@ export default function PageUpdateUsuario() {
             name: dataUpdateUsuario.name,
             email: dataUpdateUsuario.email,
             id_cliente: dataUpdateUsuario.id_cliente,
-            latitud: dataUpdateUsuario.latitud,
+            latitud: latUser,
             externo: esExterno ? 1 : 0,
-            longitud: dataUpdateUsuario.longitud
+            longitud: lonUser,
+            direccion: direccionUser
         }
 
         console.log(dataUpdate);
@@ -343,9 +415,12 @@ export default function PageUpdateUsuario() {
             console.log(resp);
             setDataUpdateUsuario(resp.data)
             var data = resp.data
-            console.log(data.externo === 1);
+            console.log(data.direccion);
             
             setEsExterno(data.externo === 1)
+            setDireccionUser(data.direccion !== null ? data.direccion : '')
+            setLatUser(data.latitud !== null ? data.latitud : '')
+            setLonUser(data.longitud !== null ? data.longitud :     '')
             setCuentaConUbicacion( data.latitud !== '' || data.longitud !== '' )
             if (errorsArray.length === 0 && validateDataFormBtn(resp.data)) {
                 setBtnDisable(false)
@@ -357,10 +432,46 @@ export default function PageUpdateUsuario() {
         })
     }
 
+    const cricleColaboradores = () => {
+        console.log(colaboradores);
+        const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
+        console.log(colaboradoresFiltro);
+        return <>{colaboradoresFiltro.map((colaborador,index) => 
+            (<Circle key={'cum-'+index} center={[colaborador.latitud, colaborador.longitud]} radius="200" pathOptions={{ color: 'blue' }}>
+                <Popup>
+                {colaborador.name}
+                </Popup>
+            </Circle>)
+            )} </>
+    }
+
+    const getDireccionGSP = () => {
+        console.log(direccionUser);
+        
+        /* if(direccionUser.length<5){
+            direccionesSet()
+        } */
+        axios.get(`https://nominatim.openstreetmap.org/search?q=${direccionUser}&format=json&addressdetails=1`,config).then((resp)=>{
+            direccionesSet(resp.data);
+        }).catch((resp)=>{
+            console.log(resp);
+        })
+    }
+
+
     /* useEffect(() => {
         getPerfilesList();
         getAllClientes();
     }, [APIURL]); */
+
+    useEffect(()=>{
+        if (direccionUser.length >= 5) {
+            getDireccionGSP();
+            /* setLatUser(direccionUser.lat)
+            setLonUser(direccionUser.lon) */
+        }
+        
+    },[direccionUser])
 
     useEffect(()=>{
         console.log(errorsArray);
@@ -423,7 +534,7 @@ export default function PageUpdateUsuario() {
                         </select>
                         {contieneError(2) && <div className="text-danger fw-medium">{ getErrorMsg(2) }</div>}
                     </div>
-                    <div className="col-5 mb-3">
+                    <div className="col-12 col-sm-8 col-md-5 mb-3">
                         <label htmlFor="inputName" className="form-label">Nombre:</label>
                         <input type="text" className="form-control mb-2" id="inputName" name="name"
                                 placeholder="Nombre:"
@@ -432,7 +543,7 @@ export default function PageUpdateUsuario() {
                         {contieneError(3) && <div className="text-danger fw-medium">{ getErrorMsg(3) }</div>}
                     </div>
 
-                    <div className="col-5 mb-3">
+                    <div className="col-12 col-sm-8 col-md-5 mb-3">
                         <label htmlFor="inputEmail" className="form-label">Email</label>
                         <input type="text" className="form-control" id="email" name="email"
                                 placeholder="name@example.com"
@@ -452,24 +563,48 @@ export default function PageUpdateUsuario() {
                         </div>
                         {   cuentaConUbicacion &&
                             <div className="row">
+                                <div className="col-sm-10 col-md-5">
+                                    <label htmlFor="direccion" className="form-label">
+                                        Direccion:
+                                    </label>
+                                    <input type="text" value={direccionUser} className="form-control" id="direccion" name="direccion" onChange={(e)=> {changeDireccion(e)}} placeholder="Dirección..."/>
+                                </div>
                                 <div className="col-5">
                                     <label htmlFor="inputLong" className="form-label">Longitud:</label>
                                     <input type="text" className="form-control mb-2" id="inputLong" name="longitud"
-                                            placeholder="Longitud:" value={ dataUpdateUsuario.longitud }
+                                            placeholder="Longitud:" value={lonUser}
                                             onChange={handleInputChange}/>
                                 </div>
                                 <div className="col-5">
                                     <label htmlFor="inputLat" className="form-label">Latitud:</label>
                                     <input type="text" className="form-control mb-2" id="inputLat" name="latitud"
-                                            placeholder="Latitud:" value={ dataUpdateUsuario.latitud }
+                                            placeholder="Latitud:" value={latUser}
                                             onChange={handleInputChange}/>
+                                </div>
+                                <div className="col-12">
+                                    {seccionUbicaciones()}
+                                        <MapContainer center={[latUser, lonUser]} zoom={13} style={{ height: "50vh", width: "100%" }}>
+                                            <TileLayer
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                                icon={customIcon}
+                                            />
+                                            <Marker position={[latUser, lonUser]}>
+                                                <Popup>
+                                                ¡Hola! Este es un cuadro de texto en un popup.
+                                                </Popup>
+                                            </Marker>
+                                            {cricleColaboradores()}
+                                        </MapContainer>                                
+                                
+
                                 </div>
                             </div>
                         }
                         
                     </div>
                 </div>
-            <div className="d-flex">
+            <div className="d-flex mb-3">
                 <Link className="btn btn-secondary mx-2" to={PathConstants.USUARIOS} variant="secondary" >
                     Cancelar
                 </Link>

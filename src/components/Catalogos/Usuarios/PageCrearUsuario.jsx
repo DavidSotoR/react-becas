@@ -4,7 +4,15 @@ import ControllerUsuarios from "./ControllersUsuarios";
 import { Button, Form, OverlayTrigger, Popover } from "react-bootstrap";
 import axios from "axios";
 import PathConstants from "../../../routes/pathsConstants";
+
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+
 import { Link, useNavigate } from "react-router-dom";
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
 
 export default function PageCrearUsuario () {
     const navigate = useNavigate()
@@ -16,6 +24,15 @@ export default function PageCrearUsuario () {
         }
     }
     const [esExterno, setEsExterno] = useState(false);
+    const [direcciones,direccionesSet] = useState([])
+    const [placeId,placeIdSet] = useState('')
+    const [direccionUser, setDireccionUser] = useState('')
+
+    const [latUser, setLatUser] = useState('')
+    const [lonUser, setLonUser] = useState('')
+
+    const [colaboradores,setColaboradores] = useState([])
+
     const [listExterno, setListExterno] = useState([]);
     const [listInterno, setListInterno] = useState([]);
     const [ inputChanged, setInputChanged ] = useState('')
@@ -33,9 +50,24 @@ export default function PageCrearUsuario () {
         password_confirmation:"",
         id_perfil: "0",
         id_cliente: "0",
+        direccion: "",
         latitud: '',
         longitud: ''
     })
+
+    //Map Icon
+    const customIcon = L.icon({
+        iconUrl: '/public/img/ping-map.png',
+        iconSize: [38, 95], // size of the icon
+        iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+        popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+      });
+    let DefaultIcon = L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow
+    });
+    
+    L.Marker.prototype.options.icon = DefaultIcon;
     
 
     const popoverContraseña = (
@@ -73,6 +105,17 @@ export default function PageCrearUsuario () {
             setListaPerfiles([])
             console.error("Error fetching perfiles:", error);
         }
+    }
+
+    const getDireccionGSP = () => {
+        if(dataPostUsuario.direccion.length<5){
+            direccionesSet()
+        }
+        axios.get(`https://nominatim.openstreetmap.org/search?q=${direccionUser}&format=json&addressdetails=1`,config).then((resp)=>{
+            direccionesSet(resp.data);
+        }).catch((resp)=>{
+            console.log(resp);
+        })
     }
 
     const getAllClientes = async () => {
@@ -197,7 +240,8 @@ export default function PageCrearUsuario () {
         for (let key in obj) {
             // Ignora la validación de 'id_cliente' si 'isExterno' es false
             if ((key === "longitud" && !esExterno) || (key === "latitud" && !esExterno) ||
-                (key === "longitud" && esExterno) || (key === "latitud" && esExterno) || (key === "id_cliente" && !esExterno) || (obj[key] !== "" && obj[key] !== "0")) {
+                (key === "longitud" && esExterno) || (key === "latitud" && esExterno) || 
+                (key === "id_cliente" && !esExterno) || key === 'direccion' /* || (obj[key] !== "" && obj[key] !== "0") */) {
                 continue; // Continúa con la siguiente iteración del bucle
             }
             
@@ -319,6 +363,11 @@ export default function PageCrearUsuario () {
         setEsExterno(!esExterno)
     }
 
+    const changeDireccion = (e)=>{
+        var dir = e.target.value
+        setDireccionUser(dir)
+    }
+
     const changeCuentaUbicacion = ()=> {
         setCuentaConUbicacion(!cuentaConUbicacion)
     }
@@ -334,6 +383,55 @@ export default function PageCrearUsuario () {
     
     };
 
+    const seccionUbicaciones = () => {
+        {JSON.stringify(direcciones)}
+        return (
+          <div>
+            {Array.isArray(direcciones) && direcciones.slice(0, 5).map((direccion, index) => (
+              <div 
+                key={'asu-' + index} 
+                className="row rounded border mt-1 p-1" 
+                style={{ backgroundColor: (direccion.place_id === placeId) ? '#47E58A' : '' , cursor:'pointer' }}
+                onClick={() => seleccionarUbicacion(direccion)}
+              >
+                <div className="col-1">
+                    <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                </div>
+                <div className="col-10">
+                  <div>{direccion.display_name}</div>
+                  <div style={{fontSize:'.8em'}}>{direccion.lat}, {direccion.lon}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+    }
+
+    const seleccionarUbicacion = (direccion) => {
+        placeIdSet(direccion.place_id);
+        setLatUser(direccion.lat)
+        setLonUser(direccion.lon)
+        setDataPostUsuario(prevState => ({
+            ...prevState,
+            latitud: direccion.lat,
+            longitud: direccion.lon
+        }));
+    }
+
+    const cricleColaboradores = () => {
+        //console.log(colaboradores);
+        const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
+        //console.log(colaboradoresFiltro);
+        return <>{colaboradoresFiltro.map((colaborador,index) => 
+            (<Circle key={'cum-'+index} center={[colaborador.latitud, colaborador.longitud]} radius="200" pathOptions={{ color: 'blue' }}>
+                <Popup>
+                {colaborador.name}
+                </Popup>
+            </Circle>)
+            )} </>
+    }
+
+    
     const postCrearUsuario = async () => {
         var data = {
             name: dataPostUsuario.name,
@@ -343,8 +441,9 @@ export default function PageCrearUsuario () {
             id_cliente: esExterno ? dataPostUsuario.id_cliente : null,
             id_perfil: parseInt(dataPostUsuario.id_perfil,10),
             externo: esExterno ? 1 : 0,
-            latitud: dataPostUsuario.latitud,
-            longitud: dataPostUsuario.longitud
+            latitud: latUser,
+            longitud: lonUser,
+            direccion: direccionUser
         }
 
         try {
@@ -360,13 +459,22 @@ export default function PageCrearUsuario () {
         }   
     }
 
+    useEffect(()=>{
+        if (direccionUser.length >= 3) {
+            getDireccionGSP();
+            /* setLatUser(direccionUser.lat)
+            setLonUser(direccionUser.lon) */
+        }
+        
+    },[direccionUser])
+
     useEffect(() => {
             getPerfilesList();
             getAllClientes();   
     }, []);
     
     useEffect(()=>{
-        console.log(errorsArray);
+        console.log(validateDataFormBtn(dataPostUsuario));
         if (errorsArray.length === 0 && validateDataFormBtn(dataPostUsuario) ) {
             setBtnDisable(false)
         } else {
@@ -436,7 +544,7 @@ export default function PageCrearUsuario () {
                     </div>
 
                     <div className="col-12 row">
-                        <div className="col-5 mb-3">
+                        <div className="col-12 col-md-5 col-sm-7 mb-3">
                                 <div className="row d-flex justify-content-start align-items-center m-0">
                                     <div className="col m-0 ps-0">
                                         <label htmlFor="inputPassword" className="form-label">Password</label>
@@ -456,7 +564,7 @@ export default function PageCrearUsuario () {
                                 {contieneError(5) && <div className="text-danger fw-medium">{getErrorMsg(5)}</div>}
                                 {contieneError(0) && <div className="text-danger fw-medium">{ getErrorMsg(0) }</div>}
                         </div>
-                        <div className="col-5 mb-3">
+                        <div className="col-12 col-md-5 col-sm-7 mb-3">
                             <div className="row d-flex justify-content-start align-items-center m-0">
                                 <div className="col m-0 ps-0">
                                     <label htmlFor="inputPasswordConfirmar" className="form-label">Confirmar Password</label>
@@ -487,19 +595,45 @@ export default function PageCrearUsuario () {
                             </Form.Check>
                             
                         </div>
+                        
                         { cuentaConUbicacion &&
-                            <div className="row">
+                                <div className="row">
+                                    
+                                <div className="col-sm-10 col-md-5">
+                                    <label htmlFor="direccion" className="form-label">
+                                        Direccion:
+                                    </label>
+                                    <input type="text" value={direccionUser} className="form-control" id="direccion" name="direccion" onChange={(e)=> {changeDireccion(e)}} placeholder="Dirección..."/>
+                                </div>
                                 <div className="col-5">
                                     <label htmlFor="inputLong" className="form-label">Longitud:</label>
                                     <input type="text" className="form-control mb-2" id="inputLong" name="longitud"
-                                            placeholder="Longitud:"
+                                            placeholder="Longitud:" value={lonUser}
                                             onChange={handleInputChange}/>
                                 </div>
                                 <div className="col-5">
                                     <label htmlFor="inputLat" className="form-label">Latitud:</label>
                                     <input type="text" className="form-control mb-2" id="inputLat" name="latitud"
-                                            placeholder="Latitud:"
+                                            placeholder="Latitud:" value={latUser}
                                             onChange={handleInputChange}/>
+                                </div>
+                                <div className="col-12">
+                                    {seccionUbicaciones()}
+                                        <MapContainer center={[dataPostUsuario.latitud, dataPostUsuario.longitud]} zoom={13} style={{ height: "50vh", width: "100%" }}>
+                                            <TileLayer
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                                icon={customIcon}
+                                            />
+                                            <Marker position={[dataPostUsuario.latitud, dataPostUsuario.longitud]}>
+                                                <Popup>
+                                                ¡Hola! Este es un cuadro de texto en un popup.
+                                                </Popup>
+                                            </Marker>
+                                            {cricleColaboradores()}
+                                        </MapContainer>                                
+                                
+
                                 </div>
                             </div>
                         
@@ -509,7 +643,7 @@ export default function PageCrearUsuario () {
                 </div>
                 
 
-                <div className="d-flex">
+                <div className="d-flex mb-3">
                     {/* <Button variant="secondary">
                         Cancelar
                     </Button> */}
