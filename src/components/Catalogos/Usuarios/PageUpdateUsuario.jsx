@@ -448,9 +448,9 @@ export default function PageUpdateUsuario() {
     const getDireccionGSP = () => {
         console.log(direccionUser);
         
-        /* if(direccionUser.length<5){
+        if(direccionUser.length<5){
             direccionesSet()
-        } */
+        }
         axios.get(`https://nominatim.openstreetmap.org/search?q=${direccionUser}&format=json&addressdetails=1`,config).then((resp)=>{
             direccionesSet(resp.data);
         }).catch((resp)=>{
@@ -458,17 +458,10 @@ export default function PageUpdateUsuario() {
         })
     }
 
-
-    /* useEffect(() => {
-        getPerfilesList();
-        getAllClientes();
-    }, [APIURL]); */
-
     useEffect(()=>{
         if (direccionUser.length >= 5) {
             getDireccionGSP();
-            /* setLatUser(direccionUser.lat)
-            setLonUser(direccionUser.lon) */
+
         }
         
     },[direccionUser])
@@ -491,9 +484,6 @@ export default function PageUpdateUsuario() {
         getPerfilesList();
         getAllClientes();
         getUsuarioID()
-        /* if (!dataUpdateUsuario) {
-            setDataUpdateUsuario(user)
-        } */
     },[])
     return(
         <div className="container">

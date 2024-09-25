@@ -78,8 +78,9 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 1)
         formData.append('id_servicio_estudio', searchParams.get('idse'))
-        formData.append('file', file)
-
+        for (let i = 0; i < file.length; i++) {
+            formData.append('files[]', file[i]); // Importante: 'files[]' para múltiples archivos
+        }
 
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
             console.log(resp);
@@ -106,9 +107,12 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 2)
         formData.append('id_servicio_estudio', searchParams.get('idse'))
-        formData.append('file', fileD)
+        for (let i = 0; i < fileD.length; i++) {
+            formData.append('files[]', fileD[i]); // Importante: 'files[]' para múltiples archivos
+        }
 
-
+        console.log(formData);
+        
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
             console.log(resp);
             setSuccessDesempleo(true)
@@ -134,7 +138,9 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 3)
         formData.append('id_servicio_estudio', searchParams.get('idse'))
-        formData.append('file', fileCH)
+        for (let i = 0; i < fileCH.length; i++) {
+            formData.append('files[]', fileCH[i]); // Importante: 'files[]' para múltiples archivos
+        }
 
 
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
@@ -162,7 +168,9 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 4)
         formData.append('id_servicio_estudio', searchParams.get('idse'))
-        formData.append('file', fileAutos)
+        for (let i = 0; i < fileAutos.length; i++) {
+            formData.append('files[]', fileAutos[i]); // Importante: 'files[]' para múltiples archivos
+        }
 
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
             console.log(resp);
@@ -188,7 +196,9 @@ function FamiliaSubirArchivos() {
         formData.append('id_familia', id)
         formData.append('id_familias_documentos_tipo', 5)
         formData.append('id_servicio_estudio', searchParams.get('idse'))
-        formData.append('file', fileDomicilio)
+        for (let i = 0; i < fileDomicilio.length; i++) {
+            formData.append('files[]', fileDomicilio[i]); // Importante: 'files[]' para múltiples archivos
+        }
 
 
         axios.post(APIURL+"/familias/documentos",formData,config).then((resp) => {
@@ -209,19 +219,21 @@ function FamiliaSubirArchivos() {
         console.log(name);
         console.log(e);
         if (name === 'ingresos') {
-            setFile(e.target.files[0]);
+            setFile(e.target.files);
         }
         if (name === 'desempleo') {
-            setFileD(e.target.files[0]);
+            console.log(e.target.files);
+            
+            setFileD(e.target.files);
         }
         if (name === 'casahabitacion') {
-            setFileCH(e.target.files[0]);
+            setFileCH(e.target.files);
         }
         if (name === 'autos') {
-            setFileAutos(e.target.files[0]);
+            setFileAutos(e.target.files);
         }
         if (name === 'comprobantes') {
-            setFileDomicilio(e.target.files[0]);
+            setFileDomicilio(e.target.files);
         }
     }
 
@@ -307,6 +319,17 @@ function FamiliaSubirArchivos() {
         
     }
 
+    const renderImagesIngresos = () => {
+        console.log(files1DeFamilia);
+        
+        var arrIMG = files1DeFamilia
+        return [...arrIMG.map((ch)=>{
+                <div className="carousel-item">
+                    <img src={ ch.directorio } className="d-block w-100" alt="..."/>
+                </div>
+        })]
+    }
+
     useEffect(()=>{
         getFilesDeFamilia()
         //getDataEstudioSocioeconomico()
@@ -356,6 +379,21 @@ function FamiliaSubirArchivos() {
                                         { renderFilesDeFamilia(1) }
                                     </ul>
                                 </div>
+                                <div id="carouselExampleFade" className="carousel slide carousel-fade">
+                                    <div class="carousel-inner">
+                                        { renderImagesIngresos() }
+                                    </div>
+                                    
+                                    
+                                    <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                                        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span className="visually-hidden">Previous</span>
+                                    </button>
+                                    <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                                        <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span className="visually-hidden">Next</span>
+                                    </button>
+                                </div>
                             </div>
                         </li>
                         <li className="list-group-item">
@@ -372,7 +410,7 @@ function FamiliaSubirArchivos() {
                             <div className="ms-2 me-auto">
                                 <div className="mb-3">
                                     <label htmlFor="formFileMultipleDesempleo" className="form-label">Cargar archivos Desempleo:</label>
-                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'desempleo') } } accept="application/pdf" type="file" id="formFileMultipleDesempleo" multiple />
+                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'desempleo') } } accept=".pdf, .jpg, .jpeg, .png, .txt, .doc, .docx, .xls, .xlsx" type="file" id="formFileMultipleDesempleo" multiple />
                                     <button className="btn btn-primary mt-2" onClick={ subirArchivosDesempleo }> Subir Archivos </button>
                                 </div>
 
@@ -398,7 +436,7 @@ function FamiliaSubirArchivos() {
                             <div className="ms-2 me-auto">
                                 <div className="mb-3">
                                     <label htmlFor="formFileMultipleCasaHabitacion" className="form-label">Cargar archivos Casa/Habitacion:</label>
-                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'casahabitacion') } } accept="application/pdf" type="file" id="formFileMultipleCasaHabitacion" multiple />
+                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'casahabitacion') } } accept=".pdf, .jpg, .jpeg, .png, .txt, .doc, .docx, .xls, .xlsx" type="file" id="formFileMultipleCasaHabitacion" multiple />
                                     <button className="btn btn-primary mt-2" onClick={subirArchivosCasaHabitacion }> Subir Archivos </button>
                                 </div>
                                 <div className="mb-3">
@@ -423,7 +461,7 @@ function FamiliaSubirArchivos() {
                             <div className="ms-2 me-auto">
                                 <div className="mb-3">
                                     <label htmlFor="formFileMultipleAutos" className="form-label">Cargar archivos Automóviles:</label>
-                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'autos') } } accept="application/pdf" type="file" id="formFileMultipleAutos" multiple />
+                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'autos') } } accept=".pdf, .jpg, .jpeg, .png, .txt, .doc, .docx, .xls, .xlsx" type="file" id="formFileMultipleAutos" multiple />
                                     <button className="btn btn-primary mt-2" onClick={ subirArchivosAutomoviles }> Subir Archivos </button>
                                 </div>
                                 <div className="mb-3">
@@ -446,7 +484,7 @@ function FamiliaSubirArchivos() {
                             <div className="ms-2 me-auto">
                                 <div className="mb-3">
                                     <label htmlFor="formFileMultipleComprobantes" className="form-label">Cargar archivos Comprobantes:</label>
-                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'comprobantes') } } accept="application/pdf" type="file" id="formFileMultipleComprobantes" multiple />
+                                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'comprobantes') } } accept=".pdf, .jpg, .jpeg, .png, .txt, .doc, .docx, .xls, .xlsx" type="file" id="formFileMultipleComprobantes" multiple />
                                     <button className="btn btn-primary mt-2" onClick={ subirArchivosComprobantes }> Subir Archivos </button>
                                 </div>
                                 <div className="mb-3">
