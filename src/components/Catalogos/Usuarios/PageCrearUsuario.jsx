@@ -42,6 +42,8 @@ export default function PageCrearUsuario () {
     const [listaPerfiles, setListaPerfiles] = useState([])
     const [ allClientes, setAllClientes ] = useState([])
     const [ showPassword, setShowPassword ] = useState(false)
+    const [pass1, setPass1] = useState('')
+    const [pass2, setPass2] = useState('')
     const [ cuentaConUbicacion, setCuentaConUbicacion ] = useState(false)
     const [ dataPostUsuario, setDataPostUsuario ] = useState({
         name:"",
@@ -179,7 +181,13 @@ export default function PageCrearUsuario () {
         data.password = newPass
         data.password_confirmation = newPass
 
-        setDataPostUsuario(data)
+        setDataPostUsuario(prevState => ({
+            ...prevState,
+            password: newPass,
+            password_confirmation: newPass
+        }));
+
+        //setDataPostUsuario(data)
         /* validateField('password',newPass)
         validateField('password_confirmation',newPass) */
         console.log(dataPostUsuario);
