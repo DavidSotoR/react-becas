@@ -297,10 +297,10 @@ export default function Estudios(){
                     { contactoPrincipalDireccion(estudio.contacto_principal) }
                 </td>
                 <td>
-                    {estudio.proyecto.nombre}
+                    {estudio.proyecto?.nombre && estudio.proyecto.nombre}
                 </td>
                 <td>
-                    {estudio.cliente.nombre}
+                    {estudio.cliente?.nombre && estudio.cliente.nombre}
                 </td>
                 <td>
                     {'#'+estudio.orden_servicio.id}<br/>
