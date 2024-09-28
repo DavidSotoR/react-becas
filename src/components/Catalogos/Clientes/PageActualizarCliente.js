@@ -38,6 +38,7 @@ function PageActualizarCliente() {
         rso: '',
         nombre_uno: '',
         telefono_uno: '',
+        tipo_persona: '',
         nombre_dos: '',
         telefono_dos: '',
         telefono_mobil: '',
@@ -131,9 +132,10 @@ function PageActualizarCliente() {
         actualData.pais =  data.pais ?? ''
         actualData.rason_social =  data.rason_social ?? ''
         actualData.rfc = data.rfc ?? ''
+        actualData.tipo_persona = data.tipo_persona ?? ''
         setFormData(actualData)
         setFormDataOld(actualData)
-        setTipoPersona(actualData.rfc.length === 13 ? 'moral' : actualData.rfc.length === 12 ? 'fisica' : "")
+        setTipoPersona(actualData.tipo_persona)
         if (actualData.id_clientes_hermanos && actualData.id_clientes_hermanos !== '0' && actualData.id_clientes_hermanos !== '') {
             setEsColegioComun(true)
         }
@@ -183,6 +185,7 @@ function PageActualizarCliente() {
         if (form.id_tipo_cliente === '1' || form.id_tipo_cliente === 1) {
             return Object.entries(form).every(([key, valor]) => {
                 if ((key === 'id_clientes_hermanos' || key === "rso" ||
+                    key === 'tipo_persona' ||
                     key === "nombre_uno" ||
                     key === "telefono_uno" ||
                     key === "nombre_dos" ||
@@ -204,6 +207,7 @@ function PageActualizarCliente() {
         } else if (formData.id_tipo_cliente === '2' || form.id_tipo_cliente === 2) {
             return Object.entries(form).every(([key, valor]) => {
                 if (key === 'id_clientes_hermanos' || key === "rso" ||
+                    key === 'tipo_persona' ||
                     key === "nombre_uno" ||
                     key === "telefono_uno" ||
                     key === "nombre_dos" ||
@@ -650,6 +654,7 @@ function PageActualizarCliente() {
             "id_catalogo_encuesta": parseInt(formData.id_catalogo_encuesta, 10) ,
             "rso": formData.rso,
             "rfc": formData.rfc,
+            'tipo_persona': tipoPersona,
             "nombre_uno": formData.nombre_uno,
             "telefono_uno": formData.telefono_uno,
             "nombre_dos": formData.nombre_dos,
@@ -668,8 +673,6 @@ function PageActualizarCliente() {
         }
 
         console.log(dataPOST)
-        /* console.log(dataPOST);
-        navigate("/clientes") */
         axios.put(APIURL+'/clientes',dataPOST,config).then((resp)=>{
             console.log(resp);
             //window.location.replace('http://localhost:3000/clientes')
@@ -688,11 +691,8 @@ function PageActualizarCliente() {
     const getDataCliente = async () => {
         try {
             const resp = await axios.get(APIURL+'/clientes/'+ID, config).then(res => res)
-            /* setValueCliente(resp.data)
-            setFormData(resp.data)
-            setFormDataOld(resp.data) */
             setValoresDeCliente(resp.data)
-            //console.log(resp.data);
+            setTipoPersona(resp.data.tipo_persona)
             
         } catch (error) {
             console.error(error);
@@ -722,7 +722,9 @@ function PageActualizarCliente() {
 
     useEffect(()=>{
         validateFields(formData);
-        
+        if (formData && formData.tipo_persona) {
+            setTipoPersona(formData.tipo_persona);
+        }
     }, [formData])
 
     useEffect(()=>{
@@ -825,6 +827,7 @@ function PageActualizarCliente() {
                 <div className="col-12 pt-3">
                     <p className="fw-bold pb-1 mb-1"> Seleccione el tipo de persona fiscal al que pertenece: </p>
                     <div className="d-flex pb-3">
+                        <p>{ tipoPersona }</p>
                         <Form.Check checked={ tipoPersona === "fisica" } className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
                         <Form.Check checked={ tipoPersona === "moral" } type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
                     </div>
