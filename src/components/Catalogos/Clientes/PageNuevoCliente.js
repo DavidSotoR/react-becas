@@ -555,6 +555,7 @@ function PageNuevoCliente() {
             "descripcion": formData.descripcion,
             "notificaciones_email": formData.notificaciones_email,
             "id_clientes_hermanos": formData.id_tipo_cliente === '1' ? parseInt(formData.id_clientes_hermanos,10) : null,
+            "rfc": formData.rfc,
             "rso": formData.rso,
             "nombre_uno": formData.nombre_uno,
             "telefono_uno": formData.telefono_uno,

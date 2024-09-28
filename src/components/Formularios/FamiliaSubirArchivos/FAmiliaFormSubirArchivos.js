@@ -8,6 +8,7 @@ function FamiliaSubirArchivos() {
     const [searchParams] = useSearchParams();
 
     const APIURL = process.env.REACT_APP_API_URL;
+    const urlIMG = 'http://127.0.0.1:8000/storage/'
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -72,7 +73,7 @@ function FamiliaSubirArchivos() {
         var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!file) {
-            alert("Please select a file first.");
+            alert("Seleccione un archivo antes de subir.");
             return;
         }
         formData.append('id_familia', id)
@@ -100,7 +101,7 @@ function FamiliaSubirArchivos() {
         var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!fileD) {
-            alert("Please select a file first.");
+            alert("Seleccione un archivo antes de subir.");
             return;
         }
 
@@ -131,7 +132,7 @@ function FamiliaSubirArchivos() {
         var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!fileCH) {
-            alert("Please select a file first.");
+            alert("Seleccione un archivo antes de subir.");
             return;
         }
 
@@ -161,7 +162,7 @@ function FamiliaSubirArchivos() {
         var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!fileAutos) {
-            alert("Please select a file first.");
+            alert("Seleccione un archivo antes de subir.");
             return;
         }
 
@@ -189,7 +190,7 @@ function FamiliaSubirArchivos() {
         var id = localStorage.getItem('id')
         const formData = new FormData();
         if (!fileDomicilio) {
-            alert("Please select a file first.");
+            alert("Seleccione un archivo antes de subir.");
             return;
         }
 
@@ -275,42 +276,66 @@ function FamiliaSubirArchivos() {
         ))] */
     }
 
-    const renderFilesDeFamilia = (tipo) => {
+    const renderImgDeFamilia = (tipo) => {
         
         switch (tipo) {
             case 1:
-                return [...files1DeFamilia.map((ch) => (
-                    <li > {ch.nombre} </li>
-                ))]
+                return files1DeFamilia
+                .filter(ch => /\.(jpg|jpeg|png)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch, index) => (
+                    <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                        <img src={urlIMG + ch.directorio} className="d-block w-100 h-50 rounded" alt={ch.nombre} />
+                    </div>
+                ));
                 break;
             case 2:
-                return [...files2DeFamilia.map((ch) => (
-                    <li > {ch.nombre} </li>
-                ))]
+                return files2DeFamilia
+                .filter(ch => /\.(jpg|jpeg|png)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch, index) => (
+                    <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                        <img src={urlIMG + ch.directorio} className="d-block w-100 h-50 rounded" alt={ch.nombre} />
+                    </div>
+                ));
                 break;
             
             case 3:
-                return [...files3DeFamilia.map((ch) => (
-                    <li > {ch.nombre} </li>
-                ))]
+                return files3DeFamilia
+                .filter(ch => /\.(jpg|jpeg|png)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch, index) => (
+                    <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                        <img src={urlIMG + ch.directorio} className="d-block w-100 h-50 rounded" alt={ch.nombre} />
+                    </div>
+                ));
                 break;
 
             case 4:
-                return [...files4DeFamilia.map((ch) => (
-                    <li > {ch.nombre} </li>
-                ))]
+                return files4DeFamilia
+                .filter(ch => /\.(jpg|jpeg|png)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch, index) => (
+                    <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                        <img src={urlIMG + ch.directorio} className="d-block w-100 h-50 rounded" alt={ch.nombre} />
+                    </div>
+                ));
                 break;
 
             case 5:
-                return [...files5DeFamilia.map((ch) => (
-                    <li > {ch.nombre} </li>
-                ))]
+                return files5DeFamilia
+                .filter(ch => /\.(jpg|jpeg|png)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch, index) => (
+                    <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                        <img src={urlIMG + ch.directorio} className="d-block w-100 h-50 rounded" alt={ch.nombre} />
+                    </div>
+                ));
                 break;
 
             case 6:
-                return [...files6DeFamilia.map((ch) => (
-                    <li > {ch.nombre} </li>
-                ))]
+                return files6DeFamilia
+                .filter(ch => /\.(jpg|jpeg|png)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch, index) => (
+                    <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                        <img src={urlIMG + ch.directorio} className="d-block w-100 h-50 rounded" alt={ch.nombre} />
+                    </div>
+                ));
                 break;
             default:
                 break;
@@ -319,16 +344,71 @@ function FamiliaSubirArchivos() {
         
     }
 
-    const renderImagesIngresos = () => {
-        console.log(files1DeFamilia);
+    const renderFilesDeFamilia = (tipo) => {
         
-        var arrIMG = files1DeFamilia
-        return [...arrIMG.map((ch)=>{
-                <div className="carousel-item">
-                    <img src={ ch.directorio } className="d-block w-100" alt="..."/>
-                </div>
-        })]
+        switch (tipo) {
+            case 1:
+                return files1DeFamilia
+                .filter(ch => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch) => (
+                    <li > {FileLink(ch.nombre, ch.directorio)} </li>
+                ));
+                break;
+            case 2:
+                return files2DeFamilia
+                .filter(ch => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch) => (
+                    <li > {FileLink(ch.nombre, ch.directorio)} </li>
+                ));
+                break;
+            
+            case 3:
+                return files3DeFamilia
+                .filter(ch => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch) => (
+                    <li > {FileLink(ch.nombre, ch.directorio)} </li>
+                ));
+                break;
+
+            case 4:
+                return files4DeFamilia
+                .filter(ch => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch) => (
+                    <li > {FileLink(ch.nombre, ch.directorio)} </li>
+                ));
+                break;
+
+            case 5:
+                return files5DeFamilia
+                .filter(ch => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch) => (
+                    <li > {FileLink(ch.nombre, ch.directorio)} </li>
+                ));
+                break;
+
+            case 6:
+                return files6DeFamilia
+                .filter(ch => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .map((ch) => (
+                    <li > {FileLink(ch.nombre, ch.directorio)} </li>
+                ));
+                break;
+            default:
+                break;
+        }
+
+        
     }
+
+    const FileLink = (nombre ,dir) => {
+        const fileUrl = urlIMG + dir; // URL del archivo PDF o DOCX
+    
+        return (
+            <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                Abrir archivo - { nombre }
+            </a>
+        );
+    };
 
     useEffect(()=>{
         getFilesDeFamilia()
@@ -373,27 +453,29 @@ function FamiliaSubirArchivos() {
                                      type="file" id="formFileMultipleIngresos" multiple />
                                     <button className="btn btn-primary mt-2" onClick={subirArchivosIngresos}> Subir Archivos </button>
                                 </div>
-                                <div className="mb-3">
-                                    <p> Archivo:  </p>
-                                    <ul>
-                                        { renderFilesDeFamilia(1) }
-                                    </ul>
-                                </div>
-                                <div id="carouselExampleFade" className="carousel slide carousel-fade">
-                                    <div class="carousel-inner">
-                                        { renderImagesIngresos() }
+                                <div className="row" style={{ display: files1DeFamilia.length === 0 ? 'none' : 'flex' }}>
+                                    <div className="col-3">
+                                        <p className="fw-bold"> Archivos:  </p>
+                                        <ul>
+                                            { renderFilesDeFamilia(1) }
+                                        </ul>
                                     </div>
-                                    
-                                    
-                                    <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-                                        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span className="visually-hidden">Previous</span>
-                                    </button>
-                                    <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-                                        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span className="visually-hidden">Next</span>
-                                    </button>
+                                    <div id="carouselExample" className="carousel slide col" style={{ width: '50vw' }}>
+                                        <div className="carousel-inner">
+                                            { renderImgDeFamilia(1) }
+                                        </div>
+                                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Previous</span>
+                                        </button>
+                                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
                                 </div>
+                                
+                                
                             </div>
                         </li>
                         <li className="list-group-item">
@@ -412,13 +494,27 @@ function FamiliaSubirArchivos() {
                                     <label htmlFor="formFileMultipleDesempleo" className="form-label">Cargar archivos Desempleo:</label>
                                     <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'desempleo') } } accept=".pdf, .jpg, .jpeg, .png, .txt, .doc, .docx, .xls, .xlsx" type="file" id="formFileMultipleDesempleo" multiple />
                                     <button className="btn btn-primary mt-2" onClick={ subirArchivosDesempleo }> Subir Archivos </button>
-                                </div>
-
-                                <div className="mb-3">
-                                    <p> Archivo:  </p>
-                                    <ul>
-                                        { renderFilesDeFamilia(2) }
-                                    </ul>
+                                </div>  
+                                <div className="row" style={{ display: files2DeFamilia.length === 0 ? 'none' : 'flex' }}>
+                                    <div className="col-3">
+                                        <p className="fw-bold"> Archivos:  </p>
+                                        <ul>
+                                            { renderFilesDeFamilia(2) }
+                                        </ul>
+                                    </div>
+                                    <div id="carouselDesempleo" className="carousel slide col" style={{ width: '50vw' }}>
+                                        <div className="carousel-inner">
+                                            { renderImgDeFamilia(2) }
+                                        </div>
+                                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselDesempleo" data-bs-slide="prev">
+                                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Previous</span>
+                                        </button>
+                                        <button className="carousel-control-next" type="button" data-bs-target="#carouselDesempleo" data-bs-slide="next">
+                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -439,12 +535,28 @@ function FamiliaSubirArchivos() {
                                     <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'casahabitacion') } } accept=".pdf, .jpg, .jpeg, .png, .txt, .doc, .docx, .xls, .xlsx" type="file" id="formFileMultipleCasaHabitacion" multiple />
                                     <button className="btn btn-primary mt-2" onClick={subirArchivosCasaHabitacion }> Subir Archivos </button>
                                 </div>
-                                <div className="mb-3">
-                                    <p> Archivo:  </p>
-                                    <ul>
-                                        { renderFilesDeFamilia(3) }
-                                    </ul>
+                                <div className="row" style={{ display: files3DeFamilia.length === 0 ? 'none' : 'flex' }}>
+                                    <div className="col-3">
+                                        <p className="fw-bold"> Archivos:  </p>
+                                        <ul>
+                                            { renderFilesDeFamilia(3) }
+                                        </ul>
+                                    </div>
+                                    <div id="carouselCasa" className="carousel slide col" style={{ width: '50vw' }}>
+                                        <div className="carousel-inner">
+                                            { renderImgDeFamilia(3) }
+                                        </div>
+                                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselCasa" data-bs-slide="prev">
+                                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Previous</span>
+                                        </button>
+                                        <button className="carousel-control-next" type="button" data-bs-target="#carouselCasa" data-bs-slide="next">
+                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
                                 </div>
+                                
                             </div>
                         </li>
                         <li className="list-group-item">
@@ -464,12 +576,28 @@ function FamiliaSubirArchivos() {
                                     <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'autos') } } accept=".pdf, .jpg, .jpeg, .png, .txt, .doc, .docx, .xls, .xlsx" type="file" id="formFileMultipleAutos" multiple />
                                     <button className="btn btn-primary mt-2" onClick={ subirArchivosAutomoviles }> Subir Archivos </button>
                                 </div>
-                                <div className="mb-3">
-                                    <p> Archivo:  </p>
-                                    <ul>
-                                        { renderFilesDeFamilia(4) }
-                                    </ul>
+                                <div className="row" style={{ display: files4DeFamilia.length === 0 ? 'none' : 'flex' }}>
+                                    <div className="col-3">
+                                        <p className="fw-bold"> Archivos:  </p>
+                                        <ul>
+                                            { renderFilesDeFamilia(4) }
+                                        </ul>
+                                    </div>
+                                    <div id="carouselAutos" className="carousel slide col" style={{ width: '50vw' }}>
+                                        <div className="carousel-inner">
+                                            { renderImgDeFamilia(4) }
+                                        </div>
+                                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselAutos" data-bs-slide="prev">
+                                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Previous</span>
+                                        </button>
+                                        <button className="carousel-control-next" type="button" data-bs-target="#carouselAutos" data-bs-slide="next">
+                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
                                 </div>
+                                
                             </div>
                         </li>
                         <li className="list-group-item">
@@ -487,12 +615,29 @@ function FamiliaSubirArchivos() {
                                     <input className="form-control" onChange={ (e) => { actualizoInputFiles(e, 'comprobantes') } } accept=".pdf, .jpg, .jpeg, .png, .txt, .doc, .docx, .xls, .xlsx" type="file" id="formFileMultipleComprobantes" multiple />
                                     <button className="btn btn-primary mt-2" onClick={ subirArchivosComprobantes }> Subir Archivos </button>
                                 </div>
-                                <div className="mb-3">
-                                    <p> Archivo:  </p>
-                                    <ul>
-                                        { renderFilesDeFamilia(5) }
-                                    </ul>
+                                <div className="row" style={{ display: files5DeFamilia.length === 0 ? 'none' : 'flex' }}>
+                                    <div className="col-3">
+                                        <p className="fw-bold"> Archivos:  </p>
+                                        <ul>
+                                            { renderFilesDeFamilia(5) }
+                                        </ul>
+                                    </div>
+                                    <div id="carouselComprobantesDomicilio" className="carousel slide col" style={{ width: '50vw' }}>
+                                        <div className="carousel-inner">
+                                            { renderImgDeFamilia(5) }
+                                        </div>
+                                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselComprobantesDomicilio" data-bs-slide="prev">
+                                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Previous</span>
+                                        </button>
+                                        <button className="carousel-control-next" type="button" data-bs-target="#carouselComprobantesDomicilio" data-bs-slide="next">
+                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
                                 </div>
+                                
+                                
                             </div>
                         </li>
                     </ul>
