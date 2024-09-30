@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import Select from "react-select";
 import Avatar from 'react-avatar';
 import ResaltarTexto from "../ResaltarTexto/ResaltarTexto";
+import VisitaAgendada from "./Componentes/VisitaAgendada";
 
 
 export default function SeccionEstudios(){
@@ -88,10 +89,9 @@ export default function SeccionEstudios(){
         setOpcionesOrdenesServicio(opcioneslista)
     }
     
-    const [opcionesColaboradores,setSpcionesColaboradores] = useState([])
-    const renderOpcionesColaboradores  = (opciones) =>{
+    const [opcionesCalidad,setOpcionesCalidad] = useState([])
+    const renderOpcionesCalidad  = (opciones) =>{
         var opcioneslista = []
-        opcioneslista.push({ value: '', label:'Todos' })
         
         opciones.forEach((h)=>{
             var option = { value: '', label:'' }
@@ -99,7 +99,7 @@ export default function SeccionEstudios(){
             option.value = h.id
             opcioneslista.push(option)
         })
-        setSpcionesColaboradores(opcioneslista)
+        setOpcionesCalidad(opcioneslista)
     }
 
     const [search,setSearch] = useState("")
@@ -122,9 +122,9 @@ export default function SeccionEstudios(){
     })
     
     const [selectedOption, setSelectedOption] = useState(null);
-    const [fromAsignarColaborador,setFromAsignarColaborador] = useState({
+    const [fromAsignarCalidad,setFromAsignarCalidad] = useState({
         id_servicios_estudio: [],
-        id_colaborador:'',
+        id_calidad:'',
     }) 
 
     const searchText = (e) => {
@@ -147,6 +147,14 @@ export default function SeccionEstudios(){
     const getFiltroEstadosEstudios= () => {
         axios.get(`${APIURL}/estudios/enproceso/estados`,config).then((resp)=>{
             renderOpcionesEstados(resp.data);
+        }).catch((resp)=>{
+            console.log(resp);
+        })
+    }
+
+    const getUsuariosCalidad = () => {
+        axios.get(`${APIURL}/estudio/calidad`,config).then((resp)=>{
+            renderOpcionesCalidad(resp.data);
         }).catch((resp)=>{
             console.log(resp);
         })
@@ -183,7 +191,7 @@ export default function SeccionEstudios(){
         })
     }
     const postDataEnviarACalidad = () =>{
-        axios.post(`${APIURL}/estudio/colaboradores`,fromAsignarColaborador,config).then((resp)=>{
+        axios.post(`${APIURL}/estudio/calidad`,fromAsignarCalidad,config).then((resp)=>{
             console.log(resp.data);
             setSelectedRows([]);
             setSelectedOption(null);
@@ -198,6 +206,7 @@ export default function SeccionEstudios(){
 
     useEffect(()=> {
         getProyectos();
+        getUsuariosCalidad();
         getFiltroEstadosEstudios();
         getListaEstudiosEnProceso();
     } ,[])
@@ -215,7 +224,7 @@ export default function SeccionEstudios(){
     },[fromData.id_proyecto,fromData.id_cliente,fromData.id_orden_servicio,fromData.id_colaborador])
 
     useEffect(() => {
-        setFromAsignarColaborador(prevState => ({
+        setFromAsignarCalidad(prevState => ({
             ...prevState,
             id_servicios_estudio: selectedRows
         })); 
@@ -291,21 +300,48 @@ export default function SeccionEstudios(){
                 </td>
             </tr>
             {filaSeleccionada === estudio.id && (
-                <tr>
-                <td colSpan="8"  className={`subseccion ${filaSeleccionada === estudio.id ? 'expandida' : ''}`}>
-                    <div style={{ backgroundColor: "#f9f9f9", padding: "10px" }}>
-                    <strong>Detalles:</strong> {JSON.stringify(estudio)}
-                    <div style={{ marginTop: "10px" }}>
-                        <strong>Subsección:</strong>
-                        <ul>
-                        {[{nombre:'uno'},{nombre:'dos'},{nombre:'tres'}].map((subItem, index) => (
-                            <li key={index}>{subItem.nombre}</li>
-                        ))}
-                        </ul>
-                    </div>
+            <tr>
+                <td colSpan="9"  className={`subseccion ${filaSeleccionada === estudio.id ? 'expandida' : ''}`}>
+                    <div  style={{ backgroundColor: "#47D1D6"}} className="p-3 rounded-4">
+                        <div className="row m-0">
+                            {/*JSON.stringify(estudio)*/}
+                            <div className="col-sm-8">
+                                <div className="row rounded-4 me-1" style={{ backgroundColor: "#f9f9f9"}}>
+                                    <div className="col-12 pt-2" >
+                                        <h5>Contacto principal </h5>
+                                        <hr></hr>
+                                    </div>
+                                    <div className="col-sm-6 pt-1">
+                                        <div>Cliente:</div>
+                                        <div>{estudio.cliente.nombre}</div>
+                                    </div>
+                                    <div className="col-sm-6 pt-1">
+                                        <div>Contacto principal:</div>
+                                        <div>{estudio.contacto_principal?.nombre ? estudio.contacto_principal.nombre:"\u00A0"}</div>
+                                    </div>
+                                    <div className="col-sm-6 pt-1">
+                                        <div>Teléfono:</div>
+                                        <div>{estudio.contacto_principal?.telefono_casa ? estudio.contacto_principal.telefono_casa:"\u00A0"}</div>
+                                    </div>
+                                    <div className="col-sm-6 pt-1">
+                                        <div>Correo:</div>
+                                        <div>{estudio.contacto_principal?.email ? estudio.contacto_principal.email:"\u00A0"}</div>
+                                    </div>
+                                    <div className="col-sm-6 pt-1">
+                                        <div>Teléfono:</div>
+                                        <div>{estudio.contacto_principal?.telefono_casa ? estudio.contacto_principal.telefono_casa:"\u00A0"}</div>
+                                    </div>
+                                    <div className="col-sm-8 pt-1">
+                                        <div>Fecha de visita: /*Botón  de programar visita*/</div>
+                                        <div>{"\u00A0"}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <VisitaAgendada estudio={estudio}/>
+                        </div>
                     </div>
                 </td>
-                </tr>
+            </tr>
             )}
         </React.Fragment>
         ));
@@ -421,20 +457,20 @@ export default function SeccionEstudios(){
                 </div>
                 {selectedRows.length > 0 && (<>
                     <div className="col-4 row">
-                        <label htmlFor="search" className="col-sm-3 col-form-label">Asignar Colaborador:</label>
+                        <label htmlFor="search" className="col-sm-3 col-form-label">Asignar Calidad:</label>
                         <div className="col-9">
                             <Select 
-                                name="id_colaborador" 
-                                id="id_colaborador" 
+                                name="id_calidad" 
+                                id="id_calidad" 
                                 components={animatedComponents}
-                                options={ opcionesColaboradores }
+                                options={ opcionesCalidad }
                                 value={selectedOption}
                                 onChange={
                                     (e)=> {
                                         setSelectedOption(e);
-                                        setFromAsignarColaborador(prevState => ({
+                                        setFromAsignarCalidad(prevState => ({
                                             ...prevState,
-                                            id_colaborador: e.value
+                                            id_calidad: e.value
                                         })); 
                                     }
                                 }>
