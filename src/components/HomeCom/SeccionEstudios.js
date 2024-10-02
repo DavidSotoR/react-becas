@@ -280,12 +280,6 @@ export default function SeccionEstudios(){
                     { mostrarEstado(estudio.estado) }
                 </td>
                 <td>
-                    { contactoPrincipalDireccion(estudio.contacto_principal) }
-                </td>
-                <td>
-                    {estudio.proyecto.nombre}
-                </td>
-                <td>
                     {estudio.cliente.nombre}
                 </td>
                 <td>
@@ -327,13 +321,27 @@ export default function SeccionEstudios(){
                                         <div>Correo:</div>
                                         <div>{estudio.contacto_principal?.email ? estudio.contacto_principal.email:"\u00A0"}</div>
                                     </div>
-                                    <div className="col-sm-6 pt-1">
-                                        <div>Teléfono:</div>
-                                        <div>{estudio.contacto_principal?.telefono_casa ? estudio.contacto_principal.telefono_casa:"\u00A0"}</div>
+                                    <div className="col-sm-12 pt-1">
+                                        <div>Direccion:</div>
+                                        <div>
+                                            { contactoPrincipalDireccion(estudio.contacto_principal) }
+                                        </div>
+                                        <hr/>
                                     </div>
-                                    <div className="col-sm-8 pt-1">
-                                        <div>Fecha de visita: /*Botón  de programar visita*/</div>
-                                        <div>{"\u00A0"}</div>
+                                    <div className="col-sm-12 mt-1 mb-2 pt-1">
+                                        <div className="row ">
+                                            <div className="col-sm-1 p-1">
+                                            </div>
+                                            {/*<div className="col-sm-2 p-1">
+                                                <Link className="btn btn-primary btn-sm" to={`/estudio/${estudio.id}`}>Pre vista</Link>
+                                            </div>
+                                            <div className="col-sm-3 p-1">
+                                                <Link className="btn btn-primary btn-sm" to={`/estudio/${estudio.id}`}>Imagenes encuesta</Link>
+                                            </div>*/}
+                                            <div className="col-sm-2 p-1">
+                                                <Link className="btn btn-primary btn-sm" to={`/estudio-socioeconomico/${estudio.id}`}>Encuesta</Link>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -523,8 +531,6 @@ export default function SeccionEstudios(){
                             <th scope="col" className="col-id">#</th>
                             <th scope="col">Familia</th>
                             <th scope="col">Estado</th>
-                            <th scope="col">Direccion</th>
-                            <th scope="col">Proyecto</th>
                             <th scope="col">Cliente</th>
                             <th scope="col">Orden de servicio</th>
                             <th scope="col">Opciones</th>

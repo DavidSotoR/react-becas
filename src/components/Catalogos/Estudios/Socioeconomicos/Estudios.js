@@ -2,6 +2,8 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../context/AuthContext";
 import { Button,Form, Modal } from "react-bootstrap";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 import Select from "react-select";
 import makeAnimated from 'react-select/animated';
 import ResaltarTexto from "../../../ResaltarTexto/ResaltarTexto";
@@ -85,6 +87,8 @@ export default function Estudios(){
     }
 
     const [search,setSearch] = useState("")
+    const [idEstado,setIdEstado] = useState(1)
+    
     const [selectedRows, setSelectedRows] = useState([]);
     const handleRowSelect = (id) => {
         if (selectedRows.includes(id)) {
@@ -114,9 +118,11 @@ export default function Estudios(){
         const buscar = e.target.value;
         setSearch(buscar);
     }
-
+    
     const allEstudiosFiltrados = allEstudios.filter(item =>
+        item.id_servicio_estado === idEstado &&
         item.candidato.toLowerCase().includes(search.toLowerCase())
+
     );
     const handelNavegate = (id) => {
         navigate(`/estudio/${id}`);
@@ -418,51 +424,71 @@ export default function Estudios(){
         </>)
     }
 
-    const opcionesTabla = () => {
-        return (<>
-            <div className="row">
-                <div className="col-3 row">
-                    <label htmlFor="search" className="col-sm-3 col-form-label">Buscar:</label>
-                    <div className="col-9">
-                        <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
-                    </div>
-                </div>
-                {selectedRows.length > 0 && (<>
-                    <div className="col-4 row">
-                        <label htmlFor="search" className="col-sm-3 col-form-label">Asignar Colaborador:</label>
-                        <div className="col-9">
-                            <Select 
-                                name="id_colaborador" 
-                                id="id_colaborador" 
-                                components={animatedComponents}
-                                options={ opcionesColaboradores }
-                                value={selectedOption}
-                                onChange={
-                                    (e)=> {
-                                        setSelectedOption(e);
-                                        setFromAsignarColaborador(prevState => ({
-                                            ...prevState,
-                                            id_colaborador: e.value
-                                        })); 
-                                    }
-                                }>
-                            </Select>
+    const opcionesTabla = (idEstado) => {
+        switch (idEstado){
+            case 1:
+                return (<>
+                    <div className="row">
+                        <div className="col-3 row">
+                            <label htmlFor="search" className="col-sm-3 col-form-label">Buscar:</label>
+                            <div className="col-9">
+                                <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
+                            </div>
                         </div>
-                    </div> 
-                    <div className="col-2">
-                        <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataEditarColaborador()}} >Guardar</Button>
+                        {selectedRows.length > 0 && (<>
+                            <div className="col-4 row">
+                                <label htmlFor="search" className="col-sm-3 col-form-label">Asignar Colaborador:</label>
+                                <div className="col-9">
+                                    <Select 
+                                        name="id_colaborador" 
+                                        id="id_colaborador" 
+                                        components={animatedComponents}
+                                        options={ opcionesColaboradores }
+                                        value={selectedOption}
+                                        onChange={
+                                            (e)=> {
+                                                setSelectedOption(e);
+                                                setFromAsignarColaborador(prevState => ({
+                                                    ...prevState,
+                                                    id_colaborador: e.value
+                                                })); 
+                                            }
+                                        }>
+                                    </Select>
+                                </div>
+                            </div> 
+                            <div className="col-2">
+                                <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataEditarColaborador()}} >Guardar</Button>
+                            </div>
+                            
+                            <div className="col-2">
+                                <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataAsignarColaboradores()}} >Pasar a asignado</Button>
+                            </div>
+                            
+                        </>
+                        )}
                     </div>
-                    
-                    <div className="col-2">
-                        <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataAsignarColaboradores()}} >Pasar a asignado</Button>
+                
+                    <br/>
+                </>)
+            break;
+            case 2:
+                return (<>
+                    <div className="row">
+                        <div className="col-3 row">
+                            <label htmlFor="search" className="col-sm-3 col-form-label">Buscar:</label>
+                            <div className="col-9">
+                                <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
+                            </div>
+                        </div>
                     </div>
-                    
-                </>
-                )}
-            </div>
-        
-            <br/>
-        </>)
+                    <br/>
+                </>)
+            break;
+            default:
+                return '';
+            break;
+        }
     }
 
     return(<>
@@ -474,29 +500,65 @@ export default function Estudios(){
             </div>
 
             {seccionFiltrar()}
-            {opcionesTabla()}
 
-            <div style={{overflowX:'auto'}}>
-                <table className="table" style={{width:'auto',minWidth:'100%'}}>
-                    <thead>
-                        <tr>
-                            <th scope="col" style={{width:'30px'}}></th>
-                            <th scope="col" className="col-id">#</th>
-                            <th scope="col">Familia</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Direccion</th>
-                            <th scope="col">Proyecto</th>
-                            <th scope="col">Cliente</th>
-                            <th scope="col">Orden de servicio</th>
-                            <th scope="col">Colaborador</th>
-                            <th scope="col">Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { renderFilasTablaEstudiosSocioeconomicos() }
-                    </tbody>
-                </table>
-            </div>
+            <Tabs>
+                <TabList>
+                    <Tab onClick={() => {setIdEstado(1)}}>Registrados</Tab>
+                    <Tab onClick={() => {setIdEstado(2)}}>Asignados</Tab>
+                </TabList>
+
+                <TabPanel>
+                    {opcionesTabla(1)}
+
+                    <div style={{overflowX:'auto'}}>
+                        <table className="table" style={{width:'auto',minWidth:'100%'}}>
+                            <thead>
+                                <tr>
+                                    <th scope="col" style={{width:'30px'}}></th>
+                                    <th scope="col" className="col-id">#</th>
+                                    <th scope="col">Familia</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Direccion</th>
+                                    <th scope="col">Proyecto</th>
+                                    <th scope="col">Cliente</th>
+                                    <th scope="col">Orden de servicio</th>
+                                    <th scope="col">Colaborador</th>
+                                    <th scope="col">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { renderFilasTablaEstudiosSocioeconomicos(1) }
+                            </tbody>
+                        </table>
+                    </div>
+                </TabPanel>
+                <TabPanel >
+                    {opcionesTabla(2)}
+
+                    <div style={{overflowX:'auto'}}>
+                        <table className="table" style={{width:'auto',minWidth:'100%'}}>
+                            <thead>
+                                <tr>
+                                    <th scope="col" style={{width:'30px'}}></th>
+                                    <th scope="col" className="col-id">#</th>
+                                    <th scope="col">Familia</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Direccion</th>
+                                    <th scope="col">Proyecto</th>
+                                    <th scope="col">Cliente</th>
+                                    <th scope="col">Orden de servicio</th>
+                                    <th scope="col">Colaborador</th>
+                                    <th scope="col">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { renderFilasTablaEstudiosSocioeconomicos() }
+                            </tbody>
+                        </table>
+                    </div>
+                </TabPanel>
+            </Tabs>
+
        </div> 
     </>)
 }

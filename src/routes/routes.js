@@ -35,6 +35,7 @@ const EstudioLaboral = React.lazy(()=> import("../components/Catalogos/ServicioE
 const AltaEstudioLaboral = React.lazy(()=> import("../components/Catalogos/ServicioEstudio/AltaEstudioLaboral"))
 const Estudios = React.lazy(()=> import('../components/Catalogos/Estudios/Socioeconomicos/Estudios'))
 const Estudio = React.lazy(()=> import('../components/Catalogos/Estudios/Socioeconomicos/Estudio'))
+const EstudioSocioeconomicoID = React.lazy(() => import('../components/Estudios/Socioeconomico'))
 //const Details = React.lazy(() => import("../pages/details/details"))
 
 const isAuthenticated = () => {
@@ -86,6 +87,13 @@ const routes = [
             <PrivateRoute path={PathConstants.ESTUDIOID} element={<Estudio />} />
           </Suspense>
         )},
+      { path: PathConstants.ESTUDIO_SOCIOECONOMICO_ID, perfil:'todos', 
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <PrivateRoute path={PathConstants.ESTUDIO_SOCIOECONOMICO_ID} element={<EstudioSocioeconomicoID />} />
+          </Suspense>
+        )},
+        
     { path: PathConstants.USUARIOS, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
