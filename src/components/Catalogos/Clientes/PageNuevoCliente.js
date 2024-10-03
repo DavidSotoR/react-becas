@@ -22,6 +22,10 @@ function PageNuevoCliente() {
     const [formValid, setFormValid] = useState(true)
     const [tipoPersona, setTipoPersona] = useState('')
     const [ inputSeleccionado, setInputSeleccionado ] = useState("")
+    
+    const [ requiereFacturar, setRequiereFacturar] = useState(false)
+    const [ documentosDigital, setDocumentosDigital ] = useState(false)
+
     const [formData, setFormData] = useState({
         id_tipo_cliente: '',
         nombre:'',
@@ -136,7 +140,7 @@ function PageNuevoCliente() {
     }
 
     const validateSoloNumeros = (tel) => {
-        return /^\d+$/.test(tel);
+        return tel === '' || /^\d+$/.test(tel);
     }
 
     const contieneErrorInput = (id) => {
@@ -569,8 +573,10 @@ function PageNuevoCliente() {
             "ciudad": formData.ciudad,
             "estado": formData.estado,
             "pais": formData.pais,
+            "tipo_persona": tipoPersona,
             "rason_social": formData.rason_social,
-            "documentacion_digital": formData.documentacion_digital,
+            "requiere_facturar": formData.requiere_facturar ? 1 : 0,
+            "documentacion_digital": formData.documentacion_digital ? 1 : 0,
             "id_catalogo_encuesta": formData.id_catalogo_encuesta
         }
         console.log(dataPOST);
@@ -714,7 +720,6 @@ function PageNuevoCliente() {
                         { contieneErrorInput(1) && <span className="error-msg"> {obtenerErrorMensaje(1)} </span> }
                     </div>
                 </div>
-                {formData.id_tipo_cliente === "1" && (
                 <div className="col-3 d-flex align-items-center">
                     <div className="mb-3 d-grid">
                         <Form.Check className="p-0">
@@ -726,7 +731,6 @@ function PageNuevoCliente() {
                         </Form.Check>
                     </div>
                 </div>
-                )}
                 {(formData.id_tipo_cliente === "1" && esColegioComun === true )&& (
                 <div className="col-5">
                     <div className="mb-3" >

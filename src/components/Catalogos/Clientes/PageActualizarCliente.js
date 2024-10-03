@@ -101,6 +101,8 @@ function PageActualizarCliente() {
             [name]: value
         }));
 
+        //validarValoresBtn()
+
     }
 
     const changeTipoCliente = (e) =>{
@@ -115,8 +117,8 @@ function PageActualizarCliente() {
         actualData.notificaciones_email =  data.notificaciones_email ?? ''
         actualData.id_clientes_hermanos =  data.id_clientes_hermanos ?? ''
         actualData.id_catalogo_encuesta =  data.id_catalogo_encuesta ?? ''
-        actualData.documentacion_digital = data.documentacion_digital ?? false
-        actualData.requiere_facturar = data.requiere_facturar ?? false
+        actualData.documentacion_digital = data.documentacion_digital === 1 ? true : false
+        actualData.requiere_facturar = data.requiere_facturar === 1 ? true : false
         actualData.rso =  data.rso ?? ''
         actualData.nombre_uno =  data.nombre_uno ?? ''
         actualData.telefono_uno =  data.telefono_uno ?? ''
@@ -178,56 +180,45 @@ function PageActualizarCliente() {
             return nuevoIdSet;
         });
     }
+
+    const isValidValue = (valor) => {
+        return valor !== '' && valor !== null && valor !== '0' && valor !== 'null';
+    };
     
     const validarValoresBtn = (form) =>{
         console.log(form);
                 
         if (form.id_tipo_cliente === '1' || form.id_tipo_cliente === 1) {
             return Object.entries(form).every(([key, valor]) => {
-                if ((key === 'id_clientes_hermanos' || key === "rso" ||
-                    key === 'tipo_persona' ||
-                    key === "nombre_uno" ||
-                    key === "telefono_uno" ||
-                    key === "nombre_dos" ||
-                    key === "telefono_dos" ||
-                    key === "telefono_mobil" ||
-                    key === "calle" ||
-                    key === "entre_cale" ||
-                    key === "colonia" ||
-                    key === "codigo_postal" ||
-                    key === "ciudad" ||
-                    key === "estado" ||
-                    key === "pais" ||
-                    key === "rason_social" ||
-                    key === "rfc") && esColegioComun) {
+                if ([
+                    'id_clientes_hermanos', 'rso', 'tipo_persona', 'nombre_uno', 'telefono_uno',
+                    'nombre_dos', 'telefono_dos', 'telefono_mobil', 'requiere_facturar',
+                    'documentacion_digital', 'calle', 'entre_cale', 'colonia', 'codigo_postal',
+                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc'
+                ].includes(key)) {
                     return true; // Ignora este campo y continúa
                 }
-                return valor !== '' && valor !== null && valor !== '0' && valor !== 'null';
+                
+                console.log(isValidValue(valor));
+                return isValidValue(valor);
             });
         } else if (formData.id_tipo_cliente === '2' || form.id_tipo_cliente === 2) {
             return Object.entries(form).every(([key, valor]) => {
-                if (key === 'id_clientes_hermanos' || key === "rso" ||
-                    key === 'tipo_persona' ||
-                    key === "nombre_uno" ||
-                    key === "telefono_uno" ||
-                    key === "nombre_dos" ||
-                    key === "telefono_dos" ||
-                    key === "telefono_mobil" ||
-                    key === "calle" ||
-                    key === "entre_cale" ||
-                    key === "colonia" ||
-                    key === "codigo_postal"||
-                    key === "ciudad" ||
-                    key === "estado" ||
-                    key === "pais" ||
-                    key === "rason_social" ||
-                    key === "rfc") {
+                if ([
+                    'id_clientes_hermanos', 'rso', 'tipo_persona', 'nombre_uno', 'telefono_uno',
+                    'nombre_dos', 'telefono_dos', 'telefono_mobil', 'requiere_facturar',
+                    'documentacion_digital', 'calle', 'entre_cale', 'colonia', 'codigo_postal',
+                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc'
+                ].includes(key)) {
                     return true; // Ignora este campo y continúa
                 }
-                return valor !== '' && valor !== null && valor !== '0' && valor !== 'null';
+    
+                console.log(isValidValue(valor));
+                return isValidValue(valor);
             });
         }
-    
+        console.log('return flase');
+        
         return false;
         
     }
@@ -249,7 +240,7 @@ function PageActualizarCliente() {
     }
 
     const validateSoloNumeros = (tel) => {
-        return /^\d+$/.test(tel);
+        return tel === '' || /^\d+$/.test(tel);
     }
 
     const validateFields = (from) => {
@@ -602,7 +593,6 @@ function PageActualizarCliente() {
     }
 
     const renderOptionsEncuestas = useMemo(() =>{
-        console.log('render Datos');
         return [<option key={'encuesta-0'} value="0">Seleccione una Opción</option>,...allOptionsSelectEncuestas.map((ch) => (
             <option key={'encuestas-'+ch.id} value={ch.id}> {ch.nombre} </option>
         ))]
@@ -619,7 +609,6 @@ function PageActualizarCliente() {
 
         try {
             const resp = await axios.get(APIURL+'/clientes/hermanos', config)
-            console.log(resp.data);
             setAllColegiosHermanos(resp.data);
         } catch (resp) {
             if (resp?.response) {
@@ -627,7 +616,7 @@ function PageActualizarCliente() {
                     logout()
                 }
             }
-            console.log(resp);
+            //console.log(resp);
         }
     }
 
@@ -668,8 +657,8 @@ function PageActualizarCliente() {
             "estado": formData.estado,
             "pais": formData.pais,
             "rason_social": formData.rason_social,
-            "documentacion_digital": formData.documentacion_digital,
-            "requiere_facturar": formData.requiere_facturar
+            "documentacion_digital": formData.documentacion_digital ? 1 : 0,
+            "requiere_facturar": formData.requiere_facturar ? 1 : 0
         }
 
         console.log(dataPOST)
@@ -693,6 +682,8 @@ function PageActualizarCliente() {
             const resp = await axios.get(APIURL+'/clientes/'+ID, config).then(res => res)
             setValoresDeCliente(resp.data)
             setTipoPersona(resp.data.tipo_persona)
+            console.log(resp.data);
+            
             
         } catch (error) {
             console.error(error);
@@ -727,6 +718,22 @@ function PageActualizarCliente() {
         }
     }, [formData])
 
+    useEffect(() => {
+        // Tu lógica aquí, por ejemplo, para manejar cambios en documentacion_digital
+        console.log('cambio valor ', formData.documentacion_digital, formData.requiere_facturar);
+        console.log(arrayErrors);
+        
+        if ( arrayErrors.length === 0 && validarValoresBtn(formData)) {
+            setFormValid(false)
+        } else if (arrayErrors.length === 0 && validarValoresBtn(formData)) {
+            setFormValid(false)
+        } else {
+            console.log('btn disable');
+            
+            setFormValid(true)
+        }
+    }, [formData.documentacion_digital, formData.requiere_facturar]);
+
     useEffect(()=>{
         
         if (arrayErrors.length === 0 ) {
@@ -741,7 +748,9 @@ function PageActualizarCliente() {
                 setFormValid(true)
             }
             
-        } 
+        } else {
+            setFormValid(true)
+        }
         
     },[arrayErrors])
 
@@ -771,7 +780,7 @@ function PageActualizarCliente() {
                         { contieneErrorInput(1) && <span className="error-msg"> {obtenerErrorMensaje(1)} </span> }
                     </div>
                 </div>
-                {(formData.id_tipo_cliente === "1" || esColegioComun) && (
+                
                 <div className="col-3 d-flex align-items-center">
                     <div className="mb-3 d-grid">
                         <Form.Check className="p-0">
@@ -783,7 +792,6 @@ function PageActualizarCliente() {
                         </Form.Check>
                     </div>
                 </div>
-                )}
                 {(esColegioComun === true )&& (
                 <div className="col-5">
                     <div className="mb-3" >
@@ -827,8 +835,8 @@ function PageActualizarCliente() {
                 <div className="col-12 pt-3">
                     <p className="fw-bold pb-1 mb-1"> Seleccione el tipo de persona fiscal al que pertenece: </p>
                     <div className="d-flex pb-3">
-                        <p>{ tipoPersona }</p>
-                        <Form.Check checked={ tipoPersona === "fisica" } className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
+{/*                         <p>{ tipoPersona }</p>
+ */}                        <Form.Check checked={ tipoPersona === "fisica" } className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
                         <Form.Check checked={ tipoPersona === "moral" } type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
                     </div>
                     
