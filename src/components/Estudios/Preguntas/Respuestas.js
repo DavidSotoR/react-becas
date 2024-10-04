@@ -48,6 +48,7 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
         }, 0);
     };
     
+    
     // 1 .-  Pregunta abierta
     const preguntaAbierta = () => {
 
@@ -135,41 +136,48 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                     <div className="col-sm-3">ACTIVO LABORALEMNTE</div>
                     <div className="col-sm-5">EMPRESA</div>
                 </div>
-                {[{texto:'PADRE'},{texto:'MADRE'},{texto:'OTRO'}].map((item,index) => {(
+                
+                {formData.map((item,index) => (
                     <div key={'pes-'+idPregunta+'-'+index} className="row">
                         <div className="col-sm-2">{item.texto}</div>
+                        { item.texto=== 'OTRO' ? (<div className="col-sm-2 p-1"></div>):(
                         <div className="col-sm-2 p-1">
                             <div className="row">
                                 <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
-                                    <label className="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+                                    <input 
+                                        className="form-check-input" 
+                                        type="checkbox" 
+                                        role="switch"
+                                        checked={item.vive} 
+                                        id="vive"/>
+                                    <label className="form-check-label">{(item.vive) ? 'Si' : 'No'}</label>
                                 </div>
                             </div>
                         </div>
+                        )}
                         <div className="col-sm-3 p-1">
                             <div className="row">
                                 <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
-                                    <label className="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+                                    <input 
+                                    className="form-check-input"  
+                                    type="checkbox" 
+                                    role="switch"
+                                    checked={item.activo}
+                                    id="activo"/>
+                                    <label className="form-check-label">{(item.activo) ? 'Si' : 'No'}</label>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                        <div className="col-sm-5 p-1">
+                            <input
+                                className="form-control"
+                                name="respuesta"disabled={item.activo}
+                                value={item.respuesta}
+                                onChange={(e) => {textChange(e,index)}}
+                            ></input>
+                            </div>
                     </div>
-                )})}
-                <div className="row">
-                    <div className="col-sm-2">OTRO</div>
-                    <div className="col-sm-2"></div>
-                    <div className="col-sm-3 p-1">
-                        <div className=" row">
-                            <div className="col-3">SI</div>
-                            <div className="col-2 border-bottom border-secondary"></div>
-                            <div className="col-3">NO</div>
-                            <div className="col-2 border-bottom border-secondary"></div>
-                        </div>
-                    </div>
-                    <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
+                ))}
             </div>
         )
     }
@@ -903,9 +911,10 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                         id_pregunta:'',
                         id_item:'',
                         parentesco:'',
-                        texto:'',
+                        texto:'PADRE',
                         vive:false,
                         activo:false,
+                        respuesta:'',
                         padre_monto:'',
                         madre_monto:'',
                         monto:'',
@@ -920,9 +929,10 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                         id_pregunta:'',
                         id_item:'',
                         parentesco:'',
-                        texto:'',
+                        texto:'MADRE',
                         vive:false,
                         activo:false,
+                        respuesta:'',
                         padre_monto:'',
                         madre_monto:'',
                         monto:'',
@@ -937,7 +947,8 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                         id_pregunta:'',
                         id_item:'',
                         parentesco:'',
-                        texto:'',
+                        texto:'OTRO',
+                        respuesta:'',
                         vive:false,
                         activo:false,
                         padre_monto:'',

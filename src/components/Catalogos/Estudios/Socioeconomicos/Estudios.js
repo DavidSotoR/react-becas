@@ -461,9 +461,9 @@ export default function Estudios(){
                                 <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataEditarColaborador()}} >Guardar</Button>
                             </div>
                             
-                            <div className="col-2">
+                            {/*<div className="col-2">
                                 <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {postDataAsignarColaboradores()}} >Pasar a asignado</Button>
-                            </div>
+                            </div>*/}
                             
                         </>
                         )}

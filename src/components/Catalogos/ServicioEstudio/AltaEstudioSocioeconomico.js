@@ -52,7 +52,14 @@ function AltaEstudioSocioeconomico(){
         email:'',
         telefono_movil:'',
         telefono_contacto:'',
-        generar_usuario_automaticamente: false,
+        generar_usuario_automaticamente: true,
+        calle:'',
+        numero_exterior:'',
+        colonia:'',
+        municipio:'',
+        estado:'',
+        codigo_postal:'',
+        pais:'',
         direccion:'',
         latitud:25.67507,
         longitud:-100.31847,
@@ -60,7 +67,7 @@ function AltaEstudioSocioeconomico(){
             id_familias_padres_tipo:'1',
             nombre:'',
             edad:'',
-            vive:false,
+            vive:true,
             direccion:'',
             ocupacion_actual:'',
             empresa_trabajo:'',
@@ -72,7 +79,7 @@ function AltaEstudioSocioeconomico(){
             id_familias_padres_tipo:'2',
             nombre:'',
             edad:'',
-            vive:false,
+            vive:true,
             direccion:'',
             ocupacion_actual:'',
             empresa_trabajo:'',
@@ -326,7 +333,7 @@ function AltaEstudioSocioeconomico(){
         const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
         if(colaboradoresFiltro.length){
             const colaborador = obtenerUbicacionMasCercana(fromData.latitud, fromData.longitud, colaboradoresFiltro);
-            console.log(colaborador);        
+            console.log(colaborador);
             setFormData(prevState => ({
                 ...prevState,
                 id_colaborador: colaborador.id
@@ -358,6 +365,22 @@ function AltaEstudioSocioeconomico(){
     useEffect(()=>{
         cambiarCaloborador();
     },[fromData.latitud])
+
+    useEffect(()=>{ 
+        setFormData(prevState => ({
+            ...prevState,
+            direccion: `${fromData.calle} ${fromData.numero_exterior}, ${fromData.colonia}, ${fromData.municipio}, ${fromData.estado}, ${fromData.codigo_postal}, ${fromData.pais}` 
+        }));
+    },[
+        fromData.calle,
+        fromData.numero_exterior,
+        fromData.colonia,
+        fromData.municipio,
+        fromData.estado,
+        fromData.codigo_postal,
+        fromData.pais,
+    ])
+    
 
     
     const ultimasFamiliasAñadidas = () => {
@@ -770,6 +793,105 @@ function AltaEstudioSocioeconomico(){
                         </div>
                     </div>
                     )}
+
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <div className="mb-3 row">
+                                <label htmlFor="calle" className="col-sm-2 col-form-label">Calle:</label>
+                                <div className="col-sm-10">
+                                    <input key={"AES-calle"} type="text" className="form-control" id="calle" name="calle" value={fromData.calle} onChange={(e)=> formInputChange(e)}/>
+                                </div>
+                                {fromDataError?.calle && (
+                                <div>
+                                    {fromDataError.calle.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                                </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="col-sm-6">
+                            <div className="mb-3 row">
+                                <label htmlFor="numero_exterior" className="col-sm-4 col-form-label">No Exterior:</label>
+                                <div className="col-sm-8">
+                                    <input key={"AES-numero_exterior"} type="text" className="form-control" id="numero_exterior" name="numero_exterior" value={fromData.numero_exterior} onChange={(e)=> formInputChange(e)}/>
+                                </div>
+                                {fromDataError?.numero_exterior && (
+                                <div>
+                                    {fromDataError.numero_exterior.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                                </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="mb-3 row">
+                                <label htmlFor="colonia" className="col-sm-4 col-form-label">Colonia:</label>
+                                <div className="col-sm-8">
+                                    <input key={"AES-colonia"} type="text" className="form-control" id="colonia" name="colonia" value={fromData.colonia} onChange={(e)=> formInputChange(e)}/>
+                                </div>
+                                {fromDataError?.colonia && (
+                                <div>
+                                    {fromDataError.colonia.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                                </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="mb-3 row">
+                                <label htmlFor="municipio" className="col-sm-4 col-form-label">Municipio:</label>
+                                <div className="col-sm-8">
+                                    <input key={"AES-municipio"} type="text" className="form-control" id="municipio" name="municipio" value={fromData.municipio} onChange={(e)=> formInputChange(e)}/>
+                                </div>
+                                {fromDataError?.municipio && (
+                                <div>
+                                    {fromDataError.municipio.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                                </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="mb-3 row">
+                                <label htmlFor="estado" className="col-sm-4 col-form-label">Estado:</label>
+                                <div className="col-sm-8">
+                                    <input key={"AES-estado"} type="text" className="form-control" id="estado" name="estado" value={fromData.estado} onChange={(e)=> formInputChange(e)}/>
+                                </div>
+                                {fromDataError?.estado && (
+                                <div>
+                                    {fromDataError.estado.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                                </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="mb-3 row">
+                                <label htmlFor="codigo_postal" className="col-sm-4 col-form-label">Código Postal:</label>
+                                <div className="col-sm-8">
+                                    <input key={"AES-codigo_postal"} type="text" className="form-control" id="codigo_postal" name="codigo_postal" value={fromData.codigo_postal} onChange={(e)=> formInputChange(e)}/>
+                                </div>
+                                {fromDataError?.codigo_postal && (
+                                <div>
+                                    {fromDataError.codigo_postal.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                                </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="mb-3 row">
+                                <label htmlFor="pais" className="col-sm-4 col-form-label">País:</label>
+                                <div className="col-sm-8">
+                                    <input key={"AES-pais"} type="text" className="form-control" id="pais" name="pais" value={fromData.pais} onChange={(e)=> formInputChange(e)}/>
+                                </div>
+                                {fromDataError?.pais && (
+                                <div>
+                                    {fromDataError.pais.map((message => (<p><span className="error-msg"> {message} </span></p>)))}
+                                </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    
 
                     {formularioFamilia('padre')}
 
