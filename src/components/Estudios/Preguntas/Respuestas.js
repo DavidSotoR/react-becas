@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect,useRef  } from "react";
 
 export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}) {
 
@@ -48,7 +48,56 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
         }, 0);
     };
     
+
+    const formInputChange = (e,index) => {
+
+        var {name, value, type, checked } = e.target;
+        let updatedValue = type === 'checkbox' ? checked : name === 'email' ? value :  convertirAMayusculas(value);
     
+        setFormData((prevState) => {
+            const newState = [...prevState];
+            newState[index] = {
+                ...newState[index],
+                [name]: updatedValue
+            };
+            return newState;
+        });
+    };
+
+    // 7 sumatoria totoal
+    const sumaTotalporCampo = (campo) => {
+        return formData.reduce((acc, item) => {
+          const value = parseFloat(item[campo]);
+          return acc + (isNaN(value) ? 0 : value); // Solo suma si es un número válido
+        }, 0);
+    }
+    
+    const  sumaTotales = () => {
+        let total = 0
+        total += sumaTotalporCampo('padre_monto');
+        total += sumaTotalporCampo('madre_monto');
+        total += sumaTotalporCampo('monto');
+        return total;
+    }
+    //ref
+    const padreRefs = useRef([]);
+    const madreRefs = useRef([]);
+    const montoRefs = useRef([]);
+    
+    const tipoRefs          = useRef([]);
+    const marcaModeloRefs   = useRef([]);
+    const anioRefs          = useRef([]);
+    const propietarioRefs   = useRef([]);
+
+    const handleKeyDown = (e, index, refArray) => {
+        if (e.key === 'Enter') {
+        e.preventDefault();
+        // Si no es el último elemento, enfoca el siguiente input de la misma columna
+        if (index < refArray.current.length - 1) {
+            refArray.current[index + 1].focus();
+        }
+        }
+    };
     // 1 .-  Pregunta abierta
     const preguntaAbierta = () => {
 
@@ -97,31 +146,33 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                 <div className="col-sm-3 p-1">PARENTESCO</div>
                 <div className="col-sm-3 p-1">NOMBRE</div>
             </div>
-            <div className="row text-start">
+            {formData.map((item,index) => (
+            <div  key={'pes-'+idPregunta+'-'+index}  className="row text-start">
                 <div className="col-sm-2"></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                <div className="col-sm-3 p-1">
+                    <input
+                        className="form-control form-control-sm"
+                        name="parentesco" 
+                        key={`parentesco-${index}`}
+                        ref={(el) => (padreRefs.current[index] = el)}
+                        onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
+                        value={item.parentesco}
+                        onChange={(e) => {formInputChange(e,index)}}
+                    />
+                </div>
+                <div className="col-sm-3 p-1">
+                    <input
+                        className="form-control form-control-sm"
+                        name="nombre" 
+                        key={`nombre-${index}`}
+                        ref={(el) => (madreRefs.current[index] = el)}
+                        onKeyDown={(e) => handleKeyDown(e, index, madreRefs)}
+                        value={item.nombre}
+                        onChange={(e) => {formInputChange(e,index)}}
+                    />
+                </div>
             </div>
-            <div className="row text-start">
-                <div className="col-sm-2"></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-2"></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-2"></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-2"></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-            </div>
+            ))}
             </div>
         )
     }
@@ -148,7 +199,9 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                                         className="form-check-input" 
                                         type="checkbox" 
                                         role="switch"
-                                        checked={item.vive} 
+                                        name="vive"
+                                        checked={item.vive}
+                                        onChange={(e) => {formInputChange(e,index)}}
                                         id="vive"/>
                                     <label className="form-check-label">{(item.vive) ? 'Si' : 'No'}</label>
                                 </div>
@@ -159,11 +212,14 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                             <div className="row">
                                 <div className="form-check form-switch">
                                     <input 
-                                    className="form-check-input"  
-                                    type="checkbox" 
-                                    role="switch"
-                                    checked={item.activo}
-                                    id="activo"/>
+                                        className="form-check-input"  
+                                        type="checkbox" 
+                                        role="switch"
+                                        name="activo"
+                                        checked={item.activo}
+                                        disabled={item.texto=== 'OTRO' ? false : !item.vive}
+                                        onChange={(e) => {formInputChange(e,index)}}
+                                        id="activo"/>
                                     <label className="form-check-label">{(item.activo) ? 'Si' : 'No'}</label>
                                 </div>
                             </div>
@@ -171,11 +227,12 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                         <div className="col-sm-5 p-1">
                             <input
                                 className="form-control"
-                                name="respuesta"disabled={item.activo}
+                                name="respuesta" 
+                                disabled={!item.activo}
                                 value={item.respuesta}
-                                onChange={(e) => {textChange(e,index)}}
+                                onChange={(e) => {formInputChange(e,index)}}
                             ></input>
-                            </div>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -186,87 +243,111 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
         return (
             <div>
             <div className="row">
-                <div className="col-sm-3 p-1">INGRESO NETO</div>
+                <div className="col-sm-3 p-1"></div>
                 <div className="col-sm-3 p-1">PADRE</div>
                 <div className="col-sm-3 p-1">MADRE</div>
                 <div className="col-sm-3 p-1">OTROS</div>
             </div>
             <br/>
+            
+            {formData.map((item,index) => (
+                    <div key={'pes-'+idPregunta+'-'+index} className="row text-start">
+                        <div className="col-sm-3 p-1"><div>{item.texto}</div></div>
+                        <div className="col-sm-3 p-1">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10">
+                                    <input
+                                        className="form-control form-control-sm"
+                                        name="padre_monto" 
+                                        key={`padre_monto-${index}`}
+                                        ref={(el) => (padreRefs.current[index] = el)}
+                                        onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
+                                        value={item.padre_monto}
+                                        onChange={(e) => {formInputChange(e,index)}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-3 p-1">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10">
+                                    <input
+                                        className="form-control form-control-sm"
+                                        name="madre_monto" 
+                                        key={`madre_monto-${index}`}
+                                        ref={(el) => (madreRefs.current[index] = el)}
+                                        onKeyDown={(e) => handleKeyDown(e, index, madreRefs)}
+                                        value={item.madre_monto}
+                                        onChange={(e) => {formInputChange(e,index)}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-3 p-1">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10">
+                                    <input
+                                        className="form-control form-control-sm"
+                                        name="monto" 
+                                        key={`monto-${index}`}
+                                        ref={(el) => (montoRefs.current[index] = el)}
+                                        onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
+                                        value={item.monto}
+                                        onChange={(e) => {formInputChange(e,index)}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            ))}
             <div className="row text-start">
-                <div className="col-sm-3"><div>INGRESO NETO</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
+                <div className="col-sm-3 p-1"><div><b>SUB TOTAL</b></div></div>
+                <div className="col-sm-3 p-1">
+                    <div className="border-bottom border-secondary">
+                        <div className="row">
+                            <div className="col-1">$</div>
+                            <div className="col-10 text-right">
+                                {sumaTotalporCampo('padre_monto')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-sm-3 p-1">
+                    <div className="border-bottom border-secondary">
+                        <div className="row">
+                            <div className="col-1">$</div>
+                            <div className="col-10 text-right">
+                                {sumaTotalporCampo('madre_monto')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-sm-3 p-1">
+                    <div className="border-bottom border-secondary">
+                        <div className="row">
+                            <div className="col-1">$</div>
+                            <div className="col-10 text-right">
+                                {sumaTotalporCampo('monto')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className="row text-start">
-                <div className="col-sm-3"><div>BONOS DE DESPENSA</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div>VALES DE GASOLINA</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div>COMISIONES POR VENTAS</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div>AGUINALDO </div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div>BONO DE PRODUCTIVIDAD</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div>FONDO DE AHORRO</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div>UTILIDADES PRIMA</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div>VACACIONAL</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div>RENTA QUE RECIBA</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div>AYUDA QUE RECIBA</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div><b>SUB TOTAL</b></div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-3"><div><b>TOTAL</b></div></div>
-                <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">$</div></div>
+                <div className="col-sm-3 p-1"><div><b>TOTAL</b></div></div>
+                <div className="col-sm-3 p-1">
+                    <div className="border-bottom border-secondary">
+                        <div className="row">
+                            <div className="col-1">$</div>
+                            <div className="col-10">
+                                {sumaTotales()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             {/*<div className="row text-start">
                 <div className="col-sm-3">
@@ -292,45 +373,79 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                     <div className="col-sm-3">PROPIETARIO</div>
                     <div className="col-sm-2">VALOR APROXIMADO</div>
                 </div>
-                <div className="row">
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                {formData.map((item,index) => (
+                <div  key={'pes-'+idPregunta+'-'+index} className="row">
+                    
+                    <div className="col-sm-3 p-1">
+                        <input
+                            className="form-control form-control-sm"
+                            name="tipo" 
+                            key={`tipo-${index}`}
+                            ref={(el) => (tipoRefs.current[index] = el)}
+                            onKeyDown={(e) => handleKeyDown(e, index, tipoRefs)}
+                            value={item.tipo}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        />
+                    </div>
+                    <div className="col-sm-3 p-1">
+                        <input
+                            className="form-control form-control-sm"
+                            name="marca_modelo" 
+                            key={`marca_modelo-${index}`}
+                            ref={(el) => (marcaModeloRefs.current[index] = el)}
+                            onKeyDown={(e) => handleKeyDown(e, index, marcaModeloRefs)}
+                            value={item.marca_modelo}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        />
+                    </div>
+                    <div className="col-sm-1 p-1">
+                        <input
+                            className="form-control form-control-sm"
+                            name="anio" 
+                            key={`anio-${index}`}
+                            ref={(el) => (anioRefs.current[index] = el)}
+                            onKeyDown={(e) => handleKeyDown(e, index, anioRefs)}
+                            value={item.anio}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        />
+                    </div>
+                    <div className="col-sm-3 p-1">
+                        <input
+                            className="form-control form-control-sm"
+                            name="propietario" 
+                            key={`propietario-${index}`}
+                            ref={(el) => (propietarioRefs.current[index] = el)}
+                            onKeyDown={(e) => handleKeyDown(e, index, propietarioRefs)}
+                            value={item.propietario}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        />
+                    </div>
+                    <div className="col-sm-2 p-1">
+                        <input
+                            className="form-control form-control-sm"
+                            name="monto" 
+                            key={`monto-${index}`}
+                            ref={(el) => (montoRefs.current[index] = el)}
+                            onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
+                            value={item.monto}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        />
+                    </div>
                 </div>
-                <div className="row">
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-1 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
+                ))}
                 
                 <div className="row">
                     <div className="col-sm-3"><b>TOTAL:</b></div>
-                    <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                    <div className="col-sm-3 p-1 text-start">
+                        <div className="border-bottom border-secondary">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10 text-right">
+                                    {sumaTotalporCampo('monto')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         )
@@ -625,41 +740,46 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                 <div className="col-sm-4 p-1">MENSUALIDAD</div>
                 <div className="col-sm-4 p-1">SALDO</div>
             </div>
-            <div className="row text-start">
-                <div className="col-sm-4">
-                    CREDITO HIPOTECARIO
+            
+            {formData.map((item,index) => (
+                <div key={'pes-'+idPregunta+'-'+index} className="row  text-start">
+                    <div className="col-sm-4 p-1">
+                        {item.texto}
+                    </div>
+                    <div className="col-sm-4 p-1">
+                        <div className="row">
+                            <div className="col-1">$</div>
+                            <div className="col-10">
+                                <input
+                                    className="form-control form-control-sm"
+                                    name="padre_monto" 
+                                    key={`padre_monto-${index}`}
+                                    ref={(el) => (padreRefs.current[index] = el)}
+                                    onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
+                                    value={item.padre_monto}
+                                    onChange={(e) => {formInputChange(e,index)}}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-sm-4 p-1">
+                        <div className="row">
+                            <div className="col-1">$</div>
+                            <div className="col-10">
+                                <input
+                                    className="form-control form-control-sm"
+                                    name="monto" 
+                                    key={`monto-${index}`}
+                                    ref={(el) => (montoRefs.current[index] = el)}
+                                    onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
+                                    value={item.monto}
+                                    onChange={(e) => {formInputChange(e,index)}}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-4">
-                    CREDITO AUTOMOTRIZ
-                </div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-4">
-                    TARJETAS DE CREDITO
-                </div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-4">
-                    TARJETAS DEPARTAMENTALES
-                </div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
-            <div className="row text-start">
-                <div className="col-sm-4">
-                    PRESTAMOS PERSONALES/ NOOMINA/ FAMILIARES 
-                </div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                <div className="col-sm-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-            </div>
+            ))}
             </div>
         )
     }
@@ -667,162 +787,30 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
     const gastosFamiliaresMensuales = () => {
         return (
             <div className="row  text-start">
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        ALIMENTACION Y DESPENSA
+                 {formData.map((item,index) => (
+                    
+                <div key={'pes-'+idPregunta+'-'+index} className="row col-sm-6">
+                    <div className="col-6 p-1">
+                        {item.texto}
                     </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        SEGURO GTS. MEDICOS MAYORES
+                    <div className="col-6 p-1">
+                        <div className="row">
+                            <div className="col-1">$</div>
+                            <div className="col-10">
+                                <input
+                                    className="form-control form-control-sm"
+                                    name="padre_monto" 
+                                    key={`padre_monto-${index}`}
+                                    ref={(el) => (padreRefs.current[index] = el)}
+                                    onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
+                                    value={item.padre_monto}
+                                    onChange={(e) => {formInputChange(e,index)}}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
                 </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        ROPA Y CALZADO
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        SEGURO DE VIDA
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        RENTA HIPOTECA CASA - HABITACION
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        SEGURO DE CASA
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        PREDIAL
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        SEGURO DE AUTO
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        MTTO. Y SEGURIDAD FRACCIONAMIENTO
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        CREDITO AUTOMOTRIZ
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        SERVICIOS LUZ, AGUA, GAS, TELEFONO, INTERNET, TV. PAGA, CELULAR
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        GASOLINA Y TRANSPORTE
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        MTTO. CASA
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        MTTO. AUTO
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        SERVICIO DOMESTICO
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        VACACIONES (1 AÑO ATRAS)
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        MASCOTAS
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        DIVERCION CINE, RESTAURANTES, PASEOS
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        MEMBRESIA CLUB SOCIAL O DEPORTIVO
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        AYUDA A PARIENTES
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        CONSULTAS, DOCTORES, MEDICAMENTOS, TRATAMIENTOS, ESPECIALISTAS
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        CLASES / ACTIVIDADES EXTRACURRICULARES FUERA DEL COLEGIO (BALLET, FUTBOL, PINTURA, IDIOMAS, APOYO KUMOS, ETC.)
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        GASTOS DE EDUCACION INSCRIPCIONES, UNIFORMES, LIBROS, UTILES, SOCIEDAD DE PADRES, CUOTA DEPORTIVA, SEGURO, PLATAFORMAS
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        GASTOS DE EDUCACION MENSUALIDAD, CLASE ESTRACURRICULAR DENTRO DEL COLEGIO
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        TENENCIA
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
-                <div className="row col-sm-6">
-                    <div className="col-7 p-1">
-                        OTRO (ESPECIFICAR)
-                    </div>
-                    <div className="col-4 p-1"><div className="border-bottom border-secondary">$</div></div>
-                </div>
+                ))}
             </div>
         )
     }
@@ -885,81 +873,88 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
             // 1 .-  Pregunta abierta
             case 1:
                 setFormData([
-                    {
-                        id_encuesta:'',
-                        id_estudio:'',
-                        id_pregunta:'',
-                        id_item:'',
-                        parentesco:'',
-                        texto:'',
-                        padre_monto:'',
-                        madre_monto:'',
-                        monto:'',
-                        valor:'',
-                        tipo:'',
-                        marca_modelo:'',
-                        anio:'',
-                        propietario:'',
-                    }
+                    {id_encuesta:'',id_estudio:'',id_pregunta:'',id_item:'',parentesco:'',texto:'',padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',}
+                ]);
+            break;
+            case 6:
+                setFormData([
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 ]);
             break;
             case 7:
                 setFormData([
-                    {
-                        id_encuesta:'',
-                        id_estudio:'',
-                        id_pregunta:'',
-                        id_item:'',
-                        parentesco:'',
-                        texto:'PADRE',
-                        vive:false,
-                        activo:false,
-                        respuesta:'',
-                        padre_monto:'',
-                        madre_monto:'',
-                        monto:'',
-                        valor:'',
-                        tipo:'',
-                        marca_modelo:'',
-                        anio:'',
-                        propietario:'',
-                    },{
-                        id_encuesta:'',
-                        id_estudio:'',
-                        id_pregunta:'',
-                        id_item:'',
-                        parentesco:'',
-                        texto:'MADRE',
-                        vive:false,
-                        activo:false,
-                        respuesta:'',
-                        padre_monto:'',
-                        madre_monto:'',
-                        monto:'',
-                        valor:'',
-                        tipo:'',
-                        marca_modelo:'',
-                        anio:'',
-                        propietario:'',
-                    },{
-                        id_encuesta:'',
-                        id_estudio:'',
-                        id_pregunta:'',
-                        id_item:'',
-                        parentesco:'',
-                        texto:'OTRO',
-                        respuesta:'',
-                        vive:false,
-                        activo:false,
-                        padre_monto:'',
-                        madre_monto:'',
-                        monto:'',
-                        valor:'',
-                        tipo:'',
-                        marca_modelo:'',
-                        anio:'',
-                        propietario:'',
-                    }]);
+                    {id_encuesta:'',id_estudio:'',id_pregunta:'',id_item:'',parentesco:'',texto:'PADRE',vive:false,activo:false,respuesta:'',padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',},
+                    {id_encuesta:'',id_estudio:'',id_pregunta:'',id_item:'',parentesco:'',texto:'MADRE',vive:false,activo:false,respuesta:'',padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',},
+                    {id_encuesta:'',id_estudio:'',id_pregunta:'',id_item:'',parentesco:'',texto:'OTRO',respuesta:'',vive:false,activo:false,padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',}
+                ]);
+            break;
+            case 8:
+                setFormData([
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'INGRESO NETO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'BONOS DE DESPENSA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'VALES DE GASOLINA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'COMISIONES POR VENTAS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'AGUINALDO ', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'BONO DE PRODUCTIVIDAD', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'FONDO DE AHORRO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'UTILIDADES PRIMA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'VACACIONAL', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'RENTA QUE RECIBA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'AYUDA QUE RECIBA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                ]);
+            break;
+            case 11:
+                setFormData([
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                ]);
+            break;
+            case 14:
+                setFormData([
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'CREDITO HIPOTECARIO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'CREDITO AUTOMOTRIZ', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'TARJETAS DE CREDITO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'TARJETAS DEPARTAMENTALES', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'PRESTAMOS PERSONALES/ NOMINA/ FAMILIARES', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                ]);
+            break;
+            case 15:
+                setFormData([
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'ALIMENTACION Y DESPENSA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SEGURO GTS. MEDICOS MAYORES', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'ROPA Y CALZADO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SEGURO DE VIDA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'RENTA HIPOTECA CASA - HABITACION', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SEGURO DE CASA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'PREDIAL', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SEGURO DE AUTO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MTTO. Y SEGURIDAD FRACCIONAMIENTO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'CREDITO AUTOMOTRIZ', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SERVICIOS LUZ, AGUA, GAS, TELEFONO, INTERNET, TV. PAGA, CELULAR', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'GASOLINA Y TRANSPORTE', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MTTO. CASA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MTTO. AUTO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SERVICIO DOMESTICO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'VACACIONES (1 AÑO ATRAS)', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MASCOTAS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'DIVERCION CINE, RESTAURANTES, PASEOS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MEMBRESIA CLUB SOCIAL O DEPORTIVO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'AYUDA A PARIENTES', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'CONSULTAS, DOCTORES, MEDICAMENTOS, TRATAMIENTOS, ESPECIALISTAS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'CLASES / ACTIVIDADES EXTRACURRICULARES FUERA DEL COLEGIO (BALLET, FUTBOL, PINTURA, IDIOMAS, APOYO KUMOS, ETC.)', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'GASTOS DE EDUCACION INSCRIPCIONES, UNIFORMES, LIBROS, UTILES, SOCIEDAD DE PADRES, CUOTA DEPORTIVA, SEGURO, PLATAFORMAS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'GASTOS DE EDUCACION MENSUALIDAD, CLASE ESTRACURRICULAR DENTRO DEL COLEGIO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'TENENCIA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'OTRO (ESPECIFICAR)', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                
+                ]);
             break;
             default:
                 setFormData([]);
