@@ -49,9 +49,16 @@ export default function PageUpdateUsuario() {
         id_perfil: "0",
         id_cliente: "0",
         externo: false,
-        latitud: '',
-        longitud: '',
-        direccion: ''
+        latitud:25.67507,
+        longitud:-100.31847,
+        direccion: '',
+        calle:'',
+        numero_exterior:'',
+        colonia:'',
+        municipio:'',
+        estado:'',
+        codigo_postal:'',
+        pais:'',
     })
 
 
@@ -111,16 +118,36 @@ export default function PageUpdateUsuario() {
         }
     }
 
+    const convertirAMayusculas = (texto) => {
+        return texto.toUpperCase();
+    }
+
     const handleInputChange = (e) => {
         var { name, value } = e.target;
         console.log(name, value);
         if (name === 'id_cliente' || name === 'id_perfil') {
             value = parseInt(value,10)
         }
-        setDataUpdateUsuario(prevState => ({  
+
+        if ((name === "calle") || (name === "numero_exterior") ||  (name === "colonia") || 
+        (name === "municipio") || (name === "estado") ||  (name === "codigo_postal") || 
+        (name === "pais")) {
+            var mayus = convertirAMayusculas(value);
+            setDataUpdateUsuario(prevState => ({  
+                ...prevState,
+                [name]: mayus
+            }));
+        } else {
+            setDataUpdateUsuario(prevState => ({  
+                ...prevState,
+                [name]: value
+            }));
+        }
+
+        /* setDataUpdateUsuario(prevState => ({  
             ...prevState,
             [name]: value
-        }));
+        })); */
 
     };
 
@@ -227,7 +254,7 @@ export default function PageUpdateUsuario() {
     }
 
     const changeDireccion = (e)=>{
-        var dir = e.target.value
+        var dir = convertirAMayusculas(e.target.value)
         setDireccionUser(dir)
     }
 
@@ -380,10 +407,17 @@ export default function PageUpdateUsuario() {
             name: dataUpdateUsuario.name,
             email: dataUpdateUsuario.email,
             id_cliente: dataUpdateUsuario.id_cliente,
-            latitud: latUser,
+            latitud: dataUpdateUsuario.latitud,
             externo: esExterno ? 1 : 0,
-            longitud: lonUser,
-            direccion: direccionUser
+            longitud: dataUpdateUsuario.longitud,
+            direccion: direccionUser,
+            calle: dataUpdateUsuario.calle,
+            numero_exterior: dataUpdateUsuario.numero_exterior,
+            colonia: dataUpdateUsuario.colonia,
+            municipio: dataUpdateUsuario.municipio,
+            estado: dataUpdateUsuario.estado,
+            codigo_postal: dataUpdateUsuario.codigo_postal,
+            pais: dataUpdateUsuario.pais,
         }
 
         console.log(dataUpdate);
@@ -485,6 +519,24 @@ export default function PageUpdateUsuario() {
         getAllClientes();
         getUsuarioID()
     },[])
+
+    useEffect(()=>{ 
+        setDataUpdateUsuario(prevState => ({
+            ...prevState,
+            direccion: `${dataUpdateUsuario.calle} ${dataUpdateUsuario.numero_exterior},${dataUpdateUsuario.colonia !== '' ? dataUpdateUsuario.colonia+',' : ''}${dataUpdateUsuario.municipio !== '' ? dataUpdateUsuario.municipio+',' : ''}${dataUpdateUsuario.estado !== '' ? dataUpdateUsuario.estado+',' : ''}${dataUpdateUsuario.codigo_postal !== '' ? dataUpdateUsuario.codigo_postal+',' : ''}${dataUpdateUsuario.pais}`
+        }));
+        setDireccionUser(`${dataUpdateUsuario.calle} ${dataUpdateUsuario.numero_exterior}, ${dataUpdateUsuario.colonia !== '' ? dataUpdateUsuario.colonia+', ' : ''}${dataUpdateUsuario.municipio !== '' ? dataUpdateUsuario.municipio+', ' : ''}${dataUpdateUsuario.estado !== '' ? dataUpdateUsuario.estado+', ' : ''}${dataUpdateUsuario.codigo_postal !== '' ? dataUpdateUsuario.codigo_postal+', ' : ''}${dataUpdateUsuario.pais}`)
+
+    },[
+        dataUpdateUsuario.calle,
+        dataUpdateUsuario.numero_exterior,
+        dataUpdateUsuario.colonia,
+        dataUpdateUsuario.municipio,
+        dataUpdateUsuario.estado,
+        dataUpdateUsuario.codigo_postal,
+        dataUpdateUsuario.pais,
+    ])
+
     return(
         <div className="container">
             <div className="">
@@ -542,6 +594,76 @@ export default function PageUpdateUsuario() {
                         {contieneError(4) && <div className="text-danger fw-medium">{ getErrorMsg(4) }</div>}
                     </div>
 
+                    <div className="col-12">
+                        <h6 style={{ fontWeight: 'bold' }}>Dirección del Usuario</h6>
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <div className="mb-3 row">
+                                    <label htmlFor="calle" className="col-sm-2 col-form-label">Calle:</label>
+                                    <div className="col-sm-10">
+                                        <input key={"AES-calle"} type="text" className="form-control" id="calle" name="calle" value={dataUpdateUsuario.calle} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="numero_exterior" className="col-sm-4 col-form-label">No Exterior:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-numero_exterior"} type="text" className="form-control" id="numero_exterior" name="numero_exterior" value={dataUpdateUsuario.numero_exterior} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="colonia" className="col-sm-4 col-form-label">Colonia:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-colonia"} type="text" className="form-control" id="colonia" name="colonia" value={dataUpdateUsuario.colonia} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="municipio" className="col-sm-4 col-form-label">Municipio:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-municipio"} type="text" className="form-control" id="municipio" name="municipio" value={dataUpdateUsuario.municipio} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="estado" className="col-sm-4 col-form-label">Estado:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-estado"} type="text" className="form-control" id="estado" name="estado" value={dataUpdateUsuario.estado} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="codigo_postal" className="col-sm-4 col-form-label">Código Postal:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-codigo_postal"} type="text" className="form-control" id="codigo_postal" name="codigo_postal" value={dataUpdateUsuario.codigo_postal} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="pais" className="col-sm-4 col-form-label">País:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-pais"} type="text" className="form-control" id="pais" name="pais" value={dataUpdateUsuario.pais} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="col-12" style={{ display: !esExterno ? 'block' : 'none' }}>
                         <h6 className="fw-bold"> Ubicacion del Usuario </h6>
                         <div className="mb-3">
@@ -562,13 +684,13 @@ export default function PageUpdateUsuario() {
                                 <div className="col-5">
                                     <label htmlFor="inputLong" className="form-label">Longitud:</label>
                                     <input type="text" className="form-control mb-2" id="inputLong" name="longitud"
-                                            placeholder="Longitud:" value={lonUser}
+                                            placeholder="Longitud:" value={dataUpdateUsuario.longitud}
                                             onChange={handleInputChange}/>
                                 </div>
                                 <div className="col-5">
                                     <label htmlFor="inputLat" className="form-label">Latitud:</label>
                                     <input type="text" className="form-control mb-2" id="inputLat" name="latitud"
-                                            placeholder="Latitud:" value={latUser}
+                                            placeholder="Latitud:" value={dataUpdateUsuario.latitud}
                                             onChange={handleInputChange}/>
                                 </div>
                                 <div className="col-12">
