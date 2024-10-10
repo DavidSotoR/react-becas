@@ -26,6 +26,7 @@ function Socioeconomico(){
     const [fromData,setFormData] = useState(null)
     const [encuesta,setEncuesta] = useState(null)
 
+    const [columnRow,setColumnRow] = useState('short');
     const [fromDataError,setFormDataError] = useState({})
     const [editarSeccion,setEditarSeccion] = useState('')
 
@@ -65,6 +66,20 @@ function Socioeconomico(){
                         Regresar
                     </Button>
                 </div>
+                
+                <div className="col"></div>
+                
+                <div className="col-md-2">
+                    <Form.Select 
+                        className="form-select form-select-sm" 
+                        name="vista" 
+                        id="vista" 
+                        value={columnRow}
+                        onChange={(e)=> {setColumnRow(e.target.value)}}>
+                        <option value='short'>Vista Corta</option>
+                        <option value='length'>Vista Larga</option>
+                    </Form.Select>
+                </div>
             </div>
             <hr/>
         </>
@@ -74,7 +89,7 @@ function Socioeconomico(){
         <div className="container mt-3">
             {headerPage()}
             
-            <Preguntas preguntas={listaPreguntas()}/>
+            <Preguntas idEstudio={idEstudio} preguntas={listaPreguntas()}/>
 
        </div> 
     </>)

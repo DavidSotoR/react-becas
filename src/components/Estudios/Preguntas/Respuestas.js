@@ -1,7 +1,17 @@
 import { useState,useEffect,useRef  } from "react";
+import { Button,Form, Modal } from "react-bootstrap";
+import axios from "axios";
+import { AuthContext } from "../../../context/AuthContext";
 
-export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}) {
+export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPreguntaTipo}) {
 
+    const APIURL = process.env.REACT_APP_API_URL;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    }
+    
     const [formData, setFormData] = useState([]);
 
 
@@ -37,7 +47,7 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
             const newState = [...prevState];
             newState[index] = {
                 ...newState[index],
-                texto: texto
+                respuesta: texto
             };
             return newState;
         });
@@ -63,6 +73,14 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
             return newState;
         });
     };
+    const save = () => {
+        const fromData = {id_catalogo_encuestas_preguntas_tipo:idPreguntaTipo,respuestas:formData};
+        axios.post(`${APIURL}/estudio/respuestas`,fromData,config).then((resp)=>{
+            getListaRespuestas();
+        }).catch((resp)=>{
+            console.log(resp);
+        })
+    }
 
     // 7 sumatoria totoal
     const sumaTotalporCampo = (campo) => {
@@ -101,7 +119,7 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
     // 1 .-  Pregunta abierta
     const preguntaAbierta = () => {
 
-        if ( !Array.isArray(formData) || !formData[0] || formData[0].texto === undefined) {
+        if ( !Array.isArray(formData) || !formData[0] || formData[0].respuesta === undefined) {
             return '';
         }
 
@@ -109,11 +127,11 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
             return (
             <div key={'pes-'+idPregunta+'-'+index}>
                 <div>
-                    {longitudTexto(item.texto,longitudRespuesta)}
+                    {longitudTexto(item.respuesta,longitudRespuesta)}
                 </div>
                 <div>
                     <textarea
-                        value={item.texto}
+                        value={item.respuesta}
                         onChange={(e) => {textChange(e,index)}}
                         maxLength={longitudRespuesta}
                         style={{
@@ -181,6 +199,7 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
 
         return (
             <div>
+                
                 <div className="row">
                     <div className="col-sm-2"></div>
                     <div className="col-sm-2">VIVE</div>
@@ -866,93 +885,108 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
             </div>
         )
     }
-
-    useEffect(() => {
+    const getListaRespuestas = () => {
         
+        axios.get(`${APIURL}/estudio/${idEstudio}/pregunta/${idPregunta}/respuestas`,config)
+        .then((resp)=>{
+            const data = resp.data;
+
+            if(data.length){
+                setFormData(data);
+            }else{
+                defaultValue()
+            }
+
+        }).catch((resp)=>{
+            console.log(resp);
+        })
+    }
+    const defaultValue = () => {
         switch(idPreguntaTipo){
             // 1 .-  Pregunta abierta
             case 1:
+
                 setFormData([
-                    {id_encuesta:'',id_estudio:'',id_pregunta:'',id_item:'',parentesco:'',texto:'',padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',}
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',}
                 ]);
             break;
             case 6:
                 setFormData([
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 ]);
             break;
             case 7:
                 setFormData([
-                    {id_encuesta:'',id_estudio:'',id_pregunta:'',id_item:'',parentesco:'',texto:'PADRE',vive:false,activo:false,respuesta:'',padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',},
-                    {id_encuesta:'',id_estudio:'',id_pregunta:'',id_item:'',parentesco:'',texto:'MADRE',vive:false,activo:false,respuesta:'',padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',},
-                    {id_encuesta:'',id_estudio:'',id_pregunta:'',id_item:'',parentesco:'',texto:'OTRO',respuesta:'',vive:false,activo:false,padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',}
+                    {id_encuesta:'',id_servicio_estudio:idEstudio,id_catalogo_encuestas_pregunta:idPregunta,id_item:'',parentesco:'',texto:'PADRE', respuesta:'', vive:false,activo:false,respuesta:'',padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',},
+                    {id_encuesta:'',id_servicio_estudio:idEstudio,id_catalogo_encuestas_pregunta:idPregunta,id_item:'',parentesco:'',texto:'MADRE', respuesta:'', vive:false,activo:false,respuesta:'',padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',},
+                    {id_encuesta:'',id_servicio_estudio:idEstudio,id_catalogo_encuestas_pregunta:idPregunta,id_item:'',parentesco:'',texto:'OTRO',respuesta:'', respuesta:'', vive:false,activo:false,padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',}
                 ]);
             break;
             case 8:
                 setFormData([
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'INGRESO NETO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'BONOS DE DESPENSA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'VALES DE GASOLINA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'COMISIONES POR VENTAS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'AGUINALDO ', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'BONO DE PRODUCTIVIDAD', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'FONDO DE AHORRO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'UTILIDADES PRIMA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'VACACIONAL', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'RENTA QUE RECIBA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'AYUDA QUE RECIBA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'INGRESO NETO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'BONOS DE DESPENSA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'VALES DE GASOLINA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'COMISIONES POR VENTAS',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'AGUINALDO ',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'BONO DE PRODUCTIVIDAD',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'FONDO DE AHORRO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'UTILIDADES PRIMA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'VACACIONAL',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'RENTA QUE RECIBA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'AYUDA QUE RECIBA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 ]);
             break;
             case 11:
                 setFormData([
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 ]);
             break;
             case 14:
                 setFormData([
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'CREDITO HIPOTECARIO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'CREDITO AUTOMOTRIZ', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'TARJETAS DE CREDITO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'TARJETAS DEPARTAMENTALES', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', nombre:'', texto:'PRESTAMOS PERSONALES/ NOMINA/ FAMILIARES', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'CREDITO HIPOTECARIO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'CREDITO AUTOMOTRIZ',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'TARJETAS DE CREDITO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'TARJETAS DEPARTAMENTALES',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'PRESTAMOS PERSONALES/ NOMINA/ FAMILIARES',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 ]);
             break;
             case 15:
                 setFormData([
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'ALIMENTACION Y DESPENSA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SEGURO GTS. MEDICOS MAYORES', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'ROPA Y CALZADO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SEGURO DE VIDA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'RENTA HIPOTECA CASA - HABITACION', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SEGURO DE CASA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'PREDIAL', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SEGURO DE AUTO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MTTO. Y SEGURIDAD FRACCIONAMIENTO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'CREDITO AUTOMOTRIZ', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SERVICIOS LUZ, AGUA, GAS, TELEFONO, INTERNET, TV. PAGA, CELULAR', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'GASOLINA Y TRANSPORTE', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MTTO. CASA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MTTO. AUTO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'SERVICIO DOMESTICO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'VACACIONES (1 AÑO ATRAS)', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MASCOTAS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'DIVERCION CINE, RESTAURANTES, PASEOS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'MEMBRESIA CLUB SOCIAL O DEPORTIVO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'AYUDA A PARIENTES', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'CONSULTAS, DOCTORES, MEDICAMENTOS, TRATAMIENTOS, ESPECIALISTAS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'CLASES / ACTIVIDADES EXTRACURRICULARES FUERA DEL COLEGIO (BALLET, FUTBOL, PINTURA, IDIOMAS, APOYO KUMOS, ETC.)', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'GASTOS DE EDUCACION INSCRIPCIONES, UNIFORMES, LIBROS, UTILES, SOCIEDAD DE PADRES, CUOTA DEPORTIVA, SEGURO, PLATAFORMAS', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'GASTOS DE EDUCACION MENSUALIDAD, CLASE ESTRACURRICULAR DENTRO DEL COLEGIO', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'TENENCIA', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_estudio:'', id_pregunta:'', id_item:'', parentesco:'', texto:'OTRO (ESPECIFICAR)', vive:false, activo:false, respuesta:'', padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'ALIMENTACION Y DESPENSA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'SEGURO GTS. MEDICOS MAYORES',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'ROPA Y CALZADO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'SEGURO DE VIDA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'RENTA HIPOTECA CASA - HABITACION',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'SEGURO DE CASA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'PREDIAL',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'SEGURO DE AUTO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'MTTO. Y SEGURIDAD FRACCIONAMIENTO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'CREDITO AUTOMOTRIZ',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'SERVICIOS LUZ, AGUA, GAS, TELEFONO, INTERNET, TV. PAGA, CELULAR',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'GASOLINA Y TRANSPORTE',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'MTTO. CASA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'MTTO. AUTO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'SERVICIO DOMESTICO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'VACACIONES (1 AÑO ATRAS)',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'MASCOTAS',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'DIVERCION CINE, RESTAURANTES, PASEOS',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'MEMBRESIA CLUB SOCIAL O DEPORTIVO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'AYUDA A PARIENTES',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'CONSULTAS, DOCTORES, MEDICAMENTOS, TRATAMIENTOS, ESPECIALISTAS',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'CLASES / ACTIVIDADES EXTRACURRICULARES FUERA DEL COLEGIO (BALLET, FUTBOL, PINTURA, IDIOMAS, APOYO KUMOS, ETC.)',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'GASTOS DE EDUCACION INSCRIPCIONES, UNIFORMES, LIBROS, UTILES, SOCIEDAD DE PADRES, CUOTA DEPORTIVA, SEGURO, PLATAFORMAS',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'GASTOS DE EDUCACION MENSUALIDAD, CLASE ESTRACURRICULAR DENTRO DEL COLEGIO',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'TENENCIA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'OTRO (ESPECIFICAR)',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 
                 ]);
             break;
@@ -960,7 +994,10 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
                 setFormData([]);
             break;
         }
-
+    }
+    useEffect(() => {
+        //idPregunta,longitudRespuesta,idPreguntaTipo
+        getListaRespuestas();
     },[])
     const preguntaPorTipoPregunta = () => {
         switch(idPreguntaTipo){
@@ -1028,6 +1065,13 @@ export default function Respuestas({idPregunta,longitudRespuesta,idPreguntaTipo}
             </div>
             <div className="col-md-8">
                 {preguntaPorTipoPregunta()}
+            </div>
+            
+            <div className="col-md-8">
+                
+                <Button variant="light" style={{ marginLeft: "5px" }} className="d-flex align-items-center" onClick={() => save()}>
+                    Guardar
+                </Button>
             </div>
         </div>
     )
