@@ -123,7 +123,7 @@ export default function Layout() {
                           
                           <MenuItem onClick={Logout} className="ps-1"> 
                           { collapsed ?
-                                (<ion-icon  name="log-out" size="large"/>):(<p>Logout</p>)
+                                (<ion-icon  name="log-out" size="large"/>):(<p>CERRAR SESIÓN</p>)
                               }
                           </MenuItem>
                         </Menu>

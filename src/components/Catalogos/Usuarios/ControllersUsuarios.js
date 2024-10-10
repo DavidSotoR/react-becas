@@ -1,6 +1,6 @@
 function ControllerUsuarios() {
     const GenerarPassword = () => {
-        const length = 12;
+        const length = 6;
         const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const lowerChars = "abcdefghijklmnopqrstuvwxyz";
         const numbers = "0123456789";

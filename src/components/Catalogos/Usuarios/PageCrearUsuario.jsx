@@ -45,6 +45,8 @@ export default function PageCrearUsuario () {
     const [pass1, setPass1] = useState('')
     const [pass2, setPass2] = useState('')
     const [ cuentaConUbicacion, setCuentaConUbicacion ] = useState(false)
+    const [timeoutId, setTimeoutId] = useState(null);
+
     const [ dataPostUsuario, setDataPostUsuario ] = useState({
         name:"",
         email:"",
@@ -53,8 +55,15 @@ export default function PageCrearUsuario () {
         id_perfil: "0",
         id_cliente: "0",
         direccion: "",
-        latitud: '',
-        longitud: ''
+        latitud:25.67507,
+        longitud:-100.31847,
+        calle:'',
+        numero_exterior:'',
+        colonia:'',
+        municipio:'',
+        estado:'',
+        codigo_postal:'',
+        pais:'',
     })
 
     //Map Icon
@@ -248,7 +257,10 @@ export default function PageCrearUsuario () {
         for (let key in obj) {
             // Ignora la validación de 'id_cliente' si 'isExterno' es false
             if ((key === "longitud" && !esExterno) || (key === "latitud" && !esExterno) ||
-                (key === "longitud" && esExterno) || (key === "latitud" && esExterno) || 
+                (key === "longitud" && esExterno) || (key === "latitud" && esExterno) ||
+                (key === "calle") || (key === "numero_exterior") ||  (key === "colonia") || 
+                (key === "municipio") || (key === "estado") ||  (key === "codigo_postal") || 
+                (key === "pais") || 
                 (key === "id_cliente" && !esExterno) || key === 'direccion' /* || (obj[key] !== "" && obj[key] !== "0") */) {
                 continue; // Continúa con la siguiente iteración del bucle
             }
@@ -380,22 +392,56 @@ export default function PageCrearUsuario () {
         setCuentaConUbicacion(!cuentaConUbicacion)
     }
 
+    const convertirAMayusculas = (texto) => {
+        return texto.toUpperCase();
+    }
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
+        if ((name === "calle") || (name === "numero_exterior") ||  (name === "colonia") || 
+        (name === "municipio") || (name === "estado") ||  (name === "codigo_postal") || 
+        (name === "pais")) {
+            var mayus = convertirAMayusculas(value);
+            setDataPostUsuario(prevState => ({  
+                ...prevState,
+                [name]: mayus
+            }));
+        } else {
+            setDataPostUsuario(prevState => ({  
+                ...prevState,
+                [name]: value
+            }));
+        }
+
         setInputChanged(name)
-        setDataPostUsuario(prevState => ({  
-            ...prevState,
-            [name]: value
-        }));
+        
     
     };
 
     const seccionUbicaciones = () => {
-        {JSON.stringify(direcciones)}
+
+        if (!Array.isArray(direcciones) || direcciones.length === 0) {
+            // Si `direcciones` no es un array válido o está vacío, mostramos un mensaje
+            return (<div>
+                        <div 
+                        className="row rounded border mt-1 p-1" 
+                        style={{cursor:'pointer' }}
+                        >
+                            <div className="col-1">
+                                <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                            </div>
+                            <div className="col-10">
+                                <div>No se encontraron ubicaciones.</div>
+                                <div style={{fontSize:'.8em'}}>Introduzca otra dirección</div>
+                            </div>
+                        </div>
+                    </div>);
+        }
+
         return (
           <div>
-            {Array.isArray(direcciones) && direcciones.slice(0, 5).map((direccion, index) => (
+            {direcciones.slice(0, 5).map((direccion, index) => (
               <div 
                 key={'asu-' + index} 
                 className="row rounded border mt-1 p-1" 
@@ -451,8 +497,17 @@ export default function PageCrearUsuario () {
             externo: esExterno ? 1 : 0,
             latitud: latUser,
             longitud: lonUser,
-            direccion: direccionUser
+            direccion: direccionUser,
+            calle: dataPostUsuario.calle,
+            numero_exterior: dataPostUsuario.numero_exterior,
+            colonia: dataPostUsuario.colonia,
+            municipio: dataPostUsuario.municipio,
+            estado: dataPostUsuario.estado,
+            codigo_postal: dataPostUsuario.codigo_postal,
+            pais: dataPostUsuario.pais
         }
+        console.log(data);
+        
 
         try {
             const resp = await axios.post(APIURL+'/register', data, config)
@@ -467,14 +522,29 @@ export default function PageCrearUsuario () {
         }   
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         if (direccionUser.length >= 3) {
-            getDireccionGSP();
-            /* setLatUser(direccionUser.lat)
-            setLonUser(direccionUser.lon) */
+            // Limpiar cualquier timeout anterior cuando cambia la dirección
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+
+            // Crear un nuevo timeout de 3 segundos
+            const newTimeoutId = setTimeout(() => {
+                getDireccionGSP();
+            }, 3000);
+
+            // Guardar el id del timeout para poder limpiarlo en futuros cambios
+            setTimeoutId(newTimeoutId);
         }
-        
-    },[direccionUser])
+
+        // Limpiar el timeout cuando el componente se desmonte
+        return () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+    }, [direccionUser]);
 
     useEffect(() => {
             getPerfilesList();
@@ -493,6 +563,23 @@ export default function PageCrearUsuario () {
     useEffect(() =>{
         validateForm( dataPostUsuario )
     },[dataPostUsuario])
+
+    useEffect(()=>{ 
+        setDataPostUsuario(prevState => ({
+            ...prevState,
+            direccion: `${dataPostUsuario.calle} ${dataPostUsuario.numero_exterior},${dataPostUsuario.colonia !== '' ? dataPostUsuario.colonia+',' : ''}${dataPostUsuario.municipio !== '' ? dataPostUsuario.municipio+',' : ''}${dataPostUsuario.estado !== '' ? dataPostUsuario.estado+',' : ''}${dataPostUsuario.codigo_postal !== '' ? dataPostUsuario.codigo_postal+',' : ''}${dataPostUsuario.pais}`
+        }));
+        setDireccionUser(`${dataPostUsuario.calle} ${dataPostUsuario.numero_exterior}, ${dataPostUsuario.colonia !== '' ? dataPostUsuario.colonia+', ' : ''}${dataPostUsuario.municipio !== '' ? dataPostUsuario.municipio+', ' : ''}${dataPostUsuario.estado !== '' ? dataPostUsuario.estado+', ' : ''}${dataPostUsuario.codigo_postal !== '' ? dataPostUsuario.codigo_postal+', ' : ''}${dataPostUsuario.pais}`)
+
+    },[
+        dataPostUsuario.calle,
+        dataPostUsuario.numero_exterior,
+        dataPostUsuario.colonia,
+        dataPostUsuario.municipio,
+        dataPostUsuario.estado,
+        dataPostUsuario.codigo_postal,
+        dataPostUsuario.pais,
+    ])
 
     return (
             <div className="container">
@@ -551,7 +638,8 @@ export default function PageCrearUsuario () {
                         {contieneError(4) && <div className="text-danger fw-medium">{ getErrorMsg(4) }</div>}
                     </div>
 
-                    <div className="col-12 row">
+                    <div className="col-12 row mb-5">
+                    
                         <div className="col-12 col-md-5 col-sm-7 mb-3">
                                 <div className="row d-flex justify-content-start align-items-center m-0">
                                     <div className="col m-0 ps-0">
@@ -594,6 +682,76 @@ export default function PageCrearUsuario () {
                             {contieneError(0) && <div className="text-danger fw-medium">{ getErrorMsg(0) }</div>}
                         </div>
                     </div>
+
+                    <div className="col-12">
+                        <h6 style={{ fontWeight: 'bold' }}>Dirección del Usuario</h6>
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <div className="mb-3 row">
+                                    <label htmlFor="calle" className="col-sm-2 col-form-label">Calle:</label>
+                                    <div className="col-sm-10">
+                                        <input key={"AES-calle"} type="text" className="form-control" id="calle" name="calle" value={dataPostUsuario.calle} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="numero_exterior" className="col-sm-4 col-form-label">No Exterior:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-numero_exterior"} type="text" className="form-control" id="numero_exterior" name="numero_exterior" value={dataPostUsuario.numero_exterior} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="colonia" className="col-sm-4 col-form-label">Colonia:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-colonia"} type="text" className="form-control" id="colonia" name="colonia" value={dataPostUsuario.colonia} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="municipio" className="col-sm-4 col-form-label">Municipio:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-municipio"} type="text" className="form-control" id="municipio" name="municipio" value={dataPostUsuario.municipio} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="estado" className="col-sm-4 col-form-label">Estado:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-estado"} type="text" className="form-control" id="estado" name="estado" value={dataPostUsuario.estado} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="codigo_postal" className="col-sm-4 col-form-label">Código Postal:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-codigo_postal"} type="text" className="form-control" id="codigo_postal" name="codigo_postal" value={dataPostUsuario.codigo_postal} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="mb-3 row">
+                                    <label htmlFor="pais" className="col-sm-4 col-form-label">País:</label>
+                                    <div className="col-sm-8">
+                                        <input key={"AES-pais"} type="text" className="form-control" id="pais" name="pais" value={dataPostUsuario.pais} onChange={(e)=> handleInputChange(e)}/>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className="col-12" style={{ display: !esExterno ? 'block' : 'none' }}>
                         <h6 className="fw-bold"> Ubicacion del Usuario </h6>
                         <div className="mb-3">
@@ -626,20 +784,22 @@ export default function PageCrearUsuario () {
                                             onChange={handleInputChange}/>
                                 </div>
                                 <div className="col-12">
+                                <div className="mb-3 row">
                                     {seccionUbicaciones()}
-                                        <MapContainer center={[dataPostUsuario.latitud, dataPostUsuario.longitud]} zoom={13} style={{ height: "50vh", width: "100%" }}>
-                                            <TileLayer
-                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                                icon={customIcon}
-                                            />
-                                            <Marker position={[dataPostUsuario.latitud, dataPostUsuario.longitud]}>
-                                                <Popup>
-                                                ¡Hola! Este es un cuadro de texto en un popup.
-                                                </Popup>
-                                            </Marker>
-                                            {cricleColaboradores()}
-                                        </MapContainer>                                
+                                </div>
+                                    <MapContainer center={[dataPostUsuario.latitud, dataPostUsuario.longitud]} zoom={13} style={{ height: "50vh", width: "100%" }}>
+                                        <TileLayer
+                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                            icon={customIcon}
+                                        />
+                                        <Marker position={[dataPostUsuario.latitud, dataPostUsuario.longitud]}>
+                                            <Popup>
+                                            ¡Hola! Este es un cuadro de texto en un popup.
+                                            </Popup>
+                                        </Marker>
+                                        {cricleColaboradores()}
+                                    </MapContainer>                                
                                 
 
                                 </div>
