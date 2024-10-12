@@ -259,6 +259,7 @@ export default function PageUpdateUsuario() {
     }
 
     const seleccionarUbicacion = (direccion) => {
+        setDireccionUser(convertirAMayusculas(direccion.display_name))
         placeIdSet(direccion.place_id);
         setLatUser(direccion.lat)
         setLonUser(direccion.lon)
@@ -270,10 +271,28 @@ export default function PageUpdateUsuario() {
     }
 
     const seccionUbicaciones = () => {
-        {JSON.stringify(direcciones)}
+
+        if (!Array.isArray(direcciones) || direcciones.length === 0) {
+            // Si `direcciones` no es un array válido o está vacío, mostramos un mensaje
+            return (<div>
+                        <div 
+                        className="row rounded border mt-1 p-1" 
+                        style={{cursor:'pointer' }}
+                        >
+                            <div className="col-1">
+                                <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                            </div>
+                            <div className="col-10">
+                                <div>No se encontraron ubicaciones.</div>
+                                <div style={{fontSize:'.8em'}}>Introduzca otra dirección</div>
+                            </div>
+                        </div>
+                    </div>);
+        }
+
         return (
           <div>
-            {Array.isArray(direcciones) && direcciones.slice(0, 5).map((direccion, index) => (
+            {direcciones.slice(0, 5).map((direccion, index) => (
               <div 
                 key={'asu-' + index} 
                 className="row rounded border mt-1 p-1" 
@@ -479,9 +498,27 @@ export default function PageUpdateUsuario() {
             )} </>
     }
 
-    const getDireccionGSP = () => {
-        console.log(direccionUser);
-        
+    function crearDireccion(data) {
+        const {
+            numero_exterior,
+            calle,
+            colonia,
+            municipio,
+            estado,
+            codigo_postal,
+            pais
+        } = data;
+    
+        return `${numero_exterior ? numero_exterior + ', ' : ''}` +
+               `${calle ? calle + ', ' : ''}` +
+               `${colonia ? colonia + ', ' : ''}` +
+               `${municipio ? municipio + ', ' : ''}` +
+               `${estado ? estado + ', ' : ''}` +
+               `${codigo_postal ? codigo_postal + ', ' : ''}` +
+               `${pais ? pais : ''}`;
+    }
+
+    const getDireccionGSP = () => {        
         if(direccionUser.length<5){
             direccionesSet()
         }
@@ -521,11 +558,14 @@ export default function PageUpdateUsuario() {
     },[])
 
     useEffect(()=>{ 
+        const direccion = crearDireccion(dataUpdateUsuario);
+
         setDataUpdateUsuario(prevState => ({
             ...prevState,
-            direccion: `${dataUpdateUsuario.calle} ${dataUpdateUsuario.numero_exterior},${dataUpdateUsuario.colonia !== '' ? dataUpdateUsuario.colonia+',' : ''}${dataUpdateUsuario.municipio !== '' ? dataUpdateUsuario.municipio+',' : ''}${dataUpdateUsuario.estado !== '' ? dataUpdateUsuario.estado+',' : ''}${dataUpdateUsuario.codigo_postal !== '' ? dataUpdateUsuario.codigo_postal+',' : ''}${dataUpdateUsuario.pais}`
+            direccion: convertirAMayusculas(direccion)
         }));
-        setDireccionUser(`${dataUpdateUsuario.calle} ${dataUpdateUsuario.numero_exterior}, ${dataUpdateUsuario.colonia !== '' ? dataUpdateUsuario.colonia+', ' : ''}${dataUpdateUsuario.municipio !== '' ? dataUpdateUsuario.municipio+', ' : ''}${dataUpdateUsuario.estado !== '' ? dataUpdateUsuario.estado+', ' : ''}${dataUpdateUsuario.codigo_postal !== '' ? dataUpdateUsuario.codigo_postal+', ' : ''}${dataUpdateUsuario.pais}`)
+    
+        setDireccionUser(convertirAMayusculas(direccion));
 
     },[
         dataUpdateUsuario.calle,

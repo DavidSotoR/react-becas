@@ -462,6 +462,7 @@ export default function PageCrearUsuario () {
     }
 
     const seleccionarUbicacion = (direccion) => {
+        setDireccionUser(convertirAMayusculas(direccion.display_name))
         placeIdSet(direccion.place_id);
         setLatUser(direccion.lat)
         setLonUser(direccion.lon)
@@ -567,9 +568,9 @@ export default function PageCrearUsuario () {
     useEffect(()=>{ 
         setDataPostUsuario(prevState => ({
             ...prevState,
-            direccion: `${dataPostUsuario.calle} ${dataPostUsuario.numero_exterior},${dataPostUsuario.colonia !== '' ? dataPostUsuario.colonia+',' : ''}${dataPostUsuario.municipio !== '' ? dataPostUsuario.municipio+',' : ''}${dataPostUsuario.estado !== '' ? dataPostUsuario.estado+',' : ''}${dataPostUsuario.codigo_postal !== '' ? dataPostUsuario.codigo_postal+',' : ''}${dataPostUsuario.pais}`
+            direccion: `${dataPostUsuario.numero_exterior !== '' ? dataPostUsuario.numero_exterior+', ' : ''}${dataPostUsuario.calle !== '' ? dataPostUsuario.calle+', ' : ''}${dataPostUsuario.colonia !== '' ? dataPostUsuario.colonia+', ' : ''}${dataPostUsuario.municipio !== '' ? dataPostUsuario.municipio+', ' : ''}${dataPostUsuario.estado !== '' ? dataPostUsuario.estado+', ' : ''}${dataPostUsuario.codigo_postal !== '' ? dataPostUsuario.codigo_postal+', ' : ''}${dataPostUsuario.pais}`
         }));
-        setDireccionUser(`${dataPostUsuario.calle} ${dataPostUsuario.numero_exterior}, ${dataPostUsuario.colonia !== '' ? dataPostUsuario.colonia+', ' : ''}${dataPostUsuario.municipio !== '' ? dataPostUsuario.municipio+', ' : ''}${dataPostUsuario.estado !== '' ? dataPostUsuario.estado+', ' : ''}${dataPostUsuario.codigo_postal !== '' ? dataPostUsuario.codigo_postal+', ' : ''}${dataPostUsuario.pais}`)
+        setDireccionUser(`${dataPostUsuario.numero_exterior !== '' ? dataPostUsuario.numero_exterior+', ' : ''}${dataPostUsuario.calle !== '' ? dataPostUsuario.calle+', ' : ''}${dataPostUsuario.colonia !== '' ? dataPostUsuario.colonia+', ' : ''}${dataPostUsuario.municipio !== '' ? dataPostUsuario.municipio+', ' : ''}${dataPostUsuario.estado !== '' ? dataPostUsuario.estado+', ' : ''}${dataPostUsuario.codigo_postal !== '' ? dataPostUsuario.codigo_postal+', ' : ''}${dataPostUsuario.pais}`)
 
     },[
         dataPostUsuario.calle,
