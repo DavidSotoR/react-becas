@@ -473,51 +473,92 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     const casaHabitacion = () => {
         return (
             <div className="row">
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'vivienda' && (                    
+                        <div  key={'pes-'+idPregunta+'-'+index} className="row col-12">
+                            <div className="row col-md-6 text-start">
+                                <div className="col-sm-6 p-1 text-start">{item.texto}</div>
+                                <div className="col-sm-6 p-1">
+                                    <div className="row">
+                                        <div className="col-1"></div>
+                                        <div className="col-10">
+                                            <input
+                                                className="form-control form-control-sm"
+                                                name="respuesta" 
+                                                value={item.respuesta}
+                                                onChange={(e) => {formInputChange(e,index)}}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        )
+                })}
+                
                 <div className="row col-12">
-                    <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start">SITUACION DE LA VIVIENDA</div>
-                        <div className="col-sm-6 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    </div>
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'valor' && (
+                        <div key={'pes-'+idPregunta+'-'+index} className="row col-md-6 text-start">
+                            <div className="col-sm-6 p-1 text-start">{item.texto}</div>
+                            <div className="col-sm-6 p-1 text-start">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10">
+                                        <input
+                                            className="form-control form-control-sm"
+                                            name="monto" 
+                                            value={item.monto}
+                                            onChange={(e) => {formInputChange(e,index)}}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        )
+                })}
                 </div>
-                <div className="row col-12">
-                    <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start">MONTO DE LA RENTA O MENSUALIDAD</div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
-                    </div>
-                    <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start">VALOR APROXIMADO</div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
-                    </div>
-                </div>
-                <div className="row col-12">
-                    <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start">METROS DE CONTRUCCION</div>
-                        <div className="col-sm-6 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    </div>
-                    <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start">METRO DE TERRENO</div>
-                        <div className="col-sm-6 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    </div>
-                </div>
+
                 <div className="row col-12 mt-4">
-                    <div className="col-12 p-1 text-start">
-                        ESPESIFICAR SI CUENTA CON TROA CASA HABITACION, TERRENO, DEPARTAMENTO, LOCALES, ETC.
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'header_otros' && (
+                    <div key={'pes-'+idPregunta+'-'+index}  className="col-12 p-1 text-start">
+                        {item.texto}
                     </div>
+                    )
+                })}
                 </div>
+                
                 <div className="row col-12">
-                    <div className="row col-md-12 text-start">
-                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
-                    </div>
-                    <div className="row col-md-12 text-start">
-                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
-                    </div>
-                    <div className="row col-md-12 text-start">
-                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                    <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
-                    </div>
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'body_otros' && (
+                        <div key={'pes-'+idPregunta+'-'+index} className="row col-md-12 text-start">                            
+                            <div className="col-sm-9 p-1">
+                                <input
+                                    className="form-control"
+                                    name="respuesta" 
+                                    value={item.respuesta}
+                                    onChange={(e) => {formInputChange(e,index)}}
+                                />
+                            </div>
+                            <div className="col-sm-3 p-1 text-start">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10">
+                                        <input
+                                            className="form-control form-control-sm"
+                                            name="monto" 
+                                            value={item.monto}
+                                            onChange={(e) => {formInputChange(e,index)}}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        )
+                })}
                 </div>
+                
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
                         <div className="col-sm-6 p-1 text-start"><b>B) TOTAL:</b></div>
@@ -948,6 +989,19 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                ]);
+            break;
+            case 12:
+                setFormData([
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'SITUACION DE LA VIVIENDA', seccion:'vivienda', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'MONTO DE LA RENTA O MENSUALIDAD', seccion:'valor', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'VALOR APROXIMADO', seccion:'valor', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'METROS DE CONTRUCCION', seccion:'construccion', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'METRO DE TERRENO', seccion:'construccion', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'ESPESIFICAR SI CUENTA CON TROA CASA HABITACION, TERRENO, DEPARTAMENTO, LOCALES, ETC.', seccion:'header_otros', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'', seccion:'body_otros', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'', seccion:'body_otros', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'', seccion:'body_otros', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 ]);
             break;
             case 14:
