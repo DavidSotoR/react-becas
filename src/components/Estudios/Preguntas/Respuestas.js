@@ -278,7 +278,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                 <div className="col-1">$</div>
                                 <div className="col-10">
                                     <input
-                                        className="form-control form-control-sm"
+                                        className="form-control form-control-sm text-end"
                                         name="padre_monto" 
                                         key={`padre_monto-${index}`}
                                         ref={(el) => (padreRefs.current[index] = el)}
@@ -294,7 +294,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                 <div className="col-1">$</div>
                                 <div className="col-10">
                                     <input
-                                        className="form-control form-control-sm"
+                                        className="form-control form-control-sm text-end"
                                         name="madre_monto" 
                                         key={`madre_monto-${index}`}
                                         ref={(el) => (madreRefs.current[index] = el)}
@@ -310,7 +310,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                 <div className="col-1">$</div>
                                 <div className="col-10">
                                     <input
-                                        className="form-control form-control-sm"
+                                        className="form-control form-control-sm text-end"
                                         name="monto" 
                                         key={`monto-${index}`}
                                         ref={(el) => (montoRefs.current[index] = el)}
@@ -329,7 +329,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     <div className="border-bottom border-secondary">
                         <div className="row">
                             <div className="col-1">$</div>
-                            <div className="col-10 text-right">
+                            <div className="col-10 text-end">
                                 {sumaTotalporCampo('padre_monto')}
                             </div>
                         </div>
@@ -339,7 +339,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     <div className="border-bottom border-secondary">
                         <div className="row">
                             <div className="col-1">$</div>
-                            <div className="col-10 text-right">
+                            <div className="col-10 text-end">
                                 {sumaTotalporCampo('madre_monto')}
                             </div>
                         </div>
@@ -349,7 +349,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     <div className="border-bottom border-secondary">
                         <div className="row">
                             <div className="col-1">$</div>
-                            <div className="col-10 text-right">
+                            <div className="col-10 text-end">
                                 {sumaTotalporCampo('monto')}
                             </div>
                         </div>
@@ -362,7 +362,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     <div className="border-bottom border-secondary">
                         <div className="row">
                             <div className="col-1">$</div>
-                            <div className="col-10">
+                            <div className="col-10 text-end">
                                 {sumaTotales()}
                             </div>
                         </div>
@@ -442,7 +442,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     </div>
                     <div className="col-sm-2 p-1">
                         <input
-                            className="form-control form-control-sm"
+                            className="form-control form-control-sm text-end"
                             name="monto" 
                             key={`monto-${index}`}
                             ref={(el) => (montoRefs.current[index] = el)}
@@ -460,7 +460,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                         <div className="border-bottom border-secondary">
                             <div className="row">
                                 <div className="col-1">$</div>
-                                <div className="col-10 text-right">
+                                <div className="col-10 text-end">
                                     {sumaTotalporCampo('monto')}
                                 </div>
                             </div>
@@ -507,7 +507,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                     <div className="col-1">$</div>
                                     <div className="col-10">
                                         <input
-                                            className="form-control form-control-sm"
+                                            className="form-control form-control-sm text-end"
                                             name="monto" 
                                             value={item.monto ?? ''}
                                             onChange={(e) => {formInputChange(e,index)}}
@@ -547,7 +547,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                     <div className="col-1">$</div>
                                     <div className="col-10">
                                         <input
-                                            className="form-control form-control-sm"
+                                            className="form-control form-control-sm text-end"
                                             name="monto" 
                                             value={item.monto ?? ''}
                                             onChange={(e) => {formInputChange(e,index)}}
@@ -678,7 +678,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                             <div className="col-1">$</div>
                             <div className="col-10">
                                 <input
-                                    className="form-control form-control-sm"
+                                    className="form-control form-control-sm text-end"
                                     name="padre_monto" 
                                     key={`padre_monto-${index}`}
                                     ref={(el) => (padreRefs.current[index] = el)}
@@ -694,7 +694,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                             <div className="col-1">$</div>
                             <div className="col-10">
                                 <input
-                                    className="form-control form-control-sm"
+                                    className="form-control form-control-sm text-end"
                                     name="monto" 
                                     key={`monto-${index}`}
                                     ref={(el) => (montoRefs.current[index] = el)}
@@ -725,7 +725,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                             <div className="col-1">$</div>
                             <div className="col-10">
                                 <input
-                                    className="form-control form-control-sm"
+                                    className="form-control form-control-sm text-end"
                                     name="padre_monto" 
                                     key={`padre_monto-${index}`}
                                     ref={(el) => (padreRefs.current[index] = el)}
