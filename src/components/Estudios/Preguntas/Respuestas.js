@@ -3,7 +3,7 @@ import { Button,Form, Modal } from "react-bootstrap";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
 
-export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPreguntaTipo}) {
+export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPreguntaTipo,colClass}) {
 
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -13,8 +13,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     }
     
     const [formData, setFormData] = useState([]);
-
-
+ 
     const longitudTexto = (text = '',longitud = 0) => {
         const dif = longitud - text.length;
         const porcentaje = longitud ? ((dif / longitud) * 100) : 0;
@@ -131,7 +130,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                 </div>
                 <div>
                     <textarea
-                        value={item.respuesta}
+                        value={item.respuesta ?? ''}
                         onChange={(e) => {textChange(e,index)}}
                         maxLength={longitudRespuesta}
                         style={{
@@ -160,13 +159,14 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         return (
             <div>
             <div className="row">
-                <div className="col-sm-2"></div>
+                <div className="col"/>
                 <div className="col-sm-3 p-1">PARENTESCO</div>
                 <div className="col-sm-3 p-1">NOMBRE</div>
+                <div className="col"/>
             </div>
             {formData.map((item,index) => (
             <div  key={'pes-'+idPregunta+'-'+index}  className="row text-start">
-                <div className="col-sm-2"></div>
+                <div className="col"/>
                 <div className="col-sm-3 p-1">
                     <input
                         className="form-control form-control-sm"
@@ -174,7 +174,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                         key={`parentesco-${index}`}
                         ref={(el) => (padreRefs.current[index] = el)}
                         onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
-                        value={item.parentesco}
+                        value={item.parentesco ?? ''}
                         onChange={(e) => {formInputChange(e,index)}}
                     />
                 </div>
@@ -185,10 +185,11 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                         key={`nombre-${index}`}
                         ref={(el) => (madreRefs.current[index] = el)}
                         onKeyDown={(e) => handleKeyDown(e, index, madreRefs)}
-                        value={item.nombre}
+                        value={item.nombre ?? ''}
                         onChange={(e) => {formInputChange(e,index)}}
                     />
                 </div>
+                <div className="col"/>
             </div>
             ))}
             </div>
@@ -248,7 +249,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                 className="form-control"
                                 name="respuesta" 
                                 disabled={!item.activo}
-                                value={item.respuesta}
+                                value={item.respuesta ?? ''}
                                 onChange={(e) => {formInputChange(e,index)}}
                             ></input>
                         </div>
@@ -282,7 +283,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                         key={`padre_monto-${index}`}
                                         ref={(el) => (padreRefs.current[index] = el)}
                                         onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
-                                        value={item.padre_monto}
+                                        value={item.padre_monto ?? ''}
                                         onChange={(e) => {formInputChange(e,index)}}
                                     />
                                 </div>
@@ -298,7 +299,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                         key={`madre_monto-${index}`}
                                         ref={(el) => (madreRefs.current[index] = el)}
                                         onKeyDown={(e) => handleKeyDown(e, index, madreRefs)}
-                                        value={item.madre_monto}
+                                        value={item.madre_monto ?? ''}
                                         onChange={(e) => {formInputChange(e,index)}}
                                     />
                                 </div>
@@ -314,7 +315,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                         key={`monto-${index}`}
                                         ref={(el) => (montoRefs.current[index] = el)}
                                         onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
-                                        value={item.monto}
+                                        value={item.monto ?? ''}
                                         onChange={(e) => {formInputChange(e,index)}}
                                     />
                                 </div>
@@ -402,7 +403,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                             key={`tipo-${index}`}
                             ref={(el) => (tipoRefs.current[index] = el)}
                             onKeyDown={(e) => handleKeyDown(e, index, tipoRefs)}
-                            value={item.tipo}
+                            value={item.tipo ?? ''}
                             onChange={(e) => {formInputChange(e,index)}}
                         />
                     </div>
@@ -413,7 +414,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                             key={`marca_modelo-${index}`}
                             ref={(el) => (marcaModeloRefs.current[index] = el)}
                             onKeyDown={(e) => handleKeyDown(e, index, marcaModeloRefs)}
-                            value={item.marca_modelo}
+                            value={item.marca_modelo ?? ''}
                             onChange={(e) => {formInputChange(e,index)}}
                         />
                     </div>
@@ -424,7 +425,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                             key={`anio-${index}`}
                             ref={(el) => (anioRefs.current[index] = el)}
                             onKeyDown={(e) => handleKeyDown(e, index, anioRefs)}
-                            value={item.anio}
+                            value={item.anio ?? ''}
                             onChange={(e) => {formInputChange(e,index)}}
                         />
                     </div>
@@ -435,7 +436,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                             key={`propietario-${index}`}
                             ref={(el) => (propietarioRefs.current[index] = el)}
                             onKeyDown={(e) => handleKeyDown(e, index, propietarioRefs)}
-                            value={item.propietario}
+                            value={item.propietario ?? ''}
                             onChange={(e) => {formInputChange(e,index)}}
                         />
                     </div>
@@ -446,7 +447,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                             key={`monto-${index}`}
                             ref={(el) => (montoRefs.current[index] = el)}
                             onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
-                            value={item.monto}
+                            value={item.monto ?? ''}
                             onChange={(e) => {formInputChange(e,index)}}
                         />
                     </div>
@@ -485,7 +486,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                             <input
                                                 className="form-control form-control-sm"
                                                 name="respuesta" 
-                                                value={item.respuesta}
+                                                value={item.respuesta ?? ''}
                                                 onChange={(e) => {formInputChange(e,index)}}
                                             />
                                         </div>
@@ -508,7 +509,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                         <input
                                             className="form-control form-control-sm"
                                             name="monto" 
-                                            value={item.monto}
+                                            value={item.monto ?? ''}
                                             onChange={(e) => {formInputChange(e,index)}}
                                         />
                                     </div>
@@ -537,7 +538,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                 <input
                                     className="form-control"
                                     name="respuesta" 
-                                    value={item.respuesta}
+                                    value={item.respuesta ?? ''}
                                     onChange={(e) => {formInputChange(e,index)}}
                                 />
                             </div>
@@ -548,7 +549,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                         <input
                                             className="form-control form-control-sm"
                                             name="monto" 
-                                            value={item.monto}
+                                            value={item.monto ?? ''}
                                             onChange={(e) => {formInputChange(e,index)}}
                                         />
                                     </div>
@@ -573,221 +574,87 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                 </div>
             </div>
         )
-    }
+    } 
     // 13 .-  Distribución de la casa
     const distrubucionDeLaCasa = () => {
         return (
             <div className="row">
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        COCHERA AUTOS
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'seleccionable' && (                 
+                        <div  key={'pes-'+idPregunta+'-'+index} className="row col-sm-3">
+                            <div className="col-8 p-1 text-start">
+                                {item.texto}
+                            </div>
+                            <div className="col-4 p-1"> 
+                            <div className="form-check form-switch">
+                                    <input 
+                                        className="form-check-input"  
+                                        type="checkbox" 
+                                        role="switch"
+                                        name="activo"
+                                        checked={item.activo}
+                                        onChange={(e) => {formInputChange(e,index)}}
+                                        id="activo"/> 
+                                    {/*<label className="form-check-label">{(item.activo) ? 'Si' : 'No'}</label>*/}
+                                </div>
+                            </div>
+                        </div>
+                        )
+                })}
+                <div className="sol-12">
+                    <br/>
                 </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        PATIO
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        SALA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        COMEDOR
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        COCINA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        RECAMARAS
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        BAÑOS
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        PANTALLA DE TV
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        REFRIGERADOR
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        PARRILLA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        LAVADORA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        SECADORA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        CUARTO DE LAVANDERIA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        CUARTO DE SERVICIO
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        RECIBIDOR
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        ESTANCIA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        JARDIN
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        JUEGOS
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        MINISPLIT
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        ESTUDIO
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        BODEGA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        ROOF GARDEN
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        ALBERCA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        CUARZO
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        MARMOL
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        GRANITO
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        AREA SOCIAL
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        CANTERA
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        PANELES SOLARES
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        CLIMA CENTRAL
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        GIMNASIO
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-sm-3">
-                    <div className="col-8 p-1 text-start">
-                        CUARZO
-                    </div>
-                    <div className="col-3 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-12">
-                    <div className="col-sm-3 p-1 text-start">
-                        CLASIFICACION
-                    </div>
-                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-12">
-                    <div className="col-sm-3 p-1 text-start">
-                        DESCRIBIR LO OBSERVADO
-                    </div>
-                    <div className="col-sm-9 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-12">
-                    <div className="col-sm-12 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row col-12">
-                    <div className="col-sm-12 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'clasificacion'  && (                 
+                        <div  key={'pes-'+idPregunta+'-'+index} className="row col-12">
+                            <div className="col-4 p-1 text-start">
+                                {item.texto}
+                            </div>
+                            <div className="col-8 p-1"> 
+                                <input
+                                    className="form-control"
+                                    name="respuesta" 
+                                    value={item.respuesta ?? ''}
+                                    onChange={(e) => {formInputChange(e,index)}}
+                                ></input>
+                            </div>
+                        </div>
+                        )
+                })}
+                
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'descripcion' && (                 
+                        <div  key={'pes-'+idPregunta+'-'+index} className="row col-12">
+                                    
+                        <div className="row col-12">
+                            <div className="col-sm-3 p-1 text-start">
+                            {item.texto}
+                            </div>
+                            <div className="col-sm-9 p-1">
+                                
+                            </div>
+                        </div>
+                            <div className="col-12 p-1 text-start">
+                                
+                            </div>
+                            <div className="col-12 p-1"> 
+                                
+                                <textarea
+                                    value={item.respuesta ?? ''}
+                                    onChange={(e) => {textChange(e,index)}}
+                                    maxLength={300}
+                                    style={{
+                                        width: '100%',
+                                        height: '200px',
+                                        padding: '5px'
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        )
+                })}
+                
             </div>
         )
     }
@@ -816,7 +683,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                     key={`padre_monto-${index}`}
                                     ref={(el) => (padreRefs.current[index] = el)}
                                     onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
-                                    value={item.padre_monto}
+                                    value={item.padre_monto ?? ''}
                                     onChange={(e) => {formInputChange(e,index)}}
                                 />
                             </div>
@@ -832,7 +699,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                     key={`monto-${index}`}
                                     ref={(el) => (montoRefs.current[index] = el)}
                                     onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
-                                    value={item.monto}
+                                    value={item.monto ?? ''}
                                     onChange={(e) => {formInputChange(e,index)}}
                                 />
                             </div>
@@ -863,7 +730,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                     key={`padre_monto-${index}`}
                                     ref={(el) => (padreRefs.current[index] = el)}
                                     onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
-                                    value={item.padre_monto}
+                                    value={item.padre_monto ?? ''}
                                     onChange={(e) => {formInputChange(e,index)}}
                                 />
                             </div>
@@ -879,53 +746,51 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     // 18 .-  Salto de Hoja
     // 19 .-  Espacio en blanco
     // 20 .- Actualemte con empleo
-    const actualmenteConEmpleo = ()=>{
+    const actualmenteConEmpleo = ()=>{ 
         return (
             <div>
+                 
+
                 <div className="row">
-                    <div className="col-sm-2"></div>
+                    <div className="col-sm-3"></div>
                     <div className="col-sm-3">ACTIVO LABORALEMNTE</div>
                     <div className="col-sm-5">EMPRESA</div>
                 </div>
-                <div className="row">
-                    <div className="col-sm-2">PADRE</div>
-                    <div className="col-sm-3 p-1">
-                        <div className=" row">
-                            <div className="col-3">SI</div>
-                            <div className="col-2 border-bottom border-secondary"></div>
-                            <div className="col-3">NO</div>
-                            <div className="col-2 border-bottom border-secondary"></div>
+                
+                {formData.map((item,index) => (
+                    <div key={'pes-'+idPregunta+'-'+index} className="row">
+                        <div className="col-sm-3">{item.texto}</div>                
+                        <div className="col-sm-3 p-1">
+                            <div className="row">
+                                <div className="form-check form-switch">
+                                    <input 
+                                        className="form-check-input"  
+                                        type="checkbox" 
+                                        role="switch"
+                                        name="activo"
+                                        checked={item.activo}
+                                        onChange={(e) => {formInputChange(e,index)}}
+                                        id="activo"/>
+                                    <label className="form-check-label">{(item.activo) ? 'Si' : 'No'}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-5 p-1">
+                            <input
+                                className="form-control"
+                                name="respuesta" 
+                                disabled={!item.activo}
+                                value={item.respuesta ?? ''}
+                                onChange={(e) => {formInputChange(e,index)}}
+                            ></input>
                         </div>
                     </div>
-                    <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-2">MADRE</div>
-                    <div className="col-sm-3 p-1">
-                        <div className=" row">
-                            <div className="col-3">SI</div>
-                            <div className="col-2 border-bottom border-secondary"></div>
-                            <div className="col-3">NO</div>
-                            <div className="col-2 border-bottom border-secondary"></div>
-                        </div>
-                    </div>
-                    <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-2">OTRO</div>
-                    <div className="col-sm-3 p-1">
-                        <div className=" row">
-                            <div className="col-3">SI</div>
-                            <div className="col-2 border-bottom border-secondary"></div>
-                            <div className="col-3">NO</div>
-                            <div className="col-2 border-bottom border-secondary"></div>
-                        </div>
-                    </div>
-                    <div className="col-sm-5 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
-                </div>
+                ))}
             </div>
+        
         )
     }
+
     const getListaRespuestas = () => {
         
         axios.get(`${APIURL}/estudio/${idEstudio}/pregunta/${idPregunta}/respuestas`,config)
@@ -942,6 +807,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
             console.log(resp);
         })
     }
+
     const defaultValue = () => {
         switch(idPreguntaTipo){
             // 1 .-  Pregunta abierta
@@ -960,6 +826,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 ]);
             break;
+            case 20:
             case 7:
                 setFormData([
                     {id_encuesta:'',id_servicio_estudio:idEstudio,id_catalogo_encuestas_pregunta:idPregunta,id_item:'',parentesco:'',texto:'PADRE', respuesta:'', vive:false,activo:false,respuesta:'',padre_monto:'',madre_monto:'',monto:'',valor:'',tipo:'',marca_modelo:'',anio:'',propietario:'',},
@@ -1003,6 +870,44 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'', seccion:'body_otros', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'', seccion:'body_otros', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 ]);
+            break;
+            case 13:
+                setFormData([
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'PATIO', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'SALA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'COMEDOR', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'COCINA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'RECAMARAS', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'BAÑOS', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'PANTALLA DE TV', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'REFRIGERADOR', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'PARRILLA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'LAVADORA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'SECADORA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'CUARTO DE LAVANDERIA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'CUARTO DE SERVICIO', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'RECIBIDOR', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'ESTANCIA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'JARDIN', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'JUEGOS', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'MINISPLIT', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'ESTUDIO', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'BODEGA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'ROOF GARDEN', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'ALBERCA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'CUARZO', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'MARMOL', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'GRANITO', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'AREA SOCIAL', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'CANTERA', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'PANELES SOLARES', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'CLIMA CENTRAL', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'GIMNASIO', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'CUARZO', seccion:'seleccionable', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'CLASIFICACION', seccion:'clasificacion', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'DESCRIBIR LO OBSERVADO', seccion:'descripcion', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                ]); 
             break;
             case 14:
                 setFormData([
@@ -1053,6 +958,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         //idPregunta,longitudRespuesta,idPreguntaTipo
         getListaRespuestas();
     },[])
+
     const preguntaPorTipoPregunta = () => {
         switch(idPreguntaTipo){
             // 1 .-  Pregunta abierta
@@ -1113,15 +1019,15 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     }
     return (
         <div className="row justify-content-md-center">
-            <div className="col-md-8">
+            <div className={colClass}>
                 Seccion Preguntas ID: {idPregunta} Tipo {idPreguntaTipo}
                 <br/><br/>
             </div>
-            <div className="col-md-8">
+            <div className={colClass}>
                 {preguntaPorTipoPregunta()}
             </div>
             
-            <div className="col-md-8">
+            <div className={"m-1 "+colClass}>
                 
                 <Button variant="light" style={{ marginLeft: "5px" }} className="d-flex align-items-center" onClick={() => save()}>
                     Guardar

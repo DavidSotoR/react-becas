@@ -5,6 +5,7 @@ import { Button,Form, Modal } from "react-bootstrap";
 import makeAnimated from 'react-select/animated';
 import { useParams,useNavigate } from "react-router-dom";
 import Preguntas from "./Preguntas/Preguntas";
+import Evidencias from "./Preguntas/Evidencias";
 
 
 function Socioeconomico(){
@@ -23,12 +24,16 @@ function Socioeconomico(){
     const animatedComponents = makeAnimated;
 
 
-    const [fromData,setFormData] = useState(null)
-    const [encuesta,setEncuesta] = useState(null)
+    const [fromData,setFormData] = useState(null);
+    const [encuesta,setEncuesta] = useState(null);
+    const [verPuntos,setVerPuntos] = useState(false);
+    const cambiarVerPuntos = () => {
+        setVerPuntos(!verPuntos);
+    }
 
     const [columnRow,setColumnRow] = useState('short');
-    const [fromDataError,setFormDataError] = useState({})
-    const [editarSeccion,setEditarSeccion] = useState('')
+    const [fromDataError,setFormDataError] = useState({});
+    const [editarSeccion,setEditarSeccion] = useState('');
 
     const getEsrudioSocioeconomico = () => {
         axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/encuesta`,config).then((resp)=>{
@@ -60,7 +65,7 @@ function Socioeconomico(){
             </div>
             <hr/>
             <div className="row">
-                <div className="col-md-2">
+                <div className="col-md-4">
                     <Button variant="light" style={{ marginLeft: "5px" }} className="d-flex align-items-center" onClick={() => backPage()}>
                         <ion-icon name="chevron-back-outline"></ion-icon>
                         Regresar
@@ -69,9 +74,10 @@ function Socioeconomico(){
                 
                 <div className="col"></div>
                 
-                <div className="col-md-2">
+                <div className="col-md-4 d-flex flex-row-reverse align-items-center" >
                     <Form.Select 
-                        className="form-select form-select-sm" 
+                        className="form-select form-select-sm"
+                        style={{maxWidth:'150px'}}
                         name="vista" 
                         id="vista" 
                         value={columnRow}
@@ -79,6 +85,12 @@ function Socioeconomico(){
                         <option value='short'>Vista Corta</option>
                         <option value='length'>Vista Larga</option>
                     </Form.Select>
+                    <div className="mt-1 me-1">
+                        <input type="checkbox" className="btn-check" id="verpuntos" onChange={cambiarVerPuntos} value={verPuntos} checked={verPuntos} autoComplete="off"/>
+                        <label className="btn btn-secondary pt-2" htmlFor="verpuntos">
+                            { verPuntos ? (<ion-icon name="eye-outline"></ion-icon>) : (<ion-icon name="eye-off-outline"></ion-icon>) }
+                        </label>
+                    </div>
                 </div>
             </div>
             <hr/>
@@ -87,9 +99,20 @@ function Socioeconomico(){
     
     return (<>
         <div className="container mt-3">
+            
             {headerPage()}
             
-            <Preguntas idEstudio={idEstudio} preguntas={listaPreguntas()}/>
+            <Preguntas 
+                idEstudio={idEstudio}
+                preguntas={listaPreguntas()}
+                columnRow={columnRow}
+                verPuntos={verPuntos}
+            />
+
+            <Evidencias
+                idEstudio={idEstudio}
+                columnRow={columnRow}
+            />
 
        </div> 
     </>)
