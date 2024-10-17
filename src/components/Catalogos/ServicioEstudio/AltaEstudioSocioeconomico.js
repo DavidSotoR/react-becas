@@ -13,6 +13,7 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 function AltaEstudioSocioeconomico(){
+    const { logout } = useContext(AuthContext)
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -36,6 +37,8 @@ function AltaEstudioSocioeconomico(){
     const [direcciones,direccionesSet] = useState([])
     const [placeId,placeIdSet] = useState('')
     const [colaboradorPreAsignado,colaboradorPreAsignadoSet] = useState({id:'',name:''})
+
+    const [ direccionFamilia, setDireccionFamilia ] = useState('')
     
     const animatedComponents = makeAnimated;
 
@@ -195,7 +198,10 @@ function AltaEstudioSocioeconomico(){
         axios.get(`${APIURL}/proyectos/${idProyecto}`,config).then((resp)=>{
             setProyecto(resp.data);
         }).catch((resp)=>{
-            console.log(resp);
+            console.log(resp.response);
+            if (resp.response.status === 401) {
+                logout()   
+            }
         })
     }
     const getCliente = () => {
@@ -203,6 +209,9 @@ function AltaEstudioSocioeconomico(){
             setProyectoCliente(resp.data);
         }).catch((resp)=>{
             console.log(resp);
+            if (resp.response.status === 401) {
+                logout()   
+            }
         })
     }
     const getOrdenServicio = () => {
@@ -210,6 +219,9 @@ function AltaEstudioSocioeconomico(){
             setOrdenServicio(resp.data);
         }).catch((resp)=>{
             console.log(resp);
+            if (resp.response.status === 401) {
+                logout()   
+            }
         })
     }
     const getListaClientesHermanos= () => {
@@ -218,6 +230,9 @@ function AltaEstudioSocioeconomico(){
         }).catch((resp)=>{
             setClientesComunes([]);
             console.log(resp);
+            if (resp.response.status === 401) {
+                logout()   
+            }
         })
     }
     const getDireccionGSP = () => {
@@ -266,6 +281,9 @@ function AltaEstudioSocioeconomico(){
         }).catch((resp)=>{
             //(resp.response.status === 401) ?? logout();
             console.log(resp);
+            if (resp.response.status === 401) {
+                logout()   
+            }
         })
     }
 
@@ -286,8 +304,14 @@ function AltaEstudioSocioeconomico(){
     }
 
     const seleccionarUbicacion = (direccion) => {
-        placeIdSet(direccion.place_id);
+        console.log(direccion);
+        setDireccionFamilia(convertirAMayusculas(direccion.display_name))
         
+        placeIdSet(direccion.place_id);
+        setFormData(prevState => ({
+            ...prevState,
+            direccion: `${convertirAMayusculas(direccion.display_name)}` 
+        }));
         setFormData(prevState => ({
             ...prevState,
             latitud: direccion.lat,
@@ -342,6 +366,33 @@ function AltaEstudioSocioeconomico(){
         }
     }
 
+    const crearDireccion = (data) => {
+        const {
+            numero_exterior,
+            calle,
+            colonia,
+            municipio,
+            estado,
+            codigo_postal,
+            pais
+        } = data;
+    
+        return `${numero_exterior ? numero_exterior + ', ' : ''}` +
+               `${calle ? calle + ', ' : ''}` +
+               `${colonia ? colonia + ', ' : ''}` +
+               `${municipio ? municipio + ', ' : ''}` +
+               `${estado ? estado + ', ' : ''}` +
+               `${codigo_postal ? codigo_postal + ', ' : ''}` +
+               `${pais ? pais : ''}`;
+    }
+
+    const buscarDireccionBtn = () => {
+        var dir = crearDireccion(fromData)
+        setDireccionFamilia(dir)
+        getDireccionGSP()
+        
+    }
+
     useEffect(()=>{
         getProyecto();
         getCliente();
@@ -357,9 +408,9 @@ function AltaEstudioSocioeconomico(){
         }
     },[fromData.id_cliente,fromData.es_cliente_comun])
 
-    useEffect(()=>{
+    /* useEffect(()=>{
         getDireccionGSP();
-    },[fromData.direccion])
+    },[fromData.direccion]) */
 
     
     useEffect(()=>{
@@ -369,7 +420,7 @@ function AltaEstudioSocioeconomico(){
     useEffect(()=>{ 
         setFormData(prevState => ({
             ...prevState,
-            direccion: `${fromData.calle} ${fromData.numero_exterior}, ${fromData.colonia}, ${fromData.municipio}, ${fromData.estado}, ${fromData.codigo_postal}, ${fromData.pais}` 
+            direccion: crearDireccion(fromData) //`${fromData.numero_exterior}, ${fromData.calle}, ${fromData.colonia}, ${fromData.municipio}, ${fromData.estado}, ${fromData.codigo_postal}, ${fromData.pais}` 
         }));
     },[
         fromData.calle,
@@ -412,9 +463,9 @@ function AltaEstudioSocioeconomico(){
     }
     
     const cricleColaboradores = () => {
-        console.log(colaboradores);
+        //console.log(colaboradores);
         const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
-        console.log(colaboradoresFiltro);
+        //console.log(colaboradoresFiltro);
         return <>{colaboradoresFiltro.map((colaborador,index) => 
             (<Circle key={'cum-'+index} center={[colaborador.latitud, colaborador.longitud]} radius="200" pathOptions={{ color: 'blue' }}>
                 <Popup>
@@ -905,8 +956,13 @@ function AltaEstudioSocioeconomico(){
                         <label htmlFor="direccion" className="col-sm-2 col-form-label">
                             Direccion:
                         </label>
-                        <div className="col-sm-10">
+                        <div className="col-sm-8">
                             <input type="text" className="form-control" id="direccion" name="direccion" value={fromData.direccion} onChange={(e)=> formInputChange(e)} placeholder="Dirección..."/>
+                        </div>
+                        <div className="col-sm-2 d-flex align-items-center">
+                            <button className="btn btn-primary d-flex justify-content-center align-items-center" onClick={buscarDireccionBtn}>
+                                <ion-icon name="search"></ion-icon>
+                            </button>
                         </div>
                         {fromDataError?.direccion && (
                         <div>
