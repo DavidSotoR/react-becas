@@ -155,6 +155,7 @@ function PageActualizarCliente() {
         actualData.rason_social =  data.rason_social ?? ''
         actualData.rfc = data.rfc ?? ''
         actualData.tipo_persona = data.tipo_persona ?? ''
+        actualData.terminos = data.terminos
         setContent(data.terminos)
         setFormData(actualData)
         setFormDataOld(actualData)
