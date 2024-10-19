@@ -10,7 +10,10 @@ function PageActualizarCliente() {
     const [content, setContent] = useState('');
     const handleChange = (value) => {
         console.log(value);
-        
+        setFormData(prevState => ({
+            ...prevState,
+            terminos: value,
+        }));
         setContent(value);        
     };
     const modules = {
@@ -785,6 +788,7 @@ function PageActualizarCliente() {
         };
         execFunc();
     }, [valueCliente]);
+
 
     return (
         <div className="container">
