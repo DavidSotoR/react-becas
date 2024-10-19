@@ -4,8 +4,29 @@ import { Alert, Form } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import PathConstants from "../../../routes/pathsConstants";
+import ReactQuill from 'react-quill';
+//import 'react-quill/dist/quill.snow.css';
 
 function PageNuevoCliente() {
+    const [content, setContent] = useState('');
+    const handleChange = (value) => {
+        console.log(value);
+        
+        setContent(value);        
+    };
+    const modules = {
+        toolbar: [
+          [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+          [{ 'script': 'sub'}, { 'script': 'super' }],
+          [{ 'color': [] }, { 'background': [] }], // Cambios de color
+          [{ 'align': [] }],
+          ['link', 'image', 'video'], // Opciones para insertar multimedia
+          ['clean'] // Botón para limpiar formato
+        ],
+      };
+
     const { logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const APIURL = process.env.REACT_APP_API_URL;
@@ -703,6 +724,11 @@ function PageNuevoCliente() {
         getOptionsEncuestas()
     },[])
 
+    /* useEffect(()=>{
+        console.log(content);
+        
+    }, content) */
+
     return (
         <div className="container">
             <p><Link className="btn btn-primary btn-sm" to={PathConstants.CLIENTES}> Regresar a Catalogo Clientes</Link></p>
@@ -835,6 +861,19 @@ function PageNuevoCliente() {
                     
             </div>
 
+            <hr></hr>
+                <div id="editor">
+                    <ReactQuill
+                    value={content}
+                    onChange={handleChange}
+                    modules={modules} // Personalizamos la barra de herramientas
+                    theme="snow"
+                    />
+                    <div style={{ marginTop: '20px' }}>
+                        <h3>Contenido actual:</h3>
+                        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: content }} />
+                    </div>
+                </div>
             <hr></hr>
 
             <div className="row mb-3">
