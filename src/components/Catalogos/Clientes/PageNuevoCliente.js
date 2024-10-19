@@ -598,7 +598,8 @@ function PageNuevoCliente() {
             "rason_social": formData.rason_social,
             "requiere_facturar": formData.requiere_facturar ? 1 : 0,
             "documentacion_digital": formData.documentacion_digital ? 1 : 0,
-            "id_catalogo_encuesta": formData.id_catalogo_encuesta
+            "id_catalogo_encuesta": formData.id_catalogo_encuesta,
+            "terminos": content,
         }
         console.log(dataPOST);
         console.log(arrayErrors);
@@ -863,16 +864,17 @@ function PageNuevoCliente() {
 
             <hr></hr>
                 <div id="editor">
+                    <p className="fw-bold">Terminos de encuesta</p>
                     <ReactQuill
                     value={content}
                     onChange={handleChange}
                     modules={modules} // Personalizamos la barra de herramientas
                     theme="snow"
                     />
-                    <div style={{ marginTop: '20px' }}>
+                    {/* <div style={{ marginTop: '20px' }}>
                         <h3>Contenido actual:</h3>
                         <div className="ql-editor" dangerouslySetInnerHTML={{ __html: content }} />
-                    </div>
+                    </div> */}
                 </div>
             <hr></hr>
 

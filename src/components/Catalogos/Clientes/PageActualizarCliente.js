@@ -4,8 +4,27 @@ import { Alert, Form } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PathConstants from "../../../routes/pathsConstants";
+import ReactQuill from 'react-quill';
 
 function PageActualizarCliente() {
+    const [content, setContent] = useState('');
+    const handleChange = (value) => {
+        console.log(value);
+        
+        setContent(value);        
+    };
+    const modules = {
+        toolbar: [
+          [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+          [{ 'script': 'sub'}, { 'script': 'super' }],
+          [{ 'color': [] }, { 'background': [] }], // Cambios de color
+          [{ 'align': [] }],
+          ['link', 'image', 'video'], // Opciones para insertar multimedia
+          ['clean'] // Botón para limpiar formato
+        ],
+      };
     const { logout } = useContext(AuthContext);
     const { ID } = useParams()
     const navigate = useNavigate();
@@ -50,7 +69,8 @@ function PageActualizarCliente() {
         estado: '',
         pais: '',
         rason_social: '',
-        rfc: ''
+        rfc: '',
+        terminos: ''
     })
 
     const [ formDataOld, setFormDataOld ] = useState({})
@@ -135,6 +155,7 @@ function PageActualizarCliente() {
         actualData.rason_social =  data.rason_social ?? ''
         actualData.rfc = data.rfc ?? ''
         actualData.tipo_persona = data.tipo_persona ?? ''
+        setContent(data.terminos)
         setFormData(actualData)
         setFormDataOld(actualData)
         setTipoPersona(actualData.tipo_persona)
@@ -658,7 +679,8 @@ function PageActualizarCliente() {
             "pais": formData.pais,
             "rason_social": formData.rason_social,
             "documentacion_digital": formData.documentacion_digital ? 1 : 0,
-            "requiere_facturar": formData.requiere_facturar ? 1 : 0
+            "requiere_facturar": formData.requiere_facturar ? 1 : 0,
+            'terminos': content,
         }
 
         console.log(dataPOST)
@@ -898,6 +920,20 @@ function PageActualizarCliente() {
                     
             </div>
 
+            <hr></hr>
+                <div id="editor">
+                    <p className="fw-bold">Terminos de encuesta</p>
+                    <ReactQuill
+                    value={content}
+                    onChange={handleChange}
+                    modules={modules} // Personalizamos la barra de herramientas
+                    theme="snow"
+                    />
+                    {/* <div style={{ marginTop: '20px' }}>
+                        <h3>Contenido actual:</h3>
+                        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: content }} />
+                    </div> */}
+                </div>
             <hr></hr>
 
             <div className="row mb-3">
