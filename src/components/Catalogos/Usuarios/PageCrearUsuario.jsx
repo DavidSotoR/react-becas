@@ -24,7 +24,8 @@ export default function PageCrearUsuario () {
         }
     }
     const [esExterno, setEsExterno] = useState(false);
-    const [direcciones,direccionesSet] = useState([])
+    const [direcciones,direccionesSet] = useState([]);
+    const [ direccionSelected, setDireccionSelected ] = useState(false);
     const [placeId,placeIdSet] = useState('')
     const [direccionUser, setDireccionUser] = useState('')
 
@@ -119,10 +120,11 @@ export default function PageCrearUsuario () {
     }
 
     const getDireccionGSP = () => {
-        if(dataPostUsuario.direccion.length<5){
+        direccionesSet([])
+        /* if(dataPostUsuario.direccion.length<5){
             direccionesSet()
-        }
-        axios.get(`https://nominatim.openstreetmap.org/search?q=${direccionUser}&format=json&addressdetails=1`,config).then((resp)=>{
+        } */
+        axios.get(`https://nominatim.openstreetmap.org/search?q=${dataPostUsuario.direccion}&format=json&addressdetails=1`,config).then((resp)=>{
             direccionesSet(resp.data);
         }).catch((resp)=>{
             console.log(resp);
@@ -233,7 +235,7 @@ export default function PageCrearUsuario () {
     const validatePassword = (value) => {
         const tieneMayuscula = /[A-Z]/.test(value);
         const tieneNumero = /\d/.test(value);
-        const tieneLongitudMinima = value.length >= 12;
+        const tieneLongitudMinima = value.length >= 6;
         const sinEspacios = !/\s/.test(value);
 
         if (sinEspacios && tieneMayuscula && tieneNumero && tieneLongitudMinima) {
@@ -429,7 +431,7 @@ export default function PageCrearUsuario () {
                         style={{cursor:'pointer' }}
                         >
                             <div className="col-1">
-                                <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                                <img src="/img/ping-map.png" style={{width:'50%'}}/>
                             </div>
                             <div className="col-10">
                                 <div>No se encontraron ubicaciones.</div>
@@ -449,7 +451,7 @@ export default function PageCrearUsuario () {
                 onClick={() => seleccionarUbicacion(direccion)}
               >
                 <div className="col-1">
-                    <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                    <img src="/img/ping-map.png" style={{width:'50%'}}/>
                 </div>
                 <div className="col-10">
                   <div>{direccion.display_name}</div>
@@ -462,12 +464,14 @@ export default function PageCrearUsuario () {
     }
 
     const seleccionarUbicacion = (direccion) => {
+        setDireccionSelected(!direccionSelected)
         setDireccionUser(convertirAMayusculas(direccion.display_name))
         placeIdSet(direccion.place_id);
         setLatUser(direccion.lat)
         setLonUser(direccion.lon)
         setDataPostUsuario(prevState => ({
             ...prevState,
+            direccion: direccion.display_name,
             latitud: direccion.lat,
             longitud: direccion.lon
         }));
@@ -523,29 +527,49 @@ export default function PageCrearUsuario () {
         }   
     }
 
-    useEffect(() => {
+    const searchDireccion = () => {
+        getDireccionGSP();
+    }
+
+    function crearDireccion(data) {
+        const {
+            numero_exterior,
+            calle,
+            colonia,
+            municipio,
+            estado,
+            codigo_postal,
+            pais
+        } = data;
+    
+        return `${numero_exterior ? numero_exterior + ', ' : ''}` +
+               `${calle ? calle + ', ' : ''}` +
+               `${colonia ? colonia + ', ' : ''}` +
+               `${municipio ? municipio + ', ' : ''}` +
+               `${estado ? estado + ', ' : ''}` +
+               `${codigo_postal ? codigo_postal + ', ' : ''}` +
+               `${pais ? pais : ''}`;
+    }
+
+    /* useEffect(() => {
         if (direccionUser.length >= 3) {
-            // Limpiar cualquier timeout anterior cuando cambia la dirección
             if (timeoutId) {
                 clearTimeout(timeoutId);
             }
 
-            // Crear un nuevo timeout de 3 segundos
             const newTimeoutId = setTimeout(() => {
                 getDireccionGSP();
             }, 3000);
 
-            // Guardar el id del timeout para poder limpiarlo en futuros cambios
             setTimeoutId(newTimeoutId);
         }
 
-        // Limpiar el timeout cuando el componente se desmonte
         return () => {
             if (timeoutId) {
                 clearTimeout(timeoutId);
             }
         };
-    }, [direccionUser]);
+    }, [direccionUser]); */
 
     useEffect(() => {
             getPerfilesList();
@@ -553,7 +577,9 @@ export default function PageCrearUsuario () {
     }, []);
     
     useEffect(()=>{
-        console.log(validateDataFormBtn(dataPostUsuario));
+        /* console.log(validateDataFormBtn(dataPostUsuario));
+        console.log(errorsArray.length === 0 && validateDataFormBtn(dataPostUsuario)); */
+        
         if (errorsArray.length === 0 && validateDataFormBtn(dataPostUsuario) ) {
             setBtnDisable(false)
         } else {
@@ -566,12 +592,19 @@ export default function PageCrearUsuario () {
     },[dataPostUsuario])
 
     useEffect(()=>{ 
-        setDataPostUsuario(prevState => ({
+        if (!direccionSelected) {
+            setDataPostUsuario(prevState => ({
+                ...prevState,
+                direccion: crearDireccion(dataPostUsuario) //`${fromData.numero_exterior}, ${fromData.calle}, ${fromData.colonia}, ${fromData.municipio}, ${fromData.estado}, ${fromData.codigo_postal}, ${fromData.pais}` 
+            }));
+        }
+        setDireccionUser(crearDireccion(dataPostUsuario))
+       /*  setDataPostUsuario(prevState => ({
             ...prevState,
             direccion: `${dataPostUsuario.numero_exterior !== '' ? dataPostUsuario.numero_exterior+', ' : ''}${dataPostUsuario.calle !== '' ? dataPostUsuario.calle+', ' : ''}${dataPostUsuario.colonia !== '' ? dataPostUsuario.colonia+', ' : ''}${dataPostUsuario.municipio !== '' ? dataPostUsuario.municipio+', ' : ''}${dataPostUsuario.estado !== '' ? dataPostUsuario.estado+', ' : ''}${dataPostUsuario.codigo_postal !== '' ? dataPostUsuario.codigo_postal+', ' : ''}${dataPostUsuario.pais}`
         }));
         setDireccionUser(`${dataPostUsuario.numero_exterior !== '' ? dataPostUsuario.numero_exterior+', ' : ''}${dataPostUsuario.calle !== '' ? dataPostUsuario.calle+', ' : ''}${dataPostUsuario.colonia !== '' ? dataPostUsuario.colonia+', ' : ''}${dataPostUsuario.municipio !== '' ? dataPostUsuario.municipio+', ' : ''}${dataPostUsuario.estado !== '' ? dataPostUsuario.estado+', ' : ''}${dataPostUsuario.codigo_postal !== '' ? dataPostUsuario.codigo_postal+', ' : ''}${dataPostUsuario.pais}`)
-
+ */
     },[
         dataPostUsuario.calle,
         dataPostUsuario.numero_exterior,
@@ -762,16 +795,33 @@ export default function PageCrearUsuario () {
                             </Form.Check>
                             
                         </div>
+
+                        { cuentaConUbicacion && 
+                        <div className="row mb-3">
+                            <div className="col-sm-6">
+                                <label htmlFor="direccion" className="form-label">
+                                    Direccion:
+                                </label>
+                                <input type="text" className="form-control" id="direccion" name="direccion" value={dataPostUsuario.direccion} onChange={(e)=> changeDireccion(e)} placeholder="Dirección..."/>
+                            </div>
+                            <div className="col-sm-2 d-flex align-items-center" style={{ marginTop: '1.5rem' }}>
+                                <button className="btn btn-primary d-flex justify-content-center align-items-center" onClick={searchDireccion}>
+                                    <ion-icon name="search"></ion-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                        }
                         
                         { cuentaConUbicacion &&
                                 <div className="row">
                                     
-                                <div className="col-sm-10 col-md-5">
+                                {/* <div className="col-sm-10 col-md-5">
                                     <label htmlFor="direccion" className="form-label">
                                         Direccion:
                                     </label>
-                                    <input type="text" value={direccionUser} className="form-control" id="direccion" name="direccion" onChange={(e)=> {changeDireccion(e)}} placeholder="Dirección..."/>
-                                </div>
+                                    <input type="text" value={dataPostUsuario.direccion} className="form-control" id="direccion" name="direccion" onChange={(e)=> {changeDireccion(e)}} placeholder="Dirección..."/>
+                                </div> */}
                                 <div className="col-5">
                                     <label htmlFor="inputLong" className="form-label">Longitud:</label>
                                     <input type="text" className="form-control mb-2" id="inputLong" name="longitud"
