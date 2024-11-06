@@ -10,6 +10,7 @@ function HomePage() {
   const [roleUsuario, setRolUsuario] = useState(null)
   
   const renderHomePage = () => {
+    console.log(roleUsuario);
     switch (roleUsuario) {
       case 'Administrador':
         return <HomePageAdmin key="hpa" />;
@@ -19,7 +20,7 @@ function HomePage() {
         return <HomePageColaborador key="hpc"/>
       case 'Calidad':
         return <HomePageCalidad key="hpcd"></HomePageCalidad>
-      case 'Empresa':
+      case 'Empresas':
         return <HomePageEmpresa key="hpe"></HomePageEmpresa>
       case 'Gerencia':
       return <HomePageGerencia key="hpg"></HomePageGerencia>

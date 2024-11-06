@@ -73,13 +73,14 @@ export default function Layout() {
                           <MenuItem component={<Link to={PathConstants.HOME} />}> 
                               { collapsed ? (<div className="ion-text-center"><ion-icon name="home" size="large"/></div>):(<p>INICIO</p>)}
                           </MenuItem>
-                          
-                          <MenuItem component={<Link to={PathConstants.ESTUDIOS} />}> 
-                              { collapsed ? (<div className="ion-text-center"><ion-icon name="folder-open-outline" size="large"/></div>):(<p>ASIGNACIONES</p>)}
-                          </MenuItem>
 
                           { roleSession === 'Administrador' &&
                             <>
+                          
+                            <MenuItem component={<Link to={PathConstants.ESTUDIOS} />}> 
+                                { collapsed ? (<div className="ion-text-center"><ion-icon name="folder-open-outline" size="large"/></div>):(<p>ASIGNACIONES</p>)}
+                            </MenuItem>
+                            
                               {/*<MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> 
                                 {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>CICLOS ESCOLARES</p>)}
                               </MenuItem>*/}
