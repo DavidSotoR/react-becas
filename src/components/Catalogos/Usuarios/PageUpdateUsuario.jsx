@@ -18,6 +18,7 @@ export default function PageUpdateUsuario() {
     const navigate = useNavigate()
 
     const [direcciones,direccionesSet] = useState([])
+    const [ direccionSelected, setDireccionSelected ] = useState(false);
     const [placeId,placeIdSet] = useState('')
     const [direccionUser, setDireccionUser] = useState('')
 
@@ -243,7 +244,7 @@ export default function PageUpdateUsuario() {
     const validatePassword = (value) => {
         const tieneMayuscula = /[A-Z]/.test(value);
         const tieneNumero = /\d/.test(value);
-        const tieneLongitudMinima = value.length >= 12;
+        const tieneLongitudMinima = value.length >= 6;
         const sinEspacios = !/\s/.test(value);
 
         if (sinEspacios && tieneMayuscula && tieneNumero && tieneLongitudMinima) {
@@ -255,14 +256,29 @@ export default function PageUpdateUsuario() {
 
     const changeDireccion = (e)=>{
         var dir = convertirAMayusculas(e.target.value)
-        setDireccionUser(dir)
+        //setDireccionUser(dir)
+        setDataUpdateUsuario(prevState => ({
+            ...prevState,
+            direccion: dir,
+        }));
+    }
+
+    const searchDireccion = () => {
+        getDireccionGSP();
     }
 
     const seleccionarUbicacion = (direccion) => {
+        console.log(direccion);
+        setDireccionSelected(!direccionSelected)
+        
         setDireccionUser(convertirAMayusculas(direccion.display_name))
         placeIdSet(direccion.place_id);
         setLatUser(direccion.lat)
         setLonUser(direccion.lon)
+        setDataUpdateUsuario(prevState => ({
+            ...prevState,
+            direccion: direccion.display_name,
+        }));
         setDataUpdateUsuario(prevState => ({
             ...prevState,
             latitud: direccion.lat,
@@ -276,11 +292,11 @@ export default function PageUpdateUsuario() {
             // Si `direcciones` no es un array válido o está vacío, mostramos un mensaje
             return (<div>
                         <div 
-                        className="row rounded border mt-1 p-1" 
+                        className="row rounded border mt-1 p-1 mb-3" 
                         style={{cursor:'pointer' }}
                         >
                             <div className="col-1">
-                                <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                                <img src="/img/ping-map.png" style={{width:'50%'}}/>
                             </div>
                             <div className="col-10">
                                 <div>No se encontraron ubicaciones.</div>
@@ -296,11 +312,11 @@ export default function PageUpdateUsuario() {
               <div 
                 key={'asu-' + index} 
                 className="row rounded border mt-1 p-1" 
-                style={{ backgroundColor: (direccion.place_id === placeId) ? '#47E58A' : '' , cursor:'pointer' }}
+                style={{ backgroundColor: (direccion.place_id === placeId) ? direccionSelected ? '#47E58A' : '' : '' , cursor:'pointer' }}
                 onClick={() => seleccionarUbicacion(direccion)}
               >
                 <div className="col-1">
-                    <img src="/img/ping-map.png" style={{width:'80%'}}/>
+                    <img src="/img/ping-map.png" style={{width:'50%'}}/>
                 </div>
                 <div className="col-10">
                   <div>{direccion.display_name}</div>
@@ -486,9 +502,9 @@ export default function PageUpdateUsuario() {
     }
 
     const cricleColaboradores = () => {
-        console.log(colaboradores);
+        //console.log(colaboradores);
         const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
-        console.log(colaboradoresFiltro);
+        //console.log(colaboradoresFiltro);
         return <>{colaboradoresFiltro.map((colaborador,index) => 
             (<Circle key={'cum-'+index} center={[colaborador.latitud, colaborador.longitud]} radius="200" pathOptions={{ color: 'blue' }}>
                 <Popup>
@@ -519,23 +535,27 @@ export default function PageUpdateUsuario() {
     }
 
     const getDireccionGSP = () => {        
-        if(direccionUser.length<5){
+        direccionesSet([])
+        var dir = '';
+        dir = dataUpdateUsuario.direccion
+        /* if(dataUpdateUsuario.direccion.length<5){
             direccionesSet()
-        }
-        axios.get(`https://nominatim.openstreetmap.org/search?q=${direccionUser}&format=json&addressdetails=1`,config).then((resp)=>{
+        } */
+        axios.get(`https://nominatim.openstreetmap.org/search?q=${dataUpdateUsuario.direccion}&format=json&addressdetails=1`).then((resp)=>{
+            console.log(resp);
             direccionesSet(resp.data);
         }).catch((resp)=>{
             console.log(resp);
         })
     }
 
-    useEffect(()=>{
+    /* useEffect(()=>{
         if (direccionUser.length >= 5) {
             getDireccionGSP();
 
         }
         
-    },[direccionUser])
+    },[direccionUser]) */
 
     useEffect(()=>{
         console.log(errorsArray);
@@ -558,14 +578,21 @@ export default function PageUpdateUsuario() {
     },[])
 
     useEffect(()=>{ 
-        const direccion = crearDireccion(dataUpdateUsuario);
+        if (!direccionSelected) {
+            setDataUpdateUsuario(prevState => ({
+                ...prevState,
+                direccion: crearDireccion(dataUpdateUsuario) //`${fromData.numero_exterior}, ${fromData.calle}, ${fromData.colonia}, ${fromData.municipio}, ${fromData.estado}, ${fromData.codigo_postal}, ${fromData.pais}` 
+            }));
+        }
+        
+        /* const direccion = crearDireccion(dataUpdateUsuario);
 
         setDataUpdateUsuario(prevState => ({
             ...prevState,
             direccion: convertirAMayusculas(direccion)
         }));
     
-        setDireccionUser(convertirAMayusculas(direccion));
+        setDireccionUser(convertirAMayusculas(direccion)); */
 
     },[
         dataUpdateUsuario.calle,
@@ -583,14 +610,14 @@ export default function PageUpdateUsuario() {
                 <h6 style={{ fontWeight: 'bold' }}>Actualizar Usuario</h6>
             </div>
             <div className="row mb-3">
-
-                    <div className="col-12 mb-3">
+                
+                    {/* <div className="col-12 mb-3">
                         <Form.Check type="switch" className="mx-2">
                             <Form.Check.Input checked={ esExterno } name="externo" onChange={()=> { changeIsExterno() }} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                             <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Es externo </span></Form.Check.Label>
                         </Form.Check>
                         
-                    </div>
+                    </div> */}
 
                     <div className="col-5 mb-3">
                         <label htmlFor="inputPerfil" className="form-label">Perfil</label>
@@ -713,14 +740,34 @@ export default function PageUpdateUsuario() {
                             </Form.Check>
                             
                         </div>
+                        { cuentaConUbicacion && 
+                        <div className="row mb-3">
+                            <div className="col-sm-6">
+                                <label htmlFor="direccion" className="form-label">
+                                    Direccion:
+                                </label>
+                                <input type="text" className="form-control" id="direccion" name="direccion" value={dataUpdateUsuario.direccion} onChange={(e)=> changeDireccion(e)} placeholder="Dirección..."/>
+                            </div>
+                            <div className="col-sm-2 d-flex align-items-center" style={{ marginTop: '1.5rem' }}>
+                                <button className="btn btn-primary d-flex justify-content-center align-items-center" onClick={searchDireccion}>
+                                    <ion-icon name="search"></ion-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                        }
                         {   cuentaConUbicacion &&
+                            
                             <div className="row">
-                                <div className="col-sm-10 col-md-5">
+                                {/* <div className="col-sm-9 col-md-5 mb-3">
                                     <label htmlFor="direccion" className="form-label">
                                         Direccion:
                                     </label>
-                                    <input type="text" value={direccionUser} className="form-control" id="direccion" name="direccion" onChange={(e)=> {changeDireccion(e)}} placeholder="Dirección..."/>
+                                    <input type="text" value={dataUpdateUsuario.direccion} className="form-control" id="direccion" name="direccion" onChange={(e)=> {changeDireccion(e)}} placeholder="Dirección..."/>
                                 </div>
+                                <div className="col-sm-3 col-md-5 d-flex align-items-end mb-3">
+                                    <button onClick={searchDireccion} className="btn btn-primary">BUSCAR</button>
+                                </div> */}
                                 <div className="col-5">
                                     <label htmlFor="inputLong" className="form-label">Longitud:</label>
                                     <input type="text" className="form-control mb-2" id="inputLong" name="longitud"
@@ -734,20 +781,20 @@ export default function PageUpdateUsuario() {
                                             onChange={handleInputChange}/>
                                 </div>
                                 <div className="col-12">
-                                    {seccionUbicaciones()}
-                                        <MapContainer center={[latUser, lonUser]} zoom={13} style={{ height: "50vh", width: "100%" }}>
-                                            <TileLayer
-                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                                icon={customIcon}
-                                            />
-                                            <Marker position={[latUser, lonUser]}>
-                                                <Popup>
-                                                ¡Hola! Este es un cuadro de texto en un popup.
-                                                </Popup>
-                                            </Marker>
-                                            {cricleColaboradores()}
-                                        </MapContainer>                                
+                                    <div className="mb-3">
+                                        {seccionUbicaciones()}
+                                    </div>
+                                    
+                                    <MapContainer center={[latUser, lonUser]} zoom={13} style={{ height: "50vh", width: "100%" }}>
+                                        <TileLayer
+                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                            icon={customIcon}
+                                        />
+                                        <Marker position={[latUser, lonUser]}>
+                                        </Marker>
+                                        {cricleColaboradores()}
+                                    </MapContainer>                                
                                 
 
                                 </div>

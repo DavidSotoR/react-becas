@@ -80,6 +80,13 @@ const PrivateRoute = ({ path ,element }) => {
         return window.location.replace('/')
       }
     }
+    if (role === 'Empresas') {
+      if (path === PathConstants.HOME) {
+        return element
+      } else {
+        return window.location.replace('/')
+      }
+    }
   } else {
     return <Navigate to={PathConstants.LOGIN} replace />
   }
