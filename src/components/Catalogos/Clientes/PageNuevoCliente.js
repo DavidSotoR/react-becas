@@ -617,6 +617,9 @@ function PageNuevoCliente() {
        
         }).catch((resp)=>{
             setShowAlertError(true)
+            if (resp.response.status === 401) {
+                logout()
+            }
             if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
                 console.log(resp.response.data);
             }
@@ -976,7 +979,7 @@ function PageNuevoCliente() {
                 </div>
                 <div className="col-12 mt-3 d-flex justify-content-center align-items-center">
                     <div className="mb-3 d-flex">
-                    <Link className="btn btn-secondary mx-2" to={PathConstants.CLIENTES}>Cancelar</Link>
+                    <Link className="btn btn-secondary mx-2" to={PathConstants.CLIENTES}>REGRESAR</Link>
                         <button onClick={ sendDataClienteNuevo } className="btn btn-primary mx-2" disabled={ formValid }>GUARDAR DATOS</button>
                     </div>
                 </div>

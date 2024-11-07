@@ -551,34 +551,14 @@ export default function PageCrearUsuario () {
                `${pais ? pais : ''}`;
     }
 
-    /* useEffect(() => {
-        if (direccionUser.length >= 3) {
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-
-            const newTimeoutId = setTimeout(() => {
-                getDireccionGSP();
-            }, 3000);
-
-            setTimeoutId(newTimeoutId);
-        }
-
-        return () => {
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-        };
-    }, [direccionUser]); */
-
     useEffect(() => {
             getPerfilesList();
             getAllClientes();   
     }, []);
     
     useEffect(()=>{
-        /* console.log(validateDataFormBtn(dataPostUsuario));
-        console.log(errorsArray.length === 0 && validateDataFormBtn(dataPostUsuario)); */
+        console.log(validateDataFormBtn(dataPostUsuario));
+        console.log(errorsArray.length === 0 && validateDataFormBtn(dataPostUsuario));
         
         if (errorsArray.length === 0 && validateDataFormBtn(dataPostUsuario) ) {
             setBtnDisable(false)
@@ -866,7 +846,7 @@ export default function PageCrearUsuario () {
                     {/* <Button variant="secondary">
                         Cancelar
                     </Button> */}
-                    <Link className="btn btn-secondary mx-2" to={PathConstants.USUARIOS}>Cancelar</Link>
+                    <Link className="btn btn-secondary mx-2" to={PathConstants.USUARIOS}>REGRESAR</Link>
                     <Button className="mx-2" variant="primary" disabled={btnDisable} onClick={ postCrearUsuario}>
                         Crear Usuario
                     </Button>
