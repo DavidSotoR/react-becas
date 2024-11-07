@@ -36,6 +36,8 @@ const AltaEstudioLaboral = React.lazy(()=> import("../components/Catalogos/Servi
 const Estudios = React.lazy(()=> import('../components/Catalogos/Estudios/Socioeconomicos/Estudios'))
 const Estudio = React.lazy(()=> import('../components/Catalogos/Estudios/Socioeconomicos/Estudio'))
 const EstudioSocioeconomicoID = React.lazy(() => import('../components/Estudios/Socioeconomico'))
+const EncuestaProyectoID = React.lazy(() => import('../components/HomePageEmpresa/Proyecto/Proyecto'))
+const EmpresaEstudio = React.lazy(() => import('../components/HomeCom/Estudio'))
 //const Details = React.lazy(() => import("../pages/details/details"))
 
 const isAuthenticated = () => {
@@ -56,8 +58,23 @@ const PrivateRoute = ({ path ,element }) => {
       return element 
     }
 
+    if (role === 'Empresas') {
+      if (
+        path === PathConstants.HOME
+        || path === PathConstants.ENCUESTAPROYECTOID
+        || path === PathConstants.ESTUDIOSID
+      ) {
+        return element
+      } else {
+        return window.location.replace('/')
+      }
+    }
+
     if (role === 'Familias') {
-      if (path === PathConstants.HOME || path === PathConstants.FAMILIASFILES) {
+      if (
+          path === PathConstants.HOME 
+          || path === PathConstants.FAMILIASFILES
+        ) {
         return element
       } else {
         return window.location.replace('/')
@@ -82,12 +99,24 @@ const routes = [
           <PrivateRoute path={PathConstants.HOME} element={<Home />} />
         </Suspense>
       )},
+      { path: PathConstants.ESTUDIOSID, perfil:'todos', 
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <PrivateRoute path={PathConstants.ESTUDIOSID} element={<EmpresaEstudio />} />
+          </Suspense>
+        )},
     { path: PathConstants.ESTUDIOS, perfil:'todos', 
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute path={PathConstants.ESTUDIOS} element={<Estudios />} />
         </Suspense>
       )},
+      { path: PathConstants.ENCUESTAPROYECTOID, perfil:'todos', 
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <PrivateRoute path={PathConstants.ENCUESTAPROYECTOID} element={<EncuestaProyectoID />} />
+          </Suspense>
+        )},
       { path: PathConstants.ESTUDIOID, perfil:'todos', 
         element: (
           <Suspense fallback={<div>Loading...</div>}>

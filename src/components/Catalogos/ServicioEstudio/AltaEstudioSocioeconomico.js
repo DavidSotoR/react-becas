@@ -112,6 +112,9 @@ function AltaEstudioSocioeconomico(){
     L.Marker.prototype.options.icon = DefaultIcon;
 
     const formInputChange =(e) => {
+        const start = e.target.selectionStart;
+        const end = e.target.selectionEnd;
+
         var {name, value, type, checked } = e.target;
         const updatedValue = type === 'checkbox' ? checked : convertirAMayusculas(value);
         
@@ -119,12 +122,20 @@ function AltaEstudioSocioeconomico(){
             ...prevState,
             [name]: updatedValue
         }));
+
+        if(type !== 'checkbox' && type !== 'number'){
+            setTimeout(() => {
+                e.target.setSelectionRange(start, end);
+            }, 0);
+        }
     }
     
     const formInputChangeFamiliar = (e,familiar='') => {
         if(familiar ===''){
             return false;
         }
+        const start = e.target.selectionStart;
+        const end = e.target.selectionEnd;
         
         casosEspeciales(e,familiar);
 
@@ -139,6 +150,12 @@ function AltaEstudioSocioeconomico(){
             }
         }));
 
+
+        if(type !== 'checkbox' && type !== 'number'){
+            setTimeout(() => {
+                e.target.setSelectionRange(start, end);
+            }, 0);
+        }
     }
 
     const casosEspeciales = (e,familiar='') => {
@@ -1025,10 +1042,15 @@ function AltaEstudioSocioeconomico(){
 
                     <div className="d-flex">
                         <div className="p-2 bd-highlight">
-                            <button className="btn btn-primary btn-sm fw-bold " onClick={() =>setFormData(nuevoUsuario)}>Cancelar</button>
+                            {/*<button className="btn btn-primary btn-sm fw-bold " onClick={() =>setFormData(nuevoUsuario)}>Cancelar</button> */}
+                            
+                            <Button variant="light" style={{ marginLeft: "5px" }} className="d-flex align-items-center" onClick={() => backPage()}>
+                                <ion-icon name="chevron-back-outline"></ion-icon>
+                                Regresar
+                            </Button>
                         </div>
                         <div className="ms-auto p-2 bd-highlight">
-                            <button className="btn btn-primary btn-sm fw-bold " onClick={sendDataEstudioSocioeconomico}>Guardar</button>
+                            <button className="btn btn-primary btn-sm fw-bold " onClick={sendDataEstudioSocioeconomico}>Guardar estudio</button>
                         </div>
                     </div>
                     

@@ -6,6 +6,7 @@ import makeAnimated from 'react-select/animated';
 import { useParams,useNavigate } from "react-router-dom";
 import Preguntas from "./Preguntas/Preguntas";
 import Evidencias from "./Preguntas/Evidencias";
+import EncuestaPDF from "./EncuestaPDF/EncuestaPDF";
 
 
 function Socioeconomico(){
@@ -15,6 +16,7 @@ function Socioeconomico(){
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+    const { logout } = useContext(AuthContext);
     const { idEstudio } = useParams();
     const navigate = useNavigate();
     const backPage = () => {
@@ -40,12 +42,18 @@ function Socioeconomico(){
             setEncuesta(resp.data);
             console.log(resp.data);
         }).catch((resp)=>{
+            if (resp.response.status === 401) {
+                logout()
+            }
             console.log(resp);
         })
     }
     
     const listaPreguntas = () => {
         return encuesta?.preguntas ? encuesta.preguntas : null
+    }
+    const listaParametros = () => {
+        return encuesta?.parametros ? encuesta.parametros : []
     }
     
     useEffect(()=>{
@@ -71,10 +79,14 @@ function Socioeconomico(){
                         Regresar
                     </Button>
                 </div>
+
                 
                 <div className="col"></div>
                 
+                
                 <div className="col-md-4 d-flex flex-row-reverse align-items-center" >
+                    
+
                     <Form.Select 
                         className="form-select form-select-sm"
                         style={{maxWidth:'150px'}}
@@ -85,12 +97,18 @@ function Socioeconomico(){
                         <option value='short'>Vista Corta</option>
                         <option value='length'>Vista Larga</option>
                     </Form.Select>
+
                     <div className="mt-1 me-1">
                         <input type="checkbox" className="btn-check" id="verpuntos" onChange={cambiarVerPuntos} value={verPuntos} checked={verPuntos} autoComplete="off"/>
                         <label className="btn btn-secondary pt-2" htmlFor="verpuntos">
                             { verPuntos ? (<ion-icon name="eye-outline"></ion-icon>) : (<ion-icon name="eye-off-outline"></ion-icon>) }
                         </label>
                     </div>
+                    
+                    <div className="mt-1 me-1">
+                        <EncuestaPDF encuesta={encuesta}></EncuestaPDF>
+                    </div>
+
                 </div>
             </div>
             <hr/>
@@ -105,6 +123,7 @@ function Socioeconomico(){
             <Preguntas 
                 idEstudio={idEstudio}
                 preguntas={listaPreguntas()}
+                parametros={listaParametros()}
                 columnRow={columnRow}
                 verPuntos={verPuntos}
             />

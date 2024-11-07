@@ -10,6 +10,7 @@ function HomePage() {
   const [roleUsuario, setRolUsuario] = useState(null)
   
   const renderHomePage = () => {
+    console.log(roleUsuario);
     switch (roleUsuario) {
       case 'Administrador':
         return <HomePageAdmin key="hpa" />;

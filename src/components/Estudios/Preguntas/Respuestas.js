@@ -72,6 +72,43 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
             return newState;
         });
     };
+
+    const formatNumber = (num) => {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    };
+      
+    const numberChange = (e,index) => {
+
+        var {name, value, selectionStart} = e.target;
+        
+        const regex = /^[0-9,]*$/;
+
+        if(!regex.test(value)){
+            return ''
+        }
+
+        let updatedValue = value.replace(/,/g, '');
+
+        if (isNaN(updatedValue) && updatedValue === '') {
+            return '';
+        }
+    
+        setFormData((prevState) => {
+            const newState = [...prevState];
+            newState[index] = {
+                ...newState[index],
+                [name]: updatedValue
+            };
+            return newState;
+        });
+        const formattedValue = formatNumber(updatedValue); 
+        e.target.value = formattedValue;
+        // Calcular la nueva posición del cursor tomando en cuenta los separadores de miles
+        const commasBeforeCursor = formattedValue.slice(0, selectionStart).split(',').length - 1;
+        const newCursorPosition = selectionStart + commasBeforeCursor;
+        e.target.setSelectionRange(newCursorPosition, newCursorPosition); 
+    };
+
     const save = () => {
         const fromData = {id_catalogo_encuestas_preguntas_tipo:idPreguntaTipo,respuestas:formData};
         axios.post(`${APIURL}/estudio/respuestas`,fromData,config).then((resp)=>{
@@ -94,6 +131,27 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         total += sumaTotalporCampo('padre_monto');
         total += sumaTotalporCampo('madre_monto');
         total += sumaTotalporCampo('monto');
+        return total;
+    }
+
+    const sumaTotalporCampoSeccion = (campo,seccion) => {
+        return formData.reduce((acc, item) => {
+            let value = 0;
+
+            if(item['seccion'] === seccion){
+                value = parseFloat(item[campo]);
+            }
+
+            return acc + (isNaN(value) ? 0 : value); 
+
+        }, 0);
+    }
+    
+    const  sumaTotalesSeccion = (seccion) => {
+        let total = 0
+        total += sumaTotalporCampoSeccion('padre_monto',seccion);
+        total += sumaTotalporCampoSeccion('madre_monto',seccion);
+        total += sumaTotalporCampoSeccion('monto',seccion);
         return total;
     }
     //ref
@@ -283,8 +341,8 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                         key={`padre_monto-${index}`}
                                         ref={(el) => (padreRefs.current[index] = el)}
                                         onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
-                                        value={item.padre_monto ?? ''}
-                                        onChange={(e) => {formInputChange(e,index)}}
+                                        value={formatNumber(item.padre_monto) ?? ''}
+                                        onChange={(e) => {numberChange(e,index)}}
                                     />
                                 </div>
                             </div>
@@ -299,8 +357,8 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                         key={`madre_monto-${index}`}
                                         ref={(el) => (madreRefs.current[index] = el)}
                                         onKeyDown={(e) => handleKeyDown(e, index, madreRefs)}
-                                        value={item.madre_monto ?? ''}
-                                        onChange={(e) => {formInputChange(e,index)}}
+                                        value={formatNumber(item.madre_monto) ?? ''}
+                                        onChange={(e) => {numberChange(e,index)}}
                                     />
                                 </div>
                             </div>
@@ -315,8 +373,8 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                         key={`monto-${index}`}
                                         ref={(el) => (montoRefs.current[index] = el)}
                                         onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
-                                        value={item.monto ?? ''}
-                                        onChange={(e) => {formInputChange(e,index)}}
+                                        value={formatNumber(item.monto) ?? ''}
+                                        onChange={(e) => {numberChange(e,index)}}
                                     />
                                 </div>
                             </div>
@@ -330,7 +388,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                         <div className="row">
                             <div className="col-1">$</div>
                             <div className="col-10 text-end">
-                                {sumaTotalporCampo('padre_monto')}
+                                {formatNumber(sumaTotalporCampo('padre_monto'))}
                             </div>
                         </div>
                     </div>
@@ -340,7 +398,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                         <div className="row">
                             <div className="col-1">$</div>
                             <div className="col-10 text-end">
-                                {sumaTotalporCampo('madre_monto')}
+                                {formatNumber(sumaTotalporCampo('madre_monto'))}
                             </div>
                         </div>
                     </div>
@@ -350,7 +408,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                         <div className="row">
                             <div className="col-1">$</div>
                             <div className="col-10 text-end">
-                                {sumaTotalporCampo('monto')}
+                                {formatNumber(sumaTotalporCampo('monto'))}
                             </div>
                         </div>
                     </div>
@@ -363,7 +421,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                         <div className="row">
                             <div className="col-1">$</div>
                             <div className="col-10 text-end">
-                                {sumaTotales()}
+                                {formatNumber(sumaTotales())}
                             </div>
                         </div>
                     </div>
@@ -461,7 +519,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                             <div className="row">
                                 <div className="col-1">$</div>
                                 <div className="col-10 text-end">
-                                    {sumaTotalporCampo('monto')}
+                                    {formatNumber(sumaTotalporCampo('monto'))}
                                 </div>
                             </div>
                         </div>
@@ -549,8 +607,8 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                         <input
                                             className="form-control form-control-sm text-end"
                                             name="monto" 
-                                            value={item.monto ?? ''}
-                                            onChange={(e) => {formInputChange(e,index)}}
+                                            value={formatNumber(item.monto) ?? ''}
+                                            onChange={(e) => {numberChange(e,index)}}
                                         />
                                     </div>
                                 </div>
@@ -563,13 +621,13 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
                         <div className="col-sm-6 p-1 text-start"><b>B) TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalesSeccion('valor'))}</div></div>
                     </div>
                 </div>
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
                         <div className="col-sm-6 p-1 text-start"><b>A +B TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">$</div></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber((sumaTotalesSeccion('valor')+sumaTotalesSeccion('body_otros')))}</div></div>
                     </div>
                 </div>
             </div>
