@@ -14,7 +14,7 @@ export const HomePageEmpresa = () =>{
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const [roleSession, setRoleSession] = useState(localStorage.getItem('role'))
+    const [roleSession, setRoleSession] = useState(localStorage.getItem('role') || '')
     const { logout } = useContext(AuthContext);
 
     const [listaProyecctos, serListaProyectos] = useState([])
