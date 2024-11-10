@@ -1039,6 +1039,7 @@ function PageActualizarCliente() {
                 </div>
                 <div className="col-12 mt-3 d-flex justify-content-center align-items-center">
                     <div className="mb-3">
+                        <Link className="btn btn-secondary mx-2" to={PathConstants.CLIENTES}>Cancelar</Link>
                         <button className="btn btn-primary" onClick={ sendUpdateCliente } disabled={ formValid }>GUARDAR DATOS</button>
                     </div>
                 </div>
