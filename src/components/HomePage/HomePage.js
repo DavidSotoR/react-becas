@@ -7,7 +7,7 @@ import {HomePageEmpresa} from "../HomePageEmpresa/HomePageEmpresa"
 import {HomePageGerencia} from "../HomePageGerencia/HomePageGerencia"
 
 function HomePage() {
-  const [roleUsuario, setRolUsuario] = useState(null)
+  const [roleUsuario, setRolUsuario] = useState('')
   
   const renderHomePage = () => {
     console.log(roleUsuario);
