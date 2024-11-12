@@ -5,9 +5,12 @@ import { AuthContext } from "../../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import PathConstants from "../../../routes/pathsConstants";
 import ReactQuill from 'react-quill';
+import { PDFDownloadLink, PDFViewer, usePDF } from "@react-pdf/renderer";
+import DocumentWord from "./Document";
 //import 'react-quill/dist/quill.snow.css';
 
 function PageNuevoCliente() {
+    const [instance, updateInstance] = usePDF({ document: DocumentWord });
     const [content, setContent] = useState('');
     const handleChange = (value) => {
         console.log(value);
@@ -997,6 +1000,16 @@ function PageNuevoCliente() {
                     Ocurrio un ERROR al realizar Request.
                 </p>
             </Alert>
+            <div style={{ width: '80vw' }}>
+            <PDFDownloadLink document={<DocumentWord />} fileName="somename.pdf">
+            {({ blob, url, loading, error }) =>
+                loading ? 'Loading document...' : 'Download now!'
+            }
+            </PDFDownloadLink>
+                <PDFViewer style={{width: '100%'}}>
+                    <DocumentWord></DocumentWord>
+                </PDFViewer>
+            </div>
         </div>
     )
 }
