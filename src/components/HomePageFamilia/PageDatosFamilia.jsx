@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
 
 export default function  PageDatosFamilia () {
     const DATOSFAMILIA = {
@@ -40,14 +42,20 @@ export default function  PageDatosFamilia () {
             contecto_principal:false,
         }
     };
+    const { logout, userID } = useContext(AuthContext);
     const [datosDeFamilia , setDatosDeFamilia] = useState(DATOSFAMILIA)
     const [datosPadre, setDatosPadre] = useState(DATOSFAMILIA.padre);
     const [datosMadre, setDatosMadre] = useState(DATOSFAMILIA.madre);
     const [pageSelected, setPageSelected] = useState('padre');
+    const APIURL = process.env.REACT_APP_API_URL;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    }
 
     const formChangeDatosPadre = (e) => {
         var { value, name } = e.target
-        console.log(value, '-', name);
         if (name === 'contecto_principal') {
             value = !datosPadre.contecto_principal
         }
@@ -75,6 +83,54 @@ export default function  PageDatosFamilia () {
             [name]: value
         }));
     }
+
+    const getDataEstudioSocioeconomico = () =>{
+        //mandar user ID
+        var padersDatos = []
+        axios.get(APIURL+'/familias/'+ userID +'/estudio/socioeconomico/padres', config).then((resp)=>{
+            padersDatos = resp.data
+            padersDatos.forEach(element => {
+                if (element.id_familias_padres_tipo == 1) {
+                    setDatosPadre(element)
+                }
+                if (element.id_familias_padres_tipo == 2) {
+                    setDatosMadre(element)
+                }
+            });
+        }).catch((err)=>{
+            console.log(err);
+            //setTieneSE(false)
+        })
+    }
+
+    useEffect(()=>{
+        if (datosPadre.contecto_principal) {
+            if (datosMadre.contecto_principal) {
+                setDatosMadre(prevState => ({  
+                    ...prevState,
+                    ['contecto_principal']: false
+                }));
+            }
+        }
+
+    }, [datosPadre.contecto_principal])
+
+    useEffect(()=>{
+        if (datosMadre.contecto_principal) {
+            if (datosPadre.contecto_principal) {
+                setDatosPadre(prevState => ({  
+                    ...prevState,
+                    ['contecto_principal']: false
+                }));   
+            }
+        }
+
+    }, [datosMadre.contecto_principal])
+    
+
+    useEffect(()=>{
+        getDataEstudioSocioeconomico()
+    },[])
 
     return (
         <div className="container">
@@ -381,7 +437,7 @@ export default function  PageDatosFamilia () {
                                 role="switch" 
                                 onChange={(e)=> formChangeDatosMadre(e)}
                                 />
-                            <label className="form-check-label">{(datosPadre.contecto_principal) ? 'Si' : 'No'}</label>
+                            <label className="form-check-label">{(datosMadre.contecto_principal) ? 'Si' : 'No'}</label>
                         </div>
                     </div>
 
