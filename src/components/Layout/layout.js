@@ -76,7 +76,7 @@ export default function Layout() {
 
                           { roleSession === 'Familias' &&
                               <MenuItem component={<Link to={PathConstants.DATOSFAMILIA} />}> 
-                                { collapsed ? (<div className="ion-text-center"><ion-icon name="list-box" size="large"></ion-icon></div>):(<p>DATOS CONTACTOS</p>)}
+                                { collapsed ? (<div className="ion-text-center"><ion-icon name="id-card-outline" size="large"></ion-icon></div>):(<p>DATOS CONTACTOS</p>)}
                             </MenuItem>
                           }
 

@@ -47,6 +47,8 @@ export default function  PageDatosFamilia () {
     const [datosPadre, setDatosPadre] = useState(DATOSFAMILIA.padre);
     const [datosMadre, setDatosMadre] = useState(DATOSFAMILIA.madre);
     const [pageSelected, setPageSelected] = useState('padre');
+    const [ idEstudioSocioEconomico, setIdEstudioSocioEconomico ] = useState(0);
+
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -66,9 +68,53 @@ export default function  PageDatosFamilia () {
         }));
     }
 
-    const saveDataFamilia = () => {
+    const saveDataFamilia = async () => {
         console.log(datosPadre);
         console.log(datosMadre);
+
+        var resp = await getDireccionGSP();
+
+        var arrDirecciones = resp.data ?? []
+
+        if (arrDirecciones.length > 0) {
+            var dataContacto = {
+                'idESE' : idEstudioSocioEconomico ?? 0,
+                'padre': datosPadre,
+                'madre': datosMadre,
+                'direccion': arrDirecciones[0].display_name,
+                'lon': arrDirecciones[0].lon,
+                'lan': arrDirecciones[0].lat
+            }
+        } else {
+            var dataContacto = {
+                'idESE' : idEstudioSocioEconomico ?? 0,
+                'padre': datosPadre,
+                'madre': datosMadre,
+                'direccion': null,
+                'lon': null,
+                'lan': null
+            }
+        }
+
+        
+        saveData(dataContacto);
+        
+    }
+
+    const saveData = async (dataSave) =>{
+        console.log(dataSave);
+        axios.post(APIURL+'/familias/'+ userID +'/estudio/socioeconomico/padres/update',dataSave, config).then((resp)=>{
+            console.log(resp);
+            
+        }).catch((err)=>{
+            console.log(err);
+            if (err.response.status == 401) {
+                //logout()
+            }
+
+            //setTieneSE(false)
+        })
+
     }
 
     const formChangeDatosMadre = (e) => {
@@ -89,18 +135,32 @@ export default function  PageDatosFamilia () {
         var padersDatos = []
         axios.get(APIURL+'/familias/'+ userID +'/estudio/socioeconomico/padres', config).then((resp)=>{
             padersDatos = resp.data
+            console.log(padersDatos);
+            
             padersDatos.forEach(element => {
                 if (element.id_familias_padres_tipo == 1) {
                     setDatosPadre(element)
+                    
                 }
                 if (element.id_familias_padres_tipo == 2) {
                     setDatosMadre(element)
                 }
+                setIdEstudioSocioEconomico(element.id_servicio_estudio)
             });
         }).catch((err)=>{
             console.log(err);
             //setTieneSE(false)
         })
+    }
+
+    const getDireccionGSP = async () => {
+        if (datosPadre.contecto_principal) {
+            return await axios.get(`https://nominatim.openstreetmap.org/search?q=${datosPadre.direccion}&format=json&addressdetails=1`,config);
+        }
+
+        if (datosMadre.contecto_principal) {
+            return await axios.get(`https://nominatim.openstreetmap.org/search?q=${datosMadre.direccion}&format=json&addressdetails=1`,config);
+        }
     }
 
     useEffect(()=>{
@@ -444,7 +504,7 @@ export default function  PageDatosFamilia () {
                 </div>
             </div>
             <div className="d-flex justify-content-center">
-                <button className="btn btn-primary" onClick={() => saveDataFamilia()}>GUARDAR</button>
+                <button className="btn btn-primary" onClick={() => saveDataFamilia()}>GUARDAR DATOS PADRES</button>
             </div>
         </div>
     )
