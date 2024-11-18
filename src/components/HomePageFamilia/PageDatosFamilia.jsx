@@ -109,7 +109,7 @@ export default function  PageDatosFamilia () {
         }).catch((err)=>{
             console.log(err);
             if (err.response.status == 401) {
-                //logout()
+                logout()
             }
 
             //setTieneSE(false)
