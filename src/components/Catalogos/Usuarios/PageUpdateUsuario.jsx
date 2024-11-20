@@ -661,6 +661,16 @@ export default function PageUpdateUsuario() {
                         {contieneError(4) && <div className="text-danger fw-medium">{ getErrorMsg(4) }</div>}
                     </div>
 
+                    { dataUpdateUsuario.id_perfil === 6 &&
+                        <div className="col-12 col-sm-8 col-md-5 mb-3">
+                            <label htmlFor="password_temporal" className="form-label">PASSWORD TEMPORAL</label>
+                            <input type="text" className="form-control" id="password_temporal" name="password_temporal"
+                                    value={dataUpdateUsuario.password_temporal} disabled
+                                    onChange={handleInputChange}/>
+                        </div>
+                    }
+                    
+
                     <div className="col-12">
                         <h6 style={{ fontWeight: 'bold' }}>Dirección del Usuario</h6>
                         <div className="row">

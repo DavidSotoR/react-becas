@@ -38,6 +38,7 @@ export default function PageCrearUsuario () {
     const [listInterno, setListInterno] = useState([]);
     const [ inputChanged, setInputChanged ] = useState('')
     const [errorsArray, setErrorsArray] = useState([]);
+    const [ errorList, setErrorList ] = useState([])
     const { GenerarPassword } = ControllerUsuarios();
     const [ btnDisable, setBtnDisable ] = useState(true)
     const [listaPerfiles, setListaPerfiles] = useState([])
@@ -490,6 +491,21 @@ export default function PageCrearUsuario () {
             )} </>
     }
 
+    const mostrarListaError = (data) =>{
+        for (const field in data) {
+            if (data.hasOwnProperty(field)) {
+                const errors = data[field];
+                errors.forEach(error => {
+                    //const errorItem = document.createElement('li');
+                    //errorItem.textContent = `Error en el campo "${field}": ${error}`;
+                    console.log(`Error en el campo "${field}": ${error}`);
+                    
+                    //errorList.appendChild(errorItem);
+                });
+            }
+        }
+    }
+
     
     const postCrearUsuario = async () => {
         var data = {
@@ -523,6 +539,12 @@ export default function PageCrearUsuario () {
 
             if (error.response.status === 401) {
                 logout()
+            }
+
+            if (error.response.status === 400) {
+                console.log(error.response);
+                
+                mostrarListaError(error.response)
             }
         }   
     }

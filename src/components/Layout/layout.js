@@ -74,10 +74,16 @@ export default function Layout() {
                               { collapsed ? (<div className="ion-text-center"><ion-icon name="home" size="large"/></div>):(<p>INICIO</p>)}
                           </MenuItem>
 
+                          { roleSession === 'Familias' &&
+                              <MenuItem component={<Link to={PathConstants.DATOSFAMILIA} />}> 
+                                { collapsed ? (<div className="ion-text-center"><ion-icon name="id-card-outline" size="large"></ion-icon></div>):(<p>DATOS CONTACTOS</p>)}
+                            </MenuItem>
+                          }
+
                           { roleSession === 'Administrador' &&
                             <>
                           
-                            <MenuItem component={<Link to={PathConstants.ESTUDIOS} />}> 
+                            <MenuItem component={<Link to={PathConstants.ESTUDIOS} />}>  
                                 { collapsed ? (<div className="ion-text-center"><ion-icon name="folder-open-outline" size="large"/></div>):(<p>ASIGNACIONES</p>)}
                             </MenuItem>
                             

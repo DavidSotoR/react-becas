@@ -1,10 +1,7 @@
 import axios from "axios";
 import React,{ useContext, useEffect, useState } from "react";
-import UsuarioCrear from "./UsuarioCrear";
 import { Button, Form, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
-import ModalUpdateUser from "./ModalUpdateUser";
-import ModalCrearUsuario from "./ModalCrearUsuario";
 import { ModalActivarUsuario } from "./ModalActivarUsuario";
 import Avatar from 'react-avatar';
 import PathConstants from "../../../routes/pathsConstants";
@@ -383,16 +380,7 @@ function Usuarios() {
                         activar_desactivar={ returnValorSwitch }></ModalActivarUsuario>
                     )
                 }
-
-                {showUpdate && (
-                    <ModalUpdateUser show={ showUpdate } handleCloseModal={ handleCloseUpdate } dataUser={ userSelected }></ModalUpdateUser>
-                )
-                }            
-
-            {   show &&
-                <ModalCrearUsuario show={show} handleClose={handleClose}></ModalCrearUsuario>
-            }
-
+     
         </div>
     )
 }

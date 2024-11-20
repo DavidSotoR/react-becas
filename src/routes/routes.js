@@ -40,6 +40,8 @@ const EncuestaProyectoID = React.lazy(() => import('../components/HomePageEmpres
 const EmpresaEstudio = React.lazy(() => import('../components/HomeCom/Estudio'))
 //const Details = React.lazy(() => import("../pages/details/details"))
 
+const PageDatosFamilia = React.lazy(()=> import('../components/HomePageFamilia/PageDatosFamilia'))
+
 const isAuthenticated = () => {
   return localStorage.getItem('login') === 'true';
 };
@@ -74,6 +76,7 @@ const PrivateRoute = ({ path ,element }) => {
       if (
           path === PathConstants.HOME 
           || path === PathConstants.FAMILIASFILES
+          || path === PathConstants.DATOSFAMILIA
         ) {
         return element
       } else {
@@ -93,6 +96,12 @@ const PrivateRoute = ({ path ,element }) => {
 };
 
 const routes = [
+  { path: PathConstants.DATOSFAMILIA, perfil:'Familias', 
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <PrivateRoute path={PathConstants.DATOSFAMILIA} element={<PageDatosFamilia />} />
+      </Suspense>
+    )},
     { path: PathConstants.HOME, perfil:'todos', 
       element: (
         <Suspense fallback={<div>Loading...</div>}>
