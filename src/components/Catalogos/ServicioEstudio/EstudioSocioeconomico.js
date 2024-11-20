@@ -187,6 +187,19 @@ function ServicioEstudio(){
         </>);
     }
 
+    const sendCorreo = (data) =>{
+        var idFamilia = data.id_familia
+
+        axios.post(APIURL+"/familias/"+idFamilia+"/estudio/socioeconomico/correo",data, config).then(resp=>{
+            console.log(resp);
+        }).catch(err=>{
+            console.log(err);
+            
+        })
+        console.log(data);
+        
+    }
+
     const renderFilasTablaEstudiosSocioeconomicos = () => {
         return allEstudiosSocioeconomicosFiltrados.map((estudio, index) => (
             <tr key={'tr-cliente-'+index}>
@@ -207,6 +220,7 @@ function ServicioEstudio(){
                 </td>
                 <td>
                     <div className="d-flex flex-row-reverse bd-highlight">
+                        <button onClick={()=>sendCorreo(estudio)} className="btn btn-primary btn-sm mx-1">Enviar Correo</button>
                         <Link className="btn btn-primary btn-sm" to={`/estudio-socioeconomico/${estudio.id}`}>Ver</Link>
                     </div>
                 </td>
