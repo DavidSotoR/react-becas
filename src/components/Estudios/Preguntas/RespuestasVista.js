@@ -305,7 +305,9 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                 </div>
             </div>
         );
-    };const distrubucionDeLaCasa = () => {
+    };
+    
+    const distrubucionDeLaCasa = () => {
         return (
             <div className="row">
                 
