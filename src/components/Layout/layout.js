@@ -6,7 +6,8 @@ import PathConstants from "../../routes/pathsConstants";
 import { Menu, MenuItem, Sidebar, SubMenu, menuClasses } from "react-pro-sidebar";
 
 export default function Layout() {
-    const { isLoggedIn, userSession,roleSession, logout } = useContext(AuthContext);
+    const { isLoggedIn, userSession,roleSession, userActive, logout } = useContext(AuthContext);
+    const [ active, setActive ] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
     const Logout = () => {
         localStorage.clear()
@@ -17,6 +18,23 @@ export default function Layout() {
         
       }
     },[collapsed])
+
+    useEffect(()=>{
+      if (userActive === null) {
+          setActive(false)
+      } else {
+          var ls = localStorage.getItem('ua')
+          console.log('este es el valor ' + ls);
+          var act
+          if (ls == true) {
+              setActive(true)
+              act = true
+          } else {
+              act = false
+              setActive(false)
+          }
+      }
+    })
 
     return (
         <>
@@ -74,7 +92,7 @@ export default function Layout() {
                               { collapsed ? (<div className="ion-text-center"><ion-icon name="home" size="large"/></div>):(<p>INICIO</p>)}
                           </MenuItem>
 
-                          { roleSession === 'Familias' &&
+                          { roleSession === 'Familias' && active &&
                               <MenuItem component={<Link to={PathConstants.DATOSFAMILIA} />}> 
                                 { collapsed ? (<div className="ion-text-center"><ion-icon name="id-card-outline" size="large"></ion-icon></div>):(<p>DATOS CONTACTOS</p>)}
                             </MenuItem>

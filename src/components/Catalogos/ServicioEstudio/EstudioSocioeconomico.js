@@ -220,7 +220,9 @@ function ServicioEstudio(){
                 </td>
                 <td>
                     <div className="d-flex flex-row-reverse bd-highlight">
-                        <button onClick={()=>sendCorreo(estudio)} className="btn btn-primary btn-sm mx-1">Enviar Correo</button>
+                        <button onClick={()=>sendCorreo(estudio)} className="btn btn-primary btn-sm mx-1 d-flex justify-content-center align-items-center">
+                            <ion-icon name="mail-outline"></ion-icon>
+                        </button>
                         <Link className="btn btn-primary btn-sm" to={`/estudio-socioeconomico/${estudio.id}`}>Ver</Link>
                     </div>
                 </td>
