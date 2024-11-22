@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import axios from "axios";
 import RespuestasVista from "../Estudios/Preguntas/RespuestasVista";
 
@@ -22,24 +24,95 @@ export default function Estudio(){
             setEncuesta(resp.data);
             console.log(resp.data);
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if ( resp?.response?.status && resp.response.status === 401) {
+                logout()
+            }
+            console.log(resp);
+        })
+    }
+    
+    const getEsrudioSocioeconomicoPDF = () => {
+        const config_pdf = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+            responseType: 'blob'
+        }
+        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/pdf`,config_pdf).then((resp)=>{
+
+            const pdfBlob = new Blob([resp.data], { type: 'application/pdf' });
+
+            // Crea una URL temporal
+            const url = URL.createObjectURL(pdfBlob);
+
+            // Crea un enlace de descarga
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `estudio_${idEstudio}.pdf` || 'estudio.pdf';
+            document.body.appendChild(link);
+            link.click();
+
+            // Limpia el DOM
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }).catch((resp)=>{
+            if ( resp?.response?.status && resp.response.status === 401) {
                 logout()
             }
             console.log(resp);
         })
     }
 
+    const totalPuntosParametros = () => {
+        return encuesta?.parametros 
+        ? encuesta.parametros.reduce((total, parametro) => {
+            const valor = parseInt(parametro.puntos.valor, 10);
+            return total + (Number.isFinite(valor) ? valor : 0);
+        }, 0)
+        : 0;
+    }
+    const grandTotalPuntosParametros = () => {
+        return encuesta?.parametros 
+        ? encuesta.parametros.reduce((total, parametro) => {
+            const valor = parseInt(parametro.puntos_maximo, 10);
+            return total + (Number.isFinite(valor) ? valor : 0);
+        }, 0)
+        : 0;
+    }
+
+    const porcentajeSugerido = () => {
+        const puntos = totalPuntosParametros();
+        const total_puntos = grandTotalPuntosParametros();
+
+        const porcentaje = total_puntos > 0 ? (puntos*100) / total_puntos : 0 ;
+
+
+        const bloquesDe20 = Math.floor(porcentaje / 20);
+    
+        // Calculamos el descuento: cada bloque de 20% equivale a un 5% de descuento
+        const descuento = bloquesDe20 * 5;
+    
+        // Aseguramos que el descuento máximo sea 25%
+        return Math.min(descuento, 25)+'%';
+    }
+
     useEffect(() => {
         getEsrudioSocioeconomico();
-    })
-    return (
-        <div className="container mt-3">
-            <div className="row">
+    },[])
+
+    const estudioPortada = () => {
+        return(
+            <div className="row mb-4">
                 <div className="col-md-2"/>
-                <div className="col-md-8">
+                <div className="col-md-8 m-2 border border-secondary">
                     <div className="text-center">
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
                         <h5>SINERGIA EN ESTUDIOS SOCIOECONÓMICOS</h5>
-                        <hr/>
+                        <br/>
                         <p className="text-uppercase mt-5">ESTUDIO SOCIOECONÓMICO PARA BECA CICLO {encuesta?.proyecto?.nombre && encuesta.proyecto.nombre}</p>
                         <br/>
                         <p className="text-uppercase">{encuesta?.estudio?.cliente?.nombre && encuesta.estudio.cliente.nombre}</p>
@@ -67,39 +140,67 @@ export default function Estudio(){
                     <br/>
                     <br/>
                 </div>
-            </div>
-            <div className="row">
+            </div>)
+    }
+
+    const estudioResultado = () => {
+        return (
+            <div className="row mb-4">
                 <div className="col-md-2"/>
-                <div className="col-md-8">
+                <div className="col-md-8 m-2 border border-secondary">
+                    <br/>
+                    <br/>
+                    <br/>
                     <div className="text-center">
-                        <div className="row">
-                            <div className="col"/>
-                            <div className="col-12 col-md-3 d-flex">
-                                <div className="w-75 text-start">
-                                    PUNTUACION<br/>TOTAL
-                                </div>
-                                <div className="w-25 border border-dark"></div>
-                            </div>
-                            <div className="col-1"/>
-                            <div className="col-12 col-md-3 d-flex mt-2 mt-md-0">
-                                <div className="w-75 text-start">
-                                    PORCENTAJE<br/>SUGERIDO
-                                </div>
-                                <div className="w-25 border border-dark"></div>
-                            </div>
-                            <div className="col"/>
-                        </div>
-                        <hr/>
                         <p className="text-uppercase fw-bolder mt-5">COMENTARIO DEL ENTREVISTADOR</p>
                         <br/>
                         <div className="row">
-                            <div className="col-md-2 fw-bolder text-start">CLASIFICACION</div>
+                            <div className="col-1"/>
+                            <div className="col-2 fw-bolder text-start">CLASIFICACION</div>
                             <div className="col border-bottom border-dark">&nbsp;</div>
+                            <div className="col-1"/>
                         </div>
                         <br/>
                         <div className="row">
-                            <div className="col-12 text-start">OBSERVACION</div>
-                            <div className="col border border-dark" style={{minHeight:'300px'}}></div>
+                            <div className="col-1"/>
+                            <div className="col-10 text-start">OBSERVACION</div>
+                            <div className="col-1"/>
+                            <div className="col-1"/>
+                            <div className="col-10 border border-dark" style={{minHeight:'300px'}}></div>
+                            <div className="col-1"/>
+                        </div>
+                        <br/>
+                        
+                        <div className="row">
+                            <div className="col-3"/>
+                            <div className="col-6 pb-2 pt-2 mb-4">
+                                <div className="text-center">COLEGIO</div>
+                                {puntosPorParametros()}
+                            </div>
+                        </div>
+
+
+
+                        <div className="row">
+                            <div className="col"/>
+                            <div className="col-3 d-flex">
+                                <div className="w-75 text-start">
+                                    PUNTUACION<br/>TOTAL
+                                </div>
+                                <div className="w-25 border border-dark d-flex align-items-center justify-content-center ">
+                                    {totalPuntosParametros()}
+                                </div>
+                            </div>
+                            <div className="col-1"/>
+                            <div className="col-3 d-flex mt-2 mt-md-0">
+                                <div className="w-75 text-start">
+                                    PORCENTAJE<br/>SUGERIDO
+                                </div>
+                                <div className="w-25 border border-dark d-flex align-items-center justify-content-center ">
+                                    {porcentajeSugerido()}
+                                </div>
+                            </div>
+                            <div className="col"/>
                         </div>
                         <br/>
                     </div>
@@ -107,6 +208,53 @@ export default function Estudio(){
                     <br/>
                 </div>
             </div>
+            )
+    }
+
+    const puntosPorParametros = () => {
+        return(
+            <div> 
+                {encuesta?.parametros && encuesta.parametros.map((parametro, index) => (
+                    <div key={'epil-'+index} className="row mt-3">
+                        <div className="col-1"></div>
+                        <div className="col-6 text-start text-uppercase">
+                            {parametro.nombre}
+                        </div>
+                        <div className="col-1"></div>
+                        <div className="col-2 text-center text-uppercase border-bottom border-secondary">
+                            {parametro.puntos.valor}
+                        </div>
+                        <div className="col-1"></div>
+                    </div>
+                )) }
+            </div>
+        )
+    }
+    return (
+        <div className="container mt-3" style={{overflowX:'auto'}}>
+        <div className="row">
+            <div className="col-sm-6">
+                <Link className="btn btn-light btn-sm" to={`/`}> 
+                    <div className="d-flex align-items-center">
+                        <ion-icon name="arrow-back-outline"></ion-icon> Regresar
+                    </div>
+                </Link>
+            </div>
+            <div className="col-sm-6 ">
+                <div className="d-flex flex-row-reverse bd-highlight">
+                
+                <Button className="btn btn-light btn-sm" onClick={ () => getEsrudioSocioeconomicoPDF() }> 
+                    <div className="d-flex align-items-center">
+                        PDF
+                    </div>
+                </Button>
+                </div>
+            </div>
+        </div>
+        <hr/>
+            <div style={{minWidth:'800px'}}>
+            {estudioPortada()}
+            {estudioResultado()}
             <div className="row">
                 <div className="col-md-2"/>
                 <div className="col-md-8">
@@ -124,6 +272,7 @@ export default function Estudio(){
                     )
                     )}
                 </div>
+            </div>
             </div>
         </div>
     )
