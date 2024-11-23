@@ -30,9 +30,11 @@ export const AuthProvider = ({ children }) => {
        role = resp.data.data.perfil.nombre
        user = resp.data.data.email
        id = resp.data.data.id
-       console.log(user);
-       setUserActive(resp.data.data.password !== null ? true : false)
-       localStorage.setItem('ua', resp.data.data.password !== null ? true : false)
+       var data = resp.data.data
+       console.log(data);
+       
+       setUserActive(data.password_temporal === null ? true : false)
+       localStorage.setItem('ua', data.password_temporal === null ? true : false)
        setIsLoggedIn(true);
        localStorage.setItem('role', role)
        localStorage.setItem('user', user)

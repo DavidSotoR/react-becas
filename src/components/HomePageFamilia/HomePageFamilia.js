@@ -9,6 +9,9 @@ function HomePageFamilia() {
     const { logout, userID, userActive } = useContext(AuthContext);
     const [ tieneSE, setTieneSE ] = useState(false);
     const [ active, setActive ] = useState(false);
+    const [ password, setPassword ] = useState('')
+    const [ passwordConfirmar, setPasswordConfirmar ] = useState('')
+    const [ errorMsg , setErrorMsg ] = useState('');
     const [ idSE, setIdSE ] = useState(0);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -23,17 +26,16 @@ function HomePageFamilia() {
             setActive(false)
         } else {
             var ls = localStorage.getItem('ua')
-            console.log('este es el valor ' + ls);
             var act
-            if (ls == true) {
+            if (ls === "true") {
                 setActive(true)
                 act = true
-            } else {
+            } 
+            if (ls === "false" || ls === null || ls === "null") {
                 act = false
                 setActive(false)
             }
         }
-        console.log(act);
         
         axios.get(APIURL+'/familias/'+ userID +'/estudio/socioeconomico', config).then((resp)=>{
             console.log(resp);
@@ -49,8 +51,46 @@ function HomePageFamilia() {
             
         }).catch((err)=>{
             console.log(err);
+            
             setTieneSE(false)
+            if (err.response.status === 401) {
+                logout()
+            }
         })
+    }
+
+    const sendActualizarPassword = () => {
+        var data = {
+            password: password,
+            password_confirmar: passwordConfirmar,
+            id: userID,
+        }
+        axios.put(APIURL+'/usuarios/'+ userID +'/password', data, config).then((resp)=>{
+            if (resp.data.confirmado) {
+                alert(resp.data.message);
+                logout()
+            }
+        }).catch((err)=>{
+            console.log(err);
+            setErrorMsg( err.response.data.message )
+            setTieneSE(false)
+            if (err.response.status === 401) {
+                logout()
+            }
+        })
+        //usuarios/{id}/password
+        
+    }
+
+    const changeData = (e) => {
+        var { value, name }  = e.target
+        if (name == 'password') {
+            setPassword(value)
+        }
+        if (name == 'password_confirmar') {
+            setPasswordConfirmar(value)
+        }
+        
     }
 
     useEffect(()=>{
@@ -151,14 +191,20 @@ function HomePageFamilia() {
                     <div className="row row-cols-1">
                         <div class="mb-3 col-12 col-md-4">
                             <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control w-40" name="password" id="password" placeholder="Contraseña"/>
+                            <input type="password" class="form-control w-40" name="password" id="password" placeholder="Contraseña" onChangeCapture={ (e) => changeData(e)}/>
                         </div>
                         <div class="mb-3 col-12 col-md-4">
                             <label for="password_confirm" class="form-label">Confirmar Contraseña</label>
-                            <input type="password" class="form-control w-40" name="password_confirm" id="password_confirm" placeholder="Confirmar Contraseña"/>
+                            <input type="password" class="form-control w-40" name="password_confirmar" id="password_confirm" placeholder="Confirmar Contraseña" onChangeCapture={ (e) => changeData(e)}/>
                         </div>
+                        { errorMsg !== '' &&
+                            <div className="col-12">
+                                <p className="text-danger fw-medium">{errorMsg}</p>
+                            </div>
+                            
+                        }
                         <div className="col-12">
-                        <button className="btn btn-primary">Actualizar Contraseña</button>
+                        <button className="btn btn-primary" onClick={()=>sendActualizarPassword()}>Actualizar Contraseña</button>
                         </div>
                         
                     </div>

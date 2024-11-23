@@ -26,10 +26,11 @@ export default function Layout() {
           var ls = localStorage.getItem('ua')
           console.log('este es el valor ' + ls);
           var act
-          if (ls == true) {
+          if (ls === "true") {
               setActive(true)
               act = true
-          } else {
+          } 
+          if (ls === "false" || ls === null || ls === "null") {
               act = false
               setActive(false)
           }
