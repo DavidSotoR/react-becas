@@ -220,6 +220,9 @@ function Usuarios() {
     const renderFilasTablaUsuarios = () => {
         return allUsuariosFiltrados.map((usuario, index) => (
             <tr key={'tr-usuario-'+index}>
+                <td className="col-id">
+                    <input type="checkbox" name={ "check-user-"+usuario.id } id={ "check-user-"+usuario.id } value=""/>
+                </td>
                 <td className="col-nombre">
                     <div className="d-flex">
                         <div>
@@ -355,6 +358,9 @@ function Usuarios() {
                     <table className="table">
                         <thead>
                             <tr>
+                                <th className="col-id" style={{ verticalAlign:'top' }}>
+                                        <input type="checkbox" value="" name={ "check-user-all" } id={ "check-user-all" }/>                                    
+                                </th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Cuenta</th>
                                 <th scope="col">Cliente</th>
