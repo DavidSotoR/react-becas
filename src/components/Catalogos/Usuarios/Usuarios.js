@@ -181,48 +181,43 @@ function Usuarios() {
     return name;
   };
 
-  const getDatosPost = (datosPost, pbtnEnable) => {
-    var data = datosPost;
-    setDataPostUsuario(data);
-    setBtnEnable(pbtnEnable);
-    console.log(btnEnable);
-  };
-
-  const sendDataPost = () => {
-    console.log(dataPostUsuario);
-    postCrearUsuario();
-  };
-
   const checkboxChange = (e) => {
-    var { name, value } = e.target;
+    var { name, value, checked } = e.target;
+    console.log(checked);
+    console.log(name);
+    
     var selected = [];
-    if (name === "checkuser-all") {
-      setCheckAllSelected(!checkAllSelected);
-      console.log("se seleccionan todos users");
-      if (allUsuarios.length === 0) {
-        allUsuarios.forEach((usu) => {
-          selected.push(usu.id);
-        });
-      } else {
-        selected = [];
-      }
-
-      setAllUsuarios(selected);
-    } else {
-      var idUserSelected = value.split("-")[1];
-      var idUser = parseInt(idUserSelected);
-
-      console.log("se seleccionan users " + idUserSelected);
-      console.log(parseInt(idUserSelected));
-
-      setAllUsuarios((prevUsuarios) => {
-        if (prevUsuarios.includes(idUser)) {
-          return prevUsuarios.filter((userId) => userId !== idUser);
+    if (checked) {
+      if (name === "checkuser-all") {
+        setCheckAllSelected(checked);
+        console.log("se seleccionan todos users");
+        if (checked) {
+          allUsuarios.forEach((usu) => {
+              selected.push(usu.id);
+          });
         } else {
-          return [...prevUsuarios, idUser];
+          selected = [];
         }
-      });
+        setListaUsuSelected(selected);
+      } else {
+        console.log('¿entro?');
+        
+        var idUserSelected = name.split("-")[1];
+        var idUser = parseInt(idUserSelected);
+        if (checked) {
+          setListaUsuSelected((prevUsuarios) => {
+              return [...prevUsuarios, idUser];
+          });
+        } else {
+          var nuevo_array = listaUsuSelected.filter(elemento => elemento !== idUserSelected)
+          setListaUsuSelected(nuevo_array)
+        }
+      }
+    } else {
+      setCheckAllSelected(checked)
+      setListaUsuSelected(selected)
     }
+    
   };
 
   const renderFiltroPerfiles = () => {
@@ -254,8 +249,9 @@ function Usuarios() {
     //setShowUpdate(!showUpdate)
   };
 
-  const existInAllUsuarioSlected = (id) => {
-    return allUsuarios.includes(id);
+  const existInAllUsuarioSelected = (id) => {
+
+    return listaUsuSelected.includes(id);
   };
 
   const renderFilasTablaUsuarios = () => {
@@ -268,7 +264,7 @@ function Usuarios() {
               checkboxChange(e);
             }}
             name={"checkuser-" + usuario.id}
-            checked={existInAllUsuarioSlected(usuario.id)}
+            checked={existInAllUsuarioSelected(usuario.id)}
             id={"checkuser-" + usuario.id}
             value=""
           />
@@ -353,14 +349,12 @@ function Usuarios() {
 
   useEffect(() => {
     if (!showUpdate) {
-      console.log("se cierra");
       getAllDataUsuarios();
     }
   }, [showUpdate]);
 
   useEffect(() => {
     if (!showActivar) {
-      console.log("se cierra");
       getAllDataUsuarios();
     }
   }, [showActivar]);
@@ -373,22 +367,25 @@ function Usuarios() {
 
   useEffect(
     (e) => {
-      //console.log(e);
-      //console.log(searchPorPerfil);
+
       if (searchPorPerfil) {
         console.log(searchPorPerfil);
         getAllDataUsuarios();
       }
-      //getAllDataUsuarios();
     },
     [searchPorPerfil]
   );
+
+  const showDataTest = () =>{
+    console.log(listaUsuSelected);
+  }
 
   return (
     <div className="container mt-3">
       <div className="mb-3 d-flex justify-content-between align-items-center">
         <div className="">
           <h6 style={{ fontWeight: "bold" }}>Catalogo de Usuarios</h6>
+          <button onClick={() => showDataTest()}>click</button>
         </div>
         <div className="">
           {/* <Button className="btn btn-primary btn-sm" onClick={handleShow}>Agregar Usuario</Button> */}
@@ -436,12 +433,20 @@ function Usuarios() {
               {renderFiltroClientes()}
             </select>
           </div>
+          
         </div>
       </div>
       <hr></hr>
       <div className="row">
         <div className="col">
           <div className="table-wrapper">
+          { listaUsuSelected.length > 0 &&
+            <div className="d-flex mb-3">
+              <button className="btn btn-primary btn-sm mx-1">Activar Cuentas</button>
+              <button className="btn btn-warning btn-sm mx-1">Deshabilitar Cuentas</button>
+            </div>
+          }
+          
             <table className="table">
               <thead>
                 <tr>
