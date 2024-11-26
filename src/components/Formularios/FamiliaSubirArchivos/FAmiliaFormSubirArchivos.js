@@ -349,7 +349,7 @@ function FamiliaSubirArchivos() {
         switch (tipo) {
             case 1:
                 return files1DeFamilia
-                .filter(ch => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
+                .filter(ch => /\.(docx|cbr|pdf|xcel|txt|xlsx)$/i.test(ch.directorio))  // Filtrar solo archivos con extensión jpg, jpeg, png
                 .map((ch) => (
                     <li > {FileLink(ch.nombre, ch.directorio)} </li>
                 ));

@@ -1001,14 +1001,14 @@ function PageNuevoCliente() {
                 </p>
             </Alert>
             <div style={{ width: '80vw' }}>
-            <PDFDownloadLink document={<DocumentWord />} fileName="somename.pdf">
+            {/* <PDFDownloadLink document={<DocumentWord />} fileName="somename.pdf">
             {({ blob, url, loading, error }) =>
                 loading ? 'Loading document...' : 'Download now!'
             }
             </PDFDownloadLink>
                 <PDFViewer style={{width: '100%'}}>
                     <DocumentWord></DocumentWord>
-                </PDFViewer>
+                </PDFViewer> */}
             </div>
         </div>
     )
