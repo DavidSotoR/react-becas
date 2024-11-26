@@ -393,6 +393,7 @@ function Usuarios() {
     if (!showModalActivaCuentas) {
       getAllDataUsuarios();
       setListaUsuSelected([]);
+      setCheckAllSelected(false)
     }
     
   }, [showModalActivaCuentas])
