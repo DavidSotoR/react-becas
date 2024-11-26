@@ -14,10 +14,14 @@ export const ModalActivarAllUsuario = ({ show ,onHide ,list_usuario, activar_des
         }
     }
 
-    const EnableOrDisable = () => {
+    const EnableOrDisableList = () => {
         //activar_desactivar(nuevoValor)
+        var data = {
+            opcion: activar_desactivar,
+            lista_usuarios: list_usuario
+        }
 
-        axios.delete(APIURL+'/usuarios/'+usuario.id,config).then((resp)=>{
+        axios.put(APIURL+'/usuarios/lista/activar',data,config).then((resp)=>{
             console.log(resp);
             onHide()
         }).catch((err)=>{
@@ -33,7 +37,7 @@ export const ModalActivarAllUsuario = ({ show ,onHide ,list_usuario, activar_des
     const renderListaUsuarios = () => {
         return list_usuario.map((usuario) => (
             <li key={usuario.id}>
-                {usuario.email}
+                Usuario:{usuario.email}{ usuario.cliente === 'INTERNO' ? ' - INTERNO' : '' }{ usuario.cliente == 'INTERNO' ? '' : ' - Cliente: '+usuario.cliente } 
             </li>
         ));
     }
@@ -44,25 +48,26 @@ export const ModalActivarAllUsuario = ({ show ,onHide ,list_usuario, activar_des
 
     return (
         <Modal show={show} onHide={onHide}>
-            <Modal.Header className="fw-bold"> { activar_desactivar ? 'Inacticos' : 'Activar' } lista usuarios </Modal.Header>
+            <Modal.Header className="fw-bold"> { activar_desactivar ? 'Activar' : 'Desactivar' } lista usuarios </Modal.Header>
             <Modal.Body>
                 La siguiente lista de usuarios pasaran a ser { activar_desactivar ? 'Inacticos' : 'Activos' }:
-                <ul>
-                    { renderListaUsuarios() }
-                </ul>
+                <div style={{ height: '60%', overflow:'scroll' }}>
+                    <ul>
+                        { renderListaUsuarios() }
+                    </ul>
+                </div>
+                
             </Modal.Body>
 
-            {
-                usuario && 
+
                 <Modal.Footer>
                     <Button variant="secondary" onClick={CancelProcessActivarDesactivar}>
                         Cancelar
                     </Button>
-                    <Button onClick={ EnableOrDisable } variant={ usuario.active ? "danger" : "success"}>
-                        { usuario.active ? "Desactivar" : "Activar"}
+                    <Button onClick={ EnableOrDisableList } variant={ activar_desactivar === 0 ? "danger" : "success"}>
+                        { activar_desactivar === 0  ? "Desactivar" : "Activar"}
                     </Button>
                 </Modal.Footer>
-            }
             
         </Modal>
     )

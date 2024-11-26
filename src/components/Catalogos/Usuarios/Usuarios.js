@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 import { ModalActivarUsuario } from "./ModalActivarUsuario";
+import { ModalActivarAllUsuario } from "./ModalActivarAllUsuarios";
 import Avatar from "react-avatar";
 import PathConstants from "../../../routes/pathsConstants";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,7 +22,6 @@ function Usuarios() {
   const [dataPostUsuario, setDataPostUsuario] = useState({});
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const [showActivar, setShowActivar] = useState(false);
   const handleCloseActivar = () => setShowActivar(false);
@@ -34,8 +34,13 @@ function Usuarios() {
   const [userSelected, setUserSelected] = useState(null);
 
   const [showUpdate, setShowUpdate] = useState(false);
-  const handleCloseUpdate = () => setShowUpdate(false);
-  const handleShowUpdate = () => setShowUpdate(true);
+  const [showModalActivaCuentas, setShowModalActivaCuentas] = useState(false);
+  const [optionSelectedAllUsuarios, setOptionSelectedAllUsuarios] = useState(1)
+
+  const handleCloseModalAll = () => setShowModalActivaCuentas(false);
+  const handleShowModalAll = () => setShowUpdate(true);
+
+  const [ dataFormActivarDeshabiliar, setDataFormActivarDeshabiliar ] = useState([])
 
   const config = {
     headers: {
@@ -46,6 +51,18 @@ function Usuarios() {
   const defaultValuesForm = () => {
     setClearForm(false);
   };
+
+  const habilitarDeshabilitarCuentas = (opcion) => {
+    setShowModalActivaCuentas(!showModalActivaCuentas);
+    setOptionSelectedAllUsuarios(opcion)
+    var usuariosSlct = [];
+    allUsuariosFiltrados.forEach(element => {
+      if (existInAllUsuarioSelected(element.id)) {
+        usuariosSlct.push({ id: element.id, email: element.email, cliente: element.cliente ?  element.cliente.nombre : 'INTERNO' })
+      }
+    });
+    setDataFormActivarDeshabiliar(usuariosSlct)
+  }
 
   const postCrearUsuario = async () => {
     var data = dataPostUsuario;
@@ -77,8 +94,6 @@ function Usuarios() {
   };
 
   const switchActiveChange = (e, usuario) => {
-    /* console.log(e.target);
-        console.log(usuario); */
     handleShowActivar();
     setUserToActive(usuario);
   };
@@ -183,14 +198,10 @@ function Usuarios() {
 
   const checkboxChange = (e) => {
     var { name, value, checked } = e.target;
-    console.log(checked);
-    console.log(name);
-    
+
     var selected = [];
-    if (checked) {
       if (name === "checkuser-all") {
         setCheckAllSelected(checked);
-        console.log("se seleccionan todos users");
         if (checked) {
           allUsuarios.forEach((usu) => {
               selected.push(usu.id);
@@ -199,25 +210,27 @@ function Usuarios() {
           selected = [];
         }
         setListaUsuSelected(selected);
-      } else {
-        console.log('¿entro?');
+      } else if (name !== "checkuser-all"){
         
         var idUserSelected = name.split("-")[1];
         var idUser = parseInt(idUserSelected);
+        var selected = [];
         if (checked) {
-          setListaUsuSelected((prevUsuarios) => {
-              return [...prevUsuarios, idUser];
-          });
+          if (existInAllUsuarioSelected(idUser)) {
+            selected = listaUsuSelected.filter(elemento => elemento !== idUser)
+            setListaUsuSelected(selected)
+          } else {
+            setListaUsuSelected((prevUsuarios) => {
+                return [...prevUsuarios, idUser];
+            });
+          }
+
         } else {
-          var nuevo_array = listaUsuSelected.filter(elemento => elemento !== idUserSelected)
-          setListaUsuSelected(nuevo_array)
+            selected = listaUsuSelected.filter(elemento => elemento !== idUser)
+            setListaUsuSelected(selected)
         }
       }
-    } else {
-      setCheckAllSelected(checked)
-      setListaUsuSelected(selected)
-    }
-    
+
   };
 
   const renderFiltroPerfiles = () => {
@@ -376,6 +389,14 @@ function Usuarios() {
     [searchPorPerfil]
   );
 
+  useEffect(()=>{
+    if (!showModalActivaCuentas) {
+      getAllDataUsuarios();
+      setListaUsuSelected([]);
+    }
+    
+  }, [showModalActivaCuentas])
+
   const showDataTest = () =>{
     console.log(listaUsuSelected);
   }
@@ -385,7 +406,6 @@ function Usuarios() {
       <div className="mb-3 d-flex justify-content-between align-items-center">
         <div className="">
           <h6 style={{ fontWeight: "bold" }}>Catalogo de Usuarios</h6>
-          <button onClick={() => showDataTest()}>click</button>
         </div>
         <div className="">
           {/* <Button className="btn btn-primary btn-sm" onClick={handleShow}>Agregar Usuario</Button> */}
@@ -442,8 +462,8 @@ function Usuarios() {
           <div className="table-wrapper">
           { listaUsuSelected.length > 0 &&
             <div className="d-flex mb-3">
-              <button className="btn btn-primary btn-sm mx-1">Activar Cuentas</button>
-              <button className="btn btn-warning btn-sm mx-1">Deshabilitar Cuentas</button>
+              <button className="btn btn-primary btn-sm mx-1" onClick={ ()=> habilitarDeshabilitarCuentas(1) }>Activar Cuentas</button>
+              <button className="btn btn-warning btn-sm mx-1" onClick={ ()=> habilitarDeshabilitarCuentas(0)}>Deshabilitar Cuentas</button>
             </div>
           }
           
@@ -482,6 +502,14 @@ function Usuarios() {
           activar_desactivar={returnValorSwitch}
         ></ModalActivarUsuario>
       )}
+      { showModalActivaCuentas && dataFormActivarDeshabiliar.length && (
+        <ModalActivarAllUsuario
+        show={showModalActivaCuentas}
+        onHide={handleCloseModalAll}
+        list_usuario={dataFormActivarDeshabiliar}
+        activar_desactivar={optionSelectedAllUsuarios}
+        ></ModalActivarAllUsuario>
+      ) }
     </div>
   );
 }
