@@ -4,7 +4,8 @@ import { AuthContext } from "../../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-
+import RangosSugeridos from "../Graficas/RangosSugeridos";
+import DataTable from "react-data-table-component";
 
 export default function ListaEncuestas({idProyecto, idOrdenServicio}){
     
@@ -19,6 +20,14 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
     const [listaEstudios,setListaEstudios] = useState([]);
     const [proyecto,setProyecto] = useState(null);
     const [listaParametors,setListaParametors] =  useState([])
+
+    const rango_pordentaje = [
+        {rango:20,nombre:'de 0 a 20%'},
+        {rango:40,nombre:'de 20 a 40%'},
+        {rango:60,nombre:'de 40 a 60%'},
+        {rango:80,nombre:'de 60 a 80%'},
+        {rango:100,nombre:'de 80 a 100%'},
+    ]
 
     const getListaEstudios = () => {
         
@@ -73,6 +82,47 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
         return estudio_parametro?.puntos?.valor && estudio_parametro.puntos.valor;
     }
 
+    const getTotalPuntosParametros = (list) => {
+        return list.reduce((total, item) => {
+          const valorNumerico = parseFloat(item.puntos.valor); // Convertir a número
+          return total + (isNaN(valorNumerico) ? 0 : valorNumerico); // Validar y sumar
+        }, 0);
+    }
+    const getMaximosPuntosParametros = (list) => {
+        return list.reduce((total, item) => {
+          const valorNumerico = parseFloat(item.puntos_maximo); // Convertir a número
+          return total + (isNaN(valorNumerico) ? 0 : valorNumerico); // Validar y sumar
+        }, 0);
+    }
+
+    const getPorcentajeSugerido = (list) => {
+        const puntuacion = getTotalPuntosParametros(list);
+        const puntuacion_maxima = getMaximosPuntosParametros(list);
+        const rango_pordentaje = (puntuacion_maxima !== 0 && (( puntuacion * 100 ) / puntuacion_maxima ) );
+ 
+        const bloquesDe20 = Math.floor(rango_pordentaje / 20);
+    
+        // Calculamos el descuento: cada bloque de 20% equivale a un 5% de descuento
+        const descuento = bloquesDe20 * 5;
+    
+        // Aseguramos que el descuento máximo sea 25%
+        return Math.min(descuento, 25);
+    }
+
+
+    const buscarRango = (numero) => {
+        const rangos = rango_pordentaje;
+        // Ordenar por rango (por si no está ordenado)
+        const rangosOrdenados = [...rangos].sort((a, b) => b.rango - a.rango);
+    
+        // Filtrar y encontrar el último que sea menor o igual al número dado
+        const rangoEncontrado = rangosOrdenados
+            .filter(item => item.rango >= numero)
+            .pop(); // Obtener el último elemento
+    
+        return rangoEncontrado ? rangoEncontrado.nombre : ''; // Retornar null si no se encuentra
+    };
+
     useEffect(() => {
         getProyectoID();
     },[idProyecto,])
@@ -91,13 +141,11 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
     const rowListaEstudios = () => {
         return Array.isArray(listaEstudios) && listaEstudios.map((estudio,index) => (
         <tr key={'lepr-'+index}>
-            <td>{index+1}</td>
+            <td>{estudio.id}</td>
             <td>{estudio.candidato}</td>
-            <td>{estudio.estado.nombre}</td>
+            <td>{estudio?.estado?.nombre && estudio.estado.nombre}</td>
             <td>
-                #{estudio.orden_servicio.id}
-                <br/>
-                {estudio.orden_servicio.descripcion}
+                #{estudio.orden_servicio.id} {estudio.orden_servicio.descripcion}
             </td>
             <td>{estudio.orden_servicio.fecha_estimada_entrega}</td>
             <td>{estudio.orden_servicio.fecha_real_entrega}</td>
@@ -107,40 +155,109 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
         </tr>
         ));
     }
+   
+
+    const columns = [
+        {
+            name: '#',
+            selector: row => row.id,
+            sortable: true,
+        },
+        {
+            name: 'Familia',
+            selector: row => row.candidato,
+            sortable: true,
+        },
+        {
+            name: 'Estado',
+            selector: row => row.estado.nombre,
+            sortable: true,
+        },
+        {
+            name: 'Orden de servicio',
+            selector: row => row.orden_servicio.descripcion,
+            sortable: true,
+        },
+        {
+            name: 'Fecha estimada de entrega',
+            selector: row => row.orden_servicio.fecha_estimada_entrega,
+            sortable: true,
+        },
+        {
+            name: 'Fecha real de entrega',
+            selector: row => row.orden_servicio.fecha_real_entrega,
+            sortable: true,
+        },
+    ];
 
     const resumenEstudiosSocioeconomicos = () => {
-        return Array.isArray(listaEstudios) && listaEstudios.map((estudio,index) => (
+        return Array.isArray(listaEstudios) && listaEstudios.map((estudio,index) => {
+            const porcentaje_sugerido =  getPorcentajeSugerido(estudio.parametros);
+        return (
             <tr key={'lepp-'+index}>
-                <td>{index+1}</td>
+                <td>{estudio.id}</td>
                 <td>{estudio.candidato}</td>
                 
-                {listaParametors.map((parametro,index) => (
+                {Array.isArray(listaParametors) && listaParametors.length > 0 && listaParametors.map((parametro,index) => (
                     <td key={'pth'+index}>{parametro?.id && getPuntosParametros(estudio.parametros,parametro.id)}</td>
                 ))}
+
+                <td>{getTotalPuntosParametros(estudio.parametros)}</td>
+                <td>{porcentaje_sugerido}%</td>
+                <td>{estudio?.porcentaje_otorgado ? `${estudio.porcentaje_otorgado }%` : (<Link className="btn btn-link btn-sm text-dark" to={`/estudios/${estudio.id}`}>Añadir</Link>)}</td>
                 <td>
-                    <Link className="btn btn-primary btn-sm" to={`/estudios/${estudio.id}`}>Ver</Link>
+                    <Link className="btn btn-link btn-sm text-dark" to={`/estudios/${estudio.id}`}>Ver</Link>
                 </td>
             </tr>
-            ));
+            )
+        });
     }
 
     return  (
         <div>
             <div className="mt-1">
                 <h5>
-                    Lista de estudios socioeconomicos: Proyecto {proyecto !== null && proyecto.nombre}
+                    Lista de estudios socioeconomicos: Proyecto { proyecto?.nombre && proyecto.nombre}
                 </h5>
                 <hr/>
             </div>
+            <div className="row mb-3">
+                <div className="col-sm-6">
+                    <div className="card m-1 shadow-sm">
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-10">
+                                <h5 className="card-title">Ordenes de servicio</h5>
+                                <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            </div>
+                            <div className="col-2 text-nowrap text-center d-flex align-items-center">
+                                <h3>1/1</h3>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div className="col-sm-6">
+                    <div className="card m-1 shadow-sm">
+                    <div className="card-body">
+                        <h5 className="card-title">Total de encuestados</h5>
+                        <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
             
 			<Tabs>
 				<TabList>
 					<Tab>Encuestas</Tab>
 					<Tab>Resumen</Tab>
+					<Tab>Análisis de datos</Tab>
 				</TabList>
  
 				<TabPanel>
-                    <div> 
+                    <DataTable columns={columns} data={listaEstudios} pagination  />
+                    {/*<div> 
                         <table className="table">
                             <thead>
                                 <tr>
@@ -157,28 +274,90 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                 {rowListaEstudios()}
                             </tbody>
                         </table>
+                    </div>*/}
+				</TabPanel>
+				<TabPanel>
+                    <div > 
+                        <div>
+
+                        </div>
+                        <div className="overflow-x-auto" style={{maxHeight:'540px'}}>
+                            <table className="table" style={{minWidth:'800px'}}>
+                                <thead>
+                                    <tr style={{position:'sticky',top:'-1px',zIndex:'1'}}>
+                                        <th style={{width:'80px'}}>No Estudio</th>
+                                        <th>Familia</th>
+                                        {Array.isArray(listaParametors) && listaParametors.length > 0 && listaParametors.map((parametro,index) => (
+                                            <th key={'pth'+index}>{parametro?.nombre && parametro.nombre}</th>
+                                        ))}
+                                        <th>Total</th>
+                                        <th>Porcentaje sugerido</th>
+                                        <th>Porcentaje orotgado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {resumenEstudiosSocioeconomicos()}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 				</TabPanel>
 				<TabPanel>
                     <div> 
-                        <div>
 
+                        
+                        <div className="row mb-3">
+                            <div className="col-sm-6">
+                                <div className="card m-1 shadow-sm">
+                                <div className="card-body">
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Familias</th>
+                                                <th>Pordentaje</th>
+                                                <th>Rango becas</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>41 a 60%</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>21 a 40%</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>0 a 20%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="card m-1 shadow-sm">
+                                <div className="card-body">
+                                    <RangosSugeridos/>
+                                </div>
+                                </div>
+                            </div>
                         </div>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th></th>
-                                    {listaParametors.map((parametro,index) => (
-                                        <th key={'pth'+index}>{parametro?.nombre && parametro.nombre}</th>
-                                    ))}
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {resumenEstudiosSocioeconomicos()}
-                            </tbody>
-                        </table>
                     </div>
 				</TabPanel>
 			</Tabs>

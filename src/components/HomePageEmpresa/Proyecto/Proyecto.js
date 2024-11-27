@@ -24,7 +24,7 @@ export default function Proyecto(){
             setListaOrdenesDeservicio(resp.data);
             console.log(resp.data);
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if ( resp?.response?.status && resp.response.status === 401) {
                 logout()
             }
             console.log(resp);
@@ -35,7 +35,7 @@ export default function Proyecto(){
         axios.get(`${APIURL}/estudios/proyectos/${idProyecto}`,config).then((resp)=>{
             setProyecto(resp.data);
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if ( resp?.response?.status && resp.response.status === 401) {
                 logout()
             }
             console.log(resp);
