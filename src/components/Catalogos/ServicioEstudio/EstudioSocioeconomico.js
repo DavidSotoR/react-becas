@@ -9,6 +9,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import Avatar from 'react-avatar';
 
 function ServicioEstudio(){
+    const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -30,6 +31,13 @@ function ServicioEstudio(){
     const [preyecto,setProyecto] = useState(location.state?.idProyecto || '')
     const [cliente,setCliente] = useState(location.state?.idCliente || '')
     const [search,setSearch] = useState("")
+    const [file, setFile] = useState(null);
+
+
+    const [ openModalCargarArchivo, setOpenModalCargarArchivo ] = useState(false)
+    const changeOpenModalArchivo = () => {         
+        setOpenModalCargarArchivo(!openModalCargarArchivo) 
+    }
     const animatedComponents = makeAnimated;
 
 
@@ -138,6 +146,11 @@ function ServicioEstudio(){
             <option key={'select-pc-'+option.id} value={option.id}> #{option.id} {option.descripcion} </option>
         ))]
     }
+
+    const actualizoInputFiles = (e, name) =>{
+        setFile(e.target.files);
+
+    }
     
     
     useEffect(()=>{
@@ -151,6 +164,13 @@ function ServicioEstudio(){
     useEffect(() => {
         getOrdenesServicio();
     },[fromData.id_cliente])
+
+    useEffect(()=>{
+        if (openModalCargarArchivo) {
+            console.log(openModalCargarArchivo);
+            
+        }
+    }, openModalCargarArchivo)
 
     useEffect(() => {
         if(fromData.id_proyecto){
@@ -230,6 +250,29 @@ function ServicioEstudio(){
         ));
     }
 
+    const subirArchivoFamiliaSE = () => {
+        const formData = new FormData();
+        if (!file) {
+            alert("Seleccione un archivo antes de subir.");
+            return;
+        }
+
+        formData.append('id_cliente', cliente);
+        formData.append('id_proyecto', preyecto);
+        formData.append('id_orden_servicio', 1);
+        formData.append('file', file); // Importante: 'files[]' para múltiples archivos
+
+
+        axios.post(APIURL+"/estudio/socioeconomico/carga/familias",formData,config).then((resp) => {
+            console.log(resp);
+        }).catch((err)=>{
+            console.log(err);
+            if (err.response.status === 401) {
+                logout()
+            }
+        })
+    }
+
     return(<>
         <div className="container mt-3">
             <div className="d-flex justify-content-between mb-3">
@@ -239,7 +282,7 @@ function ServicioEstudio(){
             </div>
             <hr/>
             <div className="row">
-                <div className="col-md-3">
+                <div className="col-md-2">
                     <label 
                         htmlFor="id_proyecto" 
                         className="form-label"
@@ -297,19 +340,23 @@ function ServicioEstudio(){
                 </div>
                 
                 { fromData.id_orden_servicio && (
-                <div className="col-md-3 d-flex align-self-end">
-                    <Button className="btn btn-primary btn-sm fw-bold" onClick={(e) => {handelNavegate()}} >Nueva Familia</Button>
+                <div className="col-md-4 d-flex align-self-end">
+                    <Button className="btn btn-primary btn-sm fw-bold me-1" onClick={(e) => {handelNavegate()}} >Nueva Familia</Button>
+                    <Button className="btn btn-primary btn-sm" onClick={ () => changeOpenModalArchivo() }>Cargar Familias</Button>
                 </div>
                 )}
             </div>
             <hr/>
-            
-            <div className="col-4 row">
-                <label htmlFor="search" className="col-sm-2 col-form-label">Buscar:</label>
-                <div className="col-10">
-                    <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
+            <div className="row">
+                <div className="col-4 row">
+                    <label htmlFor="search" className="col-sm-2 col-form-label">Buscar:</label>
+                    <div className="col-10">
+                        <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
+                    </div>
                 </div>
+                
             </div>
+            
             <br/>
             <table className="table">
                 <thead>
@@ -325,8 +372,36 @@ function ServicioEstudio(){
                 <tbody>
                     { renderFilasTablaEstudiosSocioeconomicos() }
                 </tbody>
-                </table>
+            </table>
        </div> 
+       <Modal show={openModalCargarArchivo} onHide={changeOpenModalArchivo}>
+            <Modal.Header closeButton>
+            <Modal.Title>Modal heading</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>Proyecto: { preyecto }</p>
+                <p>Cliente: { cliente }</p>
+                <p>Orden Servicio: { fromData.id_orden_servicio }</p>
+                <p>Formato a Subir:</p>
+                <a href="">Formato excel</a>
+                <Form>
+                    <input hidden name="proyecto" value={preyecto}></input>
+                    <input hidden name="cliente" value={cliente}></input>
+                    <input hidden name="proyecto" value={fromData.id_orden_servicio}></input>
+                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e) } } accept=".csv, .xls, .xlsx" type="file" id="formFileFamiliasES"/>
+
+                </Form>
+
+            </Modal.Body>
+            <Modal.Footer>
+            <Button variant="secondary" onClick={changeOpenModalArchivo}>
+                Cancelar
+            </Button>
+            <Button className="btn btn-primary mt-2" variant="primary" onClick={ subirArchivoFamiliaSE }>
+                Subir Archivo
+            </Button>
+            </Modal.Footer>
+        </Modal>
     </>)
 }
 
