@@ -148,7 +148,9 @@ function ServicioEstudio(){
     }
 
     const actualizoInputFiles = (e, name) =>{
-        setFile(e.target.files);
+        if (e.target.files && e.target.files.length > 0) {
+            setFile(e.target.files[0]); // Obtener el primer archivo
+        }
 
     }
     
@@ -249,6 +251,7 @@ function ServicioEstudio(){
             </tr>
         ));
     }
+    
 
     const subirArchivoFamiliaSE = () => {
         const formData = new FormData();
