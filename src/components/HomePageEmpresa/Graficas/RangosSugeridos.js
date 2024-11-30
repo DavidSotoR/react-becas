@@ -27,14 +27,18 @@ class RangosSugeridos extends Component {
       return (
         <div className="app">
           <div className="row">
-            <div className="mixed-chart">
-              <Chart
-                options={this.state.options}
-                series={this.state.series}
-                type="bar"
-                width="500"
-              />
+            <div className="col"/>
+            <div className="col">
+              <div className="mixed-chart">
+                <Chart
+                  options={this.state.options}
+                  series={this.state.series}
+                  type="bar"
+                  width="500"
+                />
+              </div>
             </div>
+            <div className="col"/>
           </div>
         </div>
       );
