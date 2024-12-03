@@ -55,7 +55,7 @@ export default function ModalNumeroFamiliaColegio({show,handleClose,idEstudio,cl
             ...prevState,
             clave_familia_colegio: claveFamiliaColegio || ''
         }));
-    },idEstudio)
+    },[idEstudio])
     //  defaultValue={opcionesColaboradoresDefault}
     return (
         <Modal show={show} onHide={handleClose}>

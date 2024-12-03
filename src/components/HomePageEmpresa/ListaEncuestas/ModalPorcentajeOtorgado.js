@@ -92,7 +92,7 @@ export default function ModalPorcentajeOtorgado({ show, handleClose,idEstudio })
         ...prevState,
         porcentaje_otorgado: ''
     }));
-   },idEstudio)
+   },[idEstudio])
     //  defaultValue={opcionesColaboradoresDefault}
     return (
         <Modal show={show} onHide={handleClose}>
