@@ -66,17 +66,15 @@ export default function ModalPorcentajeOtorgado({ show, handleClose,idEstudio })
             }));
         }
     }
+
     const validateFields = ()=>{
 
-        var messageError = []
+        let messageError = ''
         
         if (formData.porcentaje_otorgado !== '') {
-            messageError.push('Seleccione un Porcentaje')
-        }
-
-        if (messageError.length === 0) {
+            messageError = ('Seleccione un Porcentaje')
             setFormValid(false)
-        } else {
+        }else{
             setFormValid(true)
         }
     }
@@ -99,7 +97,7 @@ export default function ModalPorcentajeOtorgado({ show, handleClose,idEstudio })
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Asignar Colaborador </Modal.Title>
+                <Modal.Title>Pordentaje otorgado</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="mb-2">

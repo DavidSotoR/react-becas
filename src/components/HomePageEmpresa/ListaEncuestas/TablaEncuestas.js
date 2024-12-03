@@ -4,22 +4,43 @@ import { Link } from "react-router-dom";
 import Avatar from "react-avatar";
 import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions"
 import ModalPorcentajeOtorgado from "./ModalPorcentajeOtorgado";
+import ModalNumeroFamiliaColegio from "./ModalNumeroFamiliaColegio";
+import ExcelTablaEncuestas from "./ExcelTablaEncuestas";
 import { useState } from "react";
 
 export default function TablaEncuestas({
-        listaParametors = [],
+        listaParametros = [],
         listaEstudios = [],
+        callBackPorcentajeOtorgado
       }){
       
     const [idEstudio, setIdEstudio] = useState(null);
+    
     const [ show, setShow] = useState(false);
     const handleClose = () => {
       setShow(false)
       setIdEstudio(null)
+      callBackPorcentajeOtorgado()
     };
     const handleShow = (id) =>{
       setShow(true)
       setIdEstudio(id)
+    };
+    
+    const [ showClaveFamilia, setShowClaveFamilia] = useState(false);
+    const [claveFamiliaColegio, setClaveFamiliaColegio] = useState(null);
+
+    const handleCloseClaveFamilia = () => {
+      setShowClaveFamilia(false)
+      setIdEstudio(null)
+      setClaveFamiliaColegio(null)
+      callBackPorcentajeOtorgado()
+    };
+
+    const handleShowClaveFamilia = (id,clave_familia) =>{
+      setShowClaveFamilia(true)
+      setIdEstudio(id)
+      setClaveFamiliaColegio(clave_familia)
     };
     
 
@@ -47,7 +68,7 @@ export default function TablaEncuestas({
           style: { width: "850px" },
           headerStyle: { width: "850px" },
         },
-        ...listaParametors.map((parametro) => ({
+        ...listaParametros.map((parametro) => ({
           name: parametro.nombre,
           selector: (row) => getPuntosParametros(row.parametros, parametro.id) || "-",
           sortable: true,
@@ -67,11 +88,36 @@ export default function TablaEncuestas({
           name: "Porcentaje Otorgado",
           cell: (row) =>
             row.porcentaje_otorgado ? (
-              `${row.porcentaje_otorgado}%`
+              <button
+                className="btn btn-link btn-sm text-dark"
+                onClick={() => handleShow(row.id)}
+              >
+                {row.porcentaje_otorgado}%
+              </button>
             ) : (
               <button
                 className="btn btn-link btn-sm text-dark"
-                onClick={() => handleShow(row.id)} // Llama a handleShow con el ID
+                onClick={() => handleShow(row.id)}
+              >
+                Añadir
+              </button>
+            ),
+          ignoreRowClick: true,
+        },
+        {
+          name: "No. Familia Colegio",
+          cell: (row) =>
+            row.clave_familia_colegio ? (
+              <button
+                className="btn btn-link btn-sm text-dark"
+                onClick={() => handleShowClaveFamilia(row.id,row.clave_familia_colegio)}
+              >
+                {row.clave_familia_colegio}
+              </button>
+            ) : (
+              <button
+                className="btn btn-link btn-sm text-dark"
+                onClick={() => handleShowClaveFamilia(row.id,row.clave_familia_colegio)}
               >
                 Añadir
               </button>
@@ -93,7 +139,11 @@ export default function TablaEncuestas({
       ];
 
     return(   <>
+    <div>
+      <ExcelTablaEncuestas parametros={listaParametros} data={listaEstudios} fileName={"Lista Edtidios"}/>
+    </div>
     <DataTable columns={columns} data={listaEstudios} pagination  />
     <ModalPorcentajeOtorgado show={show} handleClose={handleClose} idEstudio={idEstudio}/>
+    <ModalNumeroFamiliaColegio show={showClaveFamilia} handleClose={handleCloseClaveFamilia} idEstudio={idEstudio} claveFamiliaColegio={claveFamiliaColegio}/>
     </>)
 }

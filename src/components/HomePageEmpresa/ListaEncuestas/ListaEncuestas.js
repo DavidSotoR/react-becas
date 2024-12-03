@@ -160,7 +160,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                         <div className="row">
                             <div className="col-10">
                                 <h5 className="card-title">Ordenes de servicio</h5>
-                                <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                               {/*<p className="card-text">With supporting text below as a natural lead-in to additional content.</p>*/}
                             </div>
                             <div className="col-2 text-nowrap text-center d-flex align-items-center">
                                 <h3>1/1</h3>
@@ -169,14 +169,14 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                     </div>
                     </div>
                 </div>
-                <div className="col-sm-6">
+                {/*<div className="col-sm-6">
                     <div className="card m-1 shadow-sm">
                     <div className="card-body">
                         <h5 className="card-title">Total de encuestados</h5>
                         <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
                     </div>
                     </div>
-                </div>
+                </div>*/}
             </div>
 
             
@@ -195,29 +195,9 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                             <TablaEncuestas
                             listaParametors={listaParametors}
                             listaEstudios={listaEstudios}
-                            getPuntosParametros={getPuntosParametros}
-                            getTotalPuntosParametros={getTotalPuntosParametros}
-                            getPorcentajeSugerido={getPorcentajeSugerido}
+                            callBackPorcentajeOtorgado={getListaEstudios}
                             />)
                     }
-                    {/*<div> 
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Familia</th>
-                                    <th>Estado</th>
-                                    <th>Orden de servicio</th>
-                                    <th>Fecha estimada de entrega</th>
-                                    <th>Fecha real de entrega</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rowListaEstudios()}
-                            </tbody>
-                        </table>
-                    </div>*/}
 				</TabPanel>
 				<TabPanel>
                     <div > 
