@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import RangosSugeridos from "../Graficas/RangosSugeridos";
-import DataTable from "react-data-table-component";
+import TablaEncuestas from "./TablaEncuestas";
+import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions"
 
 export default function ListaEncuestas({idProyecto, idOrdenServicio}){
     
@@ -73,43 +74,6 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
         })
     }
 
-    const findElementById = (list, id) => {
-        return list.find(item => item.id === id);
-    };
-
-    const getPuntosParametros = (list, id) => {
-        const estudio_parametro =  findElementById(list, id);
-        return estudio_parametro?.puntos?.valor && estudio_parametro.puntos.valor;
-    }
-
-    const getTotalPuntosParametros = (list) => {
-        return list.reduce((total, item) => {
-          const valorNumerico = parseFloat(item.puntos.valor); // Convertir a número
-          return total + (isNaN(valorNumerico) ? 0 : valorNumerico); // Validar y sumar
-        }, 0);
-    }
-    const getMaximosPuntosParametros = (list) => {
-        return list.reduce((total, item) => {
-          const valorNumerico = parseFloat(item.puntos_maximo); // Convertir a número
-          return total + (isNaN(valorNumerico) ? 0 : valorNumerico); // Validar y sumar
-        }, 0);
-    }
-
-    const getPorcentajeSugerido = (list) => {
-        const puntuacion = getTotalPuntosParametros(list);
-        const puntuacion_maxima = getMaximosPuntosParametros(list);
-        const rango_pordentaje = (puntuacion_maxima !== 0 && (( puntuacion * 100 ) / puntuacion_maxima ) );
- 
-        const bloquesDe20 = Math.floor(rango_pordentaje / 20);
-    
-        // Calculamos el descuento: cada bloque de 20% equivale a un 5% de descuento
-        const descuento = bloquesDe20 * 5;
-    
-        // Aseguramos que el descuento máximo sea 25%
-        return Math.min(descuento, 25);
-    }
-
-
     const buscarRango = (numero) => {
         const rangos = rango_pordentaje;
         // Ordenar por rango (por si no está ordenado)
@@ -157,38 +121,6 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
     }
    
 
-    const columns = [
-        {
-            name: '#',
-            selector: row => row.id,
-            sortable: true,
-        },
-        {
-            name: 'Familia',
-            selector: row => row.candidato,
-            sortable: true,
-        },
-        {
-            name: 'Estado',
-            selector: row => row.estado.nombre,
-            sortable: true,
-        },
-        {
-            name: 'Orden de servicio',
-            selector: row => row.orden_servicio.descripcion,
-            sortable: true,
-        },
-        {
-            name: 'Fecha estimada de entrega',
-            selector: row => row.orden_servicio.fecha_estimada_entrega,
-            sortable: true,
-        },
-        {
-            name: 'Fecha real de entrega',
-            selector: row => row.orden_servicio.fecha_real_entrega,
-            sortable: true,
-        },
-    ];
 
     const resumenEstudiosSocioeconomicos = () => {
         return Array.isArray(listaEstudios) && listaEstudios.map((estudio,index) => {
@@ -228,7 +160,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                         <div className="row">
                             <div className="col-10">
                                 <h5 className="card-title">Ordenes de servicio</h5>
-                                <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                               {/*<p className="card-text">With supporting text below as a natural lead-in to additional content.</p>*/}
                             </div>
                             <div className="col-2 text-nowrap text-center d-flex align-items-center">
                                 <h3>1/1</h3>
@@ -237,14 +169,14 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                     </div>
                     </div>
                 </div>
-                <div className="col-sm-6">
+                {/*<div className="col-sm-6">
                     <div className="card m-1 shadow-sm">
                     <div className="card-body">
                         <h5 className="card-title">Total de encuestados</h5>
                         <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
                     </div>
                     </div>
-                </div>
+                </div>*/}
             </div>
 
             
@@ -256,25 +188,16 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 				</TabList>
  
 				<TabPanel>
-                    <DataTable columns={columns} data={listaEstudios} pagination  />
-                    {/*<div> 
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Familia</th>
-                                    <th>Estado</th>
-                                    <th>Orden de servicio</th>
-                                    <th>Fecha estimada de entrega</th>
-                                    <th>Fecha real de entrega</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rowListaEstudios()}
-                            </tbody>
-                        </table>
-                    </div>*/}
+                    {
+                        listaParametors.length > 0 
+                        && listaEstudios.length > 0 
+                        && (
+                            <TablaEncuestas
+                            listaParametors={listaParametors}
+                            listaEstudios={listaEstudios}
+                            callBackPorcentajeOtorgado={getListaEstudios}
+                            />)
+                    }
 				</TabPanel>
 				<TabPanel>
                     <div > 
@@ -282,7 +205,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 
                         </div>
                         <div className="overflow-x-auto" style={{maxHeight:'540px'}}>
-                            <table className="table" style={{minWidth:'800px'}}>
+                            <table className="table" style={{minwidth:'800px'}}>
                                 <thead>
                                     <tr style={{position:'sticky',top:'-1px',zIndex:'1'}}>
                                         <th style={{width:'80px'}}>No Estudio</th>
@@ -323,12 +246,12 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                             <tr>
                                                 <td></td>
                                                 <td></td>
-                                                <td></td>
+                                                <td>81 a 100%</td>
                                             </tr>
                                             <tr>
                                                 <td></td>
                                                 <td></td>
-                                                <td></td>
+                                                <td>61 a 80%</td>
                                             </tr>
                                             <tr>
                                                 <td></td>
