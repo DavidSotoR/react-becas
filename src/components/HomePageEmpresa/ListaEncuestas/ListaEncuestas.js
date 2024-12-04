@@ -20,7 +20,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 
     const [listaEstudios,setListaEstudios] = useState([]);
     const [proyecto,setProyecto] = useState(null);
-    const [listaParametors,setListaParametors] =  useState([])
+    const [listaParametros,setlistaParametros] =  useState([])
 
     const rango_pordentaje = [
         {rango:20,nombre:'de 0 a 20%'},
@@ -32,6 +32,10 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 
     const getListaEstudios = () => {
         
+        if(!idProyecto){
+            return false;
+        }
+
         let conf = config;
         if(idOrdenServicio){
             conf.params = {
@@ -65,7 +69,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
             return false;
         }
         axios.get(`${APIURL}/catalogos/encuestas/${proyecto.id_encuesta}/parametros`,config).then((resp)=>{
-            setListaParametors(resp.data);
+            setlistaParametros(resp.data);
         }).catch((resp)=>{
             if (resp?.response?.status && resp.response.status === 401) {
                 logout()
@@ -130,7 +134,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                 <td>{estudio.id}</td>
                 <td>{estudio.candidato}</td>
                 
-                {Array.isArray(listaParametors) && listaParametors.length > 0 && listaParametors.map((parametro,index) => (
+                {Array.isArray(listaParametros) && listaParametros.length > 0 && listaParametros.map((parametro,index) => (
                     <td key={'pth'+index}>{parametro?.id && getPuntosParametros(estudio.parametros,parametro.id)}</td>
                 ))}
 
@@ -189,11 +193,11 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
  
 				<TabPanel>
                     {
-                        listaParametors.length > 0 
+                        listaParametros.length > 0 
                         && listaEstudios.length > 0 
                         && (
                             <TablaEncuestas
-                            listaParametors={listaParametors}
+                            listaParametros={listaParametros}
                             listaEstudios={listaEstudios}
                             callBackPorcentajeOtorgado={getListaEstudios}
                             />)
@@ -210,7 +214,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                     <tr style={{position:'sticky',top:'-1px',zIndex:'1'}}>
                                         <th style={{width:'80px'}}>No Estudio</th>
                                         <th>Familia</th>
-                                        {Array.isArray(listaParametors) && listaParametors.length > 0 && listaParametors.map((parametro,index) => (
+                                        {Array.isArray(listaParametros) && listaParametros.length > 0 && listaParametros.map((parametro,index) => (
                                             <th key={'pth'+index}>{parametro?.nombre && parametro.nombre}</th>
                                         ))}
                                         <th>Total</th>

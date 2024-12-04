@@ -199,3 +199,15 @@ mark {
   max-height: 500px; /* Expansión */
   padding: 10px;
 }
+
+.fixed-column {
+  position: sticky;
+  left: 0;
+  background-color: white; /* Fondo para evitar solapamiento */
+  z-index: 1; /* Asegúrate de que se mantenga en la parte superior */
+  border-right: 1px solid #ddd; /* Opcional: borde para distinguir */
+}
+
+.fixed-column:nth-child(2) {
+  left: 100px; /* Ajusta según el ancho de la primera columna */
+}

@@ -2,7 +2,7 @@
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import Avatar from "react-avatar";
-import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions"
+import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions";
 import ModalPorcentajeOtorgado from "./ModalPorcentajeOtorgado";
 import ModalNumeroFamiliaColegio from "./ModalNumeroFamiliaColegio";
 import ExcelTablaEncuestas from "./ExcelTablaEncuestas";
@@ -43,14 +43,19 @@ export default function TablaEncuestas({
       setClaveFamiliaColegio(clave_familia)
     };
     
-
+    const [rowSelect,setRowSelect] = useState([])
+    const handleChange = ({ selectedRows }) => {
+      console.log('Selected Rows: ', selectedRows);
+      setRowSelect(selectedRows)
+    };
 
     const columns = [
         {
           name: "No Estudio",
           selector: (row) => row.id,
           sortable: true,
-          width: "120px",
+          width: "110px",
+          cellClassName: 'fixed-column',
         },
         {
           name: "Familia",
@@ -65,8 +70,7 @@ export default function TablaEncuestas({
             </div>
           ),
           sortable: true,
-          style: { width: "850px" },
-          headerStyle: { width: "850px" },
+          width: "300px",
         },
         ...listaParametros.map((parametro) => ({
           name: parametro.nombre,
@@ -137,13 +141,32 @@ export default function TablaEncuestas({
           ignoreRowClick: true,
         },
       ];
+    
 
     return(   <>
-    <div>
-      <ExcelTablaEncuestas parametros={listaParametros} data={listaEstudios} fileName={"Lista Edtidios"}/>
-    </div>
-    <DataTable columns={columns} data={listaEstudios} pagination  />
-    <ModalPorcentajeOtorgado show={show} handleClose={handleClose} idEstudio={idEstudio}/>
-    <ModalNumeroFamiliaColegio show={showClaveFamilia} handleClose={handleCloseClaveFamilia} idEstudio={idEstudio} claveFamiliaColegio={claveFamiliaColegio}/>
+      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-start">
+        {rowSelect.length !== 0 && (<div className="btn btn-light btn-sm">Columnas: {rowSelect.length}seleccionada(s)</div>)}
+      </div>
+      <div className="d-flex justify-content-end">
+        <ExcelTablaEncuestas parametros={listaParametros} data={listaEstudios} fileName={"Lista Edtidios"}/>
+      </div>
+        
+        
+      </div>
+
+      <DataTable 
+        columns={columns} 
+        data={listaEstudios} 
+        pagination 
+        dense 
+        selectableRows 
+        fixedHeader
+        fixedHeaderScrollHeight="400px"
+        onSelectedRowsChange={handleChange} 
+      />
+
+      <ModalPorcentajeOtorgado show={show} handleClose={handleClose} idEstudio={idEstudio}/>
+      <ModalNumeroFamiliaColegio show={showClaveFamilia} handleClose={handleCloseClaveFamilia} idEstudio={idEstudio} claveFamiliaColegio={claveFamiliaColegio}/>
     </>)
 }

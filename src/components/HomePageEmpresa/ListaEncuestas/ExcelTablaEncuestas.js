@@ -1,68 +1,82 @@
 import React from 'react';
 import { saveAs } from 'file-saver';
 import * as XLSX from "xlsx";
+import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions"
 
 
 export default function ExcelTablaEncuestas({parametros, data,fileName}){
-    /*const columns = [
-        {
-            header: "No Estudio",
-            key:"id",
-        },
-        {
-          name: "Familia",
-          key:"candidato",
-        },
-        ...listaParametros.map((parametro) => ({
-            header: parametro.nombre,
-          selector: (row) => getPuntosParametros(row.parametros, parametro.id) || "-",
-          sortable: true,
-        })),
-        {
-          name: "Total",
-          selector: (row) => getTotalPuntosParametros(row.parametros),
-          sortable: true,
-        },
-        {
-          name: "Porcentaje Sugerido",
-          selector: (row) => `${getPorcentajeSugerido(row.parametros)}%`,
-          sortable: true,
-          style: { textAling: "250px" },
-        },
-        {
-          name: "Porcentaje Otorgado",
-          cell: "porcentaje_otorgado",
-        },
-        {
-          name: "No. Familia Colegio",
-          cell: "clave_familia_colegio"
-        },
-      ];*/
-      
-    const transformDataForExcel = () => {
-        return data.map((row) => {
-            const transformedRow = {};
-            parametros.forEach((col) => {
-                if (col.selector) {
-                    // Si el selector es una función, evaluarlo
-                    transformedRow[col.name] = typeof col.selector === "function" 
-                    ? col.selector(row) 
-                    : row[col.selector];
-                }
-            });
+   
+  const columns = [
+    {
+      name: "No Estudio",
+      selector: (row) => row.id,
+    },
+    {
+      name: "Familia",
+      selector: (row) => row.candidato,
+      width: "300px",
+    },
+    ...parametros.map((parametro) => ({
+      name: parametro.nombre,
+      selector: (row) => {
+        const param = row.parametros.find((p) => p.id === parametro.id);
+        return param ? getPuntosParametros(row.parametros, parametro.id) : "-";
+      },
+    })),
+    {
+      name: "Total",
+      selector: (row) => getTotalPuntosParametros(row.parametros),
+    },
+    {
+      name: "Porcentaje Sugerido",
+      selector: (row) => `${getPorcentajeSugerido(row.parametros)}%`,
+    },
+    {
+      name: "Porcentaje Otorgado",
+      cell: (row) =>  {return (row.porcentaje_otorgado !==null )  ?  `${row.porcentaje_otorgado}%` : '' },
+    },
+    {
+      name: "No. Familia Colegio",
+      cell: (row) => {return (row.clave_familia_colegio !==null )  ? row.clave_familia_colegio : "" },
+    },
+  ];
+  const transformDataForExcel = () => {
+    return data.map((row) => {
+      const transformedRow = {};
+      columns.forEach((col) => {
+        if (col.selector) {
+          // Si el selector es una función, evaluarlo
+          transformedRow[col.name] = typeof col.selector === "function" 
+            ? col.selector(row) 
+            : row[col.selector];
+        } else if (col.cell) {
+          // Para celdas con lógica compleja, agregar texto representativo
+          transformedRow[col.name] = typeof col.cell === "function"
+                    ? col.cell(row)
+                    : "null";
+        }
+      });
 
-            return transformedRow;
-        });
-    };
+      return transformedRow;
+    });
+  };
 
     const exportToExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Hoja 1');
-        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-        const blob = new Blob([excelBuffer], {type: 'application/octet-stream'});
-        saveAs(blob, `${fileName}.xlsx`);
+      const transformedData = transformDataForExcel();
+  
+      // Crear hoja de cálculo y libro
+      const worksheet = XLSX.utils.json_to_sheet(transformedData);
+
+      worksheet["!cols"] = columns.map((col) => ({
+          width: col.width ? parseInt(col.width.replace("px", "")) / 7 : 10, // Conversión px a "Excel width"
+      }));
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Datos");
+  
+      // Descargar archivo
+      XLSX.writeFile(workbook, "Datos.xlsx");
     }
 
-    return ( <button onClick={exportToExcel}>Export to Excel</button> )
+    return ( <button type="button" className="btn btn-light btn-sm" onClick={exportToExcel}>Excel</button> )
 }
