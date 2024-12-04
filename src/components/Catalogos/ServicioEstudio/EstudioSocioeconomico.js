@@ -262,7 +262,7 @@ function ServicioEstudio(){
 
         formData.append('id_cliente', cliente);
         formData.append('id_proyecto', preyecto);
-        formData.append('id_orden_servicio', 1);
+        formData.append('id_orden_servicio', fromData.id_orden_servicio);
         formData.append('file', file); // Importante: 'files[]' para múltiples archivos
 
 
@@ -379,21 +379,36 @@ function ServicioEstudio(){
        </div> 
        <Modal show={openModalCargarArchivo} onHide={changeOpenModalArchivo}>
             <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
+            <Modal.Title>Alta de Familias por Archivo</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <p>Proyecto: { preyecto }</p>
                 <p>Cliente: { cliente }</p>
                 <p>Orden Servicio: { fromData.id_orden_servicio }</p>
-                <p>Formato a Subir:</p>
-                <a href="">Formato excel</a>
-                <Form>
-                    <input hidden name="proyecto" value={preyecto}></input>
-                    <input hidden name="cliente" value={cliente}></input>
-                    <input hidden name="proyecto" value={fromData.id_orden_servicio}></input>
-                    <input className="form-control" onChange={ (e) => { actualizoInputFiles(e) } } accept=".csv, .xls, .xlsx" type="file" id="formFileFamiliasES"/>
+                
+                
+                
+                <div className="mb-3 form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="enableCrearUsuarios" id="enableCrearUsuarios"/>
+                            <label class="form-check-label" for="enableCrearUsuarios">Crear usuarios para alta de Familias</label>
+                        </div>
+                <div className="row">
+                    <div className="col-3">
+                        <p className="m-0 p-0">Formato a Subir:</p>
+                        <a className="mb-3" href="">Formato excel</a>
+                    </div>
+                    <div className="col-9">
+                        <Form>
+                            <input hidden name="proyecto" value={preyecto}></input>
+                            <input hidden name="cliente" value={cliente}></input>
+                            <input hidden name="proyecto" value={fromData.id_orden_servicio}></input>
+                            <input className="form-control" onChange={ (e) => { actualizoInputFiles(e) } } accept=".csv, .xls, .xlsx" type="file" id="formFileFamiliasES"/>
+                        </Form>
+                    </div>
 
-                </Form>
+                </div>
+                
+                
 
             </Modal.Body>
             <Modal.Footer>
