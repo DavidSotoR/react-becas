@@ -187,7 +187,6 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 			<Tabs>
 				<TabList>
 					<Tab>Encuestas</Tab>
-					<Tab>Resumen</Tab>
 					<Tab>Análisis de datos</Tab>
 				</TabList>
  
@@ -202,33 +201,6 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                             callBackPorcentajeOtorgado={getListaEstudios}
                             />)
                     }
-				</TabPanel>
-				<TabPanel>
-                    <div > 
-                        <div>
-
-                        </div>
-                        <div className="overflow-x-auto" style={{maxHeight:'540px'}}>
-                            <table className="table" style={{minwidth:'800px'}}>
-                                <thead>
-                                    <tr style={{position:'sticky',top:'-1px',zIndex:'1'}}>
-                                        <th style={{width:'80px'}}>No Estudio</th>
-                                        <th>Familia</th>
-                                        {Array.isArray(listaParametros) && listaParametros.length > 0 && listaParametros.map((parametro,index) => (
-                                            <th key={'pth'+index}>{parametro?.nombre && parametro.nombre}</th>
-                                        ))}
-                                        <th>Total</th>
-                                        <th>Porcentaje sugerido</th>
-                                        <th>Porcentaje orotgado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {resumenEstudiosSocioeconomicos()}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
 				</TabPanel>
 				<TabPanel>
                     <div> 
