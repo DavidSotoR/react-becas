@@ -1,0 +1,79 @@
+import React,{ useState } from "react";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+import axios from "axios";
+
+export default function PDFSelection({seleccionRow}){
+    const APIURL = process.env.REACT_APP_API_URL;
+    const config = {
+        responseType: "blob",
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    }
+    const [loading, setLoading] = useState(false);
+    /*const getProyectoID = () => { 
+
+        const lista_encuestas = seleccionRow.map((item) => item.id);
+        
+        const config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        }
+
+        axios.get(`${APIURL}/estudios/proyectos/${idProyecto}`,config).then((resp)=>{
+            setProyecto(resp.data);
+        }).catch((resp)=>{
+            if (resp?.response?.status && resp.response.status === 401) {
+                logout()
+            }
+            console.log(resp);
+        })
+    }*/
+
+
+  const downloadZipEstudiosSeleccionados = async () => {
+    setLoading(true);
+    const zip = new JSZip();
+    const folder = zip.folder("Estudios"); // Carpeta dentro del zip
+
+    try {
+
+        for (const row of seleccionRow) {
+            const response = await axios.get(`${APIURL}/estudio/socioeconomico/${row.id}/pdf`, config);
+            folder.file(`${row.id}_${row.candidato}.pdf`, response.data, { binary: true });
+        }
+
+        const content = await zip.generateAsync({ type: "blob" });
+        saveAs(content, "archivos.zip");
+    } catch (error) {
+        console.error(`Error al descargar el PDF`, error);
+    } finally {
+        setLoading(false); // Ocultar el estado de carga
+    }
+
+  };
+
+  return ( 
+    <button
+      onClick={downloadZipEstudiosSeleccionados}
+      className={`btn btn-light btn-sm ${loading ? "disabled" : ""}`}
+      disabled={loading}
+    >
+      {loading ? (
+        <>
+          <span
+            className="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          Procesando...
+        </>
+      ) : (
+        "Descargar PDFs"
+      )}
+    </button>
+  );
+    
+}

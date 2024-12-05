@@ -20,7 +20,7 @@ export default function ModalNumeroFamiliaColegio({show,handleClose,idEstudio,cl
         axios.post(`${APIURL}/estudio/${idEstudio}/no-familia-colegio`,formData,config).then((resp)=>{
             handleClose()
         }).catch((resp)=>{
-            if (resp.status === 401) {
+            if (resp?.status && resp.status === 401) {
                 logout()
             }
         })

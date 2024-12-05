@@ -7,6 +7,7 @@ import ModalPorcentajeOtorgado from "./ModalPorcentajeOtorgado";
 import ModalNumeroFamiliaColegio from "./ModalNumeroFamiliaColegio";
 import ExcelTablaEncuestas from "./ExcelTablaEncuestas";
 import { useState } from "react";
+import PDFSelection from "./PDFSelection";
 
 export default function TablaEncuestas({
         listaParametros = [],
@@ -146,7 +147,8 @@ export default function TablaEncuestas({
     return(   <>
       <div className="d-flex justify-content-between">
       <div className="d-flex justify-content-start">
-        {rowSelect.length !== 0 && (<div className="btn btn-light btn-sm">Columnas: {rowSelect.length}seleccionada(s)</div>)}
+        {rowSelect.length !== 0 && (<div className="btn btn-light btn-sm">Columnas: {rowSelect.length} seleccionada(s)</div>)}
+        {rowSelect.length !== 0 && (<PDFSelection seleccionRow={rowSelect} />)}
       </div>
       <div className="d-flex justify-content-end">
         <ExcelTablaEncuestas parametros={listaParametros} data={listaEstudios} fileName={"Lista Edtidios"}/>
