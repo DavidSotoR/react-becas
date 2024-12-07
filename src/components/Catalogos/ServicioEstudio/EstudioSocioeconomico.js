@@ -33,6 +33,9 @@ function ServicioEstudio(){
     const [search,setSearch] = useState("")
     const [file, setFile] = useState(null);
 
+    const [ switchAsignarColaborador, setSwitchAsignarColaborador ] = useState(false);
+    const [ switchCrearCuentaFamilia, setSwitchCrearCuentaFamilia ] = useState(false);
+
 
     const [ openModalCargarArchivo, setOpenModalCargarArchivo ] = useState(false)
     const changeOpenModalArchivo = () => {         
@@ -152,6 +155,18 @@ function ServicioEstudio(){
             setFile(e.target.files[0]); // Obtener el primer archivo
         }
 
+    }
+
+    const changeSwitchModalCargaMasiva = (e) => {
+        console.log(e.target.checked);
+        if (e.target.name === 'enableAsignarColaborador') {
+            setSwitchAsignarColaborador(e.target.checked)
+        }
+
+        if (e.target.name === 'enableCrearUsuariosFamilia') {
+            setSwitchCrearCuentaFamilia(e.target.checked)
+        }
+        
     }
     
     
@@ -276,6 +291,25 @@ function ServicioEstudio(){
         })
     }
 
+    const descargarArchivo = async () => {
+        try {
+            const response = await axios.get(APIURL+"/estudio/socioeconomico/formatoalta/descargar", {
+              responseType: 'blob',
+              headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'formato_test.csv'); // Nombre sugerido para el archivo
+            document.body.appendChild(link);
+            link.click();
+          } catch (error) {
+            console.error('Error al descargar el archivo:', error);
+          }
+    }
+
     return(<>
         <div className="container mt-3">
             <div className="d-flex justify-content-between mb-3">
@@ -382,20 +416,23 @@ function ServicioEstudio(){
             <Modal.Title>Alta de Familias por Archivo</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>Proyecto: { preyecto }</p>
+                {/* <p>Proyecto: { preyecto }</p>
                 <p>Cliente: { cliente }</p>
-                <p>Orden Servicio: { fromData.id_orden_servicio }</p>
-                
+                <p>Orden Servicio: { fromData.id_orden_servicio }</p> */}
                 
                 
                 <div className="mb-3 form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" name="enableCrearUsuarios" id="enableCrearUsuarios"/>
-                            <label class="form-check-label" for="enableCrearUsuarios">Crear usuarios para alta de Familias</label>
+                            <input class="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableAsignarColaborador" id="enableAsignar"/>
+                            <label class="form-check-label" for="enableAsignar" >Asignar Colaborador para Estudio(EN DESARROLLO)</label>
+                        </div>
+                <div className="mb-3 form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableCrearUsuariosFamilia" id="enableCrearUsuarios"/>
+                            <label class="form-check-label" for="enableCrearUsuarios" >Crear usuarios para alta de Familias (EN DESARROLLO)</label>
                         </div>
                 <div className="row">
                     <div className="col-3">
                         <p className="m-0 p-0">Formato a Subir:</p>
-                        <a className="mb-3" href="">Formato excel</a>
+                        <a className="mb-3" onClick={descargarArchivo}>Formato excel</a>
                     </div>
                     <div className="col-9">
                         <Form>
