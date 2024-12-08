@@ -36,10 +36,15 @@ function ServicioEstudio(){
     const [ switchAsignarColaborador, setSwitchAsignarColaborador ] = useState(false);
     const [ switchCrearCuentaFamilia, setSwitchCrearCuentaFamilia ] = useState(false);
 
+    const [ errorsCargaMasiva, setErrorsCargaMasiva ] = useState([])
+    const [ totalInserts, setTotalInserts ] = useState(0);
+    const [ showErrors, setShowErrors ] = useState(false);
+
 
     const [ openModalCargarArchivo, setOpenModalCargarArchivo ] = useState(false)
     const changeOpenModalArchivo = () => {         
         setOpenModalCargarArchivo(!openModalCargarArchivo) 
+        setShowErrors(false)
     }
     const animatedComponents = makeAnimated;
 
@@ -266,6 +271,43 @@ function ServicioEstudio(){
             </tr>
         ));
     }
+
+    const renderErrores = () => {
+        console.log('entra');
+        console.log(errorsCargaMasiva);
+    
+        return errorsCargaMasiva.map((error, index) => {
+            if (error.tipo === 'existe') {
+                return (
+                    <li key={index} className="list-group-item list-group-item-action list-group-item-danger">
+                        <div className="d-flex w-100 justify-content-between">
+                            <p className="mb-1">Error: {error.error}</p>
+                            <small className="text-body-secondary">Error {index + 1}</small>
+                        </div>
+                        <p className="mb-1">
+                            Error al registrar Cuenta: <span className="fw-bold">{error.familia?.email ?? 'NO VALIDO'}</span>.
+                        </p>
+                    </li>
+                );
+            } else if (error.tipo === 'validador') {
+                return (
+                    <li key={index} className="list-group-item list-group-item-action list-group-item-danger">
+                        <div className="d-flex w-100 justify-content-between">
+                            <p className="mb-1">{error.error}</p>
+                            <small className="text-body-secondary">Error {index + 1}</small>
+                        </div>
+                        <p className="mb-1">
+                            Error al registrar: Email: <span className="fw-bold">{error.familia?.email ?? 'NO VALIDO'}</span> -{' '}
+                            <span>Familia: {error.familia?.name ?? 'NO VALIDO'}</span>.
+                        </p>
+                    </li>
+                );
+            } else {
+                return null; // Manejo de otros tipos de errores, si es necesario
+            }
+        });
+    };
+    
     
 
     const subirArchivoFamiliaSE = () => {
@@ -275,6 +317,8 @@ function ServicioEstudio(){
             return;
         }
 
+        formData.append('enableAltaFamilia', switchCrearCuentaFamilia)
+        formData.append('enableAsignarColaborador', switchAsignarColaborador)
         formData.append('id_cliente', cliente);
         formData.append('id_proyecto', preyecto);
         formData.append('id_orden_servicio', fromData.id_orden_servicio);
@@ -283,6 +327,9 @@ function ServicioEstudio(){
 
         axios.post(APIURL+"/estudio/socioeconomico/carga/familias",formData,config).then((resp) => {
             console.log(resp);
+            setErrorsCargaMasiva(resp.data.errors)
+            setTotalInserts(resp.data.total_insert)
+            setShowErrors(true)
         }).catch((err)=>{
             console.log(err);
             if (err.response.status === 401) {
@@ -416,19 +463,14 @@ function ServicioEstudio(){
             <Modal.Title>Alta de Familias por Archivo</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* <p>Proyecto: { preyecto }</p>
-                <p>Cliente: { cliente }</p>
-                <p>Orden Servicio: { fromData.id_orden_servicio }</p> */}
-                
-                
-                <div className="mb-3 form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableAsignarColaborador" id="enableAsignar"/>
-                            <label class="form-check-label" for="enableAsignar" >Asignar Colaborador para Estudio(EN DESARROLLO)</label>
-                        </div>
-                <div className="mb-3 form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableCrearUsuariosFamilia" id="enableCrearUsuarios"/>
-                            <label class="form-check-label" for="enableCrearUsuarios" >Crear usuarios para alta de Familias (EN DESARROLLO)</label>
-                        </div>
+                {/* <div className="mb-3 form-check form-switch">
+                    <input className="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableAsignarColaborador" id="enableAsignar"/>
+                    <label className="form-check-label" for="enableAsignar" >Asignar Colaborador para Estudio(EN DESARROLLO)</label>
+                </div> */}
+                {/* <div className="mb-3 form-check form-switch">
+                    <input className="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableCrearUsuariosFamilia" id="enableCrearUsuarios"/>
+                    <label className="form-check-label" for="enableCrearUsuarios" >Crear usuarios para alta de Familias (EN DESARROLLO)</label>
+                </div> */}
                 <div className="row">
                     <div className="col-3">
                         <p className="m-0 p-0">Formato a Subir:</p>
@@ -444,6 +486,22 @@ function ServicioEstudio(){
                     </div>
 
                 </div>
+                { showErrors &&
+                    <div className="row mt-4">
+                        <div className="col-12">
+                            <p className="fw-bold fs-5">Ejecucion Terminada</p>
+                            Total de Familias Agregadas: { totalInserts }
+                            <p>Total Errores: { errorsCargaMasiva.length }</p>
+
+                        </div>
+                        <div className="col-12" style={{ height: '30vh', overflowY: 'auto' }}>
+                            <ul class="list-group">
+                                { renderErrores() }
+                            </ul>
+                        </div>
+                    </div>
+                }
+                
                 
                 
 

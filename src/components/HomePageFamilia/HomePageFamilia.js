@@ -22,7 +22,7 @@ function HomePageFamilia() {
 
     const getDataEstudioSocioeconomico = () =>{
         //mandar user ID
-        if (userActive === null) {
+        if (userActive === null && localStorage.getItem('ua') === 'false') {
             setActive(false)
         } else {
             var ls = localStorage.getItem('ua')
@@ -43,6 +43,7 @@ function HomePageFamilia() {
                 console.log('contiene datos');
                 setTieneSE(true)
                 setIdSE(resp.data.id)
+                localStorage.setItem('se', resp.data.id)
                 
             } else {
                 console.log('mo contiene datps');

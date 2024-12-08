@@ -20,9 +20,11 @@ export default function Layout() {
     },[collapsed])
 
     useEffect(()=>{
-      if (userActive === null) {
+      if (userActive === null && localStorage.getItem('ua') === 'false') {
           setActive(false)
       } else {
+        console.log('entra ua');
+        
           var ls = localStorage.getItem('ua')
           console.log('este es el valor ' + ls);
           var act
@@ -35,7 +37,7 @@ export default function Layout() {
               setActive(false)
           }
       }
-    })
+    },[])
 
     return (
         <>
@@ -96,6 +98,12 @@ export default function Layout() {
                           { roleSession === 'Familias' && active &&
                               <MenuItem component={<Link to={PathConstants.DATOSFAMILIA} />}> 
                                 { collapsed ? (<div className="ion-text-center"><ion-icon name="id-card-outline" size="large"></ion-icon></div>):(<p>DATOS CONTACTOS</p>)}
+                            </MenuItem>
+                          }
+
+                          { roleSession === 'Familias' && active &&
+                              <MenuItem component={<Link to={`${PathConstants.FAMILIASFILES}?idse=${localStorage.getItem('se')}`} />}> 
+                                { collapsed ? (<div className="ion-text-center"><ion-icon name="cloud-upload-outline" size="large"></ion-icon></div>):(<p>SUBIR ARCHIVOS</p>)}
                             </MenuItem>
                           }
 
