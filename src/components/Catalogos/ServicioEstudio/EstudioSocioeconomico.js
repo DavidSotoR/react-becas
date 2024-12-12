@@ -463,10 +463,10 @@ function ServicioEstudio(){
             <Modal.Title>Alta de Familias por Archivo</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* <div className="mb-3 form-check form-switch">
+                <div className="mb-3 form-check form-switch">
                     <input className="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableAsignarColaborador" id="enableAsignar"/>
                     <label className="form-check-label" for="enableAsignar" >Asignar Colaborador para Estudio(EN DESARROLLO)</label>
-                </div> */}
+                </div>
                 {/* <div className="mb-3 form-check form-switch">
                     <input className="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableCrearUsuariosFamilia" id="enableCrearUsuarios"/>
                     <label className="form-check-label" for="enableCrearUsuarios" >Crear usuarios para alta de Familias (EN DESARROLLO)</label>
