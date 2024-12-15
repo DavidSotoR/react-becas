@@ -49,6 +49,8 @@ function ServicioEstudio() {
   const [showErrors, setShowErrors] = useState(false);
   const [tabResponse, setTabResponse] = useState("exitosos");
 
+  const [ loadign, setLoading ] = useState(false)
+
   const [openModalCargarArchivo, setOpenModalCargarArchivo] = useState(false);
   const changeOpenModalArchivo = () => {
     setOpenModalCargarArchivo(!openModalCargarArchivo);
@@ -364,12 +366,12 @@ function ServicioEstudio() {
           className="list-group-item list-group-item-action list-group-item-warning"
         >
           <div className="d-flex w-100 justify-content-between">
-            <p className="mb-1">Familia: {noasignado.name}</p>
+            <p className="mb-1">Familia: {noasignado.familia.candidato}</p>
             <small className="text-body-secondary">{index + 1}</small>
           </div>
           <p className="mb-1">
             Error al asignar Colaborador:{" "}
-            <span className="fw-bold">{noasignado.email ?? "NO VALIDO"}</span>.
+            <span className="fw-bold">{noasignado.familia.email ?? "NO VALIDO"}</span>.
           </p>
         </li>
       );
@@ -446,6 +448,7 @@ function ServicioEstudio() {
   };
 
   const subirArchivoFamiliaSE = () => {
+    setLoading(true)
     const formData = new FormData();
     if (!file) {
       alert("Seleccione un archivo antes de subir.");
@@ -470,9 +473,11 @@ function ServicioEstudio() {
         setDataNoAsignada(resp.data.no_asignadas);
         setDataReactivada(resp.data.reactivados);
         setShowErrors(true);
+        setLoading(false)
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false)
         if (err.response.status === 401) {
           logout();
         }
@@ -685,6 +690,15 @@ function ServicioEstudio() {
               </Form>
             </div>
           </div>
+          {
+            loadign && 
+            <div className="d-flex justify-content-center align-items-center mt-3 mb-3">
+            <div class="spinner-border text-info text-center" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            </div>
+            
+          }
           {showErrors && (
             <div className="row mt-4">
               <div className="col-12">
