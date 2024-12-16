@@ -49,7 +49,7 @@ function ServicioEstudio() {
   const [showErrors, setShowErrors] = useState(false);
   const [tabResponse, setTabResponse] = useState("exitosos");
 
-  const [ loadign, setLoading ] = useState(false)
+  const [loadign, setLoading] = useState(false);
 
   const [openModalCargarArchivo, setOpenModalCargarArchivo] = useState(false);
   const changeOpenModalArchivo = () => {
@@ -371,7 +371,10 @@ function ServicioEstudio() {
           </div>
           <p className="mb-1">
             Error al asignar Colaborador:{" "}
-            <span className="fw-bold">{noasignado.familia.email ?? "NO VALIDO"}</span>.
+            <span className="fw-bold">
+              {noasignado.familia.email ?? "NO VALIDO"}
+            </span>
+            .
           </p>
         </li>
       );
@@ -448,7 +451,7 @@ function ServicioEstudio() {
   };
 
   const subirArchivoFamiliaSE = () => {
-    setLoading(true)
+    setLoading(true);
     const formData = new FormData();
     if (!file) {
       alert("Seleccione un archivo antes de subir.");
@@ -461,7 +464,10 @@ function ServicioEstudio() {
     formData.append("id_proyecto", preyecto);
     formData.append("id_orden_servicio", fromData.id_orden_servicio);
     formData.append("file", file); // Importante: 'files[]' para múltiples archivos
-
+    /* console.log(formData);
+    for (const pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+    } */
     axios
       .post(APIURL + "/estudio/socioeconomico/carga/familias", formData, config)
       .then((resp) => {
@@ -473,11 +479,11 @@ function ServicioEstudio() {
         setDataNoAsignada(resp.data.no_asignadas);
         setDataReactivada(resp.data.reactivados);
         setShowErrors(true);
-        setLoading(false)
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false)
+        setLoading(false);
         if (err.response.status === 401) {
           logout();
         }
@@ -595,7 +601,7 @@ function ServicioEstudio() {
                 Nueva Familia
               </Button>
               <Button
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm fw-bold"
                 onClick={() => changeOpenModalArchivo()}
               >
                 Cargar Familias
@@ -654,8 +660,8 @@ function ServicioEstudio() {
               name="enableAsignarColaborador"
               id="enableAsignar"
             />
-            <label className="form-check-label" for="enableAsignar">
-              Asignar Colaborador para Estudio(EN DESARROLLO)
+            <label className="form-check-label" htmlFor="enableAsignar">
+              Asignar Colaborador para Estudio
             </label>
           </div>
           {/* <div className="mb-3 form-check form-switch">
@@ -690,15 +696,16 @@ function ServicioEstudio() {
               </Form>
             </div>
           </div>
-          {
-            loadign && 
+          {loadign && (
             <div className="d-flex justify-content-center align-items-center mt-3 mb-3">
-            <div class="spinner-border text-info text-center" role="status">
-              <span class="visually-hidden">Loading...</span>
+              <div
+                className="spinner-border text-info text-center"
+                role="status"
+              >
+                <span className="visually-hidden">Loading...</span>
+              </div>
             </div>
-            </div>
-            
-          }
+          )}
           {showErrors && (
             <div className="row mt-4">
               <div className="col-12">
