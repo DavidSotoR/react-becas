@@ -13,7 +13,8 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     }
     
     const [formData, setFormData] = useState([]);
- 
+    const [parametros, setParametros] = useState([]); 
+
     const longitudTexto = (text = '',longitud = 0) => {
         const dif = longitud - text.length;
         const porcentaje = longitud ? ((dif / longitud) * 100) : 0;
@@ -117,7 +118,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
             console.log(resp);
         })
     }
-
+    
     // 7 sumatoria totoal
     const sumaTotalporCampo = (campo) => {
         return formData.reduce((acc, item) => {
@@ -634,10 +635,18 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         )
     } 
     // 13 .-  Distribución de la casa
+    
+    const distrubucionDeLaCasaOptions = (selection) => {
+        return [<option key='sapt-0' value="0">Seleccione la clasificacion</option>,...parametros.map((param) => (
+            <option key={'sapt-'+param.id} value={`${param.valor}`} selected={selection===param.valor}>
+                { param.texto }
+            </option>
+        ))]
+    }
     const distrubucionDeLaCasa = () => {
         return (
             <div className="row">
-                
+                {JSON.stringify(parametros)}
                 {formData.map((item,index) => {
                     return item?.seccion && item.seccion === 'seleccionable' && (                 
                         <div  key={'pes-'+idPregunta+'-'+index} className="row col-sm-3">
@@ -670,12 +679,20 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                 {item.texto}
                             </div>
                             <div className="col-8 p-1"> 
-                                <input
+                                {/*<input
                                     className="form-control"
                                     name="respuesta" 
                                     value={item.respuesta ?? ''}
                                     onChange={(e) => {formInputChange(e,index)}}
-                                ></input>
+                                ></input>*/}
+
+                                <select
+                                    className="form-select form-control-sm" 
+                                    name="respuesta"
+                                    onChange={(e) => {formInputChange(e,index)}}
+                                >
+                                    {distrubucionDeLaCasaOptions(item.respuesta)}
+                                </select>
                             </div>
                         </div>
                         )
@@ -865,6 +882,14 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
             console.log(resp);
         })
     }
+    
+    const getParametros = () => {
+        let formData = config;
+        formData.params = {id_catalogo_pregunta:idPregunta};
+        axios.get(`${APIURL}/catalogos/encuestas/preguntas/${idPregunta}/parametros`,formData,config)
+        .then(res => setParametros(res.data))
+        .catch(err => console.log("Error al solisitar parametros de pregunta",err));
+    }
 
     const defaultValue = () => {
         switch(idPreguntaTipo){
@@ -1015,6 +1040,9 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     useEffect(() => {
         //idPregunta,longitudRespuesta,idPreguntaTipo
         getListaRespuestas();
+        if(idPreguntaTipo == 13){
+            getParametros();
+        }
     },[])
 
     const preguntaPorTipoPregunta = () => {

@@ -54,7 +54,6 @@ function Proyecto() {
                 <div className="">
                     <h6><b>Proyecto:</b> {proyecto.nombre}</h6>
                     <p><b>Tipo: </b> {(proyecto?.tipo_cliente) ? proyecto.tipo_cliente.nombre: ''} </p>
-                    {JSON.stringify(proyecto)}
                 </div>
             </div>
             

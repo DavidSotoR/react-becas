@@ -1,5 +1,78 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregunta}){
+
+    const APIURL = process.env.REACT_APP_API_URL;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    }
+
+    const [parametros, setParametros] = useState([]);  /*[
+        {
+          "id": 40,
+          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
+          "id_catalogo_encuestas_preguntas": null,
+          "texto": null,
+          "limite_superior": 3,
+          "limiten_inferior": 0,
+          "valor": "3",
+          "created_at": "2024-12-10T06:05:17.000000Z",
+          "updated_at": "2024-12-10T06:05:17.000000Z"
+        },
+        {
+          "id": 41,
+          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
+          "id_catalogo_encuestas_preguntas": null,
+          "texto": null,
+          "limite_superior": 5,
+          "limiten_inferior": 4,
+          "valor": "6",
+          "created_at": "2024-12-10T06:05:29.000000Z",
+          "updated_at": "2024-12-10T06:05:29.000000Z"
+        },
+        {
+          "id": 42,
+          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
+          "id_catalogo_encuestas_preguntas": null,
+          "texto": null,
+          "limite_superior": 7,
+          "limiten_inferior": 6,
+          "valor": "9",
+          "created_at": "2024-12-10T06:05:40.000000Z",
+          "updated_at": "2024-12-10T06:06:02.000000Z"
+        },
+        {
+          "id": 43,
+          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
+          "id_catalogo_encuestas_preguntas": null,
+          "texto": null,
+          "limite_superior": 9,
+          "limiten_inferior": 8,
+          "valor": "12",
+          "created_at": "2024-12-10T06:06:30.000000Z",
+          "updated_at": "2024-12-10T06:06:30.000000Z"
+        },
+        {
+          "id": 44,
+          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
+          "id_catalogo_encuestas_preguntas": null,
+          "texto": null,
+          "limite_superior": 0,
+          "limiten_inferior": 10,
+          "valor": "15",
+          "created_at": "2024-12-10T06:06:41.000000Z",
+          "updated_at": "2024-12-10T06:06:41.000000Z"
+        }
+      ];*/
+
+    const getParametros = () => {
+        axios.get(`${APIURL}/catalogos/encuestas/preguntas/${idPregunta}/parametros`,config)
+        .then(res => setParametros(res.data))
+        .catch(err => console.log("Error al solisitar parametros de pregunta",err));
+    }
     
     // 1 .-  Pregunta abierta
     const preguntaAbierta = () => {
@@ -15,6 +88,27 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
     }
     // 2 .-  Lista selección múltiple
     // 3 .-  Antigüedad en colegio
+    const antiguedadEnColegio = () => {
+        
+        return (
+            <div>
+            <div className="row">
+                <div className="col-sm-2"></div>
+                <div className="col-sm-3 p-1">AÑOS</div>
+                <div className="col-sm-3 p-1">&emsp;</div>
+            </div>
+            {parametros.length && parametros.map( par => (
+                <div className="row text-start">
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-2 p-1">
+                            {par.limiten_inferior} - {par.limite_superior ? par.limite_superior : 'O MAS' }
+                    </div>
+                    <div className="col-sm-2 p-1"><div className="border-bottom border-secondary">&emsp;</div></div>
+                </div>
+            ))}
+            </div>
+        )
+    }
     // 4 .-  Número de Hijos
     // 5 .-  Orfandad
     // 6 .-  Dependientes Económicos
@@ -818,6 +912,14 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
         )
     }
 
+    useEffect(() => {
+        if(
+            idPreguntaTipo === 3
+        ){
+            getParametros();
+        }
+    },[])
+
     const preguntaPorTipoPregunta = () => {
         switch(idPreguntaTipo){
             // 1 .-  Pregunta abierta
@@ -826,6 +928,9 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
             break;
             // 2 .-  Lista selección múltiple
             // 3 .-  Antigüedad en colegio
+            case 3:
+                return antiguedadEnColegio();
+            break;
             // 4 .-  Número de Hijos
             // 5 .-  Orfandad
             // 6 .-  Dependientes Económicos

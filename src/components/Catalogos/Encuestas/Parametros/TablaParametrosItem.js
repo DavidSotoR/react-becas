@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { Button, Form, Modal } from "react-bootstrap";
 import ModalNuevoParametrosItems from "./ParametrosItems/ModalNuevoParametrosItems";
 import ModalEditarParametrosItems from "./ParametrosItems/ModalEditarParametrosItems";
+import ModalNuevoParametrosItemsClasificacion from "./ParametrosItems/ModalNuevoParametrosItemsClasificacion";
 
 function TablaParametrosItem({idParametro,idParametroTipo}) {
     const APIURL = process.env.REACT_APP_API_URL;
@@ -126,6 +127,43 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
                 )
         ));
     };
+    const listaTablaParametrosItemCoincidencia = () => {
+        return allParametrosItem.map((pregunta_item, index) => (
+            editingItemId === pregunta_item.id ? (
+                <ModalEditarParametrosItems
+                    key={pregunta_item.id}
+                    item={pregunta_item}
+                    idParametro={idParametro}
+                    onSave={handleSave}
+                />
+            ) : (
+                <tr key={'pitr-'+index}>
+                    <td>
+                        <span style={{ fontWeight: "bold" }}>{numeroFormato(pregunta_item.limiten_inferior)}</span>
+                    </td>
+                    <td>
+                        <span style={{ fontWeight: "bold" }}>=</span>
+                    </td>
+                    <td>
+                        <span style={{ fontWeight: "bold" }}>{pregunta_item.valor}</span>
+                    </td>
+                    <td>
+                        <div style={{ display: "flex" }}>
+                            <Button variant="light" onClick={() => handleEditClick(pregunta_item.id)} >
+                                <ion-icon name="create-outline"></ion-icon>
+                            </Button>
+                            <Button 
+                                variant="light" 
+                                style={{ marginLeft: "5px" }}
+                                onClick={() => handleShowDeleteModal(pregunta_item)}>
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </Button>
+                        </div>
+                    </td>
+                </tr>
+                )
+        ));
+    };
 
     if (error) {
         return <div>Error al solicitar los datos recargue nuevamente</div>;
@@ -150,6 +188,44 @@ function TablaParametrosItem({idParametro,idParametroTipo}) {
                     <tbody>
                         {listaTablaParametrosItem()}
                         <ModalNuevoParametrosItems idParametro={idParametro} idPregunta={null} numberSave={numberSave} setNumberSave={setNumberSave}/>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+            <Modal.Header closeButton>
+                <Modal.Title>Confirmar Eliminación</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                ¿Estás seguro de que deseas eliminar este ítem?
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseDeleteModal}>
+                    Cancelar
+                </Button>
+                <Button variant="primary" onClick={deleteParametroItem}>
+                    Eliminar
+                </Button>
+            </Modal.Footer>
+        </Modal>
+        </>
+    )}
+    {idParametroTipo === 3 && (
+        <>
+        <div>
+            <div className="seccion-table-parametros">
+                <table key={'tabpm-'+idParametroTipo} className="table items-parametros">
+                    <thead>
+                        <tr>
+                            <th>Valor</th>
+                            <th></th>
+                            <th>Puntos</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listaTablaParametrosItemCoincidencia()}
+                        <ModalNuevoParametrosItemsClasificacion idParametro={idParametro} idPregunta={null} numberSave={numberSave} setNumberSave={setNumberSave}/>
                     </tbody>
                 </table>
             </div>

@@ -7,7 +7,7 @@ import ModalNuevoParametrosItems from "./ParametrosItems/ModalNuevoParametrosIte
 import ModalEditarParametrosItems from "./ParametrosItems/ModalEditarParametrosItems";
 import TablaPreguntasParametrosItem from "./TablaPreguntasParametrosItem";
 
-function TablaPreguntasParametros({idParametro,idParametroTipo}) {
+function TablaPreguntasParametros({idParametro,idParametroTipo, returnPregunta}) {
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -36,16 +36,20 @@ function TablaPreguntasParametros({idParametro,idParametroTipo}) {
         return <div className="mt-4 m-2">{allPreguntaParametros.por_pregunta.map((pregunta, index) => (
             <div key={'pptr-'+index}>
                 <div className="d-flex justify-content-between mb-3">
-                    <div className="">
+                    <div>
                             <h5>{pregunta.numero_pregunta} - {pregunta.pregunta.toUpperCase()}: &nbsp;&nbsp; &nbsp;&nbsp; <i>{pregunta.puntos_maximos} PUNTOS</i></h5>
                     </div>
+                    
                 </div>
-                        <p>
-                            <b>Tipo de clasificacion:</b> { pregunta?.tipo_preguntas ? pregunta.tipo_preguntas.nombre : '' }
-                        </p>
-                        <div>
-                            <TablaPreguntasParametrosItem key={'mtppi'+pregunta.id} idParametro={idParametro} idParametroTipo={idParametroTipo} idPregunta={pregunta.id} IdPreguntaTipo={pregunta.id_catalogo_encuestas_preguntas_tipo}/>
-                        </div>
+                <p>
+                    <b>Tipo de clasificacion:</b> 
+                    <button  type="button" class="btn btn-link text-dark" onClick={() => returnPregunta(pregunta)}>
+                         { pregunta?.calsificacion_parametro_tipo ? pregunta.calsificacion_parametro_tipo.nombre : 'Agregar tipo de calisifcacion' }
+                    </button>
+                </p>
+                <div>
+                    <TablaPreguntasParametrosItem key={'mtppi'+pregunta.id} idParametro={idParametro} idParametroTipo={idParametroTipo} idPregunta={pregunta.id} idClasificacionParametroTipo={pregunta.id_parametro_clasificacion_tipo}/>
+                </div>
             </div>
         ))}</div>;
     };

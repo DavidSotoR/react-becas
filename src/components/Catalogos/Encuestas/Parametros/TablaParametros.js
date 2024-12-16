@@ -5,6 +5,7 @@ import { AuthContext } from "./../../../../context/AuthContext";
 import ModalNuevoParametro from "./ModalNuevoParametro";
 import TablaParametrosItem from "./TablaParametrosItem";
 import TablaPreguntasParametros from "./TablaPreguntasParametros";
+import ModalModificarParametroPregunta from "./ModalModificarParametroPregunta";
 
 function TablaParametros({ ID }) {
     //const { ID } = useParams();
@@ -16,11 +17,12 @@ function TablaParametros({ ID }) {
         }
     }
 
-    const [ allParametros, setAllParametros ] = useState([]);
+    const [allParametros, setAllParametros ] = useState([]);
     const [editarParametro, setEditarParametro] = useState(null);
     const [editData, setEditData] = useState({});
     const [search,setSearch] = useState("");
-
+    const [preguntaParametro,setPreguntaParametro] = useState({});
+    const handleClosePreguntaParametro = () => setPreguntaParametro({});
     const getListaParametrosEncuensta = () => {
         axios.get(APIURL+'/catalogos/encuestas/'+ID+'/parametros',config).then((resp)=>{
             setAllParametros(resp.data)
@@ -43,6 +45,7 @@ function TablaParametros({ ID }) {
     const [ showModalNuevoParametro, setShowModalNUevoParametro ] = useState(false)
     const handleCloseMNuevoParametro = () => setShowModalNUevoParametro(false);
     const handleShowMNuevoParametro = () => setShowModalNUevoParametro(true);
+
 
     const allParametrosFiltrados = allParametros.filter(item =>
         item.nombre.toLowerCase().includes(search.toLowerCase())
@@ -142,14 +145,14 @@ function TablaParametros({ ID }) {
                                     <div className="col-md-4 row mt-2">
 
                                         <div className="col-12" style={{ display: "flex", alignItems: "center" }}>
-                                            <div class="form-check form-switch">
+                                            <div className="form-check form-switch">
                                                 <input 
-                                                    class="form-check-input" 
+                                                    className="form-check-input" 
                                                     type="checkbox" 
                                                     id="formato_decimales"
                                                     checked={editData.formato_decimales}
                                                     onChange={(e) => setEditData({ ...editData, formato_decimales: !editData.formato_decimales })}/>
-                                                <label class="form-check-label" for="formato_decimales"><b>Formato decimales:</b> {(editData.formato_decimales) ? 'Si':'No'}</label>
+                                                <label className="form-check-label" for="formato_decimales"><b>Formato decimales:</b> {(editData.formato_decimales) ? 'Si':'No'}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -195,12 +198,18 @@ function TablaParametros({ ID }) {
                         <div>
                             {a.descripcion}
                             <TablaParametrosItem key={'mtpi'+a.id} idParametro={a.id} idParametroTipo={a.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos}/>
-                            <TablaPreguntasParametros key={'mtpp'+a.id} idParametro={a.id} idParametroTipo={a.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos}/>
+                            <TablaPreguntasParametros 
+                                key={'mtpp'+a.id} 
+                                idParametro={a.id} 
+                                idParametroTipo={a.id_catalogo_encuestas_preguntas_parametros_clasificaciones_tipos}
+                                returnPregunta={setPreguntaParametro}
+                                />
                         </div>
                     </div>
                 ))}
             </div>
             <ModalNuevoParametro key={'mnp-'+ID} show={showModalNuevoParametro} handleClose={handleCloseMNuevoParametro}></ModalNuevoParametro>
+            <ModalModificarParametroPregunta pregunta={preguntaParametro} handleClose={handleClosePreguntaParametro}/>
         </div>
     )
 }

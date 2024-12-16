@@ -1,9 +1,9 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { AuthContext } from "../../../../../context/AuthContext";
 
-function ModalEditarParametrosItems({ item, idParametro, onSave }) {
+function ModalEditarParametrosItems({ item, idParametro, idClasificacionParametroTipo, onSave }) {
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -16,6 +16,7 @@ function ModalEditarParametrosItems({ item, idParametro, onSave }) {
     const [parametroItem, setParametroItem] = useState({
         id: item.id,
         id_catalogo_encuestas_preguntas_parametro_clasificacion: idParametro,
+        id_clasificacion_parametro:idClasificacionParametroTipo,
         texto: item.texto || "",
         limite_superior: item.limite_superior || "0",
         limiten_inferior: item.limiten_inferior || "0",
@@ -30,13 +31,37 @@ function ModalEditarParametrosItems({ item, idParametro, onSave }) {
         }));
     };
 
+    const convertirAMayusculas = (texto) => {
+        return texto.toUpperCase();
+    }
+
+    const textChange = (e,index) => {
+        const start = e.target.selectionStart;
+        const end = e.target.selectionEnd;
+
+        const name = e.target.name;
+
+        const texto = convertirAMayusculas(e.target.value);
+        setParametroItem(prevState => ({
+            ...prevState,
+            [name]: texto
+        }));
+
+        setTimeout(() => {
+            e.target.setSelectionRange(start, end);
+        }, 0);
+    };
+
     const validateFields = () => {
         const messageError = [];
-        if (parametroItem.limiten_inferior === '') {
-            messageError.push('Campo Límite Inferior es OBLIGATORIO');
+        if (idClasificacionParametroTipo !== 4 && idClasificacionParametroTipo !== 5 && parametroItem.limiten_inferior=== '') {
+            messageError.push('Campo Nombre es OBLIGATORIO')
         }
-        if (parametroItem.limite_superior === '') {
-            messageError.push('Campo Límite Superior es OBLIGATORIO');
+        if (idClasificacionParametroTipo !== 5 &&parametroItem.limite_superior=== '') {
+            messageError.push('Campo Nombre es OBLIGATORIO')
+        }
+        if ((idClasificacionParametroTipo === 4 || idClasificacionParametroTipo === 5) && parametroItem.texto=== '') {
+            messageError.push('Campo Nombre es OBLIGATORIO y debe contener mas de 3 caracteres')
         }
         if (parametroItem.valor === '') {
             messageError.push('Campo Valor es OBLIGATORIO');
@@ -66,6 +91,7 @@ function ModalEditarParametrosItems({ item, idParametro, onSave }) {
         setParametroItem({
             id: item.id,
             id_catalogo_encuestas_preguntas_parametro_clasificacion: idParametro,
+            id_clasificacion_parametro:idClasificacionParametroTipo,
             texto: item.texto || "",
             limite_superior: item.limite_superior || "",
             limiten_inferior: item.limiten_inferior || "",
@@ -73,26 +99,31 @@ function ModalEditarParametrosItems({ item, idParametro, onSave }) {
         });
         setFormValid(true);
     };
-
-    return (
-        <tr key={`pietr-edit-${item.id}`}>
-            <td>
-                <input 
-                    id="limiten_inferior" 
-                    type="text" 
-                    className="form-control form-control-sm" 
-                    placeholder="0" 
-                    name="limiten_inferior"
-                    autoComplete="off"
-                    value={parametroItem.limiten_inferior}
-                    onChange={formInputChange}
-                    onBlur={validateFields}
-                />
-            </td>
-            <td>
-                <span style={{ fontWeight: "bold" }}>-</span>
-            </td>
-            <td>
+    
+    useEffect(()=>{
+        validateFields();
+    },[parametroItem])
+    
+    // Case Clasificacion Parametro: Coincidencia Acumulativa
+    const formularioItemsClasificacionParametro = () => {
+        return  (
+            <tr key={`pietr-edit-${item.id}`}>
+                <td>
+                    <input 
+                        id="texto" 
+                        type="text" 
+                        className="form-control form-control-sm" 
+                        placeholder="" 
+                        name="texto"
+                        autoComplete="off"
+                        value={parametroItem.texto}
+                        onChange={(e)=> textChange(e)}
+                        onBlur={validateFields}/>
+                </td>
+                <td>
+                    <span style={{ fontWeight: "bold" }}>-</span>
+                </td>
+                <td>
                 <input 
                     id="limite_superior" 
                     type="text" 
@@ -101,14 +132,13 @@ function ModalEditarParametrosItems({ item, idParametro, onSave }) {
                     name="limite_superior"
                     autoComplete="off"
                     value={parametroItem.limite_superior}
-                    onChange={formInputChange}
-                    onBlur={validateFields}
-                />
-            </td>
-            <td>
-                <span style={{ fontWeight: "bold" }}>=</span>
-            </td>
-            <td>
+                    onChange={(e)=> formInputChange(e)}
+                    onBlur={validateFields}/>
+                </td>
+                <td>
+                    <span style={{ fontWeight: "bold" }}>=</span>
+                </td>
+                <td>
                 <input 
                     id="valor" 
                     type="text" 
@@ -117,22 +147,144 @@ function ModalEditarParametrosItems({ item, idParametro, onSave }) {
                     name="valor"
                     autoComplete="off"
                     value={parametroItem.valor}
-                    onChange={formInputChange}
-                    onBlur={validateFields}
-                />
-            </td>
-            <td>
-                <div style={{ display: "flex" }}>
-                    <Button variant="light" onClick={putDataParametroItem} disabled={formValid}>
-                        <ion-icon name="save-outline"></ion-icon>
-                    </Button>
-                    <Button variant="light" style={{ marginLeft: "5px" }} onClick={()=>onSave()}>
-                        <ion-icon name="arrow-undo-circle-outline"></ion-icon>
-                    </Button>
-                </div>
-            </td>
-        </tr>
-    );
+                    onChange={(e)=> formInputChange(e)}
+                    onBlur={validateFields}/>
+                </td>
+                <td>
+                    <div style={{ display: "flex" }}>
+                        <Button variant="light" onClick={putDataParametroItem} disabled={formValid}>
+                            <ion-icon name="save-outline"></ion-icon>
+                        </Button>
+                        <Button variant="light" style={{ marginLeft: "5px" }} onClick={()=>onSave()}>
+                            <ion-icon name="arrow-undo-circle-outline"></ion-icon>
+                        </Button>
+                    </div>
+                </td>
+            </tr>
+        );
+    }
+    
+    // Case Clasificacion Parametro: Rangos Numericos 
+    const formularioItemsParametrosSeleccionUnica = () => {
+        return  (
+            <tr key={`pietr-edit-${item.id}`}>
+                <td>
+                    <input 
+                        id="texto" 
+                        type="text" 
+                        className="form-control form-control-sm" 
+                        placeholder="" 
+                        name="texto"
+                        autoComplete="off"
+                        value={parametroItem.texto}
+                        onChange={(e)=> textChange(e)}
+                        onBlur={validateFields}/>
+                </td>
+                <td>
+                    <span style={{ fontWeight: "bold" }}>=</span>
+                </td>
+                <td>
+                <input 
+                    id="valor" 
+                    type="text" 
+                    className="form-control form-control-sm" 
+                    placeholder="0" 
+                    name="valor"
+                    autoComplete="off"
+                    value={parametroItem.valor}
+                    onChange={(e)=> formInputChange(e)}
+                    onBlur={validateFields}/>
+                </td>
+                <td>
+                    <div style={{ display: "flex" }}>
+                        <Button variant="light" onClick={putDataParametroItem} disabled={formValid}>
+                            <ion-icon name="save-outline"></ion-icon>
+                        </Button>
+                        <Button variant="light" style={{ marginLeft: "5px" }} onClick={()=>onSave()}>
+                            <ion-icon name="arrow-undo-circle-outline"></ion-icon>
+                        </Button>
+                    </div>
+                </td>
+            </tr>
+        );
+    }
+
+    // Case Clasificacion Parametro default 
+    const formularioItemsParametrosRangosNumericos = () => {
+        return (
+            <tr key={`pietr-edit-${item.id}`}>
+                <td>
+                    <input 
+                        id="limiten_inferior" 
+                        type="text" 
+                        className="form-control form-control-sm" 
+                        placeholder="0" 
+                        name="limiten_inferior"
+                        autoComplete="off"
+                        value={parametroItem.limiten_inferior}
+                        onChange={formInputChange}
+                        onBlur={validateFields}
+                    />
+                </td>
+                <td>
+                    <span style={{ fontWeight: "bold" }}>-</span>
+                </td>
+                <td>
+                    <input 
+                        id="limite_superior" 
+                        type="text" 
+                        className="form-control form-control-sm" 
+                        placeholder="0" 
+                        name="limite_superior"
+                        autoComplete="off"
+                        value={parametroItem.limite_superior}
+                        onChange={formInputChange}
+                        onBlur={validateFields}
+                    />
+                </td>
+                <td>
+                    <span style={{ fontWeight: "bold" }}>=</span>
+                </td>
+                <td>
+                    <input 
+                        id="valor" 
+                        type="text" 
+                        className="form-control form-control-sm" 
+                        placeholder="0" 
+                        name="valor"
+                        autoComplete="off"
+                        value={parametroItem.valor}
+                        onChange={formInputChange}
+                        onBlur={validateFields}
+                    />
+                </td>
+                <td>
+                    <div style={{ display: "flex" }}>
+                        <Button variant="light" onClick={putDataParametroItem} disabled={formValid}>
+                            <ion-icon name="save-outline"></ion-icon>
+                        </Button>
+                        <Button variant="light" style={{ marginLeft: "5px" }} onClick={()=>onSave()}>
+                            <ion-icon name="arrow-undo-circle-outline"></ion-icon>
+                        </Button>
+                    </div>
+                </td>
+            </tr>
+        )
+    }
+
+    const caseClasificacionParametroTipo = () => {
+        switch(idClasificacionParametroTipo){
+            case 4:
+                return formularioItemsClasificacionParametro();
+            break;
+            case 5:
+                return formularioItemsParametrosSeleccionUnica();
+            break;
+            default:
+                return formularioItemsParametrosRangosNumericos();
+        }
+    }
+    return caseClasificacionParametroTipo();
 }
 
 export default ModalEditarParametrosItems;
