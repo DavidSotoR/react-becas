@@ -636,9 +636,9 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     } 
     // 13 .-  Distribución de la casa
     
-    const distrubucionDeLaCasaOptions = (selection) => {
-        return [<option key='sapt-0' value="0">Seleccione la clasificacion</option>,...parametros.map((param) => (
-            <option key={'sapt-'+param.id} value={`${param.valor}`} selected={selection===param.valor}>
+    const distrubucionDeLaCasaOptions = () => {
+        return [<option key='sapt-0' value="">Seleccione la clasificacion</option>,...parametros.map((param) => (
+            <option key={'sapt-'+param.id} value={`${param.valor}`} >
                 { param.texto }
             </option>
         ))]
@@ -646,7 +646,6 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     const distrubucionDeLaCasa = () => {
         return (
             <div className="row">
-                {JSON.stringify(parametros)}
                 {formData.map((item,index) => {
                     return item?.seccion && item.seccion === 'seleccionable' && (                 
                         <div  key={'pes-'+idPregunta+'-'+index} className="row col-sm-3">
@@ -689,9 +688,10 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                                 <select
                                     className="form-select form-control-sm" 
                                     name="respuesta"
+                                    value={item.respuesta}
                                     onChange={(e) => {formInputChange(e,index)}}
                                 >
-                                    {distrubucionDeLaCasaOptions(item.respuesta)}
+                                    {distrubucionDeLaCasaOptions()}
                                 </select>
                             </div>
                         </div>
