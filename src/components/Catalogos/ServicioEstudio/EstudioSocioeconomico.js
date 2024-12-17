@@ -243,10 +243,11 @@ function ServicioEstudio() {
   }, [fromData.id_cliente]);
 
   useEffect(() => {
-    if (openModalCargarArchivo) {
+    if (openModalCargarArchivo === false) {
       console.log(openModalCargarArchivo);
+      getEstudiosSocioeconomicos()
     }
-  }, openModalCargarArchivo);
+  }, [openModalCargarArchivo]);
 
   useEffect(() => {
     if (fromData.id_proyecto) {
@@ -482,7 +483,6 @@ function ServicioEstudio() {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
         if (err.response.status === 401) {
           logout();
