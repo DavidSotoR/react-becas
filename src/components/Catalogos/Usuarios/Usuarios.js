@@ -29,8 +29,9 @@ function Usuarios() {
   const [userToActive, setUserToActive] = useState(null);
 
   const [search, setSearch] = useState("");
-  const [searchPorPerfil, setSearchPorPerfil] = useState(null);
-  const [searchPorCliente, setSearchPorCliente] = useState(null);
+  const [searchPorPerfil, setSearchPorPerfil] = useState(0);
+  const [searchPorCliente, setSearchPorCliente] = useState(0);
+  const [searchPorActivo, setSearchPorActivo] = useState('all');
 
   const [userSelected, setUserSelected] = useState(null);
 
@@ -106,16 +107,18 @@ function Usuarios() {
   };
 
   const getAllDataUsuarios = async () => {
-    var qPerfil = 0;
-    var qCliente = 0;
-    var qText = "";
+    var qPerfil = searchPorPerfil;
+    var qCliente = searchPorCliente;
+    var qText = search;
+    var qActivo = searchPorActivo
     try {
       const resp = await axios.get(
-        `${APIURL}/usuarios?search=${qText}&perfil=${qPerfil}&cliente=${qCliente}`,
+        `${APIURL}/usuarios?search=${qText}&perfil=${qPerfil}&cliente=${qCliente}&activo=${qActivo}`,
         config
       );
       console.log(resp);
       var listaUsuarios = resp.data;
+      
       setAllUsuarios(listaUsuarios);
     } catch (error) {
       console.error("Error fetching perfiles:", error);
@@ -326,6 +329,11 @@ function Usuarios() {
     setSearchPorCliente(value);
   };
 
+  const searchUsuarioPorActivo = (e) => {
+    var value = e.target.value;
+    setSearchPorActivo(value);
+  };
+
   const searchText = (e) => {
     const buscar = e.target.value;
     setSearch(buscar);
@@ -364,13 +372,11 @@ function Usuarios() {
   }, [show]);
 
   useEffect(
-    (e) => {
-      if (searchPorPerfil) {
-        console.log(searchPorPerfil);
+    () => {
+
         getAllDataUsuarios();
-      }
     },
-    [searchPorPerfil, searchPorCliente]
+    [searchPorPerfil, searchPorCliente, searchPorActivo]
   );
 
   useEffect(() => {
@@ -416,7 +422,7 @@ function Usuarios() {
               }}
             />
           </div>
-          <div className="col-lg-4 col-md-3 col-sm-6 col-6">
+          <div className="col-lg-3 col-md-3 col-sm-6 col-6">
             <select
               className="form-select form-select-sm"
               aria-label="Default select example"
@@ -428,7 +434,7 @@ function Usuarios() {
               {renderFiltroPerfiles()}
             </select>
           </div>
-          <div className="col-lg-4 col-md-3 col-sm-6 col-6">
+          <div className="col-lg-3 col-md-3 col-sm-6 col-6">
             <select
               className="form-select form-select-sm"
               aria-label="Default select example"
@@ -438,6 +444,20 @@ function Usuarios() {
             >
               <option value="0">Seleccione un Cliente</option>
               {renderFiltroClientes()}
+            </select>
+          </div>
+          <div className="col-lg-3 col-md-3 col-sm-6 col-6">
+            <select
+              className="form-select form-select-sm"
+              aria-label="Default select example"
+              onChange={(e) => {
+                searchUsuarioPorActivo(e);
+              }}
+            >
+              <option value="all">Activos e Inactivos</option>
+              <option value="0">Inactivos</option>
+              <option value="1">Activos</option>
+              
             </select>
           </div>
         </div>
