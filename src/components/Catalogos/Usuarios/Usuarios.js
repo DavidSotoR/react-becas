@@ -116,35 +116,6 @@ function Usuarios() {
       );
       console.log(resp);
       var listaUsuarios = resp.data;
-      /* var listafiltrada = [];
-      switch (searchPorPerfil) {
-        case "0":
-        case undefined:
-        case null:
-          listafiltrada = listaUsuarios;
-          break;
-        case "1":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 1);
-          break;
-        case "2":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 2);
-          break;
-        case "3":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 3);
-          break;
-        case "4":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 4);
-          break;
-        case "5":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 5);
-          break;
-        case "6":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 6);
-          break;
-        default:
-          listafiltrada = []; // O maneja otros casos según sea necesario
-          break;
-      } */
       setAllUsuarios(listaUsuarios);
     } catch (error) {
       console.error("Error fetching perfiles:", error);
