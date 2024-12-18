@@ -219,7 +219,7 @@ function TablaPreguntas({ ID }) {
                         </p>
                     </div>
                     <div className="col-md-4">
-                        <p><b>TIPO DE PREGUNTA: </b>{pregunta.tipo_preguntas.nombre}</p>
+                        <p><b>TIPO DE PREGUNTA: </b>{pregunta.tipo_preguntas.nombre} - {pregunta.tipo_preguntas.id}</p>
                     </div>
                     <div className="col-md-4">
                         <p><b>LONGITUD RESPUESTA: </b>{pregunta.longitud_respuesta}</p>

@@ -10,63 +10,7 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
         }
     }
 
-    const [parametros, setParametros] = useState([]);  /*[
-        {
-          "id": 40,
-          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
-          "id_catalogo_encuestas_preguntas": null,
-          "texto": null,
-          "limite_superior": 3,
-          "limiten_inferior": 0,
-          "valor": "3",
-          "created_at": "2024-12-10T06:05:17.000000Z",
-          "updated_at": "2024-12-10T06:05:17.000000Z"
-        },
-        {
-          "id": 41,
-          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
-          "id_catalogo_encuestas_preguntas": null,
-          "texto": null,
-          "limite_superior": 5,
-          "limiten_inferior": 4,
-          "valor": "6",
-          "created_at": "2024-12-10T06:05:29.000000Z",
-          "updated_at": "2024-12-10T06:05:29.000000Z"
-        },
-        {
-          "id": 42,
-          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
-          "id_catalogo_encuestas_preguntas": null,
-          "texto": null,
-          "limite_superior": 7,
-          "limiten_inferior": 6,
-          "valor": "9",
-          "created_at": "2024-12-10T06:05:40.000000Z",
-          "updated_at": "2024-12-10T06:06:02.000000Z"
-        },
-        {
-          "id": 43,
-          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
-          "id_catalogo_encuestas_preguntas": null,
-          "texto": null,
-          "limite_superior": 9,
-          "limiten_inferior": 8,
-          "valor": "12",
-          "created_at": "2024-12-10T06:06:30.000000Z",
-          "updated_at": "2024-12-10T06:06:30.000000Z"
-        },
-        {
-          "id": 44,
-          "id_catalogo_encuestas_preguntas_parametro_clasificacion": 10,
-          "id_catalogo_encuestas_preguntas": null,
-          "texto": null,
-          "limite_superior": 0,
-          "limiten_inferior": 10,
-          "valor": "15",
-          "created_at": "2024-12-10T06:06:41.000000Z",
-          "updated_at": "2024-12-10T06:06:41.000000Z"
-        }
-      ];*/
+    const [parametros, setParametros] = useState([]);
 
     const getParametros = () => {
         axios.get(`${APIURL}/catalogos/encuestas/preguntas/${idPregunta}/parametros`,config)
@@ -110,7 +54,43 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
         )
     }
     // 4 .-  Número de Hijos
+    const numeroDeHijos = ()=>{
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-sm-3">NOMBRE</div>
+                    <div className="col-sm-3">% BECA ACTUAL</div>
+                    <div className="col-sm-2">GRADO A CURSAR</div>
+                    <div className="col-sm-2">PROMEDIO ACADEMICO</div>
+                    <div className="col-sm-2">PROMEDIO CONDUCTA</div>
+                </div>
+                {[1,2,3,4,5].map( index => (
+                    <div key={'ktrndh-'+index} className="row">
+                        <div className="col-sm-3"><div className="border-bottom border-secondary">&emsp;</div></div>
+                        <div className="col-sm-3"><div className="border-bottom border-secondary">&emsp;</div></div>
+                        <div className="col-sm-2"><div className="border-bottom border-secondary">&emsp;</div></div>
+                        <div className="col-sm-2"><div className="border-bottom border-secondary">&emsp;</div></div>
+                        <div className="col-sm-2"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    </div>
+                ))}
+            </div>
+        )
+    }
     // 5 .-  Orfandad
+    const orfandad = ()=>{
+        return (
+            <div>
+            {parametros.map((parametro,index) => (
+                <div key={'ktror-'+index} className="row">
+                    <div className="col"/>
+                    <div className="col-sm-3 text-start">{parametro.texto}</div>
+                    <div className="col-sm-3"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col"/>
+                </div>
+            ))}
+            </div>
+        )
+    }
     // 6 .-  Dependientes Económicos
     const dependientesEconomicamente = () => {
         return (
@@ -313,7 +293,50 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
         )
     }
     // 9 .-  Ahorro
+    const ahorroOInversion = () => {
+        return (
+        <div>
+            <div className="row">
+                <div className="col-sm-1"><div className="border-bottom border-secondary">SI/NO</div></div>
+                <div className="col-sm-1 text-start">DESCRIBE:</div>
+                <div className="col-sm-3"><div className="border-bottom border-secondary">&emsp;</div></div>
+                <div className="col-sm-5 text-start">D) MONTO DE AHORROS O INVERCIONES</div>
+                <div className="col-sm-2 text-start"><div className="border-bottom border-secondary">$</div></div>
+            </div>
+        </div>
+        )
+    }
     // 10 .-  Inversiones
+    const invercionesPropiosFamiliares = () => {
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-sm-2"><div className="border-bottom border-secondary">SI/NO</div></div>
+                    <div className="col"></div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-8">DESCRIBIR</div>
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-2">VALOR ESTIMADO</div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-8 text-start"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-2 text-start"><div className="border-bottom border-secondary">$&emsp;</div></div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-8 text-start"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-2 text-start"><div className="border-bottom border-secondary">$&emsp;</div></div>
+                </div>
+                <div className="row">
+                    <div className="col-sm-8 text-start"><div className="border-bottom border-secondary">&emsp;</div></div>
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-2 text-start"><div className="border-bottom border-secondary">$&emsp;</div></div>
+                </div>
+            </div>
+        )
+    }
     // 11 .-  Vehículos
     const preguntaVeiculos = ()=>{
         return (
@@ -915,6 +938,7 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
     useEffect(() => {
         if(
             idPreguntaTipo === 3
+            || idPreguntaTipo === 5
         ){
             getParametros();
         }
@@ -932,7 +956,13 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
                 return antiguedadEnColegio();
             break;
             // 4 .-  Número de Hijos
+            case 4:
+                return numeroDeHijos();
+            break;
             // 5 .-  Orfandad
+            case 5:
+                return orfandad();
+            break;
             // 6 .-  Dependientes Económicos
             case 6:
                 return dependientesEconomicamente();
@@ -946,7 +976,13 @@ function ModalNuevaRespesuta({ show = true, idPregunta ,idPreguntaTipo,dataPregu
                 return ingresoNetoMensual();
             break;
             // 9 .-  Ahorro
+            case 9:
+                return ahorroOInversion();
+            break;
             // 10 .-  Inversiones
+            case 10:
+                return invercionesPropiosFamiliares();
+            break;
             // 11 .-  Vehículos
             case 11:
                 return preguntaVeiculos();
