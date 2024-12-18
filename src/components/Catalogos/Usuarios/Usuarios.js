@@ -29,18 +29,22 @@ function Usuarios() {
   const [userToActive, setUserToActive] = useState(null);
 
   const [search, setSearch] = useState("");
-  const [searchPorPerfil, setSearchPorPerfil] = useState(null);
+  const [searchPorPerfil, setSearchPorPerfil] = useState(0);
+  const [searchPorCliente, setSearchPorCliente] = useState(0);
+  const [searchPorActivo, setSearchPorActivo] = useState('all');
 
   const [userSelected, setUserSelected] = useState(null);
 
   const [showUpdate, setShowUpdate] = useState(false);
   const [showModalActivaCuentas, setShowModalActivaCuentas] = useState(false);
-  const [optionSelectedAllUsuarios, setOptionSelectedAllUsuarios] = useState(1)
+  const [optionSelectedAllUsuarios, setOptionSelectedAllUsuarios] = useState(1);
 
   const handleCloseModalAll = () => setShowModalActivaCuentas(false);
   const handleShowModalAll = () => setShowUpdate(true);
 
-  const [ dataFormActivarDeshabiliar, setDataFormActivarDeshabiliar ] = useState([])
+  const [dataFormActivarDeshabiliar, setDataFormActivarDeshabiliar] = useState(
+    []
+  );
 
   const config = {
     headers: {
@@ -54,15 +58,19 @@ function Usuarios() {
 
   const habilitarDeshabilitarCuentas = (opcion) => {
     setShowModalActivaCuentas(!showModalActivaCuentas);
-    setOptionSelectedAllUsuarios(opcion)
+    setOptionSelectedAllUsuarios(opcion);
     var usuariosSlct = [];
-    allUsuariosFiltrados.forEach(element => {
+    allUsuariosFiltrados.forEach((element) => {
       if (existInAllUsuarioSelected(element.id)) {
-        usuariosSlct.push({ id: element.id, email: element.email, cliente: element.cliente ?  element.cliente.nombre : 'INTERNO' })
+        usuariosSlct.push({
+          id: element.id,
+          email: element.email,
+          cliente: element.cliente ? element.cliente.nombre : "INTERNO",
+        });
       }
     });
-    setDataFormActivarDeshabiliar(usuariosSlct)
-  }
+    setDataFormActivarDeshabiliar(usuariosSlct);
+  };
 
   const postCrearUsuario = async () => {
     var data = dataPostUsuario;
@@ -99,40 +107,19 @@ function Usuarios() {
   };
 
   const getAllDataUsuarios = async () => {
+    var qPerfil = searchPorPerfil;
+    var qCliente = searchPorCliente;
+    var qText = search;
+    var qActivo = searchPorActivo
     try {
-      const resp = await axios.get(APIURL + "/usuarios", config);
+      const resp = await axios.get(
+        `${APIURL}/usuarios?search=${qText}&perfil=${qPerfil}&cliente=${qCliente}&activo=${qActivo}`,
+        config
+      );
       console.log(resp);
       var listaUsuarios = resp.data;
-      var listafiltrada = [];
-      switch (searchPorPerfil) {
-        case "0":
-        case undefined:
-        case null:
-          listafiltrada = listaUsuarios;
-          break;
-        case "1":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 1);
-          break;
-        case "2":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 2);
-          break;
-        case "3":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 3);
-          break;
-        case "4":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 4);
-          break;
-        case "5":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 5);
-          break;
-        case "6":
-          listafiltrada = listaUsuarios.filter((item) => item.id_perfil === 6);
-          break;
-        default:
-          listafiltrada = []; // O maneja otros casos según sea necesario
-          break;
-      }
-      setAllUsuarios(listafiltrada);
+      
+      setAllUsuarios(listaUsuarios);
     } catch (error) {
       console.error("Error fetching perfiles:", error);
       if (error.response.status === 401) {
@@ -200,37 +187,34 @@ function Usuarios() {
     var { name, value, checked } = e.target;
 
     var selected = [];
-      if (name === "checkuser-all") {
-        setCheckAllSelected(checked);
-        if (checked) {
-          allUsuarios.forEach((usu) => {
-              selected.push(usu.id);
-          });
-        } else {
-          selected = [];
-        }
-        setListaUsuSelected(selected);
-      } else if (name !== "checkuser-all"){
-        
-        var idUserSelected = name.split("-")[1];
-        var idUser = parseInt(idUserSelected);
-        var selected = [];
-        if (checked) {
-          if (existInAllUsuarioSelected(idUser)) {
-            selected = listaUsuSelected.filter(elemento => elemento !== idUser)
-            setListaUsuSelected(selected)
-          } else {
-            setListaUsuSelected((prevUsuarios) => {
-                return [...prevUsuarios, idUser];
-            });
-          }
-
-        } else {
-            selected = listaUsuSelected.filter(elemento => elemento !== idUser)
-            setListaUsuSelected(selected)
-        }
+    if (name === "checkuser-all") {
+      setCheckAllSelected(checked);
+      if (checked) {
+        allUsuarios.forEach((usu) => {
+          selected.push(usu.id);
+        });
+      } else {
+        selected = [];
       }
-
+      setListaUsuSelected(selected);
+    } else if (name !== "checkuser-all") {
+      var idUserSelected = name.split("-")[1];
+      var idUser = parseInt(idUserSelected);
+      var selected = [];
+      if (checked) {
+        if (existInAllUsuarioSelected(idUser)) {
+          selected = listaUsuSelected.filter((elemento) => elemento !== idUser);
+          setListaUsuSelected(selected);
+        } else {
+          setListaUsuSelected((prevUsuarios) => {
+            return [...prevUsuarios, idUser];
+          });
+        }
+      } else {
+        selected = listaUsuSelected.filter((elemento) => elemento !== idUser);
+        setListaUsuSelected(selected);
+      }
+    }
   };
 
   const renderFiltroPerfiles = () => {
@@ -263,7 +247,6 @@ function Usuarios() {
   };
 
   const existInAllUsuarioSelected = (id) => {
-
     return listaUsuSelected.includes(id);
   };
 
@@ -341,6 +324,16 @@ function Usuarios() {
     setSearchPorPerfil(value);
   };
 
+  const searchUsuarioPorCliente = (e) => {
+    var value = e.target.value;
+    setSearchPorCliente(value);
+  };
+
+  const searchUsuarioPorActivo = (e) => {
+    var value = e.target.value;
+    setSearchPorActivo(value);
+  };
+
   const searchText = (e) => {
     const buscar = e.target.value;
     setSearch(buscar);
@@ -379,28 +372,24 @@ function Usuarios() {
   }, [show]);
 
   useEffect(
-    (e) => {
+    () => {
 
-      if (searchPorPerfil) {
-        console.log(searchPorPerfil);
         getAllDataUsuarios();
-      }
     },
-    [searchPorPerfil]
+    [searchPorPerfil, searchPorCliente, searchPorActivo]
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!showModalActivaCuentas) {
       getAllDataUsuarios();
       setListaUsuSelected([]);
-      setCheckAllSelected(false)
+      setCheckAllSelected(false);
     }
-    
-  }, [showModalActivaCuentas])
+  }, [showModalActivaCuentas]);
 
-  const showDataTest = () =>{
+  const showDataTest = () => {
     console.log(listaUsuSelected);
-  }
+  };
 
   return (
     <div className="container mt-3">
@@ -433,7 +422,7 @@ function Usuarios() {
               }}
             />
           </div>
-          <div className="col-lg-4 col-md-3 col-sm-6 col-6">
+          <div className="col-lg-3 col-md-3 col-sm-6 col-6">
             <select
               className="form-select form-select-sm"
               aria-label="Default select example"
@@ -445,29 +434,55 @@ function Usuarios() {
               {renderFiltroPerfiles()}
             </select>
           </div>
-          <div className="col-lg-4 col-md-3 col-sm-6 col-6">
+          <div className="col-lg-3 col-md-3 col-sm-6 col-6">
             <select
               className="form-select form-select-sm"
               aria-label="Default select example"
+              onChange={(e) => {
+                searchUsuarioPorCliente(e);
+              }}
             >
               <option value="0">Seleccione un Cliente</option>
               {renderFiltroClientes()}
             </select>
           </div>
-          
+          <div className="col-lg-3 col-md-3 col-sm-6 col-6">
+            <select
+              className="form-select form-select-sm"
+              aria-label="Default select example"
+              onChange={(e) => {
+                searchUsuarioPorActivo(e);
+              }}
+            >
+              <option value="all">Activos e Inactivos</option>
+              <option value="0">Inactivos</option>
+              <option value="1">Activos</option>
+              
+            </select>
+          </div>
         </div>
       </div>
       <hr></hr>
       <div className="row">
         <div className="col">
           <div className="table-wrapper">
-          { listaUsuSelected.length > 0 &&
-            <div className="d-flex mb-3">
-              <button className="btn btn-primary btn-sm mx-1" onClick={ ()=> habilitarDeshabilitarCuentas(1) }>Activar Cuentas</button>
-              <button className="btn btn-warning btn-sm mx-1" onClick={ ()=> habilitarDeshabilitarCuentas(0)}>Deshabilitar Cuentas</button>
-            </div>
-          }
-          
+            {listaUsuSelected.length > 0 && (
+              <div className="d-flex mb-3">
+                <button
+                  className="btn btn-primary btn-sm mx-1"
+                  onClick={() => habilitarDeshabilitarCuentas(1)}
+                >
+                  Activar Cuentas
+                </button>
+                <button
+                  className="btn btn-warning btn-sm mx-1"
+                  onClick={() => habilitarDeshabilitarCuentas(0)}
+                >
+                  Deshabilitar Cuentas
+                </button>
+              </div>
+            )}
+
             <table className="table">
               <thead>
                 <tr>
@@ -503,14 +518,14 @@ function Usuarios() {
           activar_desactivar={returnValorSwitch}
         ></ModalActivarUsuario>
       )}
-      { showModalActivaCuentas && dataFormActivarDeshabiliar.length && (
+      {showModalActivaCuentas && dataFormActivarDeshabiliar.length && (
         <ModalActivarAllUsuario
-        show={showModalActivaCuentas}
-        onHide={handleCloseModalAll}
-        list_usuario={dataFormActivarDeshabiliar}
-        activar_desactivar={optionSelectedAllUsuarios}
+          show={showModalActivaCuentas}
+          onHide={handleCloseModalAll}
+          list_usuario={dataFormActivarDeshabiliar}
+          activar_desactivar={optionSelectedAllUsuarios}
         ></ModalActivarAllUsuario>
-      ) }
+      )}
     </div>
   );
 }
