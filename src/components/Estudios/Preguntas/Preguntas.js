@@ -6,6 +6,9 @@ export default function Preguntas({idEstudio,preguntas,parametros,columnRow,verP
 
     const [colClass,setColClass] = useState('col-8');
 
+    const convertirAMayusculas = (texto) => {
+        return texto.toUpperCase();
+    }
     const vista = () => {
         switch(columnRow){
             //Vista Larga
@@ -29,7 +32,7 @@ export default function Preguntas({idEstudio,preguntas,parametros,columnRow,verP
             <div className="row">
                 <div className="col"/>
                 <div className={colClass}>
-                    <h5>{pregunta?.numero_pregunta && pregunta.numero_pregunta+' - '} {pregunta.pregunta}</h5>
+                    <h5>{pregunta?.numero_pregunta && pregunta.numero_pregunta+' - '} {convertirAMayusculas(pregunta.pregunta)}</h5>
                 </div>
                 <div className="col"/>
             </div>

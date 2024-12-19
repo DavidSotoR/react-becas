@@ -14,6 +14,9 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     
     const [formData, setFormData] = useState([]);
     const [parametros, setParametros] = useState([]); 
+    
+    const [parametrosPromedioAcademico, setParametrosPromedioAcademico] = useState([]); 
+    const [parametrosPromedioConducta, setParametrosPromedioConducta] = useState([]); 
 
     const longitudTexto = (text = '',longitud = 0) => {
         const dif = longitud - text.length;
@@ -37,10 +40,6 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         const end = e.target.selectionEnd;
 
         const texto = convertirAMayusculas(e.target.value);
-        /*setFormData(prevState => ({
-            ...prevState,
-            texto: texto
-        }));*/
         
         console.log(formData);
         setFormData((prevState) => {
@@ -58,7 +57,6 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         }, 0);
     };
     
-
     const formInputChange = (e,index) => {
 
         var {name, value, type, checked } = e.target;
@@ -69,6 +67,19 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
             newState[index] = {
                 ...newState[index],
                 [name]: updatedValue
+            };
+            return newState;
+        });
+    };
+
+    
+    const setValueOption = (key,value,index) => {
+        const texto = convertirAMayusculas(value);
+        setFormData((prevState) => {
+            const newState = [...prevState];
+            newState[index] = {
+                ...newState[index],
+                [key]: texto
             };
             return newState;
         });
@@ -155,6 +166,12 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         total += sumaTotalporCampoSeccion('monto',seccion);
         return total;
     }
+
+    const clearValue = (index,lista_key) => {
+        lista_key.map( key => {
+            formData[index][key] = '';
+        });
+    }
     //ref
     const padreRefs = useRef([]);
     const madreRefs = useRef([]);
@@ -211,8 +228,166 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     }
     // 2 .-  Lista selección múltiple
     // 3 .-  Antigüedad en colegio
+    const antiguedadEnColegio = () => {
+        
+        return formData.length && (
+            <div>
+            <div className="row">
+                <div className="col-sm-3"></div>
+                <div className="col-sm-3 p-1">AÑOS</div>
+            </div>
+            {parametros.length && parametros.map( (item,index) => (
+                <div key={'piraec-'+index} className="row text-start">
+                    <div className="col-sm-3"></div>
+                    <div className="col-sm-4 p-1">
+                        <div className="form-check">
+                            <input 
+                                className="form-check-input" 
+                                type="checkbox" 
+                                role="switch"
+                                name="valor"
+                                checked={formData[0].valor == item.valor}
+                                onChange={() => {setValueOption('valor',item.valor,0)}}
+                                id="valor"/>
+                            <label className="form-check-label" htmlFor="flexRadioDefault2">
+                               {item.limiten_inferior} - {item.limite_superior ? item.limite_superior : 'O MAS' }
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            ))}
+            </div>
+        )
+    }
     // 4 .-  Número de Hijos
+    const annioCurso = [
+        {valor:1},{valor:2},{valor:3},{valor:4},{valor:5},{valor:6}
+    ]
+    const opcionesCurso = () => {
+        return [<option key='sapoc-default' value="">Seleccione una opción</option>,...annioCurso.map((param,index) => (
+            <option key={'sapoc-'+index} value={`${param.valor}`} >
+                { param.valor }
+            </option>
+        ))]
+    }
+    const opcionesParametrosPromedioAcademico = () => {
+        return parametrosPromedioAcademico.length !== 0  && [<option key='sapppa-default' value="">Seleccione una opción</option>,...parametrosPromedioAcademico.map((param,index) => (
+            <option key={'sapppa-'+index} value={`${param.valor}`} >
+                { param.limiten_inferior }
+            </option>
+        ))]
+    }
+    const opcionesParametrosPromedioConducta = () => {
+        return parametrosPromedioConducta.length !== 0  &&  [<option key='sapppc-default' value="">Seleccione una opción</option>,...parametrosPromedioConducta.map((param,index) => (
+            <option key={'sapppc-'+index} value={`${param.valor}`} >
+                { param.limiten_inferior }
+            </option>
+        ))]
+    }
+    const numeroDeHijos = ()=>{
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-sm-4">NOMBRE</div>
+                    <div className="col-sm-2">% BECA ACTUAL</div>
+                    <div className="col-sm-2">CURSAR</div>
+                    <div className="col-sm-2 text-center">PROMEDIO ACADEMICO</div>
+                    <div className="col-sm-2 text-center">PROMEDIO CONDUCTA</div>
+                </div>
+                {formData.map((item,index) => (
+                <div  key={'pes-'+idPregunta+'-'+index} className="row">
+                    
+                    <div className="col-sm-4 p-1">
+                        <input
+                            className="form-control form-control-sm"
+                            name="nombre" 
+                            key={`nombre-${index}`}
+                            ref={(el) => (tipoRefs.current[index] = el)}
+                            onKeyDown={(e) => handleKeyDown(e, index, tipoRefs)}
+                            value={item.nombre ?? ''}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        />
+                    </div>
+                    <div className="col-sm-2 p-1">
+                        <input
+                            className="form-control form-control-sm"
+                            name="respuesta" 
+                            type="number"
+                            key={`respuesta-${index}`}
+                            ref={(el) => (marcaModeloRefs.current[index] = el)}
+                            onKeyDown={(e) => handleKeyDown(e, index, marcaModeloRefs)}
+                            value={item.respuesta ?? ''}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        />
+                    </div>
+                    <div className="col-sm-2 p-1">
+                        <select
+                            className="form-select form-control-sm" 
+                            name="monto"
+                            value={item.monto}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        >
+                            {opcionesCurso()}
+                        </select>
+                    </div>
+                    <div className="col-sm-2 p-1">
+                        <select
+                            className="form-select form-control-sm" 
+                            name="padre_monto"
+                            value={item.padre_monto}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        >
+                            {opcionesParametrosPromedioAcademico()}
+                        </select>
+
+
+                    </div>
+                    <div className="col-sm-2 p-1">
+                        <select
+                            className="form-select form-control-sm" 
+                            name="madre_monto"
+                            value={item.madre_monto}
+                            onChange={(e) => {formInputChange(e,index)}}
+                        >
+                            {opcionesParametrosPromedioConducta()}
+                        </select>
+                    </div>
+                </div>
+                ))}
+            </div>
+        )
+    }
     // 5 .-  Orfandad
+    const orfandad = () => {
+        return formData.length && (
+            <div>
+            <div className="row">
+                <div className="col-sm-3"></div>
+                <div className="col-sm-3 p-1">AÑOS</div>
+            </div>
+            {parametros.length && parametros.map( (item,index) => (
+                <div key={'ppiorf'+index} className="row text-start">
+                    <div className="col-sm-3"></div>
+                    <div className="col-sm-4 p-1">
+                        <div className="form-check">
+                            <input 
+                                className="form-check-input" 
+                                type="checkbox" 
+                                role="switch"
+                                name="valor"
+                                checked={formData[0].valor == item.valor}
+                                onChange={() => {setValueOption('valor',item.valor,0)}}
+                                id="valor"/>
+                            <label className="form-check-label" htmlFor="flexRadioDefault2">
+                               {item.texto}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            ))}
+            </div>
+        )
+    }
     // 6 .-  Dependientes Económicos
     const dependientesEconomicamente = () => {
         return (
@@ -440,7 +615,157 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         )
     }
     // 9 .-  Ahorro
+    const ahorro = () => {
+        return formData.length && (
+            <div>
+                <div className="row">
+
+                    <div className="col-sm-1">
+                        <div className="row">
+                            <div className="form-check form-switch pt-1">
+                                <input 
+                                    className="form-check-input"  
+                                    type="checkbox" 
+                                    role="switch"
+                                    name="activo"
+                                    checked={formData[0].activo}
+                                    onChange={(e) => {
+                                        formInputChange(e,0);
+                                        if(e.target.checked === false){
+                                            clearValue(0,['respuesta','monto']);
+                                        }
+                                    }}
+                                    id="activo"/>
+                                <label className="form-check-label">{(formData[0].activo) ? 'Si' : 'No'}</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="col-sm-1 text-start p-1">DESCRIBE:</div>
+                    <div className="col-sm-3">
+                        <input
+                            className="form-control form-control-sm"
+                            name="respuesta" 
+                            disabled={!formData[0].activo}
+                            value={formData[0].respuesta ?? ''}
+                            onChange={(e) => {formInputChange(e,0)}}
+                        />
+                    </div>
+                    <div className="col-sm-5 text-start p-1">D) MONTO DE AHORROS O INVERCIONES</div>
+                    <div className="col-sm-2">
+                        <div className="row">
+                            <div className="col-2">$</div>
+                            <div className="col-9">
+                                <input
+                                    className="form-control form-control-sm text-end"
+                                    name="monto" 
+                                    key={`monto-${0}`}
+                                    ref={(el) => (montoRefs.current[0] = el)}
+                                    onKeyDown={(e) => handleKeyDown(e, 0, montoRefs)}
+                                    disabled={!formData[0].activo}
+                                    value={formatNumber(formData[0].monto) ?? ''}
+                                    onChange={(e) => {numberChange(e,0)}}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
     // 10 .-  Inversiones
+    const isInvercionesActivas = () => {
+     
+        const item = formData.find(item => item.seccion === 'activa');
+        //return JSON.stringify(item)
+        return item ? item.activo : false; // Retorna null si no se encuentra
+
+    }
+    const isInvercionesClear = () => {
+        formData.map((item,index) => {
+            if(item.seccion === 'inverciones'){
+                clearValue(index,['respuesta','monto']);
+            }
+        });
+    }
+    const inverciones = () => {
+        return formData.length && (
+            <div> 
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'activa' && (
+                        <div  key={'pes-'+idPregunta+'-'+index} className="row">
+                            <div className="col-sm-2">
+                                <div className="row">
+                                    <div className="col-1"></div>
+                                    <div className="col-10">
+                                        <div className="form-check form-switch pt-1">
+                                            <input 
+                                                className="form-check-input"  
+                                                type="checkbox" 
+                                                role="switch"
+                                                name="activo"
+                                                checked={formData[index].activo}
+                                                onChange={(e) => {
+                                                    formInputChange(e,index);
+                                                    if(e.target.checked === false){
+                                                        isInvercionesClear();
+                                                    }
+                                                }}
+                                                id="activo"/>
+                                            <label className="form-check-label">{(formData[index].activo) ? 'Si' : 'No'}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col"></div>
+                        </div>
+                        )
+                })}
+                    
+                <div className="row">
+                    <div className="col-sm-8">DESCRIBIR</div>
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-2">VALOR ESTIMADO</div>
+                </div>
+
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'inverciones' && (
+                        
+                        <div key={'pesinvii-'+idPregunta+'-'+index} className="row mt-2">
+                            <div className="col-sm-8 text-start">                                    
+                                <input
+                                    className="form-control form-control-sm"
+                                    name="respuesta" 
+                                    disabled={!isInvercionesActivas()}
+                                    value={formData[index].respuesta ?? ''}
+                                    onChange={(e) => {formInputChange(e,index)}}
+                                />
+                            </div>
+                            <div className="col-sm-2"></div>
+                            <div className="col-sm-2 text-start">
+                                <div className="row">
+                                    <div className="col-2">$</div>
+                                    <div className="col-9">
+                                        <input
+                                            className="form-control form-control-sm text-end"
+                                            name="monto" 
+                                            key={`monto-${index}`}
+                                            ref={(el) => (montoRefs.current[index] = el)}
+                                            onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
+                                            disabled={!isInvercionesActivas()}
+                                            value={formatNumber(formData[index].monto) ?? ''}
+                                            onChange={(e) => {numberChange(e,index)}}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    )
+                })}
+            </div>
+        )
+    }
     // 11 .-  Vehículos
     const preguntaVeiculos = ()=>{
         return (
@@ -637,7 +962,7 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     // 13 .-  Distribución de la casa
     
     const distrubucionDeLaCasaOptions = () => {
-        return [<option key='sapt-0' value="">Seleccione la clasificacion</option>,...parametros.map((param) => (
+        return [<option key='sapt-default' value="">Seleccione la clasificacion</option>,...parametros.map((param) => (
             <option key={'sapt-'+param.id} value={`${param.valor}`} >
                 { param.texto }
             </option>
@@ -885,9 +1210,25 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     
     const getParametros = () => {
         let formData = config;
-        formData.params = {id_catalogo_pregunta:idPregunta};
+        if(idPreguntaTipo == 13){
+            formData.params = {id_catalogo_pregunta:idPregunta};
+        }
         axios.get(`${APIURL}/catalogos/encuestas/preguntas/${idPregunta}/parametros`,formData,config)
         .then(res => setParametros(res.data))
+        .catch(err => console.log("Error al solisitar parametros de pregunta",err));
+    }
+    
+
+
+    const getParametrosPromedioAcademico  = () => {
+        axios.get(`${APIURL}/estudio/socioeconomico/pregunta/parametro/${idPregunta}/adicional-dos/items`,config)
+        .then(res => setParametrosPromedioAcademico(res.data))
+        .catch(err => console.log("Error al solisitar parametros de pregunta",err));
+    }
+    
+    const getParametrosPromedioConducta = () => {
+        axios.get(`${APIURL}/estudio/socioeconomico/pregunta/parametro/${idPregunta}/adicional-dos/items`,config)
+        .then(res => setParametrosPromedioConducta(res.data))
         .catch(err => console.log("Error al solisitar parametros de pregunta",err));
     }
 
@@ -895,11 +1236,28 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         switch(idPreguntaTipo){
             // 1 .-  Pregunta abierta
             case 1:
-
                 setFormData([
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',}
                 ]);
             break;
+            case 3:
+                setFormData([
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',}
+                ]);
+            break;
+            case 4:
+                setFormData([
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                ]);
+            break;
+            case 5:
+                setFormData([
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',}
+                ]);
             case 6:
                 setFormData([
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
@@ -907,6 +1265,14 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                ]);
+            break;
+            case 10:
+                setFormData([
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',seccion:'activa',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',seccion:'inverciones',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',seccion:'inverciones',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',seccion:'inverciones',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                 ]);
             break;
             case 20:
@@ -930,6 +1296,11 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'VACACIONAL',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'RENTA QUE RECIBA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', texto:'AYUDA QUE RECIBA',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                ]);
+            break;
+            case 9:
+                setFormData([
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'',  respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',}
                 ]);
             break;
             case 11:
@@ -1040,8 +1411,17 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     useEffect(() => {
         //idPregunta,longitudRespuesta,idPreguntaTipo
         getListaRespuestas();
-        if(idPreguntaTipo == 13){
+        if(
+            idPreguntaTipo == 13
+            || idPreguntaTipo == 3
+            || idPreguntaTipo == 5
+        ){
             getParametros();
+        }
+
+        if(idPreguntaTipo == 4){
+            getParametrosPromedioAcademico();
+            getParametrosPromedioConducta();
         }
     },[])
 
@@ -1053,8 +1433,17 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
             break;
             // 2 .-  Lista selección múltiple
             // 3 .-  Antigüedad en colegio
+            case 3:
+                return antiguedadEnColegio();
+            break;
             // 4 .-  Número de Hijos
+            case 4:
+                return numeroDeHijos();
+            break;
             // 5 .-  Orfandad
+            case 5:
+                return orfandad();
+            break;
             // 6 .-  Dependientes Económicos
             case 6:
                 return dependientesEconomicamente();
@@ -1068,7 +1457,13 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                 return ingresoNetoMensual();
             break;
             // 9 .-  Ahorro
+            case 9:
+                return ahorro();
+            break;
             // 10 .-  Inversiones
+            case 10:
+                return inverciones();
+            break;
             // 11 .-  Vehículos
             case 11:
                 return preguntaVeiculos();
