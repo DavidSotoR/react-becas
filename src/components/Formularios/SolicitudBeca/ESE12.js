@@ -116,7 +116,7 @@ function ESE12() {
           <div className="row">
             <div className="column-5">
               <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">SITUACION POR LA CUAL SE VEN EN LA NECESIDAD DE PEDIR APOYO DE BECA</label>
+                <label htmlFor="exampleFormControlTextarea1" class="form-label">SITUACION POR LA CUAL SE VEN EN LA NECESIDAD DE PEDIR APOYO DE BECA</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
               </div>
             </div>
@@ -125,31 +125,31 @@ function ESE12() {
             <div className="column">
               <h5>1. Datos de quién(es) solicita(n) la Beca:</h5>
               <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Alumno(s)</label>
+                <label htmlFor="exampleFormControlInput1" class="form-label">Alumno(s)</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1"/>
               </div>
               <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">DOMICILIO PARTICULAR CALLE, NO.</label>
+                <label htmlFor="exampleFormControlInput1" class="form-label">DOMICILIO PARTICULAR CALLE, NO.</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1"/>
               </div>
               <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">COLONIA</label>
+                <label htmlFor="exampleFormControlInput1" class="form-label">COLONIA</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1"/>
               </div>
               <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">MUNICIPIO</label>
+                <label htmlFor="exampleFormControlInput1" class="form-label">MUNICIPIO</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1"/>
               </div>
               <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">CODIGO POSTAL</label>
+                <label htmlFor="exampleFormControlInput1" class="form-label">CODIGO POSTAL</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1"/>
               </div>
               <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">TELEFONO (CELULAR) PADRE</label>
+                <label htmlFor="exampleFormControlInput1" class="form-label">TELEFONO (CELULAR) PADRE</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1"/>
               </div>
               <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">TELEFONO (CELULAR) MADRE</label>
+                <label htmlFor="exampleFormControlInput1" class="form-label">TELEFONO (CELULAR) MADRE</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1"/>
               </div>
             </div>
@@ -162,18 +162,18 @@ function ESE12() {
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Nombre:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Nombre:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Edad:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Edad:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-3">
-              <label for="evive" class="form-label">Vive:</label>
+              <label htmlFor="evive" class="form-label">Vive:</label>
               <select id="evive" class="form-select form-select-sm" aria-label="Small select example">
                 <option value="1">Si</option>
                 <option value="2">No</option>
@@ -181,31 +181,31 @@ function ESE12() {
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Direccion:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Direccion:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Ocupacion Actual:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Ocupacion Actual:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Empresa en que trabaja:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Empresa en que trabaja:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Email:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Email:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Tel. de Casa:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Tel. de Casa:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
@@ -218,18 +218,18 @@ function ESE12() {
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Nombre:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Nombre:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Edad:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Edad:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-3">
-              <label for="evive" class="form-label">Vive:</label>
+              <label htmlFor="evive" class="form-label">Vive:</label>
               <select id="evive" class="form-select form-select-sm" aria-label="Small select example">
                 <option value="1">Si</option>
                 <option value="2">No</option>
@@ -237,31 +237,31 @@ function ESE12() {
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Direccion:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Direccion:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Ocupacion Actual:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Ocupacion Actual:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Empresa en que trabaja:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Empresa en que trabaja:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Email:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Email:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>
             <div className="col-4">
                 <div class="mb-3">
-                  <label for="exampleFormControlInput1" class="form-label">Tel. de Casa:</label>
+                  <label htmlFor="exampleFormControlInput1" class="form-label">Tel. de Casa:</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1"/>
                 </div>
             </div>

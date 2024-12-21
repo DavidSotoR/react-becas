@@ -687,7 +687,7 @@ function ServicioEstudio() {
           </div>
           {/* <div className="mb-3 form-check form-switch">
                     <input className="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableCrearUsuariosFamilia" id="enableCrearUsuarios"/>
-                    <label className="form-check-label" for="enableCrearUsuarios" >Crear usuarios para alta de Familias (EN DESARROLLO)</label>
+                    <label className="form-check-label" htmlFor="enableCrearUsuarios" >Crear usuarios para alta de Familias (EN DESARROLLO)</label>
                 </div> */}
           <div className="row">
             <div className="col-3">

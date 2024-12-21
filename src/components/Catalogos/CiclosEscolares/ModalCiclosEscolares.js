@@ -116,7 +116,7 @@ function ModalCiclosEscolares({ show, handleClose }) {
                 <div className="form-check form-switch">
                     <input className="form-check-input" name="ciclo_activo" type="checkbox" checked={cicloActivo}
                     role="switch" value={'on'} id="flexSwitchCheckChecked" onChange={(e) => {formInputChange(e)}}/>
-                    <label className="form-check-label" for="flexSwitchCheckChecked">Ciclo Escolar Activo</label>
+                    <label className="form-check-label" htmlForfor="flexSwitchCheckChecked">Ciclo Escolar Activo</label>
                 </div>
                 <div className="mb-3">
                     <p style={{ color:"red" }}> { msgError } </p>
