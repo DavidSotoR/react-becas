@@ -28,10 +28,15 @@ function Usuarios() {
   const handleShowActivar = () => setShowActivar(true);
   const [userToActive, setUserToActive] = useState(null);
 
+  const [showModalVerUsuario, setShowModalVerUsuario] = useState(false);
+  const handleCloseShowModalVerUsuario = () => setShowModalVerUsuario(false);
+  const handleShowModalVerUsuario = () => setShowModalVerUsuario(true);
+  const [dataShowUsuario, setDataShowUsuario] = useState(null);
+
   const [search, setSearch] = useState("");
   const [searchPorPerfil, setSearchPorPerfil] = useState(0);
   const [searchPorCliente, setSearchPorCliente] = useState(0);
-  const [searchPorActivo, setSearchPorActivo] = useState('all');
+  const [searchPorActivo, setSearchPorActivo] = useState("all");
 
   const [userSelected, setUserSelected] = useState(null);
 
@@ -110,7 +115,7 @@ function Usuarios() {
     var qPerfil = searchPorPerfil;
     var qCliente = searchPorCliente;
     var qText = search;
-    var qActivo = searchPorActivo
+    var qActivo = searchPorActivo;
     try {
       const resp = await axios.get(
         `${APIURL}/usuarios?search=${qText}&perfil=${qPerfil}&cliente=${qCliente}&activo=${qActivo}`,
@@ -118,7 +123,7 @@ function Usuarios() {
       );
       console.log(resp);
       var listaUsuarios = resp.data;
-      
+
       setAllUsuarios(listaUsuarios);
     } catch (error) {
       console.error("Error fetching perfiles:", error);
@@ -304,6 +309,16 @@ function Usuarios() {
             <button
               className="btn btn-outline-secondary mx-1 btn-sm p-1 pb-0"
               style={{ borderColor: "rgba(0,0,0,0)" }}
+              onClick={() => showDataUsuario(usuario)}
+            >
+              <ion-icon
+                name="eye"
+                style={{ fontWeight: "bolder!important", fontSize: "x-large" }}
+              ></ion-icon>
+            </button>
+            <button
+              className="btn btn-outline-secondary mx-1 btn-sm p-1 pb-0"
+              style={{ borderColor: "rgba(0,0,0,0)" }}
               onClick={() => {
                 selectUserToUpdate(usuario);
               }}
@@ -345,6 +360,12 @@ function Usuarios() {
       item.email.toLowerCase().includes(search.toLowerCase())
   );
 
+  const showDataUsuario = (data) => {
+    console.log(data);
+    setDataShowUsuario(data);
+    handleShowModalVerUsuario();
+  };
+
   useEffect(() => {
     if (APIURL) {
       getAllPerfiles();
@@ -371,13 +392,9 @@ function Usuarios() {
     }
   }, [show]);
 
-  useEffect(
-    () => {
-
-        getAllDataUsuarios();
-    },
-    [searchPorPerfil, searchPorCliente, searchPorActivo]
-  );
+  useEffect(() => {
+    getAllDataUsuarios();
+  }, [searchPorPerfil, searchPorCliente, searchPorActivo]);
 
   useEffect(() => {
     if (!showModalActivaCuentas) {
@@ -386,10 +403,6 @@ function Usuarios() {
       setCheckAllSelected(false);
     }
   }, [showModalActivaCuentas]);
-
-  const showDataTest = () => {
-    console.log(listaUsuSelected);
-  };
 
   return (
     <div className="container mt-3">
@@ -407,12 +420,12 @@ function Usuarios() {
           </Link>
         </div>
       </div>
-      <div className="mb-3 d-flex">
-        <div className="d-flex justify-content-center align-items-center">
-          <p className="fw-bold m-0 me-1">Filtros:</p>
-        </div>
+      <div className="mb-3">
         <div className="row">
-          <div className="col-lg-3 col-md-3 col-sm-8 col-8">
+          <div className="col-12 col-md-12">
+            <p className="fw-bold m-0 me-1">Filtros:</p>
+          </div>
+          <div className="col-12 col-md-3 col-lg-2 mb-2">
             <input
               type="text"
               className="form-control form-control-sm"
@@ -422,7 +435,7 @@ function Usuarios() {
               }}
             />
           </div>
-          <div className="col-lg-3 col-md-3 col-sm-6 col-6">
+          <div className="col-6 col-md-3 col-lg-2 mb-2">
             <select
               className="form-select form-select-sm"
               aria-label="Default select example"
@@ -430,11 +443,11 @@ function Usuarios() {
                 searchUsuarioPorPerfil(e);
               }}
             >
-              <option value="0">Seleccione un Perfil</option>
+              <option value="0">Perfiles</option>
               {renderFiltroPerfiles()}
             </select>
           </div>
-          <div className="col-lg-3 col-md-3 col-sm-6 col-6">
+          <div className="col-6 col-md-3 col-lg-2 mb-2">
             <select
               className="form-select form-select-sm"
               aria-label="Default select example"
@@ -442,11 +455,11 @@ function Usuarios() {
                 searchUsuarioPorCliente(e);
               }}
             >
-              <option value="0">Seleccione un Cliente</option>
+              <option value="0">Clientes</option>
               {renderFiltroClientes()}
             </select>
           </div>
-          <div className="col-lg-3 col-md-3 col-sm-6 col-6">
+          <div className="col-6 col-md-3 col-lg-2">
             <select
               className="form-select form-select-sm"
               aria-label="Default select example"
@@ -454,10 +467,9 @@ function Usuarios() {
                 searchUsuarioPorActivo(e);
               }}
             >
-              <option value="all">Activos e Inactivos</option>
+              <option value="all">Activos/Inactivos</option>
               <option value="0">Inactivos</option>
               <option value="1">Activos</option>
-              
             </select>
           </div>
         </div>
@@ -483,30 +495,35 @@ function Usuarios() {
               </div>
             )}
 
-            <table className="table">
-              <thead>
-                <tr>
-                  <th className="col-id" style={{ verticalAlign: "top" }}>
-                    <input
-                      type="checkbox"
-                      onChange={(e) => {
-                        checkboxChange(e);
-                      }}
-                      checked={checkAllSelected}
-                      name={"checkuser-all"}
-                      id={"check-user-all"}
-                    />
-                  </th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Cuenta</th>
-                  <th scope="col">Cliente</th>
-                  <th scope="col">Perfil</th>
-                  <th scope="col">Activo</th>
-                  <th scope="col">Opciones</th>
-                </tr>
-              </thead>
-              <tbody>{renderFilasTablaUsuarios()}</tbody>
-            </table>
+            <div className="table-wrapper" style={{ overflowX: "auto" }}>
+              <table
+                className="table"
+                style={{ minWidth: "700px", overflowX: "auto" }}
+              >
+                <thead>
+                  <tr>
+                    <th className="col-id" style={{ verticalAlign: "top" }}>
+                      <input
+                        type="checkbox"
+                        onChange={(e) => {
+                          checkboxChange(e);
+                        }}
+                        checked={checkAllSelected}
+                        name={"checkuser-all"}
+                        id={"check-user-all"}
+                      />
+                    </th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Cuenta</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Perfil</th>
+                    <th scope="col">Activo</th>
+                    <th scope="col">Opciones</th>
+                  </tr>
+                </thead>
+                <tbody>{renderFilasTablaUsuarios()}</tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -526,6 +543,59 @@ function Usuarios() {
           activar_desactivar={optionSelectedAllUsuarios}
         ></ModalActivarAllUsuario>
       )}
+
+      <Modal
+        show={showModalVerUsuario}
+        onHide={handleCloseShowModalVerUsuario}
+        animation={true}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Usuario: {dataShowUsuario ? dataShowUsuario.id : "Cargando..."}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {dataShowUsuario !== null && (
+            <table className="table table-striped">
+              <tbody>
+                <tr>
+                  <td className="fw-bold">Nombre:</td>
+                  <td>{dataShowUsuario.name}</td>
+                </tr>
+                <tr>
+                  <td className="fw-bold">Email:</td>
+                  <td>{dataShowUsuario.email}</td>
+                </tr>
+                <tr>
+                  <td className="fw-bold">Perfil:</td>
+                  <td>{dataShowUsuario.perfil.nombre}</td>
+                </tr>
+                {dataShowUsuario.externo === 1 && (
+                  <tr>
+                    <td className="fw-bold">Cliente:</td>
+                    <td>{dataShowUsuario.cliente.nombre}</td>
+                  </tr>
+                )}
+                {dataShowUsuario.id_perfil === 6 && (
+                  <tr>
+                    <td className="fw-bold">Contraseña Temporal:</td>
+                    <td>{dataShowUsuario.password_temporal}</td>
+                  </tr>
+                )}
+                <tr>
+                  <td className="fw-bold">Dirección:</td>
+                  <td>{dataShowUsuario.direccion ?? "SIN DATO"}</td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseShowModalVerUsuario}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
