@@ -1,3 +1,5 @@
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
 @font-face {
   font-family: "MiFuentePersonalizada";
   src: url("/public/fonts/TT_Rounds_Neue_Trial_Regular.ttf") format("truetype"); /* GarbataTrial-Regular */
@@ -12,9 +14,10 @@
   font-style: normal;
 }
 .btn-text-display {
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
-@media (max-width: 768px) {/*query para ocultar testo de btns para solo dejar icono*/
+@media (max-width: 768px) {
+  /*query para ocultar testo de btns para solo dejar icono*/
   .btn-text-display {
     display: none;
   }

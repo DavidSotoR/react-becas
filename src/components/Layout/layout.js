@@ -318,7 +318,7 @@ export default function Layout() {
           )}
 
           <div
-            className="col pt-5 scrollable-content"
+            className="col pt-4 scrollable-content"
             style={{ height: "100vh" }}
           >
             <Suspense fallback={<div>Loading...</div>}>

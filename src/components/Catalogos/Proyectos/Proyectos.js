@@ -114,12 +114,13 @@ function Proyectos() {
           </p>
         </td>
         <td>
-          <div className="d-flex">
+          <div className="d-flex justify-content-start">
             <Link
               className="btn btn-primary btn-sm"
               to={`/proyectos/${proyecto.id}`}
             >
-              Editar
+              <i className="bi bi-pencil-square"></i>
+              <span className="ms-1 btn-text-display">Editar</span>
             </Link>
           </div>
         </td>
@@ -147,7 +148,7 @@ function Proyectos() {
               onChange={searchText}
             />
           </div>
-          <div className="col-12 col-md-3 mb-1">
+          <div className="col-12 col-md-3 mb-2 mb-md-1">
             <Form.Select
               className="form-select form-select-sm"
               name="id_tipo_cliente"
@@ -160,7 +161,7 @@ function Proyectos() {
           </div>
           <div className="col-12 col-md-3 d-flex justify-content-end justify-content-md-start ">
             <Button
-              className="btn btn-primary btn-sm fw-bold"
+              className="btn btn-primary btn-sm fw-bold "
               onClick={handleShow}
             >
               Nuevo Proyecto
@@ -188,8 +189,8 @@ function Proyectos() {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th className="col-id">#</th>
-                        <th className="col-activo">Activo</th>
+                        <th className="">#</th>
+                        <th className="">Activo</th>
                         <th>Nombre</th>
                         <th>Añadir</th>
                       </tr>
