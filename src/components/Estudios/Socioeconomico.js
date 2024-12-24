@@ -36,6 +36,39 @@ function Socioeconomico(){
     const [columnRow,setColumnRow] = useState('short');
     const [fromDataError,setFormDataError] = useState({});
     const [editarSeccion,setEditarSeccion] = useState('');
+    const [listaTotales,setListaTotales] = useState([]);
+    
+    const updateListaTotales = (totalPorParametro) => {
+        setListaTotales(prevState => {
+            const existingIndex = prevState.findIndex(item => item.pregunta === totalPorParametro.pregunta);
+            console.log(existingIndex);
+
+            if (existingIndex !== -1) {
+                // Si existe, actualiza el objeto con la misma `pregunta`
+                const nuevaListaTotales = [...prevState];
+                nuevaListaTotales[existingIndex] = totalPorParametro;
+                return nuevaListaTotales;
+            } else {
+                // Si no existe, agrega un nuevo objeto
+                return [...prevState, totalPorParametro];
+            }
+        });
+    }
+
+    const totalPorParametros = listaTotales.reduce((acc, item) => {
+        // Si el parámetro es null, usar un valor especial como 'null' o '0' para agruparlos
+        const key = item.parametro === null ? 'null' : item.parametro;
+      
+        // Si ya existe el parámetro, sumar el total
+        if (acc[key]) {
+          acc[key] += item.total;
+        } else {
+          // Si no existe, inicializar el parámetro con el total
+          acc[key] = item.total;
+        }
+      
+        return acc;
+      }, {});
 
     const getEsrudioSocioeconomico = () => {
         axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/encuesta`,config).then((resp)=>{
@@ -120,12 +153,15 @@ function Socioeconomico(){
             
             {headerPage()}
             
+
             <Preguntas 
                 idEstudio={idEstudio}
                 preguntas={listaPreguntas()}
                 parametros={listaParametros()}
                 columnRow={columnRow}
                 verPuntos={verPuntos}
+                updateListaTotales={updateListaTotales}
+                totalPorParametros={totalPorParametros}
             />
 
             <Evidencias

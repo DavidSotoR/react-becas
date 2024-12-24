@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Respuestas from "./Respuestas"
 import Puntos from "./Puntos";
 
-export default function Preguntas({idEstudio,preguntas,parametros,columnRow,verPuntos}) {
+export default function Preguntas({idEstudio,preguntas,parametros,columnRow,verPuntos,updateListaTotales,totalPorParametros}) {
 
     const [colClass,setColClass] = useState('col-8');
 
@@ -50,7 +50,10 @@ export default function Preguntas({idEstudio,preguntas,parametros,columnRow,verP
                 idEstudio={idEstudio}
                 idPregunta={pregunta.id}
                 idPreguntaTipo={pregunta.id_catalogo_encuestas_preguntas_tipo} 
+                idParametro={pregunta.id_catalogo_encuestas_preguntas_parametro_clasificacion}
                 longitudRespuesta={pregunta.longitud_respuesta}
+                updateListaTotales={updateListaTotales}
+                totalPorParametros={totalPorParametros}
                 colClass={colClass}
                 />
 

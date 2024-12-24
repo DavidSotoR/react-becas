@@ -3,7 +3,7 @@ import { Button,Form, Modal } from "react-bootstrap";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
 
-export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPreguntaTipo,colClass}) {
+export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRespuesta,idPreguntaTipo,updateListaTotales,totalPorParametros,colClass}) {
 
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -14,9 +14,17 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
     
     const [formData, setFormData] = useState([]);
     const [parametros, setParametros] = useState([]); 
+
+    const [preguntaParametroSumatoria, setPreguntaParametroSumatoria] = useState(0);
     
     const [parametrosPromedioAcademico, setParametrosPromedioAcademico] = useState([]); 
     const [parametrosPromedioConducta, setParametrosPromedioConducta] = useState([]); 
+
+    const [totalPorParametro,setTotalPorParametro] = useState({pregunta:idPregunta,parametro:idParametro,total:0});
+
+    const mostrarTotalParametro = () => {
+        return totalPorParametros[idParametro] ? totalPorParametros[idParametro] : 0 ;
+    }
 
     const longitudTexto = (text = '',longitud = 0) => {
         const dif = longitud - text.length;
@@ -145,6 +153,14 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         total += sumaTotalporCampo('monto');
         return total;
     }
+    
+    const sumaTotalPorCampo = (campo) => {
+        return formData.reduce((acc, item) => {
+            let value = 0;
+            value = parseFloat(item[campo]);
+            return acc + (isNaN(value) ? 0 : value); 
+        }, 0);
+    }
 
     const sumaTotalporCampoSeccion = (campo,seccion) => {
         return formData.reduce((acc, item) => {
@@ -164,6 +180,29 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         total += sumaTotalporCampoSeccion('padre_monto',seccion);
         total += sumaTotalporCampoSeccion('madre_monto',seccion);
         total += sumaTotalporCampoSeccion('monto',seccion);
+        return total;
+    }
+    
+    const  sumaTotalLista = () => {
+        let total = 0;
+        total += sumaTotalPorCampo('padre_monto');
+        total += sumaTotalPorCampo('madre_monto');
+        total += sumaTotalPorCampo('monto');
+        return total;
+    }
+    const  sumaTotalesSecciones = (secciones) => {
+
+        let total = 0;
+
+        if(!Array.isArray(secciones)){
+            return total;
+        }
+        secciones.map(seccion => {
+            total += sumaTotalporCampoSeccion('padre_monto',seccion);
+            total += sumaTotalporCampoSeccion('madre_monto',seccion);
+            total += sumaTotalporCampoSeccion('monto',seccion);
+        });
+        
         return total;
     }
 
@@ -947,13 +986,13 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
                         <div className="col-sm-6 p-1 text-start"><b>B) TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalesSeccion('valor'))}</div></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalesSecciones(['valor','body_otros']))}</div></div>
                     </div>
                 </div>
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
                         <div className="col-sm-6 p-1 text-start"><b>A +B TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber((sumaTotalesSeccion('valor')+sumaTotalesSeccion('body_otros')))}</div></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametro())}</div></div>
                     </div>
                 </div>
             </div>
@@ -1064,8 +1103,8 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
             <div>
             <div className="row">
                 <div className="col-sm-4 p-1">CONCEPTO</div>
-                <div className="col-sm-4 p-1">MENSUALIDAD</div>
-                <div className="col-sm-4 p-1">SALDO</div>
+                <div className="col-sm-4 p-1 text-center">MENSUALIDAD</div>
+                <div className="col-sm-4 p-1 text-center">SALDO</div>
             </div>
             
             {formData.map((item,index) => (
@@ -1138,6 +1177,13 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
                     </div>
                 </div>
                 ))}
+                
+                <div className="col-12">
+                    <div className="row text-start mt-2">
+                        <div className="col-sm-3 p-1 text-start"><b>TOTAL:</b></div>
+                        <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalLista())}</div></div>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -1215,6 +1261,12 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
         }
         axios.get(`${APIURL}/catalogos/encuestas/preguntas/${idPregunta}/parametros`,formData,config)
         .then(res => setParametros(res.data))
+        .catch(err => console.log("Error al solisitar parametros de pregunta",err));
+    }
+
+    const getParametroSumatoriaB = () => {        
+        axios.get(`${APIURL}/catalogos/encuestas/preguntas/${idPregunta}/parametros/sumantria/b`,formData,config)
+        .then(res => { res?.data && setPreguntaParametroSumatoria(res.data)})
         .catch(err => console.log("Error al solisitar parametros de pregunta",err));
     }
     
@@ -1424,6 +1476,30 @@ export default function Respuestas({idEstudio,idPregunta,longitudRespuesta,idPre
             getParametrosPromedioConducta();
         }
     },[])
+
+    useEffect(() => {
+        
+        let newTotal = 0;
+
+        switch(idPreguntaTipo){
+            case 12:
+                newTotal = sumaTotalesSecciones(['valor','body_otros']);
+            break;
+            default:
+                newTotal = sumaTotalLista();
+            break;
+        }
+        
+        setTotalPorParametro(prevState => ({
+            ...prevState,
+            total: newTotal
+        }));
+        
+    },[formData]);
+
+    useEffect(() => {
+        updateListaTotales(totalPorParametro);
+    },[totalPorParametro])
 
     const preguntaPorTipoPregunta = () => {
         switch(idPreguntaTipo){
