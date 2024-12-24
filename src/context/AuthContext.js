@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [userSession, setUserSession] = useState(localStorage.getItem('user'))
   const [userID, setUserID] = useState(localStorage.getItem('id'))
   const [ userActive, setUserActive ] = useState(null)
+  const [ ua, setUA ] = useState(false)
   const login = async (sendData) => {
     var token = ''
     var role = ''
@@ -35,6 +36,7 @@ export const AuthProvider = ({ children }) => {
        
        setUserActive(data.password_temporal === null ? true : false)
        localStorage.setItem('ua', data.password_temporal === null ? true : false)
+       setUA(data.password_temporal === null ? true : false)
        setIsLoggedIn(true);
        localStorage.setItem('role', role)
        localStorage.setItem('user', user)
@@ -74,7 +76,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession,userID, userActive, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession,userID, userActive, login, logout, ua }}>
       {children}
     </AuthContext.Provider>
   );

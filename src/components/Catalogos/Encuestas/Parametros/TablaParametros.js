@@ -152,7 +152,7 @@ function TablaParametros({ ID }) {
                                                     id="formato_decimales"
                                                     checked={editData.formato_decimales}
                                                     onChange={(e) => setEditData({ ...editData, formato_decimales: !editData.formato_decimales })}/>
-                                                <label className="form-check-label" for="formato_decimales"><b>Formato decimales:</b> {(editData.formato_decimales) ? 'Si':'No'}</label>
+                                                <label className="form-check-label" htmlFor="formato_decimales"><b>Formato decimales:</b> {(editData.formato_decimales) ? 'Si':'No'}</label>
                                             </div>
                                         </div>
                                     </div>

@@ -127,7 +127,7 @@ function ModalCliente({ show, handleClose }) {
 
                     {formData.id_tipo_cliente === "1" && (
                     <div className="mb-3">
-                    <label for="es_colegio_comun">Es colegio Comun</label><br/>
+                    <label htmlFor="es_colegio_comun">Es colegio Comun</label><br/>
                         <input type="checkbox" id="es_colegio_comun" name="es_colegio_comun" value="1" checked={esColegioComun} onChange={(e)=> selectEsColegioComun(e)}/>
                     </div>
                     )}

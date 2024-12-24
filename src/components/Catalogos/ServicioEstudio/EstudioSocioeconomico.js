@@ -245,7 +245,7 @@ function ServicioEstudio() {
   useEffect(() => {
     if (openModalCargarArchivo === false) {
       console.log(openModalCargarArchivo);
-      getEstudiosSocioeconomicos()
+      getEstudiosSocioeconomicos();
     }
   }, [openModalCargarArchivo]);
 
@@ -314,24 +314,26 @@ function ServicioEstudio() {
           <p>{estudio.situacion}</p>
         </td>
         <td>
-          <p>{estudio.email}</p>
+          <p className="mb-0" style={{ lineBreak: "anywhere" }}>
+            {estudio.email}
+          </p>
         </td>
         <td>
           {estudio?.colaborador && avatarColaborador(estudio.colaborador)}
         </td>
         <td>
-          <div className="d-flex flex-row-reverse bd-highlight">
+          <div className="d-flex justify-content-end bd-highlight">
             <button
               onClick={() => sendCorreo(estudio)}
-              className="btn btn-primary btn-sm mx-1 d-flex justify-content-center align-items-center"
+              className="btn btn-secondary btn-sm mx-1 d-flex justify-content-center align-items-center"
             >
               <ion-icon name="mail-outline"></ion-icon>
             </button>
             <Link
-              className="btn btn-primary btn-sm"
+              className="btn btn-info btn-sm text-white"
               to={`/estudio-socioeconomico/${estudio.id}`}
             >
-              Ver
+              <ion-icon name="file-tray-full-outline"></ion-icon>
             </Link>
           </div>
         </td>
@@ -518,7 +520,7 @@ function ServicioEstudio() {
 
   return (
     <>
-      <div className="container mt-3">
+      <div className="container">
         <div className="d-flex justify-content-between mb-3">
           <div className="">
             <h6 style={{ fontWeight: "bold" }}>Nuevo Estudio Socioeconómico</h6>
@@ -526,7 +528,7 @@ function ServicioEstudio() {
         </div>
         <hr />
         <div className="row">
-          <div className="col-md-2">
+          <div className="col-6 col-md-6 col-lg-2  mb-3">
             <label
               htmlFor="id_proyecto"
               className="form-label"
@@ -550,7 +552,7 @@ function ServicioEstudio() {
               {renderOptionProyectos()}
             </Form.Select>
           </div>
-          <div className="col-md-3">
+          <div className="col-6 col-md-6 col-lg-3 mb-3">
             <label
               htmlFor="id_cliente"
               className="form-label"
@@ -571,7 +573,7 @@ function ServicioEstudio() {
               {renderOptionProyectoClientes()}
             </Form.Select>
           </div>
-          <div className="col-md-3">
+          <div className="col-12 col-md-4 col-lg-3 mb-3 col-lg-3">
             <label
               htmlFor="id_orden_servicio"
               className="form-label"
@@ -591,27 +593,35 @@ function ServicioEstudio() {
           </div>
 
           {fromData.id_orden_servicio && (
-            <div className="col-md-4 d-flex align-self-end">
+            <div className="col-12 col-lg-4 d-flex justify-content-end align-items-center">
               <Button
-                className="btn btn-primary btn-sm fw-bold me-1"
+                className="btn btn-primary  fw-bold me-1 d-flex align-items-center"
                 onClick={(e) => {
                   handelNavegate();
                 }}
               >
-                Nueva Familia
+                <ion-icon
+                  name="person-add-outline"
+                  style={{ fontSize: "1rem" }}
+                ></ion-icon>
+                <span className="mx-1 btn-text-display">Nueva Familia</span>
               </Button>
               <Button
-                className="btn btn-primary btn-sm fw-bold"
+                className="btn btn-primary  fw-bold d-flex algin-items-center"
                 onClick={() => changeOpenModalArchivo()}
               >
-                Cargar Familias
+                <ion-icon
+                  name="share-outline"
+                  style={{ fontSize: "1.1rem" }}
+                ></ion-icon>
+                <span className="mx-1 btn-text-display">Cargar Familias</span>
               </Button>
             </div>
           )}
         </div>
         <hr />
         <div className="row">
-          <div className="col-4 row">
+          <div className="col-12 col-md-4 row">
             <label htmlFor="search" className="col-sm-2 col-form-label">
               Buscar:
             </label>
@@ -628,22 +638,33 @@ function ServicioEstudio() {
         </div>
 
         <br />
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col" className="col-id">
-                #
-              </th>
-              <th scope="col">Familia</th>
-              <th scope="col">Descripción</th>
-              <th scope="col">Email</th>
-              <th scope="col">Colaborador</th>
-              <th scope="col">Opciones</th>
-            </tr>
-          </thead>
-          <tbody>{renderFilasTablaEstudiosSocioeconomicos()}</tbody>
-        </table>
+        <div
+          style={{
+            overflowX: "auto",
+            overflowY: "auto",
+            height: "50vh",
+          }}
+        >
+          <table className="table" style={{ minWidth: "700px" }}>
+            <thead>
+              <tr>
+                <th scope="col" className="col-id">
+                  #
+                </th>
+                <th scope="col">Familia</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Email</th>
+                <th scope="col">Colaborador</th>
+                <th scope="col" className="text-end">
+                  Opciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>{renderFilasTablaEstudiosSocioeconomicos()}</tbody>
+          </table>
+        </div>
       </div>
+
       <Modal show={openModalCargarArchivo} onHide={changeOpenModalArchivo}>
         <Modal.Header closeButton>
           <Modal.Title>Alta de Familias por Archivo</Modal.Title>
@@ -666,7 +687,7 @@ function ServicioEstudio() {
           </div>
           {/* <div className="mb-3 form-check form-switch">
                     <input className="form-check-input" type="checkbox" role="switch" onChange={ (e) => { changeSwitchModalCargaMasiva(e) } } name="enableCrearUsuariosFamilia" id="enableCrearUsuarios"/>
-                    <label className="form-check-label" for="enableCrearUsuarios" >Crear usuarios para alta de Familias (EN DESARROLLO)</label>
+                    <label className="form-check-label" htmlFor="enableCrearUsuarios" >Crear usuarios para alta de Familias (EN DESARROLLO)</label>
                 </div> */}
           <div className="row">
             <div className="col-3">

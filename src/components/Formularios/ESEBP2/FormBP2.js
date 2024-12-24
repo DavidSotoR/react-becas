@@ -198,7 +198,7 @@ function FormBP2() {
                         </div>
                     </div>
                     <div id="container-1-form" className="mb-5">
-                        <label for="exampleFormControlTextarea1" className="form-label" style={{ fontWeight:"bold", fontSize:"1rem" }}>1. Situacion por la cual solicita el apoyo de beca:</label>
+                        <label htmlFor="exampleFormControlTextarea1" className="form-label" style={{ fontWeight:"bold", fontSize:"1rem" }}>1. Situacion por la cual solicita el apoyo de beca:</label>
                         <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                     </div>
                     <div id="container-2-form" className="mb-5">
@@ -379,7 +379,7 @@ function FormBP2() {
                         <h5>6. Casa Habitacion</h5>
                         <div className="row">
                             <div className="col mb-2">
-                                <label for="casa-comprobo" className="mb-2">Comprobo con:</label>
+                                <label htmlFor="casa-comprobo" className="mb-2">Comprobo con:</label>
                                 <select id="casa-comprobo" class="form-select" aria-label="Default select example">
                                     <option value="1" selected>Contrato de renta</option>
                                     <option value="2" >Pago de Renta</option>
@@ -412,7 +412,7 @@ function FormBP2() {
                             </div>
                             <div className="col mt-0">
                                 <div className="row">
-                                    <label for="staticEmail" class="col-4 col-form-label" style={{ width: "140px" }}>Valor Comercial</label>
+                                    <label htmlFor="staticEmail" class="col-4 col-form-label" style={{ width: "140px" }}>Valor Comercial</label>
                                     <div class="col-6">
                                         <input type="text" class="form-control" id="staticEmail" placeholder="$0.00"/>
                                     </div>

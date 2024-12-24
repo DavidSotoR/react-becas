@@ -1,15 +1,23 @@
 @font-face {
-  font-family: 'MiFuentePersonalizada';
-  src: url('/public/fonts/TT_Rounds_Neue_Trial_Regular.ttf') format('truetype');/* GarbataTrial-Regular */
+  font-family: "MiFuentePersonalizada";
+  src: url("/public/fonts/TT_Rounds_Neue_Trial_Regular.ttf") format("truetype"); /* GarbataTrial-Regular */
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'MiFuentePersonalizada_2';
-  src: url('/public/fonts/TT_Rounds_Neue_Trial_Regular.ttf') format('truetype');
+  font-family: "MiFuentePersonalizada_2";
+  src: url("/public/fonts/TT_Rounds_Neue_Trial_Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+.btn-text-display {
+  font-size: .8rem;
+}
+@media (max-width: 768px) {/*query para ocultar testo de btns para solo dejar icono*/
+  .btn-text-display {
+    display: none;
+  }
 }
 .red-dotted-border {
   display: grid;
@@ -21,27 +29,27 @@
   height: 15vh; /* Ajusta la altura según sea necesario */
 }
 
-.title-forms{
+.title-forms {
   font-size: x-large;
 }
 
-.table-col-switch{
+.table-col-switch {
   position: relative !important;
 }
 
-.error-msg{
+.error-msg {
   color: red;
-  font-size: .6rem;
+  font-size: 0.6rem;
 }
 
 body {
-  font-family: 'MiFuentePersonalizada', sans-serif;
-  font-size: .8rem;
+  font-family: "MiFuentePersonalizada", sans-serif;
+  font-size: 0.8rem;
 }
 
 .numeros {
-  font-family: 'MiFuentePersonalizada_2, sans-serif';
-  font-size: .9rem;
+  font-family: "MiFuentePersonalizada_2, sans-serif";
+  font-size: 0.9rem;
 }
 
 .main-container {
@@ -49,7 +57,7 @@ body {
   width: 100vw;
 }
 
-.icon-green{
+.icon-green {
   color: green;
 }
 
@@ -60,13 +68,13 @@ body {
   overflow-y: auto;
 }
 
-.background-login{
-  background:#47D1D6; 
+.background-login {
+  background: #47d1d6;
   padding-inline: 30vw;
 }
 
-.div-login{
-  background: white; 
+.div-login {
+  background: white;
   border-radius: 28px;
 }
 
@@ -77,12 +85,13 @@ body {
   /*margin-left: 16.6667%;  Ajustar el ancho del col-2 */
 }
 
-.css-dip3t8{ /* Esto quita un bloque blanco en el sidebar */
-  background-color: #47D1D6!important;
+.css-dip3t8 {
+  /* Esto quita un bloque blanco en el sidebar */
+  background-color: #47d1d6 !important;
 }
 
 .table-wrapper {
-  max-height: 60vh;/*400px;  Altura máxima de la tabla */
+  max-height: 60vh; /*400px;  Altura máxima de la tabla */
   overflow-y: auto; /* Scroll vertical */
   overflow-x: auto; /* Scroll horizontal si es necesario */
 }
@@ -95,10 +104,10 @@ body {
 .col-id {
   width: 5%;
 }
-.col-nombre{
+.col-nombre {
   word-wrap: break-word;
 }
-.col-cuenta{
+.col-cuenta {
   word-wrap: break-word;
 }
 .col-activo {
@@ -106,46 +115,46 @@ body {
 }
 
 .btn-flotante {
-	font-size: 0.8rem; /* Cambiar el tamaño de la tipografia */
-	text-transform: uppercase; /* Texto en mayusculas */
-	font-weight: bold; /* Fuente en negrita o bold */
-	color: #ffffff; /* Color del texto */
-	border-radius: 5px; /* Borde del boton */
-	letter-spacing: 2px; /* Espacio entre letras */
-	padding: 18px 30px; /* Relleno del boton */
-	position: fixed;
-	bottom: 40px;
-	right: 40px;
-	transition: all 300ms ease 0ms;
-	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-	z-index: 99;
+  font-size: 0.8rem; /* Cambiar el tamaño de la tipografia */
+  text-transform: uppercase; /* Texto en mayusculas */
+  font-weight: bold; /* Fuente en negrita o bold */
+  color: #ffffff; /* Color del texto */
+  border-radius: 5px; /* Borde del boton */
+  letter-spacing: 2px; /* Espacio entre letras */
+  padding: 18px 30px; /* Relleno del boton */
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  transition: all 300ms ease 0ms;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  z-index: 99;
 }
 .btn-flotante:hover {
-	background-color: #2c2fa5; /* Color de fondo al pasar el cursor */
-	box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
-	transform: translateY(-7px);
+  background-color: #2c2fa5; /* Color de fondo al pasar el cursor */
+  box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-7px);
 }
 
-.alert-flotante{
+.alert-flotante {
   font-size: 0.7rem; /* Cambiar el tamaño de la tipografia */
-	font-weight: bold; /* Fuente en negrita o bold */
-	border-radius: 5px; /* Borde del boton */
-	letter-spacing: 2px; /* Espacio entre letras */
-	padding: 18px 30px; /* Relleno del boton */
-	position: fixed;
-	bottom: 40px;
-	right: 40px;
-	transition: all 300ms ease 0ms;
-	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-	z-index: 99;
+  font-weight: bold; /* Fuente en negrita o bold */
+  border-radius: 5px; /* Borde del boton */
+  letter-spacing: 2px; /* Espacio entre letras */
+  padding: 18px 30px; /* Relleno del boton */
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  transition: all 300ms ease 0ms;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  z-index: 99;
 }
 
-.btn-icon-style{
+.btn-icon-style {
   font-weight: bold !important;
   font-size: 1.1rem !important;
 }
 
-.btn-icon-fix{
+.btn-icon-fix {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -153,7 +162,7 @@ body {
   padding-bottom: 8px;
 }
 
-.icon-sidebar{
+.icon-sidebar {
   font-weight: bold !important;
   font-size: 1.1rem !important;
 }
@@ -162,31 +171,31 @@ mark {
   background-color: yellow;
   color: black;
 }
-.seccion-table-parametros{
+.seccion-table-parametros {
   display: flex;
   justify-content: center;
 }
-.items-parametros{
+.items-parametros {
   max-width: 550px;
 }
-.items-parametros td{
+.items-parametros td {
   border-top: none;
 }
-.border-static{
+.border-static {
   border-color: transparent;
   border-width: 1px;
   border-style: solid;
 }
-.border-static:hover{
-  border-color: #879eb4; 
+.border-static:hover {
+  border-color: #879eb4;
 }
-.tag-color{
-  width: .8em;
-  height: .8em;
+.tag-color {
+  width: 0.8em;
+  height: 0.8em;
   border-radius: 50%;
   display: inline-block;
   margin-left: 3px;
-  margin-right: 3px;;
+  margin-right: 3px;
 }
 /* Estilos para animación de expansión */
 .subseccion {
