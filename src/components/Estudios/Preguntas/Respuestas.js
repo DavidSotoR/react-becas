@@ -1177,6 +1177,13 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                     </div>
                 </div>
                 ))}
+                
+                <div className="col-12">
+                    <div className="row text-start mt-2">
+                        <div className="col-sm-3 p-1 text-start"><b>TOTAL:</b></div>
+                        <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalLista())}</div></div>
+                    </div>
+                </div>
             </div>
         )
     }
