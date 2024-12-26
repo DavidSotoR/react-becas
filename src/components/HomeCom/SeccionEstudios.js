@@ -377,7 +377,7 @@ export default function SeccionEstudios(){
         return (<>
             <hr/>
             <div className="row">
-                <div className="col-md-3">
+                <div className="col-6 col-md-3">
                     <label 
                         htmlFor="id_proyecto" 
                         className="form-label"
@@ -400,7 +400,7 @@ export default function SeccionEstudios(){
                         }>
                     </Select>
                 </div>
-                <div className="col-md-3">
+                <div className="col-6 col-md-3">
                     <label 
                         htmlFor="id_cliente" 
                         className="form-label"
@@ -423,7 +423,7 @@ export default function SeccionEstudios(){
                         }>
                     </Select>
                 </div>
-                <div className="col-md-3">
+                <div className="col-6 col-md-3">
                     <label 
                         htmlFor="id_orden_servicio" 
                         className="form-label"
@@ -445,7 +445,7 @@ export default function SeccionEstudios(){
                         }>
                     </Select>
                 </div>
-                <div className="col-md-3">
+                <div className="col-6 col-md-3">
                     <label 
                         htmlFor="id_servicio_estado" 
                         className="form-label"
@@ -475,16 +475,16 @@ export default function SeccionEstudios(){
     const opcionesTabla = () => {
         return (<>
             <div className="row">
-                <div className="col-3 row">
-                    <label htmlFor="search" className="col-sm-3 col-form-label">Buscar:</label>
-                    <div className="col-9">
+                <div className="col-12 row">
+                    <label htmlFor="search" className="col-2 col-sm-2 col-md-1 col-form-label pe-lg-0">Buscar:</label>
+                    <div className="col-7 col-md-4 col-lg-3 ps-lg-0">
                         <input type="text" className="form-control form-control-sm" placeholder="Buscar..." value={search} onChange={searchText}/>
                     </div>
                 </div>
                 {selectedRows.length > 0 && (<>
-                    <div className="col-4 row">
-                        <label htmlFor="search" className="col-sm-3 col-form-label">Asignar Calidad:</label>
-                        <div className="col-9">
+                    <div className="col-12 row">
+                        <label htmlFor="search" className="col-2 col-sm-2 col-md-1 col-form-label pe-lg-0">Asignar Calidad:</label>
+                        <div className="col-5 col-md-2 col-lg-3 ps-lg-0">
                             <Select 
                                 name="id_calidad" 
                                 id="id_calidad" 
@@ -542,7 +542,7 @@ export default function SeccionEstudios(){
             {opcionesTabla()}
 
             <div style={{overflowX:'auto'}}>
-                <table className="table" style={{width:'auto',minWidth:'100%'}}>
+                <table className="table" style={{minWidth:'700px'}}>
                     <thead>
                         <tr>
                             <th scope="col" style={{width:'30px'}}></th>

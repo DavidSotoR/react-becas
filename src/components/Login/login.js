@@ -4,64 +4,101 @@ import { AuthContext } from "../../context/AuthContext";
 
 function Login() {
   //const [ typeRol, setTypeRol ] = useState("admin")
-  const [ inputEmail, setInputEmail ] = useState("")
-  const [ inputPass, setInputPass ] = useState("")
+  const [inputEmail, setInputEmail] = useState("");
+  const [inputPass, setInputPass] = useState("");
   const navigate = useNavigate();
   const { login, isLoggedIn } = useContext(AuthContext);
 
   const changeEmail = (e) => {
-    setInputEmail(e.target.value)
-  }
+    setInputEmail(e.target.value);
+  };
 
   const changePass = (e) => {
-    setInputPass(e.target.value)
-  }
+    setInputPass(e.target.value);
+  };
 
-  const enterPress = (e) =>{
-    if (e.code === 'Enter') {
-      sendLogin()
+  const enterPress = (e) => {
+    if (e.code === "Enter") {
+      sendLogin();
     }
-  }
+  };
 
   const sendLogin = async () => {
     var dataPost = {
-      "login": inputEmail,
-      "password": inputPass
-    }
+      login: inputEmail,
+      password: inputPass,
+    };
 
     const loged = await login(dataPost);
     if (loged) {
-      navigate('/')
+      navigate("/");
     }
+  };
 
-  }
-  
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
 
   return (
-      <div className="div-login mt-5 d-flex flex-column justify-content-center align-items-center">
-          <div className="d-grid">
-            <div className="d-flex justify-content-center">
-              <img src="/img/logo_principal_colores.png" style={{ width:'150px', height:'150px' }}></img>
+    <div className="d-flex justify-content-center">
+      <div className="card mt-5 card-login" >
+          {/* div-login mt-5 d-flex flex-column justify-content-center align-items-center */}
+          <div className="row">
+            <div className="col-12 d-flex justify-content-center">
+              <img
+                src="/img/logo_principal_colores.png"
+                style={{ width: "150px", height: "150px" }}
+              ></img>
             </div>
-            <div className="d-flex" >
-              <h3 className="text-start">Inicio de Sesion</h3>
+            <div className="col-12">
+              <h3 className="text-center fw-bold">Inicio de Sesion</h3>
             </div>
-            <div className="mb-3">
-              <label htmlFor="exampleFormControlInput1" className="form-label text-align-right">Usuario</label>
-              <input onKeyDown={(e)=>{ enterPress(e) }} onChange={ (e) => { changeEmail(e) } } type="email" className="form-control" id="exampleFormControlInput1" placeholder="Usuario"/>
+            <div className="col-12 px-4 mb-2">
+              <label
+                htmlFor="exampleFormControlInput1"
+                className="form-label text-align-right fw-bold"
+              >
+                Usuario:
+              </label>
+              <input
+                onKeyDown={(e) => {
+                  enterPress(e);
+                }}
+                onChange={(e) => {
+                  changeEmail(e);
+                }}
+                type="email"
+                className="form-control"
+                id="exampleFormControlInput1"
+                placeholder="Usuario"
+              />
             </div>
-            <div className="mb-3">
-              <label htmlFor="exampleFormControlInput2" className="form-label text-align-left">Contraseña</label>
-              <input onKeyDown={(e)=>{ enterPress(e) }} onChange={ (e) => { changePass(e) } } type="password" className="form-control" id="exampleFormControlInput2" placeholder="Contraseña"/>
+            <div className="col-12 px-4 mb-3">
+              <label
+                htmlFor="exampleFormControlInput2"
+                className="form-label text-align-left fw-bold"
+              >
+                Contraseña:
+              </label>
+              <input
+                onKeyDown={(e) => {
+                  enterPress(e);
+                }}
+                onChange={(e) => {
+                  changePass(e);
+                }}
+                type="password"
+                className="form-control"
+                id="exampleFormControlInput2"
+                placeholder="Contraseña"
+              />
             </div>
-            <div className="mb-3 d-flex justify-content-center">
-              <button onClick={ sendLogin } className="btn btn-primary">Iniciar Sesión</button>
+            <div className="col-12 mb-3 d-flex justify-content-center">
+              <button onClick={sendLogin} className="btn btn-primary">
+                Iniciar Sesión
+              </button>
             </div>
           </div>
       </div>
+    </div>
     
   );
 }

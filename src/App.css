@@ -16,10 +16,16 @@
 .btn-text-display {
   font-size: 0.8rem;
 }
+.card-login{
+  width: 80%;
+}
 @media (max-width: 768px) {
   /*query para ocultar testo de btns para solo dejar icono*/
   .btn-text-display {
     display: none;
+  }
+  .card-login{
+    width: 90vw;
   }
 }
 .red-dotted-border {

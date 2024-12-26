@@ -25,7 +25,6 @@ export default function Layout() {
   }, [collapsed]);
 
   useEffect(() => {
-    console.log('HOLA QUE HACE');
     
     if (ua) {
       console.log("entra ua");
