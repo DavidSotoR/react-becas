@@ -870,8 +870,8 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                             key={`monto-${index}`}
                             ref={(el) => (montoRefs.current[index] = el)}
                             onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
-                            value={item.monto ?? ''}
-                            onChange={(e) => {formInputChange(e,index)}}
+                            value={formatNumber(item.monto) ?? ''}
+                            onChange={(e) => {numberChange(e,index)}}
                         />
                     </div>
                 </div>
@@ -917,7 +917,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                 </div>
                             </div>
                         </div>
-                        )
+                    )
                 })}
                 
                 <div className="row col-12">
@@ -932,14 +932,17 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                         <input
                                             className="form-control form-control-sm text-end"
                                             name="monto" 
-                                            value={item.monto ?? ''}
-                                            onChange={(e) => {formInputChange(e,index)}}
+                                            key={`monto-${index}`}
+                                            ref={(el) => (montoRefs.current[index] = el)}
+                                            onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
+                                            value={formatNumber(item.monto) ?? ''}
+                                            onChange={(e) => {numberChange(e,index)}}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        )
+                    )
                 })}
                 </div>
 
@@ -972,6 +975,9 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                         <input
                                             className="form-control form-control-sm text-end"
                                             name="monto" 
+                                            key={`monto-${index}`}
+                                            ref={(el) => (montoRefs.current[index] = el)}
+                                            onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
                                             value={formatNumber(item.monto) ?? ''}
                                             onChange={(e) => {numberChange(e,index)}}
                                         />
@@ -979,7 +985,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                 </div>
                             </div>
                         </div>
-                        )
+                    )
                 })}
                 </div>
                 
@@ -1122,8 +1128,8 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                     key={`padre_monto-${index}`}
                                     ref={(el) => (padreRefs.current[index] = el)}
                                     onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
-                                    value={item.padre_monto ?? ''}
-                                    onChange={(e) => {formInputChange(e,index)}}
+                                    value={formatNumber(item.padre_monto) ?? ''}
+                                    onChange={(e) => {numberChange(e,index)}}
                                 />
                             </div>
                         </div>
@@ -1138,8 +1144,8 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                     key={`monto-${index}`}
                                     ref={(el) => (montoRefs.current[index] = el)}
                                     onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
-                                    value={item.monto ?? ''}
-                                    onChange={(e) => {formInputChange(e,index)}}
+                                    value={formatNumber(item.monto) ?? ''}
+                                    onChange={(e) => {numberChange(e,index)}}
                                 />
                             </div>
                         </div>
@@ -1169,8 +1175,8 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                     key={`padre_monto-${index}`}
                                     ref={(el) => (padreRefs.current[index] = el)}
                                     onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
-                                    value={item.padre_monto ?? ''}
-                                    onChange={(e) => {formInputChange(e,index)}}
+                                    value={formatNumber(item.padre_monto) ?? ''}
+                                    onChange={(e) => {numberChange(e,index)}}
                                 />
                             </div>
                         </div>
