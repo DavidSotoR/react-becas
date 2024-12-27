@@ -176,7 +176,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis'
                             }}>
-                                {item.respuesta ?? ''}
+                                {item.respuesta ?? '&nbsp;'}
                             </div>
                         </div>
                     </div>
@@ -284,7 +284,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                         </div>
                         <div className="col-sm-2 p-1 text-end">
                             <div className="border-bottom border-secondary">
-                                {item.monto ? formatNumber(item.monto) : <>&nbsp;</>}
+                                {item.monto ? <>${formatNumber(item.monto)}</> : <>&nbsp;</>}
                             </div>
                         </div>
                     </div>
@@ -295,9 +295,8 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                     <div className="col-sm-3 p-1 text-start">
                         <div className="border-bottom border-secondary">
                             <div className="row">
-                                <div className="col-1">$</div>
                                 <div className="col-10 text-end">
-                                    {formatNumber(sumaTotalporCampo('monto'))}
+                                    ${formatNumber(sumaTotalporCampo('monto'))}
                                 </div>
                             </div>
                         </div>
@@ -506,7 +505,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                             <div className="row">
                                 <div className="col-1">$</div>
                                 <div className="col-10 text-end border-bottom border-secondary">
-                                    {item.padre_monto ?? ''}
+                                    {formatNumber(item.padre_monto) ?? ''}
                                 </div>
                             </div>
                         </div>
@@ -514,7 +513,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                             <div className="row">
                                 <div className="col-1">$</div>
                                 <div className="col-10 text-end border-bottom border-secondary">
-                                    {item.monto ?? ''}
+                                    {formatNumber(item.monto) ?? ''}
                                 </div>
                             </div>
                         </div>
@@ -534,12 +533,18 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                             <div className="row">
                                 <div className="col-1">$</div>
                                 <div className="col-10 text-end border-bottom border-secondary">
-                                    {item.padre_monto ?? ''}
+                                    {formatNumber(item.padre_monto) ?? ''}
                                 </div>
                             </div>
                         </div>
                     </div>
                 ))}
+                <div className="col-12">
+                    <div className="row text-start mt-2">
+                        <div className="col-sm-3 p-1 text-start"><b>TOTAL:</b></div>
+                        <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary  text-end">${formatNumber(sumaTotales())}</div></div>
+                    </div>
+                </div>
             </div>
         );
     };
@@ -569,7 +574,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                         </div>
                         <div className="col-sm-5 p-1">
                             <div className="border-bottom border-secondary">
-                                {item.respuesta ?? ''}
+                                {item.respuesta ?? '\u00A0' }
                             </div>
                         </div>
                     </div>
