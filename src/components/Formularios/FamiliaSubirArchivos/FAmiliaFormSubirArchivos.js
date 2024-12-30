@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
+import { Button, Modal } from "react-bootstrap";
 
 function FamiliaSubirArchivos() {
   const { logout } = useContext(AuthContext);
@@ -28,6 +29,11 @@ function FamiliaSubirArchivos() {
   const [files4DeFamilia, setFiles4DeFamilia] = useState([]);
   const [files5DeFamilia, setFiles5DeFamilia] = useState([]);
   const [files6DeFamilia, setFiles6DeFamilia] = useState([]);
+
+  const [ showModalEliminarFile, setShowModalEliminarFile ] = useState(false);
+  const [ dataFamiliaFile, setDataFamiliaFile ] = useState(null);
+  const handleCloseModalEliminarFile = () => {  setShowModalEliminarFile(false) }
+  const handleShowModalEliminarFile = () => {  setShowModalEliminarFile(true) }
 
   const [file, setFile] = useState(null);
   const [fileD, setFileD] = useState(null);
@@ -290,7 +296,17 @@ function FamiliaSubirArchivos() {
         ))] */
   };
 
+  const deleteFileFamilia = () => {
+    axios.delete(APIURL+'/familias/documentos/file/'+dataFamiliaFile.id, config).then(resp => {
+      console.log(resp);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
   const openModalEliminarFile = (data) => {
+    handleShowModalEliminarFile()
+    setDataFamiliaFile(data)
     console.log(data);
   };
 
@@ -415,7 +431,7 @@ function FamiliaSubirArchivos() {
               </td>
               <td>
                 <button
-                  onClick={openModalEliminarFile(ch)}
+                  onClick={ () => openModalEliminarFile(ch)}
                   type="button"
                   className="btn btn-sm btn-icon-danger"
                   data-bs-toggle="button"
@@ -939,6 +955,23 @@ function FamiliaSubirArchivos() {
           </ul>
         </div>
       </div>
+      <Modal show={showModalEliminarFile} onHide={handleCloseModalEliminarFile}>
+        <Modal.Header closeButton>
+          <Modal.Title>Archivo Seleccionado: { dataFamiliaFile ? dataFamiliaFile.nombre : 'SIN DATO' }</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+                  <p className="fw-bold text-danger">**El siguiente archivo sera eliminado del almacenamiento.**</p>
+                  <p>¿Quiere continuar con la accion de ELIMINAR el archivo: <span className="fw-bold">{ dataFamiliaFile ? dataFamiliaFile.nombre : 'SIN DATO' }</span> ?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModalEliminarFile}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={() => deleteFileFamilia()}>
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

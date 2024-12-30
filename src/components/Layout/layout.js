@@ -19,6 +19,10 @@ export default function Layout() {
     localStorage.clear();
     window.location.replace("/");
   };
+
+  const returnRutaFamiliaFiles = () => {
+    return `${PathConstants.FAMILIASFILES}?idse=${localStorage.getItem("se")}` 
+  }
   useEffect(() => {
     if (collapsed) {
     }
@@ -27,10 +31,8 @@ export default function Layout() {
   useEffect(() => {
     
     if (ua) {
-      console.log("entra ua");
 
       var ls = localStorage.getItem("ua");
-      console.log("este es el valor " + ls);
       var act;
       if (ls === "true") {
         setActive(true);
@@ -165,9 +167,7 @@ export default function Layout() {
                   <MenuItem
                     component={
                       <Link
-                        to={`${
-                          PathConstants.FAMILIASFILES
-                        }?idse=${localStorage.getItem("se")}`}
+                        to={`${returnRutaFamiliaFiles()}`}
                       />
                     }
                   >

@@ -47,7 +47,7 @@ export default function  PageDatosFamilia () {
     const [datosPadre, setDatosPadre] = useState(DATOSFAMILIA.padre);
     const [datosMadre, setDatosMadre] = useState(DATOSFAMILIA.madre);
     const [pageSelected, setPageSelected] = useState('padre');
-    const [ idEstudioSocioEconomico, setIdEstudioSocioEconomico ] = useState(0);
+    const [ idEstudioSocioEconomico, setIdEstudioSocioEconomico ] = useState();
 
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
