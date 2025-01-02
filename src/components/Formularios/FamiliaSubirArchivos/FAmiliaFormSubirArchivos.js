@@ -310,6 +310,11 @@ function FamiliaSubirArchivos() {
         console.log(resp);
         setDataFamiliaFile(null);
         handleCloseModalEliminarFile();
+        renderImgDeFamilia(1)
+        renderImgDeFamilia(2)
+        renderImgDeFamilia(3)
+        renderImgDeFamilia(4)
+        renderImgDeFamilia(5)
       })
       .catch((err) => {
         console.log(err);
@@ -329,17 +334,18 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + "img-ingresos"}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
-              <div className="d-flex justify-content-center">
+              <div className="d-flex justify-content-end p-2">
                 <button
                   onClick={() => openModalEliminarFile(ch)}
                   type="button"
-                  className="btn btn-sm btn-icon-danger"
+                  className="btn btn-sm btn-danger"
                   data-bs-toggle="button"
-                >
-                  <i style={{ color: "red" }} className="bi bi-trash-fill"></i>
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
                 </button>
               </div>
               <img
@@ -350,14 +356,26 @@ function FamiliaSubirArchivos() {
             </div>
           ));
         break;
+      
       case 2:
         return files2DeFamilia
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'img-desempleo'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -372,9 +390,20 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'img-casahab'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -389,9 +418,20 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'img-auto'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -406,9 +446,20 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'img-compdomc'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -423,9 +474,20 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'imgotro'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -448,7 +510,7 @@ function FamiliaSubirArchivos() {
           ) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch) => (
             <tr>
-              <td style={{ width: "70%" }} className="p-1 pt-3 pb-0">
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
                 {FileLink(ch.nombre, ch.directorio)}
               </td>
               <td>
@@ -469,7 +531,7 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch) => (
             <tr>
-              <td style={{ width: "70%" }} className="p-1 pt-3 pb-0">
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
                 {FileLink(ch.nombre, ch.directorio)}
               </td>
               <td>
@@ -491,7 +553,7 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch) => (
             <tr>
-              <td style={{ width: "70%" }} className="p-1 pt-3 pb-0">
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
                 {FileLink(ch.nombre, ch.directorio)}
               </td>
               <td>
@@ -513,7 +575,7 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch) => (
             <tr>
-              <td style={{ width: "70%" }} className="p-1 pt-3 pb-0">
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
                 {FileLink(ch.nombre, ch.directorio)}
               </td>
               <td>
@@ -535,7 +597,7 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch) => (
             <tr>
-              <td style={{ width: "70%" }} className="p-1 pt-3 pb-0">
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
                 {FileLink(ch.nombre, ch.directorio)}
               </td>
               <td>
@@ -557,7 +619,7 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch) => (
             <tr>
-              <td style={{ width: "70%" }} className="p-1 pt-3 pb-0">
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
                 {FileLink(ch.nombre, ch.directorio)}
               </td>
               <td>
@@ -665,9 +727,8 @@ function FamiliaSubirArchivos() {
                       <tbody>{renderFilesDeFamilia(1)}</tbody>
                     </table>
                   </div>
-                  <div
+                  <div className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
                     id="carouselExample"
-                    className="carousel slide col-12 col-md-12 col-lg-8"
                     style={{ minWidth: "50vw" }}
                   >
                     <div className="carousel-inner">
@@ -762,14 +823,16 @@ function FamiliaSubirArchivos() {
                     display: files2DeFamilia.length === 0 ? "none" : "flex",
                   }}
                 >
-                  <div className="col-3">
+                  <div className="col-12 col-md-12 col-lg-4">
                     <p className="fw-bold"> Archivos: </p>
-                    <ul>{renderFilesDeFamilia(2)}</ul>
+                    <table className="table">
+                      <tbody>{renderFilesDeFamilia(2)}</tbody>
+                    </table>
                   </div>
                   <div
                     id="carouselDesempleo"
-                    className="carousel slide col"
-                    style={{ width: "50vw" }}
+                    className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
+                    
                   >
                     <div className="carousel-inner">
                       {renderImgDeFamilia(2)}
@@ -863,14 +926,16 @@ function FamiliaSubirArchivos() {
                     display: files3DeFamilia.length === 0 ? "none" : "flex",
                   }}
                 >
-                  <div className="col-2 col-md-3">
+                  <div className="col-12 col-md-12 col-lg-4">
                     <p className="fw-bold"> Archivos: </p>
-                    <ul>{renderFilesDeFamilia(3)}</ul>
+                    <table className="table">
+                      <tbody>{renderFilesDeFamilia(3)}</tbody>
+                    </table>
                   </div>
                   <div
                     id="carouselCasa"
-                    className="carousel slide col-10 col-md-9"
-                    style={{ width: "50vw" }}
+                    className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
+                    
                   >
                     <div className="carousel-inner">
                       {renderImgDeFamilia(3)}
@@ -961,14 +1026,17 @@ function FamiliaSubirArchivos() {
                     display: files4DeFamilia.length === 0 ? "none" : "flex",
                   }}
                 >
-                  <div className="col-3">
+                  <div className="col-12 col-md-12 col-lg-4">
                     <p className="fw-bold"> Archivos: </p>
-                    <ul>{renderFilesDeFamilia(4)}</ul>
+                    <table className="table">
+                      <tbody>
+                      {renderFilesDeFamilia(4)}
+                      </tbody>
+                    </table>
                   </div>
                   <div
                     id="carouselAutos"
-                    className="carousel slide col"
-                    style={{ width: "50vw" }}
+                    className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
                   >
                     <div className="carousel-inner">
                       {renderImgDeFamilia(4)}
@@ -1061,14 +1129,15 @@ function FamiliaSubirArchivos() {
                     display: files5DeFamilia.length === 0 ? "none" : "flex",
                   }}
                 >
-                  <div className="col-3">
+                  <div className="col-12 col-md-12 col-lg-4">
                     <p className="fw-bold"> Archivos: </p>
-                    <ul>{renderFilesDeFamilia(5)}</ul>
-                  </div>
-                  <div
+                    <table className="table">
+                      <tbody>{renderFilesDeFamilia(5)}</tbody>
+                    </table>
+                  </div> 
+                  <div className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
                     id="carouselComprobantesDomicilio"
-                    className="carousel slide col"
-                    style={{ width: "50vw" }}
+                    
                   >
                     <div className="carousel-inner">
                       {renderImgDeFamilia(5)}

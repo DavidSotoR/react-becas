@@ -19,6 +19,11 @@
 .card-login{
   width: 80%;
 }
+
+.sizeimg-evidencias{
+  width: 50vw;
+}
+
 @media (max-width: 768px) {
   /*query para ocultar testo de btns para solo dejar icono*/
   .btn-text-display {
@@ -26,6 +31,10 @@
   }
   .card-login{
     width: 90vw;
+  }
+
+  .sizeimg-evidencias{
+    width: 100%;
   }
 }
 .red-dotted-border {

@@ -32,8 +32,13 @@ export const AuthProvider = ({ children }) => {
        user = resp.data.data.email
        id = resp.data.data.id
        var data = resp.data.data
+       var famSE = resp.data.se
        console.log(data);
-       
+       if (data.id_perfil == 6) {
+        if (famSE) {
+          localStorage.setItem("se", famSE.id);
+        }
+       }
        setUserActive(data.password_temporal === null ? true : false)
        localStorage.setItem('ua', data.password_temporal === null ? true : false)
        setUA(data.password_temporal === null ? true : false)
