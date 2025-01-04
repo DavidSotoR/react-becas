@@ -2,13 +2,14 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
+import { Button, Modal } from "react-bootstrap";
 
 function FamiliaSubirArchivos() {
   const { logout } = useContext(AuthContext);
   const [searchParams] = useSearchParams();
 
   const APIURL = process.env.REACT_APP_API_URL;
-  const urlIMG = "http://127.0.0.1:8000/storage/";
+  const urlIMG = "http://127.0.0.1:80/storage/";
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -28,6 +29,15 @@ function FamiliaSubirArchivos() {
   const [files4DeFamilia, setFiles4DeFamilia] = useState([]);
   const [files5DeFamilia, setFiles5DeFamilia] = useState([]);
   const [files6DeFamilia, setFiles6DeFamilia] = useState([]);
+
+  const [showModalEliminarFile, setShowModalEliminarFile] = useState(false);
+  const [dataFamiliaFile, setDataFamiliaFile] = useState(null);
+  const handleCloseModalEliminarFile = () => {
+    setShowModalEliminarFile(false);
+  };
+  const handleShowModalEliminarFile = () => {
+    setShowModalEliminarFile(true);
+  };
 
   const [file, setFile] = useState(null);
   const [fileD, setFileD] = useState(null);
@@ -290,7 +300,30 @@ function FamiliaSubirArchivos() {
         ))] */
   };
 
+  const deleteFileFamilia = () => {
+    axios
+      .delete(
+        APIURL + "/familias/documentos/file/" + dataFamiliaFile.id,
+        config
+      )
+      .then((resp) => {
+        console.log(resp);
+        setDataFamiliaFile(null);
+        handleCloseModalEliminarFile();
+        renderImgDeFamilia(1)
+        renderImgDeFamilia(2)
+        renderImgDeFamilia(3)
+        renderImgDeFamilia(4)
+        renderImgDeFamilia(5)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const openModalEliminarFile = (data) => {
+    handleShowModalEliminarFile();
+    setDataFamiliaFile(data);
     console.log(data);
   };
 
@@ -301,9 +334,20 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + "img-ingresos"}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -312,14 +356,26 @@ function FamiliaSubirArchivos() {
             </div>
           ));
         break;
+      
       case 2:
         return files2DeFamilia
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'img-desempleo'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -334,9 +390,20 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'img-casahab'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -351,9 +418,20 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'img-auto'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -368,9 +446,20 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'img-compdomc'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -385,9 +474,20 @@ function FamiliaSubirArchivos() {
           .filter((ch) => /\.(jpg|jpeg|png)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch, index) => (
             <div
-              key={index}
+              key={index + 'imgotro'}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
+              <div className="d-flex justify-content-end p-2">
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  data-bs-toggle="button"
+                > 
+                  <span className="fw-bold mx-1">ELIMINAR</span>
+                  <i style={{ color: "white" }} className="bi bi-trash-fill"></i>
+                </button>
+              </div>
               <img
                 src={urlIMG + ch.directorio}
                 className="d-block w-100 h-50 rounded"
@@ -410,12 +510,12 @@ function FamiliaSubirArchivos() {
           ) // Filtrar solo archivos con extensión jpg, jpeg, png
           .map((ch) => (
             <tr>
-              <td style={{ width: "70%" }} className="p-1 pt-3 pb-0">
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
                 {FileLink(ch.nombre, ch.directorio)}
               </td>
               <td>
                 <button
-                  onClick={openModalEliminarFile(ch)}
+                  onClick={() => openModalEliminarFile(ch)}
                   type="button"
                   className="btn btn-sm btn-icon-danger"
                   data-bs-toggle="button"
@@ -429,31 +529,111 @@ function FamiliaSubirArchivos() {
       case 2:
         return files2DeFamilia
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
-          .map((ch) => <li> {FileLink(ch.nombre, ch.directorio)} </li>);
+          .map((ch) => (
+            <tr>
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
+                {FileLink(ch.nombre, ch.directorio)}
+              </td>
+              <td>
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-icon-danger"
+                  data-bs-toggle="button"
+                >
+                  <i style={{ color: "red" }} className="bi bi-trash-fill"></i>
+                </button>
+              </td>
+            </tr>
+          ));
         break;
 
       case 3:
         return files3DeFamilia
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
-          .map((ch) => <li> {FileLink(ch.nombre, ch.directorio)} </li>);
+          .map((ch) => (
+            <tr>
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
+                {FileLink(ch.nombre, ch.directorio)}
+              </td>
+              <td>
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-icon-danger"
+                  data-bs-toggle="button"
+                >
+                  <i style={{ color: "red" }} className="bi bi-trash-fill"></i>
+                </button>
+              </td>
+            </tr>
+          ));
         break;
 
       case 4:
         return files4DeFamilia
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
-          .map((ch) => <li> {FileLink(ch.nombre, ch.directorio)} </li>);
+          .map((ch) => (
+            <tr>
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
+                {FileLink(ch.nombre, ch.directorio)}
+              </td>
+              <td>
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-icon-danger"
+                  data-bs-toggle="button"
+                >
+                  <i style={{ color: "red" }} className="bi bi-trash-fill"></i>
+                </button>
+              </td>
+            </tr>
+          ));
         break;
 
       case 5:
         return files5DeFamilia
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
-          .map((ch) => <li> {FileLink(ch.nombre, ch.directorio)} </li>);
+          .map((ch) => (
+            <tr>
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
+                {FileLink(ch.nombre, ch.directorio)}
+              </td>
+              <td>
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-icon-danger"
+                  data-bs-toggle="button"
+                >
+                  <i style={{ color: "red" }} className="bi bi-trash-fill"></i>
+                </button>
+              </td>
+            </tr>
+          ));
         break;
 
       case 6:
         return files6DeFamilia
           .filter((ch) => /\.(docx|cbr|pdf|xcel|txt)$/i.test(ch.directorio)) // Filtrar solo archivos con extensión jpg, jpeg, png
-          .map((ch) => <li> {FileLink(ch.nombre, ch.directorio)} </li>);
+          .map((ch) => (
+            <tr>
+              <td style={{ width: "70%", wordBreak:"break-all" }} className="p-1 pt-3 pb-0">
+                {FileLink(ch.nombre, ch.directorio)}
+              </td>
+              <td>
+                <button
+                  onClick={() => openModalEliminarFile(ch)}
+                  type="button"
+                  className="btn btn-sm btn-icon-danger"
+                  data-bs-toggle="button"
+                >
+                  <i style={{ color: "red" }} className="bi bi-trash-fill"></i>
+                </button>
+              </td>
+            </tr>
+          ));
         break;
       default:
         break;
@@ -538,19 +718,18 @@ function FamiliaSubirArchivos() {
                 <div
                   className="row"
                   style={{
-                    display: files1DeFamilia.length === 0 ? "none" : "flex",
+                    display: files1DeFamilia.length === 0 ? "none" : "",
                   }}
                 >
-                  <div className="col-12 col-md-4">
+                  <div className="col-12 col-md-12 col-lg-4">
                     <p className="fw-bold"> Archivos: </p>
                     <table className="table">
                       <tbody>{renderFilesDeFamilia(1)}</tbody>
                     </table>
                   </div>
-                  <div
+                  <div className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
                     id="carouselExample"
-                    className="carousel slide col-12 col-md-8"
-                    style={{ width: "50vw" }}
+                    style={{ minWidth: "50vw" }}
                   >
                     <div className="carousel-inner">
                       {renderImgDeFamilia(1)}
@@ -563,9 +742,15 @@ function FamiliaSubirArchivos() {
                     >
                       <span
                         className="carousel-control-prev-icon"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Previous</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Previous
+                      </span>
                     </button>
                     <button
                       className="carousel-control-next"
@@ -575,9 +760,15 @@ function FamiliaSubirArchivos() {
                     >
                       <span
                         className="carousel-control-next-icon"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Next</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Next
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -632,14 +823,16 @@ function FamiliaSubirArchivos() {
                     display: files2DeFamilia.length === 0 ? "none" : "flex",
                   }}
                 >
-                  <div className="col-3">
+                  <div className="col-12 col-md-12 col-lg-4">
                     <p className="fw-bold"> Archivos: </p>
-                    <ul>{renderFilesDeFamilia(2)}</ul>
+                    <table className="table">
+                      <tbody>{renderFilesDeFamilia(2)}</tbody>
+                    </table>
                   </div>
                   <div
                     id="carouselDesempleo"
-                    className="carousel slide col"
-                    style={{ width: "50vw" }}
+                    className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
+                    
                   >
                     <div className="carousel-inner">
                       {renderImgDeFamilia(2)}
@@ -652,9 +845,15 @@ function FamiliaSubirArchivos() {
                     >
                       <span
                         className="carousel-control-prev-icon"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Previous</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Previous
+                      </span>
                     </button>
                     <button
                       className="carousel-control-next"
@@ -664,9 +863,15 @@ function FamiliaSubirArchivos() {
                     >
                       <span
                         className="carousel-control-next-icon"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Next</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Next
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -721,14 +926,16 @@ function FamiliaSubirArchivos() {
                     display: files3DeFamilia.length === 0 ? "none" : "flex",
                   }}
                 >
-                  <div className="col-2 col-md-3">
+                  <div className="col-12 col-md-12 col-lg-4">
                     <p className="fw-bold"> Archivos: </p>
-                    <ul>{renderFilesDeFamilia(3)}</ul>
+                    <table className="table">
+                      <tbody>{renderFilesDeFamilia(3)}</tbody>
+                    </table>
                   </div>
                   <div
                     id="carouselCasa"
-                    className="carousel slide col-10 col-md-9"
-                    style={{ width: "50vw" }}
+                    className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
+                    
                   >
                     <div className="carousel-inner">
                       {renderImgDeFamilia(3)}
@@ -741,9 +948,15 @@ function FamiliaSubirArchivos() {
                     >
                       <span
                         className="carousel-control-prev-icon"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Previous</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Previous
+                      </span>
                     </button>
                     <button
                       className="carousel-control-next"
@@ -753,9 +966,15 @@ function FamiliaSubirArchivos() {
                     >
                       <span
                         className="carousel-control-next-icon"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Next</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Next
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -807,14 +1026,17 @@ function FamiliaSubirArchivos() {
                     display: files4DeFamilia.length === 0 ? "none" : "flex",
                   }}
                 >
-                  <div className="col-3">
+                  <div className="col-12 col-md-12 col-lg-4">
                     <p className="fw-bold"> Archivos: </p>
-                    <ul>{renderFilesDeFamilia(4)}</ul>
+                    <table className="table">
+                      <tbody>
+                      {renderFilesDeFamilia(4)}
+                      </tbody>
+                    </table>
                   </div>
                   <div
                     id="carouselAutos"
-                    className="carousel slide col"
-                    style={{ width: "50vw" }}
+                    className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
                   >
                     <div className="carousel-inner">
                       {renderImgDeFamilia(4)}
@@ -827,9 +1049,15 @@ function FamiliaSubirArchivos() {
                     >
                       <span
                         className="carousel-control-prev-icon"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Previous</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Previous
+                      </span>
                     </button>
                     <button
                       className="carousel-control-next"
@@ -841,7 +1069,12 @@ function FamiliaSubirArchivos() {
                         className="carousel-control-next-icon"
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Next</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Next
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -896,14 +1129,15 @@ function FamiliaSubirArchivos() {
                     display: files5DeFamilia.length === 0 ? "none" : "flex",
                   }}
                 >
-                  <div className="col-3">
+                  <div className="col-12 col-md-12 col-lg-4">
                     <p className="fw-bold"> Archivos: </p>
-                    <ul>{renderFilesDeFamilia(5)}</ul>
-                  </div>
-                  <div
+                    <table className="table">
+                      <tbody>{renderFilesDeFamilia(5)}</tbody>
+                    </table>
+                  </div> 
+                  <div className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
                     id="carouselComprobantesDomicilio"
-                    className="carousel slide col"
-                    style={{ width: "50vw" }}
+                    
                   >
                     <div className="carousel-inner">
                       {renderImgDeFamilia(5)}
@@ -916,9 +1150,15 @@ function FamiliaSubirArchivos() {
                     >
                       <span
                         className="carousel-control-prev-icon"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Previous</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Previous
+                      </span>
                     </button>
                     <button
                       className="carousel-control-next"
@@ -930,7 +1170,12 @@ function FamiliaSubirArchivos() {
                         className="carousel-control-next-icon"
                         aria-hidden="true"
                       ></span>
-                      <span className="visually-hidden">Next</span>
+                      <span
+                        className="visually-hidden"
+                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                      >
+                        Next
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -939,6 +1184,34 @@ function FamiliaSubirArchivos() {
           </ul>
         </div>
       </div>
+      <Modal show={showModalEliminarFile} onHide={handleCloseModalEliminarFile}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Archivo Seleccionado:{" "}
+            {dataFamiliaFile ? dataFamiliaFile.nombre : "SIN DATO"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="fw-bold text-danger">
+            **El siguiente archivo sera eliminado del almacenamiento.**
+          </p>
+          <p>
+            ¿Quiere continuar con la accion de ELIMINAR el archivo:{" "}
+            <span className="fw-bold">
+              {dataFamiliaFile ? dataFamiliaFile.nombre : "SIN DATO"}
+            </span>{" "}
+            ?
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModalEliminarFile}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={() => deleteFileFamilia()}>
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
