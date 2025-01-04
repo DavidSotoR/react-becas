@@ -3,7 +3,7 @@ import { Button,Form, Modal } from "react-bootstrap";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
 
-export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,idPreguntaTipo,colClass, Respuestas}) {
+export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,idPreguntaTipo,colClass,Respuestas,idParametro,updateListaTotales,totalPorParametros}) {
 
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -14,6 +14,11 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
     
     const [formData, setFormData] = useState(Respuestas);
  
+    const [totalPorParametro,setTotalPorParametro] = useState({pregunta:idPregunta,parametro:idParametro,total:0});
+
+    const mostrarTotalParametro = () => {
+        return totalPorParametros[idParametro] ? totalPorParametros[idParametro] : 0 ;
+    }
     const convertirAMayusculas = (texto) => {
         return texto.toUpperCase();
     }
@@ -56,6 +61,36 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
         total += sumaTotalporCampoSeccion('padre_monto',seccion);
         total += sumaTotalporCampoSeccion('madre_monto',seccion);
         total += sumaTotalporCampoSeccion('monto',seccion);
+        return total;
+    }
+    
+    const sumaTotalPorCampo = (campo) => {
+        return formData.reduce((acc, item) => {
+            let value = 0;
+            value = parseFloat(item[campo]);
+            return acc + (isNaN(value) ? 0 : value); 
+        }, 0);
+    }
+
+
+    const  sumaTotalLista = () => {
+        let total = 0;
+        total += sumaTotalPorCampo('padre_monto');
+        total += sumaTotalPorCampo('madre_monto');
+        total += sumaTotalPorCampo('monto');
+        return total;
+    }
+    const sumaTotalesSecciones = (secciones) => {
+
+        let total = 0;
+
+        if(!Array.isArray(secciones)){
+            return total;
+        }
+        secciones.map(seccion => {
+            total += sumaTotalesSeccion(seccion);
+        });
+        
         return total;
     }
     //ref
@@ -423,13 +458,13 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
                         <div className="col-sm-6 p-1 text-start"><b>B) TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalesSeccion('valor'))}</div></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalesSeccion('valor') + sumaTotalesSeccion('body_otros'))}</div></div>
                     </div>
                 </div>
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
                         <div className="col-sm-6 p-1 text-start"><b>A + B TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber((sumaTotalesSeccion('valor') + sumaTotalesSeccion('body_otros')))}</div></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametro())}</div></div>
                     </div>
                 </div>
             </div>
@@ -789,6 +824,38 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
             break;
         }
     }
+    
+    /*useEffect(() => {
+        updateListaTotales(totalPorParametro);
+    },[totalPorParametro])*/
+    
+    useEffect(() => {
+        
+        let newTotal = 0;
+
+        switch(idPreguntaTipo){
+            case 12:
+                newTotal = sumaTotalesSecciones(['valor','body_otros']);
+                console.log("case 12: ",newTotal);
+            break;
+            default:
+                newTotal = sumaTotalLista();
+            break;
+        }
+        
+        setTotalPorParametro(prevState => ({
+            ...prevState,
+            total: newTotal
+        }));
+
+        console.log("this value: ",totalPorParametro);
+        
+    },[formData]);
+
+    useEffect(() => {
+        updateListaTotales(totalPorParametro);
+    },[totalPorParametro])
+
     return (
         <div className="row justify-content-md-center">
           

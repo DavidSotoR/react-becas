@@ -17,7 +17,41 @@ export default function Estudio(){
     const { logout } = useContext(AuthContext);
     const { idEstudio } = useParams();
 
-    const [encuesta,setEncuesta] = useState(null)
+    const [encuesta,setEncuesta] = useState(null);
+    
+    const [listaTotales,setListaTotales] = useState([]);
+    
+    const updateListaTotales = (totalPorParametro) => {
+        setListaTotales(prevState => {
+            const existingIndex = prevState.findIndex(item => item.pregunta === totalPorParametro.pregunta);
+            console.log(existingIndex);
+
+            if (existingIndex !== -1) {
+                // Si existe, actualiza el objeto con la misma `pregunta`
+                const nuevaListaTotales = [...prevState];
+                nuevaListaTotales[existingIndex] = totalPorParametro;
+                return nuevaListaTotales;
+            } else {
+                // Si no existe, agrega un nuevo objeto
+                return [...prevState, totalPorParametro];
+            }
+        });
+    }
+
+    const totalPorParametros = listaTotales.reduce((acc, item) => {
+        // Si el parámetro es null, usar un valor especial como 'null' o '0' para agruparlos
+        const key = item.parametro === null ? 'null' : item.parametro;
+      
+        // Si ya existe el parámetro, sumar el total
+        if (acc[key]) {
+          acc[key] += item.total;
+        } else {
+          // Si no existe, inicializar el parámetro con el total
+          acc[key] = item.total;
+        }
+      
+        return acc;
+      }, {});
 
     const getEsrudioSocioeconomico = () => {
         axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/encuesta`,config).then((resp)=>{
@@ -267,7 +301,14 @@ export default function Estudio(){
                             <div className="pt-5">
                                 <p style={{fontSize:'1rem'}} className="text-uppercase fw-bolder">{pregunta.numero_pregunta}.- {pregunta.pregunta}</p>
                             </div>
-                            <RespuestasVista idPreguntaTipo={pregunta.id_catalogo_encuestas_preguntas_tipo} Respuestas={pregunta.respuestas} ></RespuestasVista>
+                            <RespuestasVista 
+                                idPregunta={pregunta.id}
+                                idPreguntaTipo={pregunta.id_catalogo_encuestas_preguntas_tipo} 
+                                Respuestas={pregunta.respuestas} 
+                                updateListaTotales={updateListaTotales}
+                                totalPorParametros={totalPorParametros}
+                                idParametro={pregunta.id_catalogo_encuestas_preguntas_parametro_clasificacion}
+                            />
                         </div>
                     )
                     )}

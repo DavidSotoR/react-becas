@@ -997,7 +997,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                 </div>
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start"><b>A +B TOTAL:</b></div>
+                        <div className="col-sm-6 p-1 text-start"><b>A + B TOTAL:</b></div>
                         <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametro())}</div></div>
                     </div>
                 </div>
