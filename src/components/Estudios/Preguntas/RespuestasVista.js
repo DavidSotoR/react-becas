@@ -353,7 +353,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                             </div>
                             <div className="col-4 p-1">
                                 <div className="form-check form-switch">
-                                    <span>{item.activo ? "Sí" : "No"}</span>
+                                    <span>{item.monto ? formatNumber(item.monto) : "No"}</span>
                                 </div>
                             </div>
                         </div>

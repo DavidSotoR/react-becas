@@ -1046,7 +1046,8 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                 {item.texto}
                             </div>
                             <div className="col-4 p-1"> 
-                            <div className="form-check form-switch">
+                                    {/*
+                                <div className="form-check form-switch">
                                     <input 
                                         className="form-check-input"  
                                         type="checkbox" 
@@ -1054,9 +1055,19 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                         name="activo"
                                         checked={item.activo}
                                         onChange={(e) => {formInputChange(e,index)}}
-                                        id="activo"/> 
+                                        id="activo"/>
+                                </div>*/}
+                                        
+                                        <input
+                                            className="form-control form-control-sm text-end"
+                                            name="monto" 
+                                            key={`monto-${index}`}
+                                            ref={(el) => (montoRefs.current[index] = el)}
+                                            onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
+                                            value={formatNumber(item.monto) ?? 0 }
+                                            onChange={(e) => {numberChange(e,index)}}
+                                        />
                                     {/*<label className="form-check-label">{(item.activo) ? 'Si' : 'No'}</label>*/}
-                                </div>
                             </div>
                         </div>
                         )
