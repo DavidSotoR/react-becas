@@ -922,6 +922,29 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                 
                 <div className="row col-12">
                 {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'renta' && (
+                        <div key={'pes-'+idPregunta+'-'+index} className="row col-md-6 text-start">
+                            <div className="col-sm-6 p-1 text-start">{item.texto}</div>
+                            <div className="col-sm-6 p-1 text-start">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10">
+                                        <input
+                                            className="form-control form-control-sm text-end"
+                                            name="monto" 
+                                            key={`monto-${index}`}
+                                            ref={(el) => (montoRefs.current[index] = el)}
+                                            onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
+                                            value={formatNumber(item.monto) ?? ''}
+                                            onChange={(e) => {numberChange(e,index)}}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })}
+                {formData.map((item,index) => {
                     return item?.seccion && item.seccion === 'valor' && (
                         <div key={'pes-'+idPregunta+'-'+index} className="row col-md-6 text-start">
                             <div className="col-sm-6 p-1 text-start">{item.texto}</div>
@@ -1373,7 +1396,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
             case 12:
                 setFormData([
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'SITUACION DE LA VIVIENDA', seccion:'vivienda', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
-                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'MONTO DE LA RENTA O MENSUALIDAD', seccion:'valor', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
+                    { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'MONTO DE LA RENTA O MENSUALIDAD', seccion:'renta', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'VALOR APROXIMADO', seccion:'valor', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'METROS DE CONTRUCCION', seccion:'construccion', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
                     { id_encuesta:'', id_servicio_estudio:idEstudio, id_catalogo_encuestas_pregunta:idPregunta, id_item:'', parentesco:'', nombre:'', texto:'METRO DE TERRENO', seccion:'construccion', respuesta:'', vive:false, activo:false, padre_monto:'', madre_monto:'', monto:'', valor:'', tipo:'', marca_modelo:'', anio:'', propietario:'',},
