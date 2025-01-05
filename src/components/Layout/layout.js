@@ -10,6 +10,7 @@ import {
   SubMenu,
   menuClasses,
 } from "react-pro-sidebar";
+import Avatar from "react-avatar";
 
 export default function Layout() {
   const { isLoggedIn, userSession, roleSession, userActive, logout, ua } = useContext(AuthContext);
@@ -320,6 +321,18 @@ export default function Layout() {
             className="col pt-4 scrollable-content"
             style={{ height: "100vh" }}
           >
+            { isLoggedIn && (
+              <div className="d-flex justify-content-end">
+                <div>
+                  <Avatar name={localStorage.getItem('name')} size="30" round={true} />
+                </div>
+                <div className="ps-1 align-self-center">
+                  <span className="fw-bold">{localStorage.getItem('name') ?? 'SIN DATO'}</span>
+                </div>
+              </div>
+            )
+            }
+            
             <Suspense fallback={<div>Loading...</div>}>
               <Outlet />
             </Suspense>
