@@ -1296,7 +1296,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
     
     const getParametros = () => {
         let formData = config;
-        if(idPreguntaTipo == 13){
+        if(idPreguntaTipo == 13 || idPreguntaTipo == 5){
             formData.params = {id_catalogo_pregunta:idPregunta};
         }
         axios.get(`${APIURL}/catalogos/encuestas/preguntas/${idPregunta}/parametros`,formData,config)
