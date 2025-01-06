@@ -81,7 +81,7 @@ function Usuarios() {
     var data = dataPostUsuario;
     try {
       const resp = await axios.post(
-        "http://localhost:8000/api/auth/register",
+        APIURL+"/register",
         data,
         config
       );

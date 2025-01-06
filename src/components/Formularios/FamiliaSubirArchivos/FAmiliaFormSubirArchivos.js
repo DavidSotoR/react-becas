@@ -328,6 +328,7 @@ function FamiliaSubirArchivos() {
   };
 
   const renderImgDeFamilia = (tipo) => {
+    
     switch (tipo) {
       case 1:
         return files1DeFamilia
@@ -341,7 +342,7 @@ function FamiliaSubirArchivos() {
                 <button
                   onClick={() => openModalEliminarFile(ch)}
                   type="button"
-                  className="btn btn-sm btn-danger"
+                  className="btn btn-sm btn-danger mb-3"
                   data-bs-toggle="button"
                 > 
                   <span className="fw-bold mx-1">ELIMINAR</span>
@@ -369,7 +370,7 @@ function FamiliaSubirArchivos() {
                 <button
                   onClick={() => openModalEliminarFile(ch)}
                   type="button"
-                  className="btn btn-sm btn-danger"
+                  className="btn btn-sm btn-danger mb-3"
                   data-bs-toggle="button"
                 > 
                   <span className="fw-bold mx-1">ELIMINAR</span>
@@ -397,7 +398,7 @@ function FamiliaSubirArchivos() {
                 <button
                   onClick={() => openModalEliminarFile(ch)}
                   type="button"
-                  className="btn btn-sm btn-danger"
+                  className="btn btn-sm btn-danger mb-3"
                   data-bs-toggle="button"
                 > 
                   <span className="fw-bold mx-1">ELIMINAR</span>
@@ -425,7 +426,7 @@ function FamiliaSubirArchivos() {
                 <button
                   onClick={() => openModalEliminarFile(ch)}
                   type="button"
-                  className="btn btn-sm btn-danger"
+                  className="btn btn-sm btn-danger mb-3"
                   data-bs-toggle="button"
                 > 
                   <span className="fw-bold mx-1">ELIMINAR</span>
@@ -453,7 +454,7 @@ function FamiliaSubirArchivos() {
                 <button
                   onClick={() => openModalEliminarFile(ch)}
                   type="button"
-                  className="btn btn-sm btn-danger"
+                  className="btn btn-sm btn-danger mb-3"
                   data-bs-toggle="button"
                 > 
                   <span className="fw-bold mx-1">ELIMINAR</span>
@@ -481,7 +482,7 @@ function FamiliaSubirArchivos() {
                 <button
                   onClick={() => openModalEliminarFile(ch)}
                   type="button"
-                  className="btn btn-sm btn-danger"
+                  className="btn btn-sm btn-danger mb-3"
                   data-bs-toggle="button"
                 > 
                   <span className="fw-bold mx-1">ELIMINAR</span>
