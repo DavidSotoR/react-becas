@@ -9,7 +9,7 @@ function FamiliaSubirArchivos() {
   const [searchParams] = useSearchParams();
 
   const APIURL = process.env.REACT_APP_API_URL;
-  const urlIMG = "http://127.0.0.1:80/storage/";
+  const urlIMG = "http://127.0.0.1:8000/storage/";
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -44,6 +44,9 @@ function FamiliaSubirArchivos() {
   const [fileCH, setFileCH] = useState(null);
   const [fileAutos, setFileAutos] = useState(null);
   const [fileDomicilio, setFileDomicilio] = useState(null);
+  const [cargandoImgIngreso, setCargandoImgIngreso] = useState(true);
+
+  
 
   const dataPOST = {
     id_familia: "",
@@ -300,7 +303,7 @@ function FamiliaSubirArchivos() {
         ))] */
   };
 
-  const deleteFileFamilia = () => {
+  const deleteFileFamilia = (idtipo) => {
     axios
       .delete(
         APIURL + "/familias/documentos/file/" + dataFamiliaFile.id,
@@ -310,7 +313,12 @@ function FamiliaSubirArchivos() {
         console.log(resp);
         setDataFamiliaFile(null);
         handleCloseModalEliminarFile();
-        renderImgDeFamilia(1)
+        setCargandoImgIngreso(false)
+        if (idtipo === 1) {
+          setCargandoImgIngreso(false)
+          renderImgDeFamilia(1)
+        }
+        
         renderImgDeFamilia(2)
         renderImgDeFamilia(3)
         renderImgDeFamilia(4)
@@ -318,6 +326,10 @@ function FamiliaSubirArchivos() {
       })
       .catch((err) => {
         console.log(err);
+      }).then(()=>{
+        console.log('termino');
+        setCargandoImgIngreso(true)
+        
       });
   };
 
@@ -329,6 +341,7 @@ function FamiliaSubirArchivos() {
 
   const renderImgDeFamilia = (tipo) => {
     
+    
     switch (tipo) {
       case 1:
         return files1DeFamilia
@@ -338,7 +351,7 @@ function FamiliaSubirArchivos() {
               key={index + "img-ingresos"}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
-              <div className="d-flex justify-content-end p-2">
+              <div className="d-flex justify-content-center p-2">
                 <button
                   onClick={() => openModalEliminarFile(ch)}
                   type="button"
@@ -641,6 +654,20 @@ function FamiliaSubirArchivos() {
     }
   };
 
+  const contineImg = () => {
+    var tieneImg = false
+    var str = ''
+    files1DeFamilia.forEach(element => {
+      console.log(element);
+      str = (element.alias).toLowerCase();
+      if (str.endsWith('.png') || str.endsWith('.jpg') || str.endsWith('.jpeg')) {
+        tieneImg = true
+      }
+      
+    });
+    return tieneImg;
+  }
+
   const FileLink = (nombre, dir) => {
     const fileUrl = urlIMG + dir; // URL del archivo PDF o DOCX
 
@@ -728,50 +755,53 @@ function FamiliaSubirArchivos() {
                       <tbody>{renderFilesDeFamilia(1)}</tbody>
                     </table>
                   </div>
-                  <div className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
+                  {cargandoImgIngreso && contineImg() && (
+                    <div className="carousel slide col-12 col-md-12 col-lg-8 sizeimg-evidencias"
                     id="carouselExample"
                     style={{ minWidth: "50vw" }}
-                  >
-                    <div className="carousel-inner">
-                      {renderImgDeFamilia(1)}
+                    >
+                      <div className="carousel-inner">
+                        {renderImgDeFamilia(1)}
+                      </div>
+                      <button
+                        className="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#carouselExample"
+                        data-bs-slide="prev"
+                      >
+                        <span
+                          className="carousel-control-prev-icon"
+                          style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                          aria-hidden="true"
+                        ></span>
+                        <span
+                          className="visually-hidden"
+                          style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                        >
+                          Previous
+                        </span>
+                      </button>
+                      <button
+                        className="carousel-control-next"
+                        type="button"
+                        data-bs-target="#carouselExample"
+                        data-bs-slide="next"
+                      >
+                        <span
+                          className="carousel-control-next-icon"
+                          style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                          aria-hidden="true"
+                        ></span>
+                        <span
+                          className="visually-hidden"
+                          style={{ backgroundColor: "gray", borderRadius: "8px" }}
+                        >
+                          Next
+                        </span>
+                      </button>
                     </div>
-                    <button
-                      className="carousel-control-prev"
-                      type="button"
-                      data-bs-target="#carouselExample"
-                      data-bs-slide="prev"
-                    >
-                      <span
-                        className="carousel-control-prev-icon"
-                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
-                        aria-hidden="true"
-                      ></span>
-                      <span
-                        className="visually-hidden"
-                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
-                      >
-                        Previous
-                      </span>
-                    </button>
-                    <button
-                      className="carousel-control-next"
-                      type="button"
-                      data-bs-target="#carouselExample"
-                      data-bs-slide="next"
-                    >
-                      <span
-                        className="carousel-control-next-icon"
-                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
-                        aria-hidden="true"
-                      ></span>
-                      <span
-                        className="visually-hidden"
-                        style={{ backgroundColor: "gray", borderRadius: "8px" }}
-                      >
-                        Next
-                      </span>
-                    </button>
-                  </div>
+                  )}
+                  
                 </div>
               </div>
             </li>
@@ -1208,7 +1238,7 @@ function FamiliaSubirArchivos() {
           <Button variant="secondary" onClick={handleCloseModalEliminarFile}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={() => deleteFileFamilia()}>
+          <Button variant="danger" onClick={() => deleteFileFamilia(dataFamiliaFile.id_familias_documentos_tipo)}>
             Eliminar
           </Button>
         </Modal.Footer>
