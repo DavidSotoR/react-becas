@@ -193,19 +193,38 @@ function AltaEstudioSocioeconomico(){
     }
     
     const sendDataEstudioSocioeconomico = () =>{
+        
         axios.post(`${APIURL}/estudio/socioeconomico`,fromData,config).then((resp)=>{
+            setFormDataError({})
             const {message,data} = resp.data
             console.log(resp);
             
             setListaEstudiosCreados((prevLista) => [data, ...prevLista]);
             setFormData(nuevoUsuario);
+            direccionesSet([])
+            //colaboradorPreAsignadoSet({id:'',name:''})
+            colaboradorPreAsignadoSet(prevState => ({
+                ...prevState,
+                id: '',
+            }));
+            colaboradorPreAsignadoSet(prevState => ({
+                ...prevState,
+                name: ''
+            }));
+            setColaboradores([]);
 
         }).catch((err)=>{
+            console.log(err);
+            
             if(err.code === "ERR_BAD_REQUEST"){
                 const data =err.response.data;
                 if(data?.errors){
                     setFormDataError(data.errors);
                 }
+            }
+
+            if (err.response.status === 401) {
+                logout()
             }
             console.log(err);
         })
@@ -334,6 +353,7 @@ function AltaEstudioSocioeconomico(){
             latitud: direccion.lat,
             longitud: direccion.lon
         }));
+        placeIdSet('');
     }
     
     const convertirAMayusculas = (texto) => {
@@ -455,7 +475,7 @@ function AltaEstudioSocioeconomico(){
         return (
             <div>
                 <div>
-                    <p><b>Familias recentemente añadidas: {listaEstudiosCreados.length}</b></p>
+                    <p><b>Familias recintemente añadidas: {listaEstudiosCreados.length}</b></p>
                 </div>
                 <hr/>
                 <div className="row flex-nowrap overflow-auto">
