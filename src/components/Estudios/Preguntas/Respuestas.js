@@ -25,6 +25,9 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
     const mostrarTotalParametro = () => {
         return totalPorParametros[idParametro] ? totalPorParametros[idParametro] : 0 ;
     }
+    const mostrarTotalParametroID = (id_parametro) => {
+        return totalPorParametros[id_parametro] ? totalPorParametros[id_parametro] : 0 ;
+    }
 
     const longitudTexto = (text = '',longitud = 0) => {
         const dif = longitud - text.length;
@@ -802,6 +805,13 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                         </div>
                     )
                 })}
+
+                <div className="row col-12">
+                    <div className="row col-md-6 text-start">
+                        <div className="col-sm-6 p-1 text-start"><b>TOTAL:</b></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametroID(-1))}</div></div>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -1020,7 +1030,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                 </div>
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start"><b>A + B TOTAL:</b></div>
+                        <div className="col-sm-6 p-1 text-start"><b>GRAN TOTAL PATRIMONIO:</b></div>
                         <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametro())}</div></div>
                     </div>
                 </div>
@@ -1186,6 +1196,20 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                     </div>
                 </div>
             ))}
+            
+            <div className="row">
+                    <div className="col-sm-3"><b>TOTAL:</b></div>
+                    <div className="col-sm-3 p-1 text-start">
+                        <div className="border-bottom border-secondary">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10 text-end">
+                                    {formatNumber(sumaTotalporCampo('monto'))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -1524,6 +1548,15 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
         switch(idPreguntaTipo){
             case 12:
                 newTotal = sumaTotalesSecciones(['valor','body_otros']);
+            break;
+            case 9:
+            case 10:
+                newTotal = sumaTotalLista();
+                setTotalPorParametro(prevState => ({
+                    ...prevState,
+                    parametro:-1,
+                    total: newTotal
+                }));
             break;
             default:
                 newTotal = sumaTotalLista();
