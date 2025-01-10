@@ -11,6 +11,7 @@ import 'leaflet/dist/leaflet.css';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import Toast from 'react-bootstrap/Toast';
 
 function AltaEstudioSocioeconomico(){
     const { logout } = useContext(AuthContext)
@@ -41,6 +42,11 @@ function AltaEstudioSocioeconomico(){
     const [ direccionFamilia, setDireccionFamilia ] = useState('')
     
     const animatedComponents = makeAnimated;
+
+    const [showToastSuccess, setShowToastSuccess] = useState(false);
+    const [showToastError, setShowToastError] = useState(false);
+
+
 
     const nuevoUsuario = {
         id_servicio_estado:'1',
@@ -191,13 +197,26 @@ function AltaEstudioSocioeconomico(){
         
         console.log(updatedValue+' '+familiar);
     }
+
+    const renderValidationErrors = (errors) => {
+        return Object.keys(errors).map((key) =>
+          errors[key].map((message, index) => (
+            <p key={`${key}-${index}`} className="mb-0 fw-500" style={{ color: "white" }}>
+              {message}
+            </p>
+          ))
+        );
+      };
     
     const sendDataEstudioSocioeconomico = () =>{
-        
+        var creado = fromData
         axios.post(`${APIURL}/estudio/socioeconomico`,fromData,config).then((resp)=>{
             setFormDataError({})
             const {message,data} = resp.data
             console.log(resp);
+
+            setShowToastSuccess(true);
+
             
             setListaEstudiosCreados((prevLista) => [data, ...prevLista]);
             setFormData(nuevoUsuario);
@@ -220,6 +239,9 @@ function AltaEstudioSocioeconomico(){
                 const data =err.response.data;
                 if(data?.errors){
                     setFormDataError(data.errors);
+                    console.log(data.errors);
+                    setShowToastError(true)
+                    
                 }
             }
 
@@ -754,6 +776,32 @@ function AltaEstudioSocioeconomico(){
 
     return(<>
         <div className="container mt-3">
+        <Toast onClose={() => setShowToastSuccess(false)} show={showToastSuccess} delay={6000} autohide
+          className="d-inline-block m-1 alert-position" 
+          bg="success"
+          key="1"
+        >
+          <Toast.Header>
+            <strong className="me-auto">Completado</strong>
+          </Toast.Header>
+          <Toast.Body className="text-white">
+            Se agregó Familia correctamente.
+          </Toast.Body>
+        </Toast>
+
+        <Toast onClose={() => setShowToastError(false)} show={showToastError} delay={6000} autohide
+          className="d-inline-block m-1 alert-position" 
+          bg="danger"
+          key="2"
+        >
+          <Toast.Header>
+            <strong className="me-auto">Error</strong>
+          </Toast.Header>
+          <Toast.Body className="text-white">
+            Hubo un Error al crear los datos.
+            { renderValidationErrors(fromDataError) }
+          </Toast.Body>
+        </Toast>
             <div className="d-flex justify-content-between mb-3">
                 <div className="">
                     <h6 style={{ fontWeight:'bold' }}>Nuevo Estudio Socioeconómico</h6>

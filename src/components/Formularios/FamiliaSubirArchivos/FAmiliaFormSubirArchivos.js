@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { useSearchParams } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
+import Toast from 'react-bootstrap/Toast';
 
 function FamiliaSubirArchivos() {
   const { logout } = useContext(AuthContext);
@@ -46,6 +47,7 @@ function FamiliaSubirArchivos() {
   const [fileDomicilio, setFileDomicilio] = useState(null);
   const [cargandoImgIngreso, setCargandoImgIngreso] = useState(true);
 
+  const [showToastSuccess, setShowToastSuccess] = useState(false);
   
 
   const dataPOST = {
@@ -104,6 +106,7 @@ function FamiliaSubirArchivos() {
         console.log(resp);
         setSuccessIngresos(true);
         getFilesDeFamilia();
+        setShowToastSuccess(true);
       })
       .catch((err) => {
         console.log(err);
@@ -138,6 +141,7 @@ function FamiliaSubirArchivos() {
         console.log(resp);
         setSuccessDesempleo(true);
         getFilesDeFamilia();
+        setShowToastSuccess(true);
       })
       .catch((err) => {
         console.log(err);
@@ -170,6 +174,7 @@ function FamiliaSubirArchivos() {
         console.log(resp);
         setSuccessCasa(true);
         getFilesDeFamilia();
+        setShowToastSuccess(true);
       })
       .catch((err) => {
         console.log(err);
@@ -202,6 +207,7 @@ function FamiliaSubirArchivos() {
         console.log(resp);
         setSuccessAuto(true);
         getFilesDeFamilia();
+        setShowToastSuccess(true);
       })
       .catch((err) => {
         if (err.response.status === 401) {
@@ -233,6 +239,7 @@ function FamiliaSubirArchivos() {
         console.log(resp);
         setSuccessComprobante(true);
         getFilesDeFamilia();
+        setShowToastSuccess(true);
       })
       .catch((err) => {
         console.log(err);
@@ -697,6 +704,18 @@ function FamiliaSubirArchivos() {
 
   return (
     <div className="container mt-3 mb-3">
+      <Toast onClose={() => setShowToastSuccess(false)} show={showToastSuccess} delay={6000} autohide
+          className="d-inline-block m-1 alert-position" 
+          bg="success"
+          key="1"
+        >
+          <Toast.Header>
+            <strong className="me-auto">Completado</strong>
+          </Toast.Header>
+          <Toast.Body className="text-white">
+            Se agrego correctamente el archivo.
+          </Toast.Body>
+        </Toast>
       <div className="row">
         <div className="col-12">
           <ul className="list-group list-group">

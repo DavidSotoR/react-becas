@@ -25,6 +25,14 @@
   height: 500px;
 }
 
+.alert-position{
+  position: fixed; /* Siempre relativo al viewport */
+  bottom: 20px; /* Alineado al borde inferior */
+  right: 0; /* Alineado al borde derecho */
+  z-index: 10000; /* Asegúrate de que esté en frente de otros elementos */
+  margin: 10px; /* Opcional: Espaciado desde los bordes */
+}
+
 @media (max-width: 768px) {
   /*query para ocultar testo de btns para solo dejar icono*/
   .btn-text-display {
