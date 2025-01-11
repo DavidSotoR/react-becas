@@ -13,12 +13,19 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
     }
     
     const [formData, setFormData] = useState(Respuestas);
+    const [parametros, setParametros] = useState([]); 
+    const [parametrosPromedioAcademico, setParametrosPromedioAcademico] = useState([]); 
+    const [parametrosPromedioConducta, setParametrosPromedioConducta] = useState([]); 
  
     const [totalPorParametro,setTotalPorParametro] = useState({pregunta:idPregunta,parametro:idParametro,total:0});
 
     const mostrarTotalParametro = () => {
         return totalPorParametros[idParametro] ? totalPorParametros[idParametro] : 0 ;
     }
+    const mostrarTotalParametroID = (id_parametro) => {
+        return totalPorParametros[id_parametro] ? totalPorParametros[id_parametro] : 0 ;
+    }
+
     const convertirAMayusculas = (texto) => {
         return texto.toUpperCase();
     }
@@ -136,8 +143,122 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
     };
     // 2 .-  Lista selección múltiple
     // 3 .-  Antigüedad en colegio
+    const antiguedadEnColegio = () => {
+        
+        return formData.length && (
+            <div>
+            <div className="row">
+                <div className="col-sm-3"></div>
+                <div className="col-1 p-1"></div>
+                <div className="col-3 p-1 ps-3">AÑOS</div>
+            </div>
+            {parametros.length && parametros.map( (item,index) => (
+                <div key={'piraec-'+index} className="row text-start">
+                    <div className="col-sm-3"></div>
+                    <div className="col-1 p-1 border-bottom border-secondary text-center">
+                        {formData[0].valor == item.valor ? (<span>X</span>) : (<span></span>)}
+                    </div>
+                    <div className="col-4 p-1 ps-3">
+                            <label className="form-check-label" htmlFor="flexRadioDefault2">
+                               {item.limiten_inferior} - {item.limite_superior ? item.limite_superior : 'O MAS' }
+                            </label>
+                    </div>
+                </div>
+            ))}
+            </div>
+        )
+    }
     // 4 .-  Número de Hijos
+    const annioCurso = [
+        {valor:1},{valor:2},{valor:3},{valor:4},{valor:5},{valor:6}
+    ]
+    const opcionesCurso = () => {
+        return [<option key='sapoc-default' value="">Seleccione una opción</option>,...annioCurso.map((param,index) => (
+            <option key={'sapoc-'+index} value={`${param.valor}`} >
+                { param.valor }
+            </option>
+        ))]
+    }
+    const opcionesParametrosPromedioAcademico = (promedio_academico) => {
+        const parametro = parametrosPromedioAcademico.find((item) => item.valor.toString() === promedio_academico.toString() );
+        return parametro?.limiten_inferior ? parametro.limiten_inferior : '\u00A0';
+    };
+
+    const opcionesParametrosPromedioConducta = (promedio_conducta) => {
+        const parametro = parametrosPromedioConducta.find((item) => item.valor.toString() === promedio_conducta.toString() );
+        return parametro?.limiten_inferior ? parametro.limiten_inferior : '\u00A0';
+    }
+
+    const numeroDeHijos = ()=>{
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-sm-4">NOMBRE</div>
+                    <div className="col-sm-2 text-center">% BECA ACTUAL</div>
+                    <div className="col-sm-2 text-center">CURSAR</div>
+                    <div className="col-sm-2 text-center">PROMEDIO ACADEMICO</div>
+                    <div className="col-sm-2 text-center">PROMEDIO CONDUCTA</div>
+                </div>
+                {formData.map((item,index) => (
+                <div  key={'pes-'+idPregunta+'-'+index} className="row">
+                    
+                    <div className="col-sm-4 p-1 ">
+                        <div className="border-bottom border-secondary">
+                            {item.nombre ?? '\u00A0'}
+                        </div>
+                    </div>
+                    <div className="col-sm-2 p-1 text-center">
+                        <div className="border-bottom border-secondary">
+                            {item.respuesta ? item.respuesta+'%' : '\u00A0'}
+                        </div>
+                    </div>
+                    <div className="col-sm-2 p-1 text-center">
+                        <div className="border-bottom border-secondary">
+                            {item.monto ? (item.monto > 0 && item.monto) : '\u00A0'}
+                        </div>
+                    </div>
+                    <div className="col-sm-2 p-1 text-center">
+                        <div className="border-bottom border-secondary">
+                            {item.nombre && item.nombre.length > 0 ? opcionesParametrosPromedioAcademico(item.padre_monto) : '\u00A0'}
+                        </div>
+                    </div>
+                    <div className="col-sm-2 p-1 text-center">
+                        <div className="border-bottom border-secondary">
+                            {item.nombre && item.nombre.length > 0 ?  opcionesParametrosPromedioConducta(item.madre_monto) : '\u00A0'}
+                        </div>
+                    </div>
+                </div>
+                ))}
+            </div>
+        )
+    }
     // 5 .-  Orfandad
+    
+    const orfandad = () => {
+        return formData.length && (
+            <div>
+            <div className="row">
+                <div className="col-sm-3"></div>
+                <div className="col-1"></div>
+                <div className="col-3 p-1">AÑOS</div>
+            </div>
+            {parametros.length && parametros.map( (item,index) => (
+                <div key={'ppiorf'+index} className="row text-start">
+                    <div className="col-sm-3"></div>
+                    <div className="col-1 p-1 border-bottom border-secondary text-center">
+                        {formData[0].valor == item.valor ? (<span>X</span>) : (<span></span>)}
+                    </div>
+                    <div className="col-sm-4 p-1">
+                        <div className="form-check">
+                            {item.texto}
+                        </div>
+                    </div>
+                </div>
+            ))}
+            </div>
+        )
+    }
+
     // 6 .-  Dependientes Económicos
     const dependientesEconomicamente = () => {
         return (
@@ -219,7 +340,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
             </div>
         );
     };
-        // 8 .-  Ingreso mensual
+    // 8 .-  Ingreso mensual
     const ingresoNetoMensual = () => {
         return (
             <div>
@@ -283,7 +404,92 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
         );
     };
     // 9 .-  Ahorro
+    const ahorro = () => {
+        return formData.length && (
+            <div>
+                <div className="row">
+
+                    <div className="col-sm-1 text-start">
+                        <div className="border-bottom border-secondary">
+                            {(formData[0].activo) ? 'Si' : 'No'}
+                        </div>
+                    </div>
+                    
+                    <div className="col-sm-1 text-start">DESCRIBE:</div>
+                    <div className="col-sm-3 text-start ps-3">
+                        <div className="border-bottom border-secondary">
+                        {formData[0].respuesta ?? '\u00A0'}
+                        </div>
+                    </div>
+                    <div className="col-sm-5 text-start ps-1">D) MONTO DE AHORROS O INVERCIONES</div>
+                    <div className="col-sm-2">
+                        <div className="row">
+                            <div className="col-2">$</div>
+                            <div className="col-9 border-bottom border-secondary text-end">
+                                {formatNumber(formData[0].monto) ?? '\u00A0'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
     // 10 .-  Inversiones
+   
+    const inverciones = () => {
+        return formData.length && (
+            <div> 
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'activa' && (
+                        <div  key={'pes-'+idPregunta+'-'+index} className="row">
+                            <div className="col-1 border-bottom border-secondary">
+                                {(formData[index].activo) ? 'Si' : 'No'}
+                            </div>
+                            <div className="col"></div>
+                        </div>
+                        )
+                })}
+
+                <br></br>
+                    
+                <div className="row">
+                    <div className="col-sm-8">DESCRIBIR</div>
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-2">VALOR ESTIMADO</div>
+                </div>
+
+                {formData.map((item,index) => {
+                    return item?.seccion && item.seccion === 'inverciones' && (
+                        
+                        <div key={'pesinvii-'+idPregunta+'-'+index} className="row mt-2">
+                            <div className="col-sm-8 border-bottom border-secondary text-start">                                    
+                                {formData[index].respuesta ?? ''}
+                            </div>
+                            <div className="col-sm-2"></div>
+                            <div className="col-sm-2 text-start">
+                                <div className="row">
+                                    <div className="col-2">$</div>
+                                    <div className="col-9 border-bottom border-secondary">
+                                        {formatNumber(formData[index].monto) ?? ''}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    )
+                })}
+
+                <br></br>
+                
+                <div className="row col-12">
+                    <div className="row col-md-6 text-start">
+                        <div className="col-sm-6 p-1 text-start"><b>TOTAL:</b></div>
+                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametroID(-1))}</div></div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
     // 11 .-  Vehículos
     const preguntaVeiculos = () => {
         return (
@@ -397,7 +603,6 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
         );
     };
     
-    
     // 12 .- Propiedades Hipotecarias / casa Habitación
     const casaHabitacion = () => {
         return (
@@ -487,36 +692,26 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
     const distribucionDeLaCasa = () => {
         return (
             <div className="row">
-                {formData.map((item, index) => {
-                    return item?.seccion && item.seccion === 'seleccionable' && (
-                        <div key={'pes-'+idPregunta+'-'+index} className="row col-sm-3">
-                            <div className="col-8 p-1 text-start">{item.texto}</div>
-                            <div className="col-4 p-1">
-                                <div className="form-check form-switch">
-                                    <span>{item.activo ? "Sí" : "No"}</span>
-                                </div>
-                            </div>
-                        </div>
-                    );
-                })}
+               
                 <div className="sol-12">
                     <br />
                 </div>
                 {formData.map((item, index) => {
                     return item?.seccion && item.seccion === 'clasificacion' && (
-                        <div key={'pes-'+idPregunta+'-'+index} className="row col-12">
-                            <div className="col-4 p-1 text-start">{item.texto}</div>
-                            <div className="col-8 p-1">
-                                <div className="border-bottom border-secondary">{item.respuesta || <>&nbsp;</>}</div>
+                        <div key={'pes-'+idPregunta+'-'+index} className="col-12">
+                            <div className="row">
+                                <div className="col-4 p-1 text-start">{item.texto}</div>
+                                <div className="col-8 p-1">
+                                    <div className="border-bottom border-secondary">{item.respuesta || <>&nbsp;</>}</div>
+                                </div>
                             </div>
                         </div>
                     );
                 })}
+                <br></br>
                 {formData.map((item, index) => {
                     return item?.seccion && item.seccion === 'descripcion' && (
-                        <div key={'pes-'+idPregunta+'-'+index} className="row col-12">
-                            <div className="col-sm-3 p-1 text-start">{item.texto}</div>
-                            <div className="col-sm-9 p-1">
+                        <div key={'pes-'+idPregunta+'-'+index} className="col-12  p-1">
                                 <div
                                     style={{
                                         width: '100%',
@@ -528,9 +723,8 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                                         whiteSpace: 'pre-wrap',
                                     }}
                                 >
-                                    {item.respuesta || <>&nbsp;</>}
+                                    OBSERVAMOS QUE LA FAMILIA CUENTA CON: {item.respuesta || <>&nbsp;</>}
                                 </div>
-                            </div>
                         </div>
                     );
                 })}
@@ -567,6 +761,19 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                         </div>
                     </div>
                 ))}
+                <div className="row">
+                    <div className="col-sm-3"><b>TOTAL:</b></div>
+                    <div className="col-sm-3 p-1 text-start">
+                        <div className="border-bottom border-secondary">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10 text-end">
+                                    {formatNumber(sumaTotalporCampo('monto'))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     };
@@ -787,8 +994,17 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
             break;
             // 2 .-  Lista selección múltiple
             // 3 .-  Antigüedad en colegio
+            case 3:
+                return antiguedadEnColegio();
+            break;
             // 4 .-  Número de Hijos
+            case 4:
+                return numeroDeHijos()
+            break;
             // 5 .-  Orfandad
+            case 5:
+                return orfandad()
+            break;
             // 6 .-  Dependientes Económicos
             case 6:
                 return dependientesEconomicamente();
@@ -802,7 +1018,13 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                 return ingresoNetoMensual();
             break;
             // 9 .-  Ahorro
+            case 9:
+                return ahorro();
+            break;
             // 10 .-  Inversiones
+            case 10:
+                return inverciones();
+            break;
             // 11 .-  Vehículos
             case 11:
                 return preguntaVeiculos();
@@ -813,7 +1035,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
             break;
             // 13 .-  Distribución de la casa
             case 13:
-                return distrubucionDeLaCasa();
+                return distribucionDeLaCasa();
             // 14 .-  Deudas
             case 14:
                 return deudasMensuales();
@@ -842,6 +1064,44 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
         updateListaTotales(totalPorParametro);
     },[totalPorParametro])*/
     
+    const getParametros = () => {
+        let formData = config;
+        if(idPreguntaTipo == 13 || idPreguntaTipo == 5){
+            formData.params = {id_catalogo_pregunta:idPregunta};
+        }
+        axios.get(`${APIURL}/catalogos/encuestas/preguntas/${idPregunta}/parametros`,formData,config)
+        .then(res => setParametros(res.data))
+        .catch(err => console.log("Error al solisitar parametros de pregunta",err));
+    }
+
+    const getParametrosPromedioAcademico  = () => {
+        axios.get(`${APIURL}/estudio/socioeconomico/pregunta/parametro/${idPregunta}/adicional-dos/items`,config)
+        .then(res => setParametrosPromedioAcademico(res.data))
+        .catch(err => console.log("Error al solisitar parametros de pregunta",err));
+    }
+    
+    const getParametrosPromedioConducta = () => {
+        axios.get(`${APIURL}/estudio/socioeconomico/pregunta/parametro/${idPregunta}/adicional-dos/items`,config)
+        .then(res => setParametrosPromedioConducta(res.data))
+        .catch(err => console.log("Error al solisitar parametros de pregunta",err));
+    }
+    
+    useEffect(() => {
+        //idPregunta,longitudRespuesta,idPreguntaTipo
+        if(
+            idPreguntaTipo == 13
+            || idPreguntaTipo == 3
+            || idPreguntaTipo == 5
+        ){
+            getParametros();
+        }
+
+        if(idPreguntaTipo == 4){
+            getParametrosPromedioAcademico();
+            getParametrosPromedioConducta();
+        }
+    },[])
+
     useEffect(() => {
         
         let newTotal = 0;
@@ -850,6 +1110,15 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
             case 12:
                 newTotal = sumaTotalesSecciones(['valor','body_otros']);
                 console.log("case 12: ",newTotal);
+            break;
+            case 9:
+            case 10:
+                newTotal = sumaTotalLista();
+                setTotalPorParametro(prevState => ({
+                    ...prevState,
+                    parametro:-1,
+                    total: newTotal
+                }));
             break;
             default:
                 newTotal = sumaTotalLista();

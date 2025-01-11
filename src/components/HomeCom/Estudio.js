@@ -208,7 +208,7 @@ export default function Estudio(){
                         <div className="row">
                             <div className="col-3"/>
                             <div className="col-6 pb-2 pt-2 mb-4">
-                                <div className="text-center">COLEGIO</div>
+                                <div className="text-center text-uppercase">{encuesta?.estudio?.cliente?.nombre && encuesta.estudio.cliente.nombre}</div>
                                 {puntosPorParametros()}
                             </div>
                         </div>

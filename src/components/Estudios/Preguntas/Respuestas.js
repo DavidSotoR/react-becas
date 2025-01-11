@@ -1151,53 +1151,53 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
     const deudasMensuales = () => {
         return (
             <div>
-            <div className="row">
-                <div className="col-sm-4 p-1">CONCEPTO</div>
-                <div className="col-sm-4 p-1 text-center">MENSUALIDAD</div>
-                <div className="col-sm-4 p-1 text-center">SALDO</div>
-            </div>
-            
-            {formData.map((item,index) => (
-                <div key={'pes-'+idPregunta+'-'+index} className="row  text-start">
-                    <div className="col-sm-4 p-1">
-                        {item.texto}
-                    </div>
-                    <div className="col-sm-4 p-1">
-                        <div className="row">
-                            <div className="col-1">$</div>
-                            <div className="col-10">
-                                <input
-                                    className="form-control form-control-sm text-end"
-                                    name="padre_monto" 
-                                    key={`padre_monto-${index}`}
-                                    ref={(el) => (padreRefs.current[index] = el)}
-                                    onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
-                                    value={formatNumber(item.padre_monto) ?? ''}
-                                    onChange={(e) => {numberChange(e,index)}}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-sm-4 p-1">
-                        <div className="row">
-                            <div className="col-1">$</div>
-                            <div className="col-10">
-                                <input
-                                    className="form-control form-control-sm text-end"
-                                    name="monto" 
-                                    key={`monto-${index}`}
-                                    ref={(el) => (montoRefs.current[index] = el)}
-                                    onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
-                                    value={formatNumber(item.monto) ?? ''}
-                                    onChange={(e) => {numberChange(e,index)}}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                <div className="row">
+                    <div className="col-sm-4 p-1">CONCEPTO</div>
+                    <div className="col-sm-4 p-1 text-center">MENSUALIDAD</div>
+                    <div className="col-sm-4 p-1 text-center">SALDO</div>
                 </div>
-            ))}
+                
+                {formData.map((item,index) => (
+                    <div key={'pes-'+idPregunta+'-'+index} className="row  text-start">
+                        <div className="col-sm-4 p-1">
+                            {item.texto}
+                        </div>
+                        <div className="col-sm-4 p-1">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10">
+                                    <input
+                                        className="form-control form-control-sm text-end"
+                                        name="padre_monto" 
+                                        key={`padre_monto-${index}`}
+                                        ref={(el) => (padreRefs.current[index] = el)}
+                                        onKeyDown={(e) => handleKeyDown(e, index, padreRefs)}
+                                        value={formatNumber(item.padre_monto) ?? ''}
+                                        onChange={(e) => {numberChange(e,index)}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-4 p-1">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10">
+                                    <input
+                                        className="form-control form-control-sm text-end"
+                                        name="monto" 
+                                        key={`monto-${index}`}
+                                        ref={(el) => (montoRefs.current[index] = el)}
+                                        onKeyDown={(e) => handleKeyDown(e, index, montoRefs)}
+                                        value={formatNumber(item.monto) ?? ''}
+                                        onChange={(e) => {numberChange(e,index)}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
             
-            <div className="row">
+                <div className="row">
                     <div className="col-sm-3"><b>TOTAL:</b></div>
                     <div className="col-sm-3 p-1 text-start">
                         <div className="border-bottom border-secondary">
