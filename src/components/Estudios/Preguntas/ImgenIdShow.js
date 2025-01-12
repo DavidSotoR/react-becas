@@ -2,13 +2,12 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../../context/AuthContext';
 
-const ImagenId = ({ id, name }) => {
+const ImagenIdShow = ({ id }) => {
     const { logout } = useContext(AuthContext);
 
     const APIURL = process.env.REACT_APP_API_URL;
     //'http://127.0.0.1:8000/storage/'
     const SERVER_STORAGE = process.env.SERVER_STORAGE;
-    const [dataFile, setDataFile] = useState(null)
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -22,8 +21,6 @@ const ImagenId = ({ id, name }) => {
         configImg.responseType = 'blob'; // Asegurarse de que la respuesta sea de tipo blob
         axios.get(`${APIURL}/familias/documentos/file/${id}`, configImg)
             .then((response) => {
-                console.log(response);
-                
                 const contentType = response.headers['content-type'];
                 setDocType(contentType);
                 const imageUrl = URL.createObjectURL(response.data); // Crear la URL del blob
@@ -41,20 +38,19 @@ const ImagenId = ({ id, name }) => {
         getImagen(id); // Llama a la función para obtener la imagen usando el id
     }, [id]); // Solo se ejecuta cuando cambia el id
     const elementoTipo = () => {
-        console.log(name);
-        
+
         return  docType && docType.startsWith('image/') ? (
                 <img 
                     src={imageSrc} 
                     className='w-100'
-                    style={{maxHeight:'300px'}}
+                    style={{ maxHeight: '70vh' }}
                     alt={"Documento de la familia "+docType }/>
                 ) :(
-                <div className=''>
+                <div>
                     <p className='mb-0'>Este archivo es un documento.</p>
                     {imageSrc && (
                         <a href={imageSrc} download={`documento_${id}`}>
-                            Descargar { name }
+                            Descargar documento
                         </a>
                     )}
                 </div>
@@ -69,4 +65,4 @@ const ImagenId = ({ id, name }) => {
     );
 };
 
-export default ImagenId;
+export default ImagenIdShow;
