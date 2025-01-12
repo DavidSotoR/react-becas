@@ -47,7 +47,7 @@ const ImagenIdShow = ({ id }) => {
                     alt={"Documento de la familia "+docType }/>
                 ) :(
                 <div>
-                    <p>Este archivo es un documento.</p>
+                    <p className='mb-0'>Este archivo es un documento.</p>
                     {imageSrc && (
                         <a href={imageSrc} download={`documento_${id}`}>
                             Descargar documento

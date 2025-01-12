@@ -6,6 +6,8 @@ import SubirImagenPorTipoDocumento from "./SubirImagenPorTipoDocumento";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ImagenIdShow from "./ImgenIdShow";
+import Toast from 'react-bootstrap/Toast';
+
 
 export default  function Evidencias({idEstudio, columnRow}) {
     const { logout } = useContext(AuthContext);
@@ -22,6 +24,8 @@ export default  function Evidencias({idEstudio, columnRow}) {
     const [colClass,setColClass] = useState('col-8');
     const [lgShow, setLgShow] = useState(false);
     const [ dataImgShow, setDataImgShow ] = useState(null);
+    const [showToastSuccess, setShowToastSuccess] = useState(false);
+
 
     const vista = () => {
         switch(columnRow){
@@ -82,6 +86,14 @@ export default  function Evidencias({idEstudio, columnRow}) {
         
     }
 
+    const expandFile = (file) =>{
+        console.log(file);
+        setLgShow(true)
+        setDataImgShow(file)
+
+        
+    }
+
     const deleteFileFamilia = () => {
         axios
           .delete(
@@ -91,6 +103,7 @@ export default  function Evidencias({idEstudio, columnRow}) {
           .then((resp) => {
             console.log(resp);
             setLgShow(false)
+            setShowToastSuccess(true)
           })
           .catch((err) => {
             console.log(err);
@@ -123,6 +136,19 @@ export default  function Evidencias({idEstudio, columnRow}) {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Toast onClose={() => setShowToastSuccess(false)} show={showToastSuccess} delay={6000} autohide
+                className="d-inline-block m-1 alert-position" 
+                bg="success"
+                key="1"
+            >
+                <Toast.Header>
+                <strong className="me-auto">Completado</strong>
+                </Toast.Header>
+                <Toast.Body className="text-white">
+                    Se Elimino correctamente el archivo.
+                </Toast.Body>
+            </Toast>
             
             {Array.isArray(documentosLista) && documentosLista.map((seccion, index) => (
                 <div key={'si'+index}>
@@ -141,14 +167,33 @@ export default  function Evidencias({idEstudio, columnRow}) {
                                 <div className={colClass}>
                                     <div className="row">
                                         {seccion.documentos.length !== 0 && seccion.documentos.map((doc,imgKey)=> {
-                                            return(
+                                            const esImagen = doc.nombre.endsWith('.PNG') || doc.nombre.endsWith('.JPG') || doc.nombre.endsWith('.JEPG');
+
+                                            return( esImagen ? (
                                                 <div
                                                     key={'ei-img'+index+'-'+imgKey}
-                                                    className="col-6 p-1" onClick={ () => {expandImg(doc)}  }
+                                                    className="col-6 p-1" onClick={ () => expandImg(doc)}
                                                     style={{backgroundColor: '#e9e9e9'}}
                                                 >
-                                                    <ImagenId id={doc.id}/>
+                                                    <ImagenId id={doc.id} name={doc.nombre}/>
                                                 </div>
+                                            ) : (
+                                                <div
+                                                    key={'ei-img'+index+'-'+imgKey}
+                                                    className="col-6 p-1 text-center pt-5"
+                                                    style={{backgroundColor: '#e9e9e9'}}
+                                                >
+                                                    <ImagenId id={doc.id} name={doc.nombre}/>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-sm btn-icon-danger"
+                                                        data-bs-toggle="button"
+                                                        >
+                                                        <i style={{ color: "red" }} className="bi bi-trash-fill"></i>
+                                                    </button>
+                                                </div>
+                                            )
+                                                
                                             )
                                         })}
                                     </div>

@@ -2,12 +2,13 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../../context/AuthContext';
 
-const ImagenId = ({ id }) => {
+const ImagenId = ({ id, name }) => {
     const { logout } = useContext(AuthContext);
 
     const APIURL = process.env.REACT_APP_API_URL;
     //'http://127.0.0.1:8000/storage/'
     const SERVER_STORAGE = process.env.SERVER_STORAGE;
+    const [dataFile, setDataFile] = useState(null)
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -21,6 +22,8 @@ const ImagenId = ({ id }) => {
         configImg.responseType = 'blob'; // Asegurarse de que la respuesta sea de tipo blob
         axios.get(`${APIURL}/familias/documentos/file/${id}`, configImg)
             .then((response) => {
+                console.log(response);
+                
                 const contentType = response.headers['content-type'];
                 setDocType(contentType);
                 const imageUrl = URL.createObjectURL(response.data); // Crear la URL del blob
@@ -38,7 +41,8 @@ const ImagenId = ({ id }) => {
         getImagen(id); // Llama a la función para obtener la imagen usando el id
     }, [id]); // Solo se ejecuta cuando cambia el id
     const elementoTipo = () => {
-
+        console.log(name);
+        
         return  docType && docType.startsWith('image/') ? (
                 <img 
                     src={imageSrc} 
@@ -46,11 +50,11 @@ const ImagenId = ({ id }) => {
                     style={{maxHeight:'300px'}}
                     alt={"Documento de la familia "+docType }/>
                 ) :(
-                <div>
-                    <p>Este archivo es un documento.</p>
+                <div className=''>
+                    <p className='mb-0'>Este archivo es un documento.</p>
                     {imageSrc && (
                         <a href={imageSrc} download={`documento_${id}`}>
-                            Descargar documento
+                            Descargar { name }
                         </a>
                     )}
                 </div>
