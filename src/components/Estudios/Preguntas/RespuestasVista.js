@@ -1075,7 +1075,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
     }
 
     const getParametrosPromedioAcademico  = () => {
-        axios.get(`${APIURL}/estudio/socioeconomico/pregunta/parametro/${idPregunta}/adicional-dos/items`,config)
+        axios.get(`${APIURL}/estudio/socioeconomico/pregunta/parametro/${idPregunta}/adicional-uno/items`,config)
         .then(res => setParametrosPromedioAcademico(res.data))
         .catch(err => console.log("Error al solisitar parametros de pregunta",err));
     }
