@@ -40,7 +40,7 @@ function Socioeconomico(){
     
     const updateListaTotales = (totalPorParametro) => {
         setListaTotales(prevState => {
-            const existingIndex = prevState.findIndex(item => item.pregunta === totalPorParametro.pregunta);
+            const existingIndex = prevState.findIndex(item => item.pregunta === totalPorParametro.pregunta && item.parametro === totalPorParametro.parametro );
             console.log(existingIndex);
 
             if (existingIndex !== -1) {

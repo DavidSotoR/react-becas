@@ -1549,7 +1549,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
             case 12:
                 newTotal = sumaTotalesSecciones(['valor','body_otros']);
             break;
-            case 9:
+            /*case 9:
             case 10:
                 newTotal = sumaTotalLista();
                 setTotalPorParametro(prevState => ({
@@ -1557,7 +1557,9 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                     parametro:-1,
                     total: newTotal
                 }));
-            break;
+                
+                updateListaTotales({pregunta:idPregunta,parametro:-1,total:newTotal});
+            break;*/
             default:
                 newTotal = sumaTotalLista();
             break;
@@ -1572,6 +1574,10 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
 
     useEffect(() => {
         updateListaTotales(totalPorParametro);
+        if(idPreguntaTipo === 9 || idPreguntaTipo === 10){
+            const newTotal = totalPorParametro.total;
+            updateListaTotales({pregunta:idPregunta,parametro:-1,total:newTotal});
+        }
     },[totalPorParametro])
 
     const preguntaPorTipoPregunta = () => {
