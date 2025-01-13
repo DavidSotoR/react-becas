@@ -6,7 +6,7 @@ import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} fr
 import ModalPorcentajeOtorgado from "./ModalPorcentajeOtorgado";
 import ModalNumeroFamiliaColegio from "./ModalNumeroFamiliaColegio";
 import ExcelTablaEncuestas from "./ExcelTablaEncuestas";
-import { useState } from "react";
+import { useState,useMemo } from "react";
 import PDFSelection from "./PDFSelection";
 
 export default function TablaEncuestas({
@@ -50,10 +50,16 @@ export default function TablaEncuestas({
       setRowSelect(selectedRows)
     };
 
+    const mostrarColumnaHijo = () => {
+      return listaEstudios.some(row => row.hasOwnProperty('hijo'));
+    };
+
     const columns = [
         {
           name: "No Estudio",
-          selector: (row) => row.id,
+          selector: (row) => (
+            <span>{row.id}{row?.no_hijo && ' - '+row.no_hijo}</span>
+          ),
           sortable: true,
           width: "110px",
           cellClassName: 'fixed-column',
@@ -73,6 +79,16 @@ export default function TablaEncuestas({
           sortable: true,
           width: "300px",
         },
+
+        mostrarColumnaHijo() && {
+          name: "Hijo",
+          selector: (row) => ( 
+                <span>{row.nombre_hijo}</span> 
+          ),
+          sortable: true,
+          width: "300px",
+        },
+        ,
         ...listaParametros.map((parametro) => ({
           name: parametro.nombre,
           selector: (row) => getPuntosParametros(row.parametros, parametro.id) || "-",
