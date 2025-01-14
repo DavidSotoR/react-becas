@@ -23,6 +23,8 @@ export default  function Evidencias({idEstudio, columnRow}) {
     
     const [colClass,setColClass] = useState('col-8');
     const [lgShow, setLgShow] = useState(false);
+    const [fileDeleteShow, setFileDeleteShow] = useState(false);
+    const [fileName, setFileName] = useState(null);
     const [ dataImgShow, setDataImgShow ] = useState(null);
     const [showToastSuccess, setShowToastSuccess] = useState(false);
 
@@ -65,13 +67,12 @@ export default  function Evidencias({idEstudio, columnRow}) {
     },[])
 
     useEffect(()=>{
-        console.log('holalas');
         
         if (lgShow === false) {
             getFilesDeFamilia()    
         }
         
-    },[lgShow])
+    },[lgShow, fileDeleteShow])
 
 
     useEffect(() => {
@@ -88,7 +89,8 @@ export default  function Evidencias({idEstudio, columnRow}) {
 
     const expandFile = (file) =>{
         console.log(file);
-        setLgShow(true)
+        setFileName(file.nombre)
+        setFileDeleteShow(true)
         setDataImgShow(file)
 
         
@@ -104,6 +106,7 @@ export default  function Evidencias({idEstudio, columnRow}) {
             console.log(resp);
             setLgShow(false)
             setShowToastSuccess(true)
+            setFileDeleteShow(false)
           })
           .catch((err) => {
             console.log(err);
@@ -129,6 +132,28 @@ export default  function Evidencias({idEstudio, columnRow}) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setLgShow(false)}>
+                    Cerrar
+                    </Button>
+                    <Button variant="danger" onClick={() => deleteFileFamilia(dataImgShow)}>
+                    Eliminar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={fileDeleteShow}
+                onHide={() => setFileDeleteShow(false)}
+                aria-labelledby="example-modal-sizes-title-lg"
+            >
+                <Modal.Body>
+                    
+                   { dataImgShow !== null ? (
+                    <ImagenIdShow id={dataImgShow.id} name={ fileName }/>
+                   ) : ( <p>No cuenta con Archivo para eliminar.</p> ) }
+                   
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setFileDeleteShow(false)}>
                     Cerrar
                     </Button>
                     <Button variant="danger" onClick={() => deleteFileFamilia(dataImgShow)}>
@@ -185,7 +210,7 @@ export default  function Evidencias({idEstudio, columnRow}) {
                                                 >
                                                     <ImagenId id={doc.id} name={doc.nombre}/>
                                                     <button
-                                                        type="button"
+                                                        type="button" onClick={()=>expandFile(doc)}
                                                         className="btn btn-sm btn-icon-danger"
                                                         data-bs-toggle="button"
                                                         >
@@ -204,7 +229,7 @@ export default  function Evidencias({idEstudio, columnRow}) {
                                 <div className="row">
                                     <div className="col" />
                                     <div className={colClass}>
-                                        <SubirImagenPorTipoDocumento idEstudio={idEstudio} idDocTipo={seccion.id}  getFilesDeFamilia={getFilesDeFamilia}/>
+                                        <SubirImagenPorTipoDocumento idEstudio={idEstudio} idDocTipo={seccion.id}  getFilesDeFamilia={getFilesDeFamilia} seccion={seccion.nombre}/>
                                     </div>
                                     <div className="col" />
                                 </div>

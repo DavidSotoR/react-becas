@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../../context/AuthContext';
 
-const ImagenIdShow = ({ id }) => {
+const ImagenIdShow = ({ id, name }) => {
     const { logout } = useContext(AuthContext);
 
     const APIURL = process.env.REACT_APP_API_URL;
@@ -47,10 +47,10 @@ const ImagenIdShow = ({ id }) => {
                     alt={"Documento de la familia "+docType }/>
                 ) :(
                 <div>
-                    <p className='mb-0'>Este archivo es un documento.</p>
+                    <p className='mb-0'>Documento a eliminar:</p>
                     {imageSrc && (
                         <a href={imageSrc} download={`documento_${id}`}>
-                            Descargar documento
+                            Documento: { name ? name : 'SIN NOMBRE' }
                         </a>
                     )}
                 </div>

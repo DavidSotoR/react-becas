@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState, useRef  } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 
-function SubirImagenPorTipoDocumento({idEstudio,idDocTipo,getFilesDeFamilia}){
+function SubirImagenPorTipoDocumento({idEstudio,idDocTipo,getFilesDeFamilia, seccion}){
     const { logout } = useContext(AuthContext);
 
     const APIURL = process.env.REACT_APP_API_URL;
@@ -51,7 +51,7 @@ function SubirImagenPorTipoDocumento({idEstudio,idDocTipo,getFilesDeFamilia}){
  
     return (
     <div>
-        <label htmlFor="formFileMultipleIngresos" className="form-label">Cargar archivos:</label>
+        <label htmlFor="formFileMultipleIngresos" className="form-label">Cargar archivos <span className="fw-bold">{ seccion }</span>:</label>
 
         <input 
             className="form-control"
@@ -63,9 +63,9 @@ function SubirImagenPorTipoDocumento({idEstudio,idDocTipo,getFilesDeFamilia}){
             multiple />
 
         <button 
-            className="btn btn-primary mt-2" 
+            className="btn btn-primary mt-2 btn-sm" 
             onClick={() => { subirDocumentacion() }}
-        > Subir Archivos </button>
+        > Subir Archivos <span className="fw-bold">{ seccion }</span></button>
     </div>
     )
 }
