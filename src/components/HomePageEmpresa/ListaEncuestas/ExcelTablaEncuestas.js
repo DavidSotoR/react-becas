@@ -6,6 +6,10 @@ import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} fr
 
 export default function ExcelTablaEncuestas({parametros, data,fileName}){
    
+  const mostrarColumnaHijo = () => {
+    return data.some(row => row.hasOwnProperty('hijo'));
+  };
+
   const columns = [
     {
       name: "No Estudio",
@@ -16,6 +20,13 @@ export default function ExcelTablaEncuestas({parametros, data,fileName}){
       selector: (row) => row.candidato,
       width: "300px",
     },
+    
+    mostrarColumnaHijo() && {      
+      name: "Hijo",
+      selector: (row) => row.nombre_hijo,
+      width: "300px",
+    },
+
     ...parametros.map((parametro) => ({
       name: parametro.nombre,
       selector: (row) => {
