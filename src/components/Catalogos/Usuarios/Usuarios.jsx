@@ -362,8 +362,9 @@ function Usuarios() {
 
   const showDataUsuario = (data) => {
     console.log(data);
-    setDataShowUsuario(data);
-    handleShowModalVerUsuario();
+    navigate("/usuarios/" + data.id + "/ver");
+    //setDataShowUsuario(data);
+    //handleShowModalVerUsuario();
   };
 
   useEffect(() => {
