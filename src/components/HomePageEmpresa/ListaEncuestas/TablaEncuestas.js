@@ -159,6 +159,10 @@ export default function TablaEncuestas({
         },
       ];
     
+  const dataWithUniqueKeys = listaEstudios.map((row, index) => ({
+    ...row,
+    uniqueKey: `${row.id}-${(index+1)}`, // Combina `id` y `index`
+  }));
 
     return(   <>
       <div className="d-flex justify-content-between">
@@ -175,10 +179,11 @@ export default function TablaEncuestas({
 
       <DataTable 
         columns={columns} 
-        data={listaEstudios} 
+        data={dataWithUniqueKeys} 
         pagination 
         dense 
-        selectableRows 
+        selectableRows
+        keyField="uniqueKey"
         fixedHeader
         fixedHeaderScrollHeight="400px"
         onSelectedRowsChange={handleChange} 
