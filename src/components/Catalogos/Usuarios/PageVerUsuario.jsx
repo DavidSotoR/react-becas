@@ -258,26 +258,7 @@ export default function PageUpdateUsuario() {
             direccion: dir,
         }));
     }
-
-    const seleccionarUbicacion = (direccion) => {
-        console.log(direccion);
-        setDireccionSelected(!direccionSelected)
-        
-        setDireccionUser(convertirAMayusculas(direccion.display_name))
-        placeIdSet(direccion.place_id);
-        setLatUser(direccion.lat)
-        setLonUser(direccion.lon)
-        setDataUpdateUsuario(prevState => ({
-            ...prevState,
-            direccion: direccion.display_name,
-        }));
-        setDataUpdateUsuario(prevState => ({
-            ...prevState,
-            latitud: direccion.lat,
-            longitud: direccion.lon
-        }));
-    }
-
+    
     const seccionUbicaciones = () => {
         console.log(direcciones);
         
@@ -714,17 +695,21 @@ export default function PageUpdateUsuario() {
                                 <div className="mb-3">
                                     {seccionUbicaciones()}
                                 </div>
-                                
-                                <MapContainer center={[latUser, lonUser]} zoom={13} style={{ height: "50vh", width: "100%" }}>
-                                    <TileLayer
-                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                        icon={customIcon}
-                                    />
-                                    <Marker position={[latUser, lonUser]}>
-                                    </Marker>
-                                    {cricleColaboradores()}
-                                </MapContainer>                                
+                                { latUser !== null && lonUser !== null && latUser.length > 0 && lonUser.length > 0 && 
+                                (
+                                    <MapContainer center={[latUser, lonUser]} zoom={13} style={{ height: "50vh", width: "100%" }}>
+                                        <TileLayer
+                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                            icon={customIcon}
+                                        />
+                                        <Marker position={[latUser, lonUser]}>
+                                        </Marker>
+                                        {cricleColaboradores()}
+                                    </MapContainer>    
+                                )
+                                }
+                                                            
                             
 
                             </div>
