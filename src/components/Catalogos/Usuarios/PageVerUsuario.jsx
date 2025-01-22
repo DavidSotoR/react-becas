@@ -279,7 +279,8 @@ export default function PageUpdateUsuario() {
     }
 
     const seccionUbicaciones = () => {
-
+        console.log(direcciones);
+        
         if (!Array.isArray(direcciones) || direcciones.length === 0) {
             // Si `direcciones` no es un array válido o está vacío, mostramos un mensaje
             return (<div>
@@ -488,7 +489,12 @@ export default function PageUpdateUsuario() {
 
     const getDireccionGSP = (data) => {        
         direccionesSet([])
+        console.log(data);
+        
         var dir = '';
+        if (data.direccion === null || data.direccion === '' || (data.latitud === null && data.longitud === null)) {
+            return 'Sin datos GSP'
+        }
         dir = data.direccion        
         axios.get(`https://nominatim.openstreetmap.org/search?q=${dir}&format=json&addressdetails=1`).then((resp)=>{
             

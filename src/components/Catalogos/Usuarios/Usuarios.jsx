@@ -20,18 +20,12 @@ function Usuarios() {
   const [listaUsuSelected, setListaUsuSelected] = useState([]);
   const [checkAllSelected, setCheckAllSelected] = useState(false);
   const [dataPostUsuario, setDataPostUsuario] = useState({});
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   const [showActivar, setShowActivar] = useState(false);
   const handleCloseActivar = () => setShowActivar(false);
   const handleShowActivar = () => setShowActivar(true);
   const [userToActive, setUserToActive] = useState(null);
-
-  const [showModalVerUsuario, setShowModalVerUsuario] = useState(false);
-  const handleCloseShowModalVerUsuario = () => setShowModalVerUsuario(false);
-  const handleShowModalVerUsuario = () => setShowModalVerUsuario(true);
-  const [dataShowUsuario, setDataShowUsuario] = useState(null);
 
   const [search, setSearch] = useState("");
   const [searchPorPerfil, setSearchPorPerfil] = useState(0);
@@ -57,10 +51,6 @@ function Usuarios() {
     },
   };
 
-  const defaultValuesForm = () => {
-    setClearForm(false);
-  };
-
   const habilitarDeshabilitarCuentas = (opcion) => {
     setShowModalActivaCuentas(!showModalActivaCuentas);
     setOptionSelectedAllUsuarios(opcion);
@@ -75,26 +65,6 @@ function Usuarios() {
       }
     });
     setDataFormActivarDeshabiliar(usuariosSlct);
-  };
-
-  const postCrearUsuario = async () => {
-    var data = dataPostUsuario;
-    try {
-      const resp = await axios.post(
-        APIURL+"/register",
-        data,
-        config
-      );
-      console.log(resp);
-      handleClose();
-      getAllDataUsuarios();
-      setClearForm(true);
-    } catch (error) {
-      console.log(error);
-      if (error.response.status === 401) {
-        logout();
-      }
-    }
   };
 
   const returnValorSwitch = (nuevoValor) => {
@@ -246,9 +216,6 @@ function Usuarios() {
     console.log(usuario.id);
 
     navigate("/usuarios/" + usuario.id + "/actualizar");
-
-    // setUserSelected(usuario)
-    //setShowUpdate(!showUpdate)
   };
 
   const existInAllUsuarioSelected = (id) => {
@@ -363,9 +330,17 @@ function Usuarios() {
   const showDataUsuario = (data) => {
     console.log(data);
     navigate("/usuarios/" + data.id + "/ver");
-    //setDataShowUsuario(data);
-    //handleShowModalVerUsuario();
+
   };
+
+  useEffect(() => {
+    if (!hasInitialized) {
+      // Carga inicial
+      console.log('Carga inicial de datos');
+      getAllDataUsuarios();
+      setHasInitialized(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (APIURL) {
@@ -376,29 +351,29 @@ function Usuarios() {
   }, [APIURL]);
 
   useEffect(() => {
-    if (!showUpdate) {
+    if (hasInitialized && !showUpdate) {
+      console.log('showUpdate');
       getAllDataUsuarios();
     }
   }, [showUpdate]);
 
   useEffect(() => {
-    if (!showActivar) {
+    if (hasInitialized && !showActivar) {
+      console.log('showActivar');
       getAllDataUsuarios();
     }
   }, [showActivar]);
 
   useEffect(() => {
-    if (!show) {
+    if (hasInitialized) {
+      console.log('searchs filtroas');
       getAllDataUsuarios();
     }
-  }, [show]);
-
-  useEffect(() => {
-    getAllDataUsuarios();
   }, [searchPorPerfil, searchPorCliente, searchPorActivo]);
 
   useEffect(() => {
-    if (!showModalActivaCuentas) {
+    if (hasInitialized && !showModalActivaCuentas) {
+      console.log('showModalActivaCuentas');
       getAllDataUsuarios();
       setListaUsuSelected([]);
       setCheckAllSelected(false);
@@ -544,59 +519,6 @@ function Usuarios() {
           activar_desactivar={optionSelectedAllUsuarios}
         ></ModalActivarAllUsuario>
       )}
-
-      <Modal
-        show={showModalVerUsuario}
-        onHide={handleCloseShowModalVerUsuario}
-        animation={true}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Usuario: {dataShowUsuario ? dataShowUsuario.id : "Cargando..."}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {dataShowUsuario !== null && (
-            <table className="table table-striped">
-              <tbody>
-                <tr>
-                  <td className="fw-bold">Nombre:</td>
-                  <td>{dataShowUsuario.name}</td>
-                </tr>
-                <tr>
-                  <td className="fw-bold">Email:</td>
-                  <td>{dataShowUsuario.email}</td>
-                </tr>
-                <tr>
-                  <td className="fw-bold">Perfil:</td>
-                  <td>{dataShowUsuario.perfil.nombre}</td>
-                </tr>
-                {dataShowUsuario.externo === 1 && (
-                  <tr>
-                    <td className="fw-bold">Cliente:</td>
-                    <td>{dataShowUsuario.cliente.nombre}</td>
-                  </tr>
-                )}
-                {dataShowUsuario.id_perfil === 6 && (
-                  <tr>
-                    <td className="fw-bold">Contraseña Temporal:</td>
-                    <td>{dataShowUsuario.password_temporal}</td>
-                  </tr>
-                )}
-                <tr>
-                  <td className="fw-bold">Dirección:</td>
-                  <td>{dataShowUsuario.direccion ?? "SIN DATO"}</td>
-                </tr>
-              </tbody>
-            </table>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseShowModalVerUsuario}>
-            Cerrar
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 }

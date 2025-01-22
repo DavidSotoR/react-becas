@@ -264,6 +264,8 @@ export default function PageUpdateUsuario() {
     }
 
     const searchDireccion = () => {
+        console.log('search');
+        
         getDireccionGSP();
     }
 
@@ -485,7 +487,9 @@ export default function PageUpdateUsuario() {
             setDataUpdateUsuario(resp.data)
             var data = resp.data
             console.log(data.direccion);
-            
+            if(data.direccion !== null){
+                getExistDireccionGSP(data.direccion)
+            }
             setEsExterno(data.externo === 1)
             setDireccionUser(data.direccion !== null ? data.direccion : '')
             setLatUser(data.latitud !== null ? data.latitud : '')
@@ -538,9 +542,6 @@ export default function PageUpdateUsuario() {
         direccionesSet([])
         var dir = '';
         dir = dataUpdateUsuario.direccion
-        /* if(dataUpdateUsuario.direccion.length<5){
-            direccionesSet()
-        } */
         axios.get(`https://nominatim.openstreetmap.org/search?q=${dataUpdateUsuario.direccion}&format=json&addressdetails=1`).then((resp)=>{
             console.log(resp);
             direccionesSet(resp.data);
@@ -548,17 +549,21 @@ export default function PageUpdateUsuario() {
             console.log(resp);
         })
     }
+    const getExistDireccionGSP = (dir = '') => {
+        direccionesSet([])
 
-    /* useEffect(()=>{
-        if (direccionUser.length >= 5) {
-            getDireccionGSP();
-
+        if (dir === '' || dir === null) {
+            return 'Sin datos GSP'
         }
-        
-    },[direccionUser]) */
+        axios.get(`https://nominatim.openstreetmap.org/search?q=${dir}&format=json&addressdetails=1`).then((resp)=>{
+            console.log(resp);
+            direccionesSet(resp.data);
+        }).catch((resp)=>{
+            console.log(resp);
+        })
+    }
 
     useEffect(()=>{
-        console.log(errorsArray);
         if (errorsArray.length === 0 && validateDataFormBtn(dataUpdateUsuario) ) {
             setBtnDisable(false)
         } else {
@@ -741,7 +746,7 @@ export default function PageUpdateUsuario() {
                         </div>
                     </div>
 
-                    <div className="col-12" style={{ display: !esExterno ? 'block' : 'none' }}>
+                    <div className="col-12" >
                         <h6 className="fw-bold"> Ubicacion del Usuario </h6>
                         <div className="mb-3">
                             <Form.Check type="switch" className="mx-2">
@@ -750,7 +755,7 @@ export default function PageUpdateUsuario() {
                             </Form.Check>
                             
                         </div>
-                        { cuentaConUbicacion && 
+                        {/* { cuentaConUbicacion &&  */}
                         <div className="row mb-3">
                             <div className="col-sm-6">
                                 <label htmlFor="direccion" className="form-label">
@@ -759,14 +764,14 @@ export default function PageUpdateUsuario() {
                                 <input type="text" className="form-control" id="direccion" name="direccion" value={dataUpdateUsuario.direccion} onChange={(e)=> changeDireccion(e)} placeholder="Dirección..."/>
                             </div>
                             <div className="col-sm-2 d-flex align-items-center" style={{ marginTop: '1.5rem' }}>
-                                <button className="btn btn-primary d-flex justify-content-center align-items-center" onClick={searchDireccion}>
+                                <button className="btn btn-primary d-flex justify-content-center align-items-center" onClick={ () => searchDireccion()}>
                                     <ion-icon name="search"></ion-icon>
                                 </button>
                             </div>
                         </div>
 
-                        }
-                        {   cuentaConUbicacion &&
+                        {/* }
+                        {   cuentaConUbicacion && */}
                             
                             <div className="row">
                                 {/* <div className="col-sm-9 col-md-5 mb-3">
@@ -809,7 +814,7 @@ export default function PageUpdateUsuario() {
 
                                 </div>
                             </div>
-                        }
+                       {/*  } */}
                         
                     </div>
                 </div>

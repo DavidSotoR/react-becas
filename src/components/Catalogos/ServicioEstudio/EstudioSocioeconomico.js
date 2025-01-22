@@ -325,15 +325,16 @@ function ServicioEstudio() {
           <div className="d-flex justify-content-end bd-highlight">
             <button
               onClick={() => sendCorreo(estudio)}
-              className="btn btn-secondary btn-sm mx-1 d-flex justify-content-center align-items-center"
+              className="btn btn-secondary mx-1 d-flex justify-content-center align-items-center"
             >
               <ion-icon name="mail-outline"></ion-icon>
             </button>
             <Link
-              className="btn btn-info btn-sm text-white"
+              className="btn btn-info text-white"
               to={`/estudio-socioeconomico/${estudio.id}`}
             >
-              <ion-icon name="file-tray-full-outline"></ion-icon>
+              <i class="bi bi-clipboard2-fill"></i>
+
             </Link>
           </div>
         </td>
