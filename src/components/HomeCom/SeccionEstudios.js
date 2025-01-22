@@ -307,13 +307,13 @@ export default function SeccionEstudios(){
                 <td>
                     <div className="d-flex flex-row-reverse bd-highlight">
                         
-                        <Link className="btn btn-primary btn-sm" to={`/estudio/${estudio.id}`}>Ver</Link>
+                        <Link className="btn btn-primary btn-sm" to={`/estudio-socioeconomico/${estudio.id}`}>Ver</Link>
                     </div>
                 </td>
             </tr>
             {filaSeleccionada === estudio.id && (
             <tr>
-                <td colSpan="9"  className={`subseccion ${filaSeleccionada === estudio.id ? 'expandida' : ''}`}>
+                <td colSpan="7"  className={`subseccion ${filaSeleccionada === estudio.id ? 'expandida' : ''}`}>
                     <div  style={{ backgroundColor: "#47D1D6"}} className="p-3 rounded-4">
                         <div className="row m-0">
                             {/*JSON.stringify(estudio)*/}
