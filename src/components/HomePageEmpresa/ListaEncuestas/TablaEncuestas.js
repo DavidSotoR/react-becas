@@ -150,7 +150,7 @@ export default function TablaEncuestas({
           cell: (row) => (
             <Link
               className="btn btn-link btn-sm text-dark"
-              to={`/estudios/${row.id}`}
+              to={`/estudios/${row.id}${row?.hijo?.id  && '?id_hijo='+row.hijo.id}`}
             >
               Ver
             </Link>

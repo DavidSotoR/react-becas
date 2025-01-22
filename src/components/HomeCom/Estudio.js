@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 import RespuestasVista from "../Estudios/Preguntas/RespuestasVista";
 
 export default function Estudio(){
@@ -16,6 +17,8 @@ export default function Estudio(){
     }
     const { logout } = useContext(AuthContext);
     const { idEstudio } = useParams();
+    const [searchParams] = useSearchParams();
+    const idHijo = searchParams.get("id_hijo");
 
     const [encuesta,setEncuesta] = useState(null);
     
@@ -54,7 +57,8 @@ export default function Estudio(){
       }, {});
 
     const getEsrudioSocioeconomico = () => {
-        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/encuesta`,config).then((resp)=>{
+        
+        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/encuesta${idHijo && '?id_hijo='+idHijo}`,config).then((resp)=>{
             setEncuesta(resp.data);
             console.log(resp.data);
         }).catch((resp)=>{
@@ -72,7 +76,7 @@ export default function Estudio(){
             },
             responseType: 'blob'
         }
-        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/pdf`,config_pdf).then((resp)=>{
+        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/pdf${idHijo && '?id_hijo='+idHijo}`,config_pdf).then((resp)=>{
 
             const pdfBlob = new Blob([resp.data], { type: 'application/pdf' });
 
