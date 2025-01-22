@@ -50,6 +50,19 @@ export default function ExcelTablaEncuestas({parametros, data,fileName}){
       name: "No. Familia Colegio",
       cell: (row) => {return (row.clave_familia_colegio !==null )  ? row.clave_familia_colegio : "" },
     },
+
+    
+    {
+      name: "Proyecto",
+      cell: (row) => {return (row?.proyecto && row.proyecto?.nombre && row.proyecto.nombre !==null )  ? row.proyecto.nombre : "" },
+      width: "300px",
+    },
+    
+    {
+      name: "Orden de servicio",
+      cell: (row) => {return (row?.orden_servicio && row.orden_servicio?.descripcion &&row.orden_servicio.descripcion !==null )  ? row.orden_servicio.descripcion : "" },
+      width: "300px",
+    },
   ];
   const transformDataForExcel = () => {
     return data.map((row) => {
