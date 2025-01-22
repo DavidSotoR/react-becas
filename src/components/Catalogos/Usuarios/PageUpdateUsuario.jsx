@@ -22,8 +22,8 @@ export default function PageUpdateUsuario() {
     const [placeId,placeIdSet] = useState('')
     const [direccionUser, setDireccionUser] = useState('')
 
-    const [latUser, setLatUser] = useState('')
-    const [lonUser, setLonUser] = useState('')
+    const [latUser, setLatUser] = useState('25.682910')
+    const [lonUser, setLonUser] = useState('-100.317943')
 
 
     const [errors, setErrors] = useState({});
@@ -271,8 +271,27 @@ export default function PageUpdateUsuario() {
 
     const seleccionarUbicacion = (direccion) => {
         console.log(direccion);
-        setDireccionSelected(!direccionSelected)
-        
+        console.log(direccionUser);
+        if (convertirAMayusculas(direccion.display_name) === direccionUser) {
+            console.log('entro===');
+            
+            setDireccionSelected(false)
+            placeIdSet('');
+            setLatUser('0')
+            setLonUser('0')
+            setDataUpdateUsuario(prevState => ({
+                ...prevState,
+                direccion: '',
+            }));
+            setDataUpdateUsuario(prevState => ({
+                ...prevState,
+                latitud: '0',
+                longitud: '0'
+            }));
+            return;
+        }
+        setDireccionSelected(true)
+   
         setDireccionUser(convertirAMayusculas(direccion.display_name))
         placeIdSet(direccion.place_id);
         setLatUser(direccion.lat)
@@ -492,8 +511,8 @@ export default function PageUpdateUsuario() {
             }
             setEsExterno(data.externo === 1)
             setDireccionUser(data.direccion !== null ? data.direccion : '')
-            setLatUser(data.latitud !== null ? data.latitud : '')
-            setLonUser(data.longitud !== null ? data.longitud :     '')
+            setLatUser(data.latitud !== null ? data.latitud : '25.682910')
+            setLonUser(data.longitud !== null ? data.longitud : '-100.317943')
             setCuentaConUbicacion( data.latitud !== '' || data.longitud !== '' )
             if (errorsArray.length === 0 && validateDataFormBtn(resp.data)) {
                 setBtnDisable(false)
@@ -539,13 +558,19 @@ export default function PageUpdateUsuario() {
     }
 
     const getDireccionGSP = () => {        
+        setLatUser('')
+        setLonUser('')
         direccionesSet([])
         var dir = '';
         dir = dataUpdateUsuario.direccion
         axios.get(`https://nominatim.openstreetmap.org/search?q=${dataUpdateUsuario.direccion}&format=json&addressdetails=1`).then((resp)=>{
             console.log(resp);
             direccionesSet(resp.data);
+            setLatUser('25.682910')
+            setLonUser('-100.317943')
         }).catch((resp)=>{
+            setLatUser('25.682910')
+            setLonUser('-100.317943')
             console.log(resp);
         })
     }
@@ -799,19 +824,19 @@ export default function PageUpdateUsuario() {
                                     <div className="mb-3">
                                         {seccionUbicaciones()}
                                     </div>
-                                    
-                                    <MapContainer center={[latUser, lonUser]} zoom={13} style={{ height: "50vh", width: "100%" }}>
-                                        <TileLayer
-                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                            icon={customIcon}
-                                        />
-                                        <Marker position={[latUser, lonUser]}>
-                                        </Marker>
-                                        {cricleColaboradores()}
-                                    </MapContainer>                                
-                                
-
+                                    { latUser.length > 0 && lonUser.length > 0 &&
+                                        <MapContainer center={[latUser, lonUser]} zoom={10} style={{ height: "50vh", width: "100%" }}>
+                                            <TileLayer
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                                icon={customIcon}
+                                            />
+                                            <Marker position={[latUser, lonUser]}>
+                                            </Marker>
+                                            {cricleColaboradores()}
+                                        </MapContainer>  
+                                    }
+                                                                  
                                 </div>
                             </div>
                        {/*  } */}
