@@ -213,7 +213,20 @@ export default function Estudio(){
                             <div className="col-3"/>
                             <div className="col-6 pb-2 pt-2 mb-4">
                                 <div className="text-center text-uppercase">{encuesta?.estudio?.cliente?.nombre && encuesta.estudio.cliente.nombre}</div>
+                                {encuesta?.hijo?.nombre && (<div className="text-center text-uppercase">{encuesta.hijo.nombre}</div>)}
                                 {puntosPorParametros()}
+                                
+                                <div className="row mt-3">
+                                    <div className="col-1"></div>
+                                    <div className="col-6 text-start text-uppercase">
+                                        PUNTUACION TOTAL
+                                    </div>
+                                    <div className="col-1"></div>
+                                    <div className="col-2 text-center text-uppercase border-bottom border-secondary">
+                                        {totalPuntosParametros()}
+                                    </div>
+                                    <div className="col-1"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -223,19 +236,19 @@ export default function Estudio(){
                             <div className="col"/>
                             <div className="col-3 d-flex">
                                 <div className="w-75 text-start">
-                                    PUNTUACION<br/>TOTAL
+                                PORCENTAJE<br/>SUGERIDO
                                 </div>
                                 <div className="w-25 border border-dark d-flex align-items-center justify-content-center ">
-                                    {totalPuntosParametros()}
+                                {porcentajeSugerido()}
                                 </div>
                             </div>
                             <div className="col-1"/>
                             <div className="col-3 d-flex mt-2 mt-md-0">
                                 <div className="w-75 text-start">
-                                    PORCENTAJE<br/>SUGERIDO
+                                PORCENTAJE<br/>OTORGADO
                                 </div>
                                 <div className="w-25 border border-dark d-flex align-items-center justify-content-center ">
-                                    {porcentajeSugerido()}
+                                    {encuesta?.estudio?.porcentaje_otorgado && encuesta.estudio.porcentaje_otorgado+'%'}
                                 </div>
                             </div>
                             <div className="col"/>

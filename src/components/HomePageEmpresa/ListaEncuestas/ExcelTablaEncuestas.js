@@ -60,7 +60,7 @@ export default function ExcelTablaEncuestas({parametros, data,fileName}){
     
     {
       name: "Orden de servicio",
-      cell: (row) => {return (row?.orden_servicio && row.orden_servicio?.descripcion &&row.orden_servicio.descripcion !==null )  ? row.orden_servicio.descripcion : "" },
+      cell: (row) => {return (row?.orden_servicio && row.orden_servicio?.descripcion &&row.orden_servicio.descripcion !==null )  ?  `#${row.orden_servicio.id} ${row.orden_servicio.descripcion}` : "" },
       width: "300px",
     },
   ];
