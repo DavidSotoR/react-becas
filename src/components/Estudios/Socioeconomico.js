@@ -80,6 +80,37 @@ function Socioeconomico(){
             }
             console.log(resp);
         })
+    }      
+    const getEsrudioSocioeconomicoPDF = () => {
+        const config_pdf = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+            responseType: 'blob'
+        }
+        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/pdf`,config_pdf).then((resp)=>{
+
+            const pdfBlob = new Blob([resp.data], { type: 'application/pdf' });
+
+            // Crea una URL temporal
+            const url = URL.createObjectURL(pdfBlob);
+
+            // Crea un enlace de descarga
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `estudio_${idEstudio}.pdf` || 'estudio.pdf';
+            document.body.appendChild(link);
+            link.click();
+
+            // Limpia el DOM
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }).catch((resp)=>{
+            if ( resp?.response?.status && resp.response.status === 401) {
+                logout()
+            }
+            console.log(resp);
+        })
     }
     
     const listaPreguntas = () => {
@@ -139,7 +170,12 @@ function Socioeconomico(){
                     </div>
                     
                     <div className="mt-1 me-1">
-                        <EncuestaPDF encuesta={encuesta}></EncuestaPDF>
+                        {/*<EncuestaPDF encuesta={encuesta}></EncuestaPDF>*/}
+                        <Button className="btn btn-light btn-sm" onClick={ () => getEsrudioSocioeconomicoPDF() }> 
+                            <div className="d-flex align-items-center">
+                                PDF
+                            </div>
+                        </Button>
                     </div>
 
                 </div>
