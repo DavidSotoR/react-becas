@@ -409,6 +409,13 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
         );
     };
     // 9 .-  Ahorro
+    
+    /*const [cuentaConInverciones, setCuentaConInverciones] = useState(false);
+
+    if(item?.seccion && item.seccion === 'activa'){
+        setCuentaConInverciones(formData[index].activo);
+    }*/
+
     const ahorro = () => {
         return formData.length && (
             <div>
@@ -420,21 +427,23 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                         </div>
                     </div>
                     
-                    <div className="col-sm-1 text-start">DESCRIBE:</div>
-                    <div className="col-sm-3 text-start ps-3">
-                        <div className="border-bottom border-secondary">
-                        {formData[0].respuesta ?? '\u00A0'}
-                        </div>
-                    </div>
-                    <div className="col-sm-5 text-start ps-1">D) MONTO DE AHORROS O INVERCIONES</div>
-                    <div className="col-sm-2">
-                        <div className="row">
-                            <div className="col-2">$</div>
-                            <div className="col-9 border-bottom border-secondary text-end">
-                                {formatNumber(formData[0].monto) ?? '\u00A0'}
+                    {formData[0].activo && (<>
+                        <div className="col-sm-1 text-start">DESCRIBE:</div>
+                        <div className="col-sm-3 text-start ps-3">
+                            <div className="border-bottom border-secondary">
+                            {formData[0].respuesta ?? '\u00A0'}
                             </div>
                         </div>
-                    </div>
+                        <div className="col-sm-5 text-start ps-1">, MONTO DE AHORROS O INVERCIONES</div>
+                        <div className="col-sm-2">
+                            <div className="row">
+                                <div className="col-2">$</div>
+                                <div className="col-9 border-bottom border-secondary text-end">
+                                    {formatNumber(formData[0].monto) ?? '\u00A0'}
+                                </div>
+                            </div>
+                        </div>
+                    </>)}
                 </div>
             </div>
         )
