@@ -58,7 +58,7 @@ export default function Estudio(){
 
     const getEsrudioSocioeconomico = () => {
         
-        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/encuesta${idHijo && '?id_hijo='+idHijo}`,config).then((resp)=>{
+        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/encuesta${idHijo !== null && '?id_hijo='+idHijo}`,config).then((resp)=>{
             setEncuesta(resp.data);
             console.log(resp.data);
         }).catch((resp)=>{
