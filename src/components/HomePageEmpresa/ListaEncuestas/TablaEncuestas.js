@@ -65,6 +65,19 @@ export default function TablaEncuestas({
           cellClassName: 'fixed-column',
         },
         {
+          name: "Acciones",
+          cell: (row) => (
+            <Link
+              className="btn btn-link btn-sm text-dark"
+              to={`/estudios/${row.id}${(row?.hijo?.id  && row.hijo?.id)  ? '?id_hijo='+row.hijo.id : ''}`}
+            >
+              Ver
+            </Link>
+          ),
+          width: "90px",
+          ignoreRowClick: true,
+        },
+        {
           name: "Familia",
           selector: (row) => (
             <div className="d-inline-flex">
@@ -90,7 +103,11 @@ export default function TablaEncuestas({
         },
         ,
         ...listaParametros.map((parametro) => ({
-          name: parametro.nombre,
+          name: (
+            <div style={{ whiteSpace: "pre-wrap", textTransform: "uppercase" }}>
+              {parametro.nombre}
+            </div>
+          ),
           selector: (row) => getPuntosParametros(row.parametros, parametro.id) || "-",
           sortable: true,
         })),
@@ -98,15 +115,24 @@ export default function TablaEncuestas({
           name: "Total",
           selector: (row) => getTotalPuntosParametros(row.parametros),
           sortable: true,
+          width: "90px",
         },
         {
-          name: "Porcentaje Sugerido",
+          name: (
+            <div style={{ whiteSpace: "pre-wrap" }}>
+              Porcentaje Sugerido
+            </div>
+          ),
           selector: (row) => `${getPorcentajeSugerido(row.parametros)}%`,
           sortable: true,
-          style: { textAling: "250px" },
+          style: { textAling: "100px" },
         },
         {
-          name: "Porcentaje Otorgado",
+          name: (
+            <div style={{ whiteSpace: "pre-wrap" }}>
+              Porcentaje Otorgado
+            </div>
+          ),
           cell: (row) =>
             row.porcentaje_otorgado ? (
               <button
@@ -126,7 +152,11 @@ export default function TablaEncuestas({
           ignoreRowClick: true,
         },
         {
-          name: "No. Familia Colegio",
+          name: (
+            <div style={{ whiteSpace: "pre-wrap" }}>
+              No. Familia Colegio
+            </div>
+          ),
           cell: (row) =>
             row.clave_familia_colegio ? (
               <button
@@ -143,18 +173,6 @@ export default function TablaEncuestas({
                 Añadir
               </button>
             ),
-          ignoreRowClick: true,
-        },
-        {
-          name: "Acciones",
-          cell: (row) => (
-            <Link
-              className="btn btn-link btn-sm text-dark"
-              to={`/estudios/${row.id}${(row?.hijo?.id  && row.hijo?.id)  ? '?id_hijo='+row.hijo.id : ''}`}
-            >
-              Ver
-            </Link>
-          ),
           ignoreRowClick: true,
         },
       ];
