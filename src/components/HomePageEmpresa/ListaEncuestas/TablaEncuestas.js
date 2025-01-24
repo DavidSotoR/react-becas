@@ -90,7 +90,7 @@ export default function TablaEncuestas({
             </div>
           ),
           sortable: true,
-          width: "300px",
+          width: "150px",
         },
 
         mostrarColumnaHijo() && {
@@ -99,7 +99,7 @@ export default function TablaEncuestas({
                 <span>{row.nombre_hijo}</span> 
           ),
           sortable: true,
-          width: "300px",
+          width: "250px",
         },
         ,
         ...listaParametros.map((parametro) => ({
