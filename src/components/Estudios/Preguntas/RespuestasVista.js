@@ -392,11 +392,16 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                     </div>
                 </div>
                 
-                <div className="row text-start">
-                    <div className="col-sm-3 p-1"><div><b>TOTAL</b></div></div>
-                    <div className="col-sm-3 p-1">
-                        <div className="border-bottom border-secondary text-end">
-                            ${formatNumber(sumaTotales())}
+                <div className="row">
+                    <div className="col-sm-3"><b>TOTAL:</b></div>
+                    <div className="col-sm-3 p-1 text-start">
+                        <div className="border-bottom border-secondary">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10 text-end">
+                                ${formatNumber(sumaTotales())}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -484,7 +489,16 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
                         <div className="col-sm-6 p-1 text-start"><b>TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametroID(-1))}</div></div>
+                        <div className="col-sm-6 p-1 text-start">
+                            <div className="border-bottom border-secondary">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10 text-end">
+                                        {formatNumber(mostrarTotalParametroID(-1))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -536,8 +550,9 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                     <div className="col-sm-3 p-1 text-start">
                         <div className="border-bottom border-secondary">
                             <div className="row">
+                                <div className="col-1">$</div>
                                 <div className="col-10 text-end">
-                                    ${formatNumber(sumaTotalporCampo('monto'))}
+                                {formatNumber(sumaTotalporCampo('monto'))}
                                 </div>
                             </div>
                         </div>
@@ -675,20 +690,43 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
     
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start"><b>B) TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalesSeccion('valor') + sumaTotalesSeccion('body_otros'))}</div></div>
+                        <div className="col-sm-6 p-1 text-start"><b>TOTAL:</b></div>
+                        <div className="col-sm-6 p-1 text-start">
+                            <div className="border-bottom border-secondary">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10 text-end">
+                                    {formatNumber(sumaTotalesSeccion('valor') + sumaTotalesSeccion('body_otros'))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="row col-12">
                     <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start"><b>A + B TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametro())}</div></div>
+                        <div className="col-sm-6 p-1 text-start"><b>GRAN TOTAL PATRIMONIO:</b></div>
+                        <div className="col-sm-6 p-1 text-start">
+                            <div className="border-bottom border-secondary">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10 text-end">
+                                    {formatNumber(mostrarTotalParametro())}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         );
     };
     // 13 .- Distribución de la casa
+    const distribucionDeLaCasaSeleccion = (idRespuesta) =>{
+        const respuesta = parametros.find((item) =>  item.valor === idRespuesta);
+        return respuesta?.texto ?? <>&nbsp;</>;
+    }
+
     const distribucionDeLaCasa = () => {
         return (
             <div className="row">
@@ -698,11 +736,11 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                 </div>
                 {formData.map((item, index) => {
                     return item?.seccion && item.seccion === 'clasificacion' && (
-                        <div key={'pes-'+idPregunta+'-'+index} className="col-12">
+                        <div key={'pes-'+idPregunta+'-'+index} className="col-12 ">
                             <div className="row">
                                 <div className="col-4 p-1 text-start">{item.texto}</div>
                                 <div className="col-8 p-1">
-                                    <div className="border-bottom border-secondary">{item.respuesta || <>&nbsp;</>}</div>
+                                    <div className="border-bottom border-secondary">{distribucionDeLaCasaSeleccion(item.respuesta)}</div>
                                 </div>
                             </div>
                         </div>
@@ -794,12 +832,20 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                         </div>
                     </div>
                 ))}
-                <div className="col-12">
-                    <div className="row text-start mt-2">
-                        <div className="col-sm-3 p-1 text-start"><b>TOTAL:</b></div>
-                        <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary  text-end">${formatNumber(sumaTotales())}</div></div>
-                    </div>
+                <div className="col-12 mt-2">
                 </div>
+                
+                    <div className="row col-sm-6">
+                        <div className="col-6 p-1"><b>TOTAL:</b></div>
+                        <div className="col-6 p-1">
+                            <div className="row">
+                                <div className="col-1">$</div>
+                                <div className="col-10 text-end border-bottom border-secondary">
+                                {formatNumber(sumaTotales())}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
         );
     };
