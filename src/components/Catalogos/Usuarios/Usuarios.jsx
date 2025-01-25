@@ -277,13 +277,14 @@ function Usuarios() {
               className="btn btn-outline-secondary mx-1 btn-sm p-1 pb-0"
               style={{ borderColor: "rgba(0,0,0,0)" }}
               onClick={() => showDataUsuario(usuario)}
+               type="button" title="VER"
             >
-              <ion-icon
+              <ion-icon 
                 name="eye"
                 style={{ fontWeight: "bolder!important", fontSize: "x-large" }}
               ></ion-icon>
             </button>
-            <button
+            <button title="EDITAR"
               className="btn btn-outline-secondary mx-1 btn-sm p-1 pb-0"
               style={{ borderColor: "rgba(0,0,0,0)" }}
               onClick={() => {

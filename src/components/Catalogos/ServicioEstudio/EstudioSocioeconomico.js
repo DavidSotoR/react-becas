@@ -323,13 +323,13 @@ function ServicioEstudio() {
         </td>
         <td>
           <div className="d-flex justify-content-end bd-highlight">
-            <button
+            <button title="Reenvio Correo Usuario"
               onClick={() => sendCorreo(estudio)}
               className="btn btn-secondary mx-1 d-flex justify-content-center align-items-center"
             >
               <ion-icon name="mail-outline"></ion-icon>
             </button>
-            <Link
+            <Link title="Editar Estudio"
               className="btn btn-info text-white"
               to={`/estudio-socioeconomico/${estudio.id}`}
             >

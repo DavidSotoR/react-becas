@@ -240,25 +240,6 @@ function EditarEstudioSocioeconomico(){
         return '';
     }
     
-    useEffect(()=>{
-        getEsrudioSocioeconomico();
-    },[])
-
-    useEffect(() => {
-        if(fromData.es_cliente_comun === true){
-            getListaClientesHermanos();
-            renderOptionClientesComunesDefaultSet(fromData.colegios_comunes);
-        }else{
-            setClientesComunes([]);
-        }
-    },[fromData.id_cliente,fromData.es_cliente_comun])
-
-    useEffect(()=>{
-        if(showColaborador === false){
-            getEsrudioSocioeconomico();
-        }
-    },[showColaborador])
-    
     const listaColegiosComunes = (colegios_comunes) => {
         return colegios_comunes.map((colegio,index) => (<div key={'lcc-'+index} className="border p-1 mb-1 me-1">{colegio.nombre}</div>))
     }
@@ -751,6 +732,25 @@ function EditarEstudioSocioeconomico(){
             </div>
         </>)
     }
+
+    useEffect(()=>{
+        getEsrudioSocioeconomico();
+    },[])
+
+    useEffect(() => {
+        if(fromData.es_cliente_comun === true){
+            getListaClientesHermanos();
+            renderOptionClientesComunesDefaultSet(fromData.colegios_comunes);
+        }else{
+            setClientesComunes([]);
+        }
+    },[fromData.id_cliente,fromData.es_cliente_comun])
+
+    useEffect(()=>{
+        if(showColaborador === false){
+            getEsrudioSocioeconomico();
+        }
+    },[showColaborador])
 
 
     return(<>
