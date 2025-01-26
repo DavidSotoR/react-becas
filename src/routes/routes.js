@@ -37,6 +37,7 @@ const AltaEstudioLaboral = React.lazy(()=> import("../components/Catalogos/Servi
 const Estudios = React.lazy(()=> import('../components/Catalogos/Estudios/Socioeconomicos/Estudios'))
 const Estudio = React.lazy(()=> import('../components/Catalogos/Estudios/Socioeconomicos/Estudio'))
 const EstudioSocioeconomicoID = React.lazy(() => import('../components/Estudios/Socioeconomico'))
+const EstudioSocioeconomicoIDFamilia = React.lazy(() => import('../components/Catalogos/ServicioEstudio/EditarFamiliaEstudioSocioeconomico'))
 const EncuestaProyectoID = React.lazy(() => import('../components/HomePageEmpresa/Proyecto/Proyecto'))
 const EmpresaEstudio = React.lazy(() => import('../components/HomeCom/Estudio'))
 //const Details = React.lazy(() => import("../pages/details/details"))
@@ -230,6 +231,12 @@ const routes = [
               <PrivateRoute path={PathConstants.ESTUDIOSOCIOECONOMICOID} element={<EditarEstudioSocioeconomico />} />
             </Suspense>
     )},
+    { path: PathConstants.ESTUDIOSOCIOECONOMICOIDFAMILIA, perfil:'Administrador',
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PrivateRoute path={PathConstants.ESTUDIOSOCIOECONOMICOIDFAMILIA} element={< EstudioSocioeconomicoIDFamilia/>} />
+        </Suspense>
+)},
     { path: PathConstants.ESTUDIOLABORAL, perfil:'Administrador',
           element: (
             <Suspense fallback={<div>Loading...</div>}>

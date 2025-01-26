@@ -323,6 +323,12 @@ function ServicioEstudio() {
         </td>
         <td>
           <div className="d-flex justify-content-end bd-highlight">
+            <Link title="Editar Familia Estudio"
+              className="btn btn-info text-white"
+              to={`/estudio-socioeconomico/editar-familia/${estudio.id}`}
+            >
+              <i class="bi bi-pencil-square"></i>
+            </Link>
             <button title="Reenvio Correo Usuario"
               onClick={() => sendCorreo(estudio)}
               className="btn btn-secondary mx-1 d-flex justify-content-center align-items-center"

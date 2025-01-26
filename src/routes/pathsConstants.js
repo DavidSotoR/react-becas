@@ -26,6 +26,7 @@ const PathConstants = {
     SERVICIOESTUDIO: '/servicio-estudio',
     ESTUDIOSOCIOECONOMICO: '/estudio-socioeconomico',
     ESTUDIOSOCIOECONOMICOID: '/estudio-socioeconomico/:idEstudio',
+    ESTUDIOSOCIOECONOMICOIDFAMILIA:'estudio-socioeconomico/editar-familia/:idEstudio',
     ESTUDIOSOCIOECONOMICONUEVO: '/estudio-socioeconomico/nuevo/:idProyecto/:idCliente/:idOrdenServicio',
     ESTUDIOLABORAL: '/estudio-laboral',
     ESTUDIOLABORALNUEVO: '/estudio-laboral/nuevo/:idCliente/:idOrdenServicio?',
