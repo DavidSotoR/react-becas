@@ -77,7 +77,7 @@ export default function Estudio(){
             },
             responseType: 'blob'
         }
-        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/pdf${idHijo && '?id_hijo='+idHijo}`,config_pdf).then((resp)=>{
+        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}/pdf${(idHijo !== null)  ? '?id_hijo='+idHijo : ''}`,config_pdf).then((resp)=>{
 
             const pdfBlob = new Blob([resp.data], { type: 'application/pdf' });
 

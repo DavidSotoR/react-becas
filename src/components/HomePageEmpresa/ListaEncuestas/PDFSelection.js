@@ -41,7 +41,7 @@ export default function PDFSelection({seleccionRow}){
     try {
 
         for (const row of seleccionRow) {
-            const response = await axios.get(`${APIURL}/estudio/socioeconomico/${row.id}/pdf${row?.hijo?.id  && '?id_hijo='+row.hijo.id}`, config);
+            const response = await axios.get(`${APIURL}/estudio/socioeconomico/${row.id}/pdf${row?.hijo ? '?id_hijo='+row.hijo.id : ''}`, config);
             folder.file(`${row.id}_${row.candidato}_${row?.nombre_hijo  && row.nombre_hijo}.pdf`, response.data, { binary: true });
         }
 
