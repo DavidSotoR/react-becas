@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import RespuestasVista from "../Estudios/Preguntas/RespuestasVista";
+import EvidenciasVista from "../Estudios/Preguntas/EvidenciasVista";
 
 export default function Estudio(){
 
@@ -330,6 +331,13 @@ export default function Estudio(){
                     )
                     )}
                 </div>
+            </div>
+            <div className="row">
+                <div className="col-md-2"></div>
+                    <EvidenciasVista 
+                    idEstudio={idEstudio}
+                    columnRow="col-md-8"
+                    />
             </div>
             </div>
         </div>
