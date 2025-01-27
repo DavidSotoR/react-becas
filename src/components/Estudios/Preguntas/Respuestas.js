@@ -807,11 +807,21 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                 })}
 
                 <div className="row col-12">
-                    <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start"><b>TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametroID(-1))}</div></div>
+                    <div className="row text-start">
+                        <div className="col-sm-3 p-1"><div><b>TOTAL</b></div></div>
+                        <div className="col-sm-3 p-1">
+                            <div className="border-bottom border-secondary">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10 text-end">
+                                        {formatNumber(mostrarTotalParametroID(-1))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
             </div>
         )
     }
@@ -1023,15 +1033,34 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                 </div>
                 
                 <div className="row col-12">
-                    <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start"><b>B) TOTAL:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalesSecciones(['valor','body_otros']))}</div></div>
+                    <div className="row text-start">
+                        <div className="col-sm-3 p-1"><div><b>TOTAL:</b></div></div>
+                        <div className="col-sm-3 p-1">
+                            <div className="border-bottom border-secondary">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10 text-end">
+                                        {formatNumber(sumaTotalesSecciones(['valor','body_otros']))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
                 <div className="row col-12">
-                    <div className="row col-md-6 text-start">
-                        <div className="col-sm-6 p-1 text-start"><b>GRAN TOTAL PATRIMONIO:</b></div>
-                        <div className="col-sm-6 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(mostrarTotalParametro())}</div></div>
+                    <div className="row text-start">
+                        <div className="col-sm-3 p-1"><div><b>GRAN TOTAL PATRIMONIO:</b></div></div>
+                        <div className="col-sm-3 p-1">
+                            <div className="border-bottom border-secondary">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10 text-end">
+                                        {formatNumber(mostrarTotalParametro())}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1256,10 +1285,20 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                 </div>
                 ))}
                 
-                <div className="col-12">
-                    <div className="row text-start mt-2">
-                        <div className="col-sm-3 p-1 text-start"><b>TOTAL:</b></div>
-                        <div className="col-sm-3 p-1 text-start"><div className="border-bottom border-secondary">${formatNumber(sumaTotalLista())}</div></div>
+                
+                <div className="row col-12">
+                    <div className="row text-start">
+                        <div className="col-sm-3 p-1"><div><b>TOTAL:</b></div></div>
+                        <div className="col-sm-3 p-1">
+                            <div className="border-bottom border-secondary">
+                                <div className="row">
+                                    <div className="col-1">$</div>
+                                    <div className="col-10 text-end">
+                                    {formatNumber(sumaTotalLista())}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
