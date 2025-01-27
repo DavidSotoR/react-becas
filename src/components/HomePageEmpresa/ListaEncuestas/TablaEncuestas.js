@@ -16,6 +16,7 @@ export default function TablaEncuestas({
       }){
       
     const [idEstudio, setIdEstudio] = useState(null);
+    const [idEstudioHijo, setIdEstudioHijo] = useState(null);
     
     const [ show, setShow] = useState(false);
     const handleClose = () => {
@@ -23,9 +24,10 @@ export default function TablaEncuestas({
       setIdEstudio(null)
       callBackPorcentajeOtorgado()
     };
-    const handleShow = (id) =>{
+    const handleShow = (id,no_hijo) =>{
       setShow(true)
       setIdEstudio(id)
+      setIdEstudioHijo(no_hijo)
     };
     
     const [ showClaveFamilia, setShowClaveFamilia] = useState(false);
@@ -137,14 +139,14 @@ export default function TablaEncuestas({
             row.porcentaje_otorgado ? (
               <button
                 className="btn btn-link btn-sm text-dark"
-                onClick={() => handleShow(row.id)}
+                onClick={() => handleShow(row.id,(row?.hijo?.id  ? row.hijo.id : null))}
               >
-                {row.porcentaje_otorgado}%
+                {row?.hijo ? row.hijo.porcentaje_otorgado : row.porcentaje_otorgado}% 
               </button>
             ) : (
               <button
                 className="btn btn-link btn-sm text-dark"
-                onClick={() => handleShow(row.id)}
+                onClick={() => handleShow(row.id,(row?.hijo?.id  ? row.hijo.id : null))}
               >
                 Añadir
               </button>
@@ -207,7 +209,7 @@ export default function TablaEncuestas({
         onSelectedRowsChange={handleChange} 
       />
 
-      <ModalPorcentajeOtorgado show={show} handleClose={handleClose} idEstudio={idEstudio}/>
+      <ModalPorcentajeOtorgado show={show} handleClose={handleClose} idEstudio={idEstudio} idEstudioHijo={idEstudioHijo}/>
       <ModalNumeroFamiliaColegio show={showClaveFamilia} handleClose={handleCloseClaveFamilia} idEstudio={idEstudio} claveFamiliaColegio={claveFamiliaColegio}/>
     </>)
 }

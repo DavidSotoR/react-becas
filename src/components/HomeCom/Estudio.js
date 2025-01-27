@@ -248,7 +248,7 @@ export default function Estudio(){
                                 PORCENTAJE<br/>OTORGADO
                                 </div>
                                 <div className="w-25 border border-dark d-flex align-items-center justify-content-center ">
-                                    {encuesta?.estudio?.porcentaje_otorgado && encuesta.estudio.porcentaje_otorgado+'%'}
+                                    {encuesta?.hijo ? encuesta.hijo.porcentaje_otorgado+'%' : encuesta?.estudio?.porcentaje_otorgado && encuesta.estudio.porcentaje_otorgado+'%'}
                                 </div>
                             </div>
                             <div className="col"/>

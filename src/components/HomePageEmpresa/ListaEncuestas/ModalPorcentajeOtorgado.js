@@ -5,7 +5,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import Select from "react-select";
 import makeAnimated from 'react-select/animated';
 
-export default function ModalPorcentajeOtorgado({ show, handleClose,idEstudio }){
+export default function ModalPorcentajeOtorgado({ show, handleClose, idEstudio, idEstudioHijo }){
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -42,7 +42,7 @@ export default function ModalPorcentajeOtorgado({ show, handleClose,idEstudio })
     }
 
     const postPuntosEstudio = () =>{
-        axios.post(`${APIURL}/estudio/${idEstudio}/porcentaje`,formData,config).then((resp)=>{
+        axios.post(`${APIURL}/estudio/${idEstudio}/porcentaje${idEstudioHijo !== null ? '?id_hijo='+idEstudioHijo : ''}`,formData,config).then((resp)=>{
             handleClose()
         }).catch((resp)=>{
             if (resp.status === 401) {
@@ -97,7 +97,7 @@ export default function ModalPorcentajeOtorgado({ show, handleClose,idEstudio })
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Pordentaje otorgado</Modal.Title>
+                <Modal.Title>Pordentaje otorgado {idEstudioHijo}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="mb-2">
