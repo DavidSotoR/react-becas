@@ -21,10 +21,11 @@ function EditarFamiliaEstudioSocioeconomico(){
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const {idProyecto, idCliente,idOrdenServicio } = useParams()
+    const {idProyecto, idCliente,idOrdenServicio, idEstudio } = useParams()
     const navigate = useNavigate();
     const backPage = () => {
-      navigate('/estudio-socioeconomico', { state: { idProyecto: idProyecto,idCliente: idCliente,idOrdenServicio: idOrdenServicio } });
+      navigate('/estudio-socioeconomico')
+        //navigate('/estudio-socioeconomico', { state: { idProyecto: idProyecto,idCliente: idCliente,idOrdenServicio: idOrdenServicio } });
     };
 
     const [tiposClientes,setTiposClientes] = useState([])
@@ -50,9 +51,9 @@ function EditarFamiliaEstudioSocioeconomico(){
 
     const nuevoUsuario = {
         id_servicio_estado:'1',
-        id_proyecto:idProyecto,
-        id_cliente:idCliente,
-        id_orden_servicio:idOrdenServicio,
+        id_proyecto:  0,
+        id_cliente:  0,
+        id_orden_servicio:  0,
         id_colaborador:'',
         es_cliente_comun:false,
         colegios_comunes:[],
@@ -72,6 +73,15 @@ function EditarFamiliaEstudioSocioeconomico(){
         direccion:'',
         latitud:25.67507,
         longitud:-100.31847,
+        proyecto: {
+            nombre: '',
+        },
+        cliente: {
+            nombre: '',
+        },
+        orden_servicio: {
+            id: 0
+        },
         padre:{
             id_familias_padres_tipo:'1',
             nombre:'',
@@ -705,7 +715,7 @@ function EditarFamiliaEstudioSocioeconomico(){
     }
 
     const getEstudioSocioeconomicoFamiliaID = () =>{
-        axios.get(`${APIURL}/estudio/socioeconomico/${91}`,config).then((resp)=>{
+        axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}`,config).then((resp)=>{
             console.log(resp.data);
             let data =  resp.data;
             /* if(data?.latitud){
@@ -784,6 +794,7 @@ function EditarFamiliaEstudioSocioeconomico(){
             { renderValidationErrors(fromDataError) }
           </Toast.Body>
         </Toast>
+        { fromData !== null && (<>
             <div className="d-flex justify-content-between mb-3">
                 <div className="">
                     <h6 style={{ fontWeight:'bold' }}>Nuevo Estudio Socioeconómico</h6>
@@ -802,7 +813,7 @@ function EditarFamiliaEstudioSocioeconomico(){
                         htmlFor="id_proyecto" 
                         className="form-label"
                         style={{marginBottom: "1px",color: "darkolivegreen"}}
-                    >Proyecto: {fromData.proyecto.nombre}
+                    >Proyecto: { fromData?.proyecto.nombre}
                     </label>
                 </div>
                 <div className="col-md-3">
@@ -1107,6 +1118,7 @@ function EditarFamiliaEstudioSocioeconomico(){
                     <br/>
                 </div>
             </div>
+            </>)}
        </div> 
     </>)
 }

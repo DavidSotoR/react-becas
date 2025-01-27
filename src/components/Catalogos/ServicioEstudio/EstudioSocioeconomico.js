@@ -327,7 +327,7 @@ function ServicioEstudio() {
               className="btn btn-info text-white"
               to={`/estudio-socioeconomico/editar-familia/${estudio.id}`}
             >
-              <i class="bi bi-pencil-square"></i>
+              <i className="bi bi-pencil-square"></i>
             </Link>
             <button title="Reenvio Correo Usuario"
               onClick={() => sendCorreo(estudio)}
@@ -339,7 +339,7 @@ function ServicioEstudio() {
               className="btn btn-info text-white"
               to={`/estudio-socioeconomico/${estudio.id}`}
             >
-              <i class="bi bi-clipboard2-fill"></i>
+              <i className="bi bi-clipboard2-fill"></i>
 
             </Link>
           </div>
