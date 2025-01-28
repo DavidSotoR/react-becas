@@ -12,6 +12,7 @@ import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import Toast from 'react-bootstrap/Toast';
+import PathConstants from "routes/pathsConstants";
 
 function EditarFamiliaEstudioSocioeconomico(){
     const { logout } = useContext(AuthContext)
@@ -67,7 +68,8 @@ function EditarFamiliaEstudioSocioeconomico(){
         numero_exterior:'',
         colonia:'',
         municipio:'',
-        estado:'',
+        estado_columna:'',
+        estado: {},
         codigo_postal:'',
         pais:'',
         direccion:'',
@@ -218,9 +220,20 @@ function EditarFamiliaEstudioSocioeconomico(){
         );
       };
     
-    const sendDataEstudioSocioeconomico = () =>{
-        var creado = fromData
-        axios.post(`${APIURL}/estudio/socioeconomico`,fromData,config).then((resp)=>{
+    const sendUpdateDataEstudioSocioeconomico = () =>{
+        var update = fromData
+        //console.log(update);
+        axios.post(`${APIURL}/estudio/socioeconomico/editar/familia`, update, config).then(resp=>{
+            console.log(resp);
+            navigate(PathConstants.ESTUDIOSOCIOECONOMICO);
+        }).catch(err=>{
+            console.log(err);
+            if (err.response.status === 401) {
+                logout()   
+            }
+        })
+        
+        /* axios.post(`${APIURL}/estudio/socioeconomico`,fromData,config).then((resp)=>{
             setFormDataError({})
             const {message,data} = resp.data
             console.log(resp);
@@ -259,7 +272,7 @@ function EditarFamiliaEstudioSocioeconomico(){
                 logout()
             }
             console.log(err);
-        })
+        }) */
     }
     
     const getProyecto = () => {
@@ -308,6 +321,18 @@ function EditarFamiliaEstudioSocioeconomico(){
             direccionesSet()
         }
         axios.get(`https://nominatim.openstreetmap.org/search?q=${fromData.direccion}&format=json&addressdetails=1`,config).then((resp)=>{
+            direccionesSet(resp.data);
+        }).catch((resp)=>{
+            setClientesComunes([]);
+            console.log(resp);
+        })
+    }
+
+    const getDireccionGSPInit = (direccion = '') => {
+        if(direccion.length<5){
+            direccionesSet()
+        }
+        axios.get(`https://nominatim.openstreetmap.org/search?q=${direccion}&format=json&addressdetails=1`,config).then((resp)=>{
             direccionesSet(resp.data);
         }).catch((resp)=>{
             setClientesComunes([]);
@@ -441,7 +466,7 @@ function EditarFamiliaEstudioSocioeconomico(){
             calle,
             colonia,
             municipio,
-            estado,
+            estado_columna,
             codigo_postal,
             pais
         } = data;
@@ -450,12 +475,14 @@ function EditarFamiliaEstudioSocioeconomico(){
                `${calle ? calle + ', ' : ''}` +
                `${colonia ? colonia + ', ' : ''}` +
                `${municipio ? municipio + ', ' : ''}` +
-               `${estado ? estado + ', ' : ''}` +
+               `${estado_columna ? estado_columna + ', ' : ''}` +
                `${codigo_postal ? codigo_postal + ', ' : ''}` +
                `${pais ? pais : ''}`;
     }
 
     const buscarDireccionBtn = () => {
+        console.log('buscar dir');
+        
         var dir = crearDireccion(fromData)
         setDireccionFamilia(dir)
         getDireccionGSP()
@@ -718,11 +745,13 @@ function EditarFamiliaEstudioSocioeconomico(){
         axios.get(`${APIURL}/estudio/socioeconomico/${idEstudio}`,config).then((resp)=>{
             console.log(resp.data);
             let data =  resp.data;
-            /* if(data?.latitud){
-                data.latitud = '';
-                data.longitud = '';
-            } */
-            
+            if(data.latitud == null || data.longitud == null){
+                data.latitud = '25.67507';
+                data.longitud = '-100.4376180712982';
+
+                
+            }
+            getDireccionGSPInit(resp.data.direccion)
             setFormData(data);
         }).catch((resp)=>{
             //setClientesComunes([]);
@@ -731,8 +760,8 @@ function EditarFamiliaEstudioSocioeconomico(){
     }
 
     useEffect(()=>{
-        getProyecto();
-        getCliente();
+       /*  getProyecto();
+        getCliente(); */
         getOrdenServicio();
         getListaColaboradores();
         getEstudioSocioeconomicoFamiliaID()
@@ -760,7 +789,7 @@ function EditarFamiliaEstudioSocioeconomico(){
         fromData.numero_exterior,
         fromData.colonia,
         fromData.municipio,
-        fromData.estado,
+        fromData.estado_columna,
         fromData.codigo_postal,
         fromData.pais,
     ])
@@ -873,7 +902,7 @@ function EditarFamiliaEstudioSocioeconomico(){
                     </div>
                     
                     <div className="mb-3 row">
-                        <p className="col-sm-2 col-form-label">Familia consegios comunes</p>
+                        <p className="col-sm-2 col-form-label">Familia colegios comunes</p>
                         <div className="col-sm-10 pt-1">
                             <div className="form-switch">
                                 <input 
@@ -976,9 +1005,9 @@ function EditarFamiliaEstudioSocioeconomico(){
                         </div>
                         <div className="col-sm-6">
                             <div className="mb-3 row">
-                                <label htmlFor="estado" className="col-sm-4 col-form-label">Estado:</label>
+                                <label htmlFor="estado_columna" className="col-sm-4 col-form-label">Estado:</label>
                                 <div className="col-sm-8">
-                                    <input key={"AES-estado"} type="text" className="form-control" id="estado" name="estado" value={fromData.estado_columna} onChange={(e)=> formInputChange(e)}/>
+                                    <input key={"AES-estado"} type="text" className="form-control" id="estado_columna" name="estado_columna" value={fromData.estado_columna} onChange={(e)=> formInputChange(e)}/>
                                 </div>
                                 {fromDataError?.estado && (
                                 <div>
@@ -1084,7 +1113,7 @@ function EditarFamiliaEstudioSocioeconomico(){
                     </div>
 
                     { fromData.latitud && fromData.longitud && (
-                        <MapContainer center={[fromData.latitud, fromData.longitud]} zoom={13} style={{ height: "50vh", width: "100%" }}>
+                        <MapContainer center={[fromData.latitud, fromData.longitud]} zoom={11} style={{ height: "50vh", width: "100%" }}>
                         <TileLayer
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -1111,7 +1140,7 @@ function EditarFamiliaEstudioSocioeconomico(){
                             </Button>
                         </div>
                         <div className="ms-auto p-2 bd-highlight">
-                            <button className="btn btn-primary btn-sm fw-bold " >Guardar estudio</button>
+                            <button className="btn btn-primary btn-sm fw-bold " onClick={sendUpdateDataEstudioSocioeconomico}>Actualizar Estudio</button>
                         </div>
                     </div>
                     
