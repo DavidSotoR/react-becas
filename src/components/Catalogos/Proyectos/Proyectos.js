@@ -1,5 +1,7 @@
 import axios from "axios";
 import ModalProyectos from "./ModalProyectos";
+import Modal from "react-bootstrap/Modal";
+
 import { useContext, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -17,7 +19,7 @@ function Proyectos() {
     },
   };
 
-  const [activos, setActivos] = useState(1);
+  const [activos, setActivos] = useState("all");
   const [tipoCliente, setTipoCliente] = useState("Escuelas");
   const [idTipoCliente, setIdTipoCliente] = useState(1);
   const [allTiposClientes, setAllTiposClientes] = useState([]);
@@ -26,6 +28,15 @@ function Proyectos() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [search, setSearch] = useState("");
+
+  const [showActiveProyecto, setShowActiveProyecto] = useState(false);
+  const handleCloseActiveProyecto = () => setShowActiveProyecto(false);
+  const handleShowActiveProyecto = () => setShowActiveProyecto(true);
+  const [proyectoToEdit, setProyectoToEdit] = useState(null);
+
+  const [showEliminarProyecto, setShowEliminarProyecto] = useState(false);
+  const handleCloseEliminarProyecto = () => setShowEliminarProyecto(false);
+  const handleShowEliminarProyecto = () => setShowEliminarProyecto(true);
 
   const searchText = (e) => {
     const buscar = e.target.value;
@@ -75,6 +86,37 @@ function Proyectos() {
     }
   };
 
+  const updateProyectoID = async () => {
+    try {
+      const resp = await axios.post(
+        APIURL + `/proyectos/editar`,
+        proyectoToEdit,
+        config
+      );
+      console.log(resp);
+    } catch (error) {
+      if (error?.response.status === 401) {
+        logout();
+      } else {
+        console.log(error);
+        alert("Error al solicitar información");
+      }
+    }
+  };
+
+  const openEditProyecto = (proyecto, option) => {
+    setProyectoToEdit(proyecto);
+
+    if (option === 'eliminar') {
+      setShowEliminarProyecto(true)
+    }
+
+    if (option === 'editar') {
+      setShowActiveProyecto(true);
+    }
+    
+  };
+
   useEffect(() => {
     getTiposClientes();
     getProyectosList();
@@ -116,16 +158,43 @@ function Proyectos() {
         <td>
           <div className="d-flex justify-content-start">
             <Link
-              className="btn btn-primary btn-sm"
-              to={`/proyectos/${proyecto.id}`}
+              className="btn"
+              data-bs-toggle="button"
+              onClick={() => openEditProyecto(proyecto, 'editar')}
             >
               <i className="bi bi-pencil-square"></i>
-              <span className="ms-1 btn-text-display">Editar</span>
+            </Link>
+            <Link
+              className="btn"
+              data-bs-toggle="button"
+              to={`/proyectos/${proyecto.id}`}
+            >
+              <i className="bi bi-files text-blue" title="Archivo Proyecto"></i>
+
+              {/* <span className="ms-1 btn-text-display">Editar</span> */}
+            </Link>
+            <Link
+              className="btn"
+              data-bs-toggle="button"
+              title="Eliminar Proyecto"
+              onClick={() => openEditProyecto(proyecto, 'eliminar')}
+            >
+              <i
+                className="bi bi-trash text-danger"
+                title="Archivo Proyecto"
+              ></i>
             </Link>
           </div>
         </td>
       </tr>
     ));
+  };
+
+  const activarProyecto = (e) => {
+    console.log(e.target.checked);
+    setProyectoToEdit((prevState) => ({
+      ...proyectoToEdit,
+    }));
   };
 
   return (
@@ -155,8 +224,19 @@ function Proyectos() {
               id="id_tipo_cliente"
               onChange={(e) => filtroProyectosActivos(e)}
             >
-              <option value="1">Activos</option>
-              <option value="0">Inactivos</option>
+              <option value="1">Escuelas</option>
+              <option value="2">Empresas</option>
+            </Form.Select>
+          </div>
+          <div className="col-12 col-md-3 mb-2 mb-md-1">
+            <Form.Select
+              className="form-select form-select-sm"
+              aria-label="Default select example"
+              onChange={(e) => filtroProyectosActivos(e)}
+            >
+              <option value="all">Activos/Inactivos</option>
+              <option value="1">Activo</option>
+              <option value="0">Inactivo</option>
             </Form.Select>
           </div>
           <div className="col-12 col-md-3 d-flex justify-content-end justify-content-md-start ">
@@ -203,6 +283,120 @@ function Proyectos() {
           </TabPanel>
         ))}
       </Tabs>
+
+      <Modal
+        show={showActiveProyecto}
+        onHide={handleCloseActiveProyecto}
+        animation={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Edicion Proyecto</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {proyectoToEdit && (
+            <div>
+              {/* <p>Proyecto: {proyectoToEdit.nombre}</p> */}
+              <div class="mb-3">
+                <label
+                  for="exampleFormControlInput1"
+                  className="form-label fw-bold"
+                >
+                  Proyecto:
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="exampleFormControlInput1"
+                  placeholder="Proyecto"
+                  value={proyectoToEdit.nombre}
+                />
+              </div>
+              <p className="mb-1 fw-bold">Estatus:</p>
+              <div className="mb-3">
+                <Form>
+                  <Form.Check // prettier-ignore
+                    type="switch"
+                    id="custom-switch"
+                    label="Activo"
+                    onChange={(e) => {
+                      activarProyecto(e);
+                    }}
+                    checked={proyectoToEdit.activo === 1 ? true : false}
+                  />
+                </Form>
+              </div>
+              <p className="mb-2 fw-bold">Clinte Tipo:</p>
+              <Form.Select
+                aria-label="Default select example"
+                value={proyectoToEdit.id_tipo_cliente}
+              >
+                <option value="1">Escuela</option>
+                <option value="2">Empresa</option>
+              </Form.Select>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            className="btn btn-secondary"
+            onClick={() => {
+              handleCloseActiveProyecto();
+            }}
+          >
+            Cancelar
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => updateProyectoID()}
+          >
+            Actualizar
+          </button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        show={showEliminarProyecto}
+        onHide={handleCloseEliminarProyecto}
+        animation={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Eliminar Proyecto</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {proyectoToEdit && (
+            <div>
+              <p className="mb-1 fw-bold">Proyecto: {proyectoToEdit.nombre}</p>
+              <p className="mb-1 fw-bold">
+                Estatus: {proyectoToEdit.activo === 1 ? "Activo" : "Inactivo"}
+              </p>
+              <p className="mb-2 fw-bold">
+                Clinte Tipo:{" "}
+                {proyectoToEdit.id_tipo_cliente === 1 ? "Escuela" : "Empresa"}
+              </p>
+            </div>
+          )}
+          <p className="text-danger fw-bold">
+            **El siguiente elemento seleccionado se ELIMINARA del listado del
+            catalogo.**
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            className="btn btn-secondary"
+            onClick={() => {
+              handleCloseEliminarProyecto();
+            }}
+          >
+            Cancelar
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => handleCloseEliminarProyecto()}
+          >
+            Eliminar
+          </button>
+        </Modal.Footer>
+      </Modal>
 
       <ModalProyectos
         key="mp"
