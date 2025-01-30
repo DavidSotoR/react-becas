@@ -3,7 +3,7 @@ import ModalProyectos from "./ModalProyectos";
 import Modal from "react-bootstrap/Modal";
 
 import { useContext, useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Alert } from "react-bootstrap";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { AuthContext } from "../../../context/AuthContext";
@@ -18,6 +18,9 @@ function Proyectos() {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   };
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [showAlertError, setShowAlertError] = useState(false);
 
   const [activos, setActivos] = useState("all");
   const [tipoCliente, setTipoCliente] = useState("Escuelas");
@@ -95,13 +98,15 @@ function Proyectos() {
       );
       getProyectosList()
       setShowActiveProyecto(false)
+      setShowAlert(true)
       console.log(resp);
     } catch (error) {
       if (error?.response.status === 401) {
         logout();
       } else {
         console.log(error);
-        alert("Error al solicitar información");
+        setShowAlertError(true)
+        //alert("Error al solicitar información");
       }
     }
   };
@@ -115,13 +120,15 @@ function Proyectos() {
       );
       getProyectosList()
       setShowEliminarProyecto(false)
+      setShowAlert(true)
       console.log(resp);
     } catch (error) {
       if (error?.response.status === 401) {
         logout();
       } else {
+        setShowAlertError(true)
         console.log(error);
-        alert("Error al solicitar información");
+        //alert("Error al solicitar información");
       }
     }
   }
@@ -211,6 +218,8 @@ function Proyectos() {
 
   const activarProyecto = (e) => {
     var { name, checked } = e.target;
+    console.log(name, checked);
+    
     setProyectoToEdit((prevState) => ({
       ...prevState,
       [name]: checked
@@ -348,10 +357,11 @@ function Proyectos() {
                     type="switch"
                     id="custom-switch"
                     label="Activo"
+                    name="activo"
                     onChange={(e) => {
                       activarProyecto(e);
                     }}
-                    checked={proyectoToEdit.activo === 1 ? true : false}
+                    checked={proyectoToEdit.activo}
                   />
                 </Form>
               </div>
@@ -435,6 +445,19 @@ function Proyectos() {
         idTipoCliente={idTipoCliente}
         TipoCliente={tipoCliente}
       />
+
+      <Alert show={showAlert} onClose={()=>{ setShowAlert(false) }} variant="success" className="alert-flotante" dismissible>
+          <Alert.Heading>Success</Alert.Heading>
+          <p>
+              Se ha guardado correctamente los datos.
+          </p>
+      </Alert>
+      <Alert show={showAlertError} onClose={()=>{ setShowAlertError(false) }} variant="danger" className="alert-flotante" dismissible>
+          <Alert.Heading>Success</Alert.Heading>
+          <p>
+              Ocurrio un ERROR al realizar Request.
+          </p>
+      </Alert>
     </div>
   );
 }
