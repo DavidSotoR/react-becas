@@ -93,6 +93,8 @@ function Proyectos() {
         proyectoToEdit,
         config
       );
+      getProyectosList()
+      setShowActiveProyecto(false)
       console.log(resp);
     } catch (error) {
       if (error?.response.status === 401) {
@@ -103,6 +105,26 @@ function Proyectos() {
       }
     }
   };
+
+  const borrarProyecto = async () => {
+    try {
+      const resp = await axios.put(
+        APIURL + `/proyectos/borrar`,
+        proyectoToEdit,
+        config
+      );
+      getProyectosList()
+      setShowEliminarProyecto(false)
+      console.log(resp);
+    } catch (error) {
+      if (error?.response.status === 401) {
+        logout();
+      } else {
+        console.log(error);
+        alert("Error al solicitar información");
+      }
+    }
+  }
 
   const openEditProyecto = (proyecto, option) => {
     setProyectoToEdit(proyecto);
@@ -159,19 +181,16 @@ function Proyectos() {
           <div className="d-flex justify-content-start">
             <Link
               className="btn"
-              data-bs-toggle="button"
+              data-bs-toggle="button" title="Editar Datos"
               onClick={() => openEditProyecto(proyecto, 'editar')}
             >
               <i className="bi bi-pencil-square"></i>
             </Link>
             <Link
               className="btn"
-              data-bs-toggle="button"
               to={`/proyectos/${proyecto.id}`}
             >
               <i className="bi bi-files text-blue" title="Archivo Proyecto"></i>
-
-              {/* <span className="ms-1 btn-text-display">Editar</span> */}
             </Link>
             <Link
               className="btn"
@@ -191,11 +210,21 @@ function Proyectos() {
   };
 
   const activarProyecto = (e) => {
-    console.log(e.target.checked);
+    var { name, checked } = e.target;
     setProyectoToEdit((prevState) => ({
-      ...proyectoToEdit,
+      ...prevState,
+      [name]: checked
     }));
   };
+
+  const editarDatosProyecto = (e) => {
+    var { name, value } = e.target;
+    
+    setProyectoToEdit((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  }
 
   return (
     <div className="container mt-3">
@@ -306,9 +335,10 @@ function Proyectos() {
                 <input
                   type="text"
                   class="form-control"
-                  id="exampleFormControlInput1"
+                  name="nombre"
                   placeholder="Proyecto"
                   value={proyectoToEdit.nombre}
+                  onChange={ (e) => { editarDatosProyecto(e) } }
                 />
               </div>
               <p className="mb-1 fw-bold">Estatus:</p>
@@ -326,8 +356,8 @@ function Proyectos() {
                 </Form>
               </div>
               <p className="mb-2 fw-bold">Clinte Tipo:</p>
-              <Form.Select
-                aria-label="Default select example"
+              <Form.Select name="id_tipo_cliente"
+                aria-label="Default select example" onChange={ (e) => { editarDatosProyecto(e) } }
                 value={proyectoToEdit.id_tipo_cliente}
               >
                 <option value="1">Escuela</option>
@@ -391,7 +421,7 @@ function Proyectos() {
           </button>
           <button
             className="btn btn-primary"
-            onClick={() => handleCloseEliminarProyecto()}
+            onClick={() => borrarProyecto()}
           >
             Eliminar
           </button>
