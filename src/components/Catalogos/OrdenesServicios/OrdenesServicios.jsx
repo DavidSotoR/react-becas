@@ -161,6 +161,29 @@ function OrdenesServicios() {
     }));
   };
 
+  const changeDataEditarOrdenServicio = (e) => {
+    var { value, name, checked } = e.target;
+
+    if (name == "id_proyecto") {
+      getAllClientes(value);
+    }
+
+    if (name === 'activo') {
+      console.log(name , value);
+      
+      setDataSelectedOrdenServicio((prevState) => ({
+        ...prevState,
+        [name]: checked,
+      }));
+    } else {
+      setDataSelectedOrdenServicio((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
+
+  };
+
   const changeFilterOrdenes = (e) => {
     const { name, value } = e.target;
 
@@ -195,6 +218,33 @@ function OrdenesServicios() {
   const editarOrdenServicio = (or) => {
     setDataSelectedOrdenServicio(or);
     handleShowEditarOrdenServicio()
+  }
+
+  const sendDataEditarOrdenServicio = () => {
+    var dataSend = {
+      id: dataSelectedOrdenServicio.id,
+      id_cliente: dataSelectedOrdenServicio.id_cliente,
+      id_proyecto: dataSelectedOrdenServicio.id_proyecto,
+      descripcion: dataSelectedOrdenServicio.descripcion,
+      activo: dataSelectedOrdenServicio.activo,
+      notas: dataSelectedOrdenServicio.notas,
+      fecha_estimada_entrega: dataSelectedOrdenServicio.fecha_estimada_entrega,
+      fecha_estimada_finalizacion: dataSelectedOrdenServicio.fecha_estimada_finalizacion,
+    } 
+    axios
+    .put(
+      `${APIURL}/proyectos/clientes/ordenes-servicio/${dataSelectedOrdenServicio.id}`,
+      dataSend,
+      CONFIG
+    )
+    .then((resp) => {
+      console.log(resp);
+      handleCloseEditarOrdenServicio();
+    })
+    .catch((resp) => {
+      console.log(resp);
+    });
+    
   }
 
   useEffect(() => {
@@ -413,7 +463,7 @@ function OrdenesServicios() {
                   className="form-control-sm"
                   value={ dataSelectedOrdenServicio.id_proyecto }
                   onChange={(e) => {
-                    changeDataFormOrdenServicio(e);
+                    changeDataEditarOrdenServicio(e);
                   }}
                 >
                   <option value="0">Seleccione Proyecto</option>
@@ -427,7 +477,7 @@ function OrdenesServicios() {
                   value={ dataSelectedOrdenServicio.id_cliente }
                   className="form-control-sm"
                   onChange={(e) => {
-                    changeDataFormOrdenServicio(e);
+                    changeDataEditarOrdenServicio(e);
                   }}
                 >
                   <option value="0">Seleccione Cliente</option>
@@ -440,7 +490,7 @@ function OrdenesServicios() {
                   type="text"
                   className="form-control"
                   name="descripcion"
-                  onChange={(e) => formInputChange(e)}
+                  onChange={(e) => changeDataEditarOrdenServicio(e)}
                 />
               </div>
               <div className="mb-3">
@@ -449,7 +499,7 @@ function OrdenesServicios() {
                   <Form.Check.Input
                     name="activo"
                     onChange={(e) => {
-                      handleCheckChange(e);
+                      changeDataEditarOrdenServicio(e);
                     }}
                     style={{ width: "2rem" }}
                     checked={dataSelectedOrdenServicio.activo}
@@ -469,7 +519,7 @@ function OrdenesServicios() {
                   type="text"
                   className="form-control"
                   name="notas"
-                  onChange={(e) => formInputChange(e)}
+                  onChange={(e) => changeDataEditarOrdenServicio(e)}
                 />
               </div>
               <div className="mb-3">
@@ -478,7 +528,7 @@ function OrdenesServicios() {
                   type="date"
                   className="form-control"
                   name="fecha_estimada_entrega"
-                  onChange={(e) => formInputChange(e)}
+                  onChange={(e) => changeDataEditarOrdenServicio(e)}
                 />
               </div>
               <div className="mb-3">
@@ -489,7 +539,7 @@ function OrdenesServicios() {
                   type="date"
                   className="form-control"
                   name="fecha_estimada_finalizacion"
-                  onChange={(e) => formInputChange(e)}
+                  onChange={(e) => changeDataEditarOrdenServicio(e)}
                 />
               </div>
             </>
@@ -500,7 +550,7 @@ function OrdenesServicios() {
           <Button variant="secondary" onClick={handleCloseEditarOrdenServicio}>
             Cancelar
           </Button>
-          <Button variant="primary">
+          <Button variant="primary" onClick={sendDataEditarOrdenServicio}>
             Editar
           </Button>
         </Modal.Footer>
