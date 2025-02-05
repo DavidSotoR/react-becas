@@ -301,7 +301,7 @@ function Clientes() {
                   <td>
                     <p className="mb-1">
                       Persona:{" "}
-                      {dataShowCliente.tipo_persona.toUpperCase() ?? "SIN DATO"}
+                      {dataShowCliente.tipo_persona ? dataShowCliente.tipo_persona.toUpperCase() : "SIN DATO"}
                     </p>
                     <p className="mb-1">
                       Razón Social: {dataShowCliente.rason_social ?? "SIN DATO"}

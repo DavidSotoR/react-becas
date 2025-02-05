@@ -188,7 +188,7 @@ function Proyectos() {
           <div className="d-flex justify-content-start">
             <Link
               className="btn"
-              data-bs-toggle="button" title="Editar Datos"
+               title="Editar Datos"
               onClick={() => openEditProyecto(proyecto, 'editar')}
             >
               <i className="bi bi-pencil-square"></i>
@@ -201,7 +201,6 @@ function Proyectos() {
             </Link>
             <Link
               className="btn"
-              data-bs-toggle="button"
               title="Eliminar Proyecto"
               onClick={() => openEditProyecto(proyecto, 'eliminar')}
             >

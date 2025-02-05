@@ -40,64 +40,155 @@ const EstudioSocioeconomicoID = React.lazy(() => import('../components/Estudios/
 const EstudioSocioeconomicoIDFamilia = React.lazy(() => import('../components/Catalogos/ServicioEstudio/EditarFamiliaEstudioSocioeconomico'))
 const EncuestaProyectoID = React.lazy(() => import('../components/HomePageEmpresa/Proyecto/Proyecto'))
 const EmpresaEstudio = React.lazy(() => import('../components/HomeCom/Estudio'))
+
+const OrdenesServicio = React.lazy(()=> import('../components/Catalogos/OrdenesServicios/OrdenesServicios'))
 //const Details = React.lazy(() => import("../pages/details/details"))
 
 const PageDatosFamilia = React.lazy(()=> import('../components/HomePageFamilia/PageDatosFamilia'))
 
 const isAuthenticated = () => {
-  return localStorage.getItem('login') === 'true';
+  const login = localStorage.getItem('login');
+  const token = localStorage.getItem('token');
+  return login === 'true' && token;
 };
   
-const PrivateRoute = ({ path ,element }) => {
-  const { logout,roleSession } = useContext(AuthContext);
-  const [cookieValue, setCookieValue] = useState('');
-  const value = Cookies.get('localhost');
-  var role = localStorage.getItem('role') ?? ''
-  if (isAuthenticated()) {
-    if (role === '' || role !== roleSession) {
-      localStorage.clear()
-      logout()
-    }
-    if (role === 'Administrador') {
-      return element 
-    }
+const PrivateRoute = ({ path, element }) => {
+  const { logout, roleSession } = useContext(AuthContext);
+  const role = localStorage.getItem('role') ?? '';
 
-    if (role === 'Empresas') {
-      if (
-        path === PathConstants.HOME
-        || path === PathConstants.ENCUESTAPROYECTOID
-        || path === PathConstants.ESTUDIOSID
-      ) {
-        return element
-      } else {
-        return window.location.replace('/')
-      }
-    }
+  if (!isAuthenticated()) {
+    return <Navigate to={PathConstants.LOGIN} replace />;
+  }
 
-    if (role === 'Familias') {
-      if (
-          path === PathConstants.HOME 
-          || path === PathConstants.FAMILIASFILES
-          || path === PathConstants.DATOSFAMILIA
-        ) {
-        return element
-      } else {
-        return window.location.replace('/')
-      }
-    }
-    if (role === 'Empresas') {
-      if (path === PathConstants.HOME) {
-        return element
-      } else {
-        return window.location.replace('/')
-      }
-    }
+  if (role === '' || role !== roleSession) {
+    localStorage.clear();
+    logout();
+    return <Navigate to={PathConstants.LOGIN} replace />;
+  }
+
+  const allowedPathsByRole = {
+    Administrador: [
+      PathConstants.HOME,
+      PathConstants.ENCUESTAS,
+      PathConstants.USUARIOS,
+      PathConstants.PERFILES,
+      PathConstants.ESEBP2,
+      PathConstants.DATOSFAMILIA,
+      PathConstants.COLABORADOR,
+      PathConstants.CALIDAD,
+      PathConstants.CLIENTES,
+      PathConstants.CLIENTEACTUALIZAR,
+      PathConstants.CLIENTENUEVO,
+      PathConstants.COLEGIOSCOMUNES,
+      PathConstants.ENCUESTAS,
+      PathConstants.ENCUESTASID,
+      PathConstants.TIPOSCLIENTES,
+      PathConstants.FAMILIAS,
+      PathConstants.FAMILIASALTA,
+      PathConstants.FAMILIASFILES,
+      PathConstants.PERFILES,
+      PathConstants.USUARIOS,
+      PathConstants.USUARIOCREAR,
+      PathConstants.USUARIOACTUALIZAR,
+      PathConstants.USUARIOVER,
+      PathConstants.CICLOSESCOLARES,
+      PathConstants.PROYECTOS,
+      PathConstants.PROYECTO,
+      PathConstants.SERVICIOESTUDIO,
+      PathConstants.ORDENESSERVICIOS,
+      PathConstants.ESTUDIOSOCIOECONOMICO,
+      PathConstants.ESTUDIOSOCIOECONOMICOID,
+      PathConstants.ESTUDIOSOCIOECONOMICOIDFAMILIA,
+      PathConstants.ESTUDIOSOCIOECONOMICONUEVO,
+      PathConstants.ESTUDIOLABORAL,
+      PathConstants.ESTUDIOLABORALNUEVO,
+      PathConstants.ESTUDIOS,
+      PathConstants.ESTUDIOID,
+      PathConstants.ESTUDIOSID,
+      PathConstants.ESTUDIO_SOCIOECONOMICO_ID,
+      PathConstants.ENCUESTAPROYECTOID
+      // Agrega más rutas aquí
+    ],
+    Empresas: [
+      PathConstants.HOME,
+      PathConstants.ENCUESTAPROYECTOID,
+      PathConstants.ESTUDIOSID,
+    ],
+    Familias: [
+      PathConstants.HOME,
+      PathConstants.FAMILIASFILES,
+      PathConstants.DATOSFAMILIA,
+    ],
+  };
+
+  if (!allowedPathsByRole[role]) {
+    console.error(`Rol no definido: ${role}`);
+    return <Navigate to={PathConstants.HOME} replace />;
+  }
+
+  if (allowedPathsByRole[role].includes(path)) {
+    return element;
   } else {
-    return <Navigate to={PathConstants.LOGIN} replace />
+    return <Navigate to={PathConstants.HOME} replace />;
   }
 };
 
+const generateRoute = (path, element, perfil = 'todos') => ({
+  path,
+  perfil,
+  element: (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PrivateRoute path={path} element={element} />
+    </Suspense>
+  ),
+});
+
 const routes = [
+  generateRoute(PathConstants.DATOSFAMILIA, <PageDatosFamilia />, 'Familias'),
+  generateRoute(PathConstants.HOME, <Home />),
+  generateRoute(PathConstants.ESTUDIOSID, <EmpresaEstudio />),
+  generateRoute(PathConstants.ESTUDIOS, <Estudios />),
+  generateRoute(PathConstants.ENCUESTAPROYECTOID, <EncuestaProyectoID />),
+  generateRoute(PathConstants.ESTUDIOID, <Estudio />),
+  generateRoute(PathConstants.ESTUDIO_SOCIOECONOMICO_ID, <EstudioSocioeconomicoID />),
+  generateRoute(PathConstants.ORDENESSERVICIOS, <OrdenesServicio />, 'Administrador'),
+  generateRoute(PathConstants.USUARIOS, <CatUsuarios />, 'Administrador'),
+  generateRoute(PathConstants.USUARIOCREAR, <CatUsuariosCrear />, 'Administrador'),
+  generateRoute(PathConstants.USUARIOACTUALIZAR, <CatUsuariosActualizar />, 'Administrador'),
+  generateRoute(PathConstants.USUARIOVER, <CatUsuariosVer />, 'Administrador'),
+  generateRoute(PathConstants.ENCUESTASID, <CatEncuestasID />, 'Administrador'),
+  generateRoute(PathConstants.ENCUESTAS, <CatEncuestas />, 'Administrador'),
+  generateRoute(PathConstants.PERFILES, <CatPerfiles />, 'Administrador'),
+  generateRoute(PathConstants.FAMILIAS, <CatFamilia />, 'Administrador'),
+  generateRoute(PathConstants.FAMILIASALTA, <CatFamiliaAlta />, 'Administrador'),
+  generateRoute(PathConstants.FAMILIASFILES, <FormFamilaFiles />, 'familias'),
+  generateRoute(PathConstants.CICLOSESCOLARES, <CatCiclosEscolares />, 'Administrador'),
+  generateRoute(PathConstants.SERVICIOESTUDIO, <ServicioEstudio />, 'Administrador'),
+  generateRoute(PathConstants.ESTUDIOSOCIOECONOMICO, <EstudioSocioeconomico />, 'Administrador'),
+  generateRoute(PathConstants.ESTUDIOSOCIOECONOMICONUEVO, <AltaEstudioSocioeconomico />, 'Administrador'),
+  generateRoute(PathConstants.ESTUDIOSOCIOECONOMICOID, <EditarEstudioSocioeconomico />, 'Administrador'),
+  generateRoute(PathConstants.ESTUDIOSOCIOECONOMICOIDFAMILIA, <EstudioSocioeconomicoIDFamilia />, 'Administrador'),
+  generateRoute(PathConstants.ESTUDIOLABORAL, <EstudioLaboral />, 'Administrador'),
+  generateRoute(PathConstants.ESTUDIOLABORALNUEVO, <AltaEstudioLaboral />, 'Administrador'),
+  generateRoute(PathConstants.PROYECTOS, <CatProyectos />, 'Administrador'),
+  generateRoute(PathConstants.PROYECTO, <CatProyecto />, 'Administrador'),
+  generateRoute(PathConstants.ESEBP2, <FormBP2 />, 'Administrador'),
+  generateRoute(PathConstants.CLIENTES, <CatClientes />, 'Administrador'),
+  generateRoute(PathConstants.CLIENTENUEVO, <ClienteNuevo />),
+  generateRoute(PathConstants.CLIENTEACTUALIZAR, <ClienteActualizar />),
+  generateRoute(PathConstants.COLEGIOSCOMUNES, <CatColegiosComunes />, 'Administrador'),
+  generateRoute(PathConstants.TIPOSCLIENTES, <CatTiposClientes />, 'Administrador'),
+  {
+    path: PathConstants.LOGIN,
+    perfil: 'todos',
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Login />
+      </Suspense>
+    ),
+  },
+];
+/* const routes = [
   { path: PathConstants.DATOSFAMILIA, perfil:'Familias', 
     element: (
       <Suspense fallback={<div>Loading...</div>}>
@@ -140,13 +231,18 @@ const routes = [
             <PrivateRoute path={PathConstants.ESTUDIO_SOCIOECONOMICO_ID} element={<EstudioSocioeconomicoID />} />
           </Suspense>
         )},
-        
+    { path: PathConstants.ORDENESSERVICIOS, perfil:'Administrador',
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PrivateRoute path={PathConstants.ORDENESSERVICIOS} element={<OrdenesServicio />} />
+        </Suspense>
+      )},
     { path: PathConstants.USUARIOS, perfil:'Administrador',
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <PrivateRoute path={PathConstants.USUARIOS} element={<CatUsuarios />} />
         </Suspense>
-      )},
+    )},
       { path: PathConstants.USUARIOCREAR, perfil:'Administrador',
         element: (
         <Suspense fallback={<div>Loading...</div>}>
@@ -296,6 +392,6 @@ const routes = [
         <Login />
       </Suspense>
     )},
-]
+] */
 
 export default routes

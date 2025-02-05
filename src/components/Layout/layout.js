@@ -196,6 +196,15 @@ export default function Layout() {
                         <p>ASIGNACIONES</p>
                       )}
                     </MenuItem>
+                    <MenuItem component={<Link to={PathConstants.ORDENESSERVICIOS} />}>
+                      {collapsed ? (
+                        <div className="ion-text-center">
+                          <ion-icon name="albums-outline" size="large"></ion-icon>
+                        </div>
+                      ) : (
+                        <p>ORDENES DE SERVICIO</p>
+                      )}
+                    </MenuItem>
 
                     {/*<MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> 
                                 {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>CICLOS ESCOLARES</p>)}
