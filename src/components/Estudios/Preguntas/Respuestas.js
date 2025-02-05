@@ -605,7 +605,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                     <div className="border-bottom border-secondary">
                         <div className="row">
                             <div className="col-1">$</div>
-                            <div className="col-10 text-end">
+                            <div className="col-10 text-end monto-total">
                                 {formatNumber(sumaTotalporCampo('padre_monto'))}
                             </div>
                         </div>
@@ -615,7 +615,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                     <div className="border-bottom border-secondary">
                         <div className="row">
                             <div className="col-1">$</div>
-                            <div className="col-10 text-end">
+                            <div className="col-10 text-end monto-total">
                                 {formatNumber(sumaTotalporCampo('madre_monto'))}
                             </div>
                         </div>
@@ -625,7 +625,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                     <div className="border-bottom border-secondary">
                         <div className="row">
                             <div className="col-1">$</div>
-                            <div className="col-10 text-end">
+                            <div className="col-10 text-end monto-total">
                                 {formatNumber(sumaTotalporCampo('monto'))}
                             </div>
                         </div>
@@ -638,7 +638,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                     <div className="border-bottom border-secondary">
                         <div className="row">
                             <div className="col-1">$</div>
-                            <div className="col-10 text-end">
+                            <div className="col-10 text-end monto-total">
                                 {formatNumber(sumaTotales())}
                             </div>
                         </div>
@@ -813,7 +813,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                             <div className="border-bottom border-secondary">
                                 <div className="row">
                                     <div className="col-1">$</div>
-                                    <div className="col-10 text-end">
+                                    <div className="col-10 text-end monto-total">
                                         {formatNumber(mostrarTotalParametroID(-1))}
                                     </div>
                                 </div>
@@ -903,7 +903,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                         <div className="border-bottom border-secondary">
                             <div className="row">
                                 <div className="col-1">$</div>
-                                <div className="col-10 text-end">
+                                <div className="col-10 text-end monto-total">
                                     {formatNumber(sumaTotalporCampo('monto'))}
                                 </div>
                             </div>
@@ -1039,7 +1039,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                             <div className="border-bottom border-secondary">
                                 <div className="row">
                                     <div className="col-1">$</div>
-                                    <div className="col-10 text-end">
+                                    <div className="col-10 text-end monto-total">
                                         {formatNumber(sumaTotalesSecciones(['valor','body_otros']))}
                                     </div>
                                 </div>
@@ -1055,7 +1055,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                             <div className="border-bottom border-secondary">
                                 <div className="row">
                                     <div className="col-1">$</div>
-                                    <div className="col-10 text-end">
+                                    <div className="col-10 text-end monto-total">
                                         {formatNumber(mostrarTotalParametro())}
                                     </div>
                                 </div>
@@ -1307,7 +1307,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                         <div className="border-bottom border-secondary">
                             <div className="row">
                                 <div className="col-1">$</div>
-                                <div className="col-10 text-end">
+                                <div className="col-10 text-end monto-total">
                                     {formatNumber(sumaTotalporCampo('monto'))}
                                 </div>
                             </div>
@@ -1354,7 +1354,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                             <div className="border-bottom border-secondary">
                                 <div className="row">
                                     <div className="col-1">$</div>
-                                    <div className="col-10 text-end">
+                                    <div className="col-10 text-end monto-total">
                                     {formatNumber(sumaTotalLista())}
                                     </div>
                                 </div>

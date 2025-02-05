@@ -248,3 +248,7 @@ mark {
 .fixed-column:nth-child(2) {
   left: 100px; /* Ajusta según el ancho de la primera columna */
 }
+
+.monto-total {
+  font-size: .85rem;
+}
