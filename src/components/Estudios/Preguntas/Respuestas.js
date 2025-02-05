@@ -1067,6 +1067,66 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
         )
     } 
     // 13 .-  Distribución de la casa
+
+    const [textoAdicional, setTextoAdicional] = useState("");
+    const [resumen, setResumen] = useState("");
+
+    const dataSeleccionable = () => { return formData.map((item) => 
+         item?.seccion && item.seccion === 'seleccionable' && item
+    )}
+
+    const handleKeyDownPuntoYComa = (event) => {
+        if (event.key === ";") {
+        event.preventDefault(); // Evita que se inserte
+        }
+    };
+
+    useEffect(() => {
+        const data = dataSeleccionable();
+
+        const resumenNumerico = data
+        .map((item) =>  item?.monto && parseInt(item.monto) > 0 && item?.texto ? `${item.monto} ${item.texto.toUpperCase()}, ` : null )
+        .join("");
+        
+        const resumenSeleccionable = data
+        .map((item) =>  item?.activo && item.activo === true && item?.texto ? `${item.texto.toUpperCase()}, ` : null )
+        .join("");
+
+
+        const textoNumerico = (resumenNumerico.length > 3) ? `CUENTA CON ${resumenNumerico.slice(0, -2)}` : '';
+        
+        const textoSeleccionable  = resumenSeleccionable.length > 3 ? `, ADEMAS SE OBSERVAN LUJOS COMO: ${resumenSeleccionable.slice(0, -2)}` : '';
+        const nuevoValor = `${textoNumerico}${textoSeleccionable}`;
+        setResumen(nuevoValor); // Fijar el resumen y evitar que sea editable
+    }, [formData]);
+
+    const updateTestoAdicional = (e) => {
+        const texto =  e.target.value.toUpperCase();
+        //const secciones = texto.split(";");
+        //const resultado = texto.replace(/^.*;+\s*/, '');
+        //const resultado = secciones.map((item, index) =>  index > 1 ? item : '' ).join("");
+        const pre_resultado = texto.replace(/^.*;+\s*/, '');
+        const resultado = pre_resultado.replace(/;/g, '');
+        setTextoAdicional(resultado);
+    }
+    const [isIndex,setIsIndex] = useState(null);
+
+    useEffect(() => {
+        const respuesta = `${resumen};${textoAdicional ? " " + textoAdicional.toUpperCase() : " "}`;
+        // textChange(e,index);
+        
+        if(isIndex !== null){
+            setFormData((prevState) => {
+                const newState = [...prevState];
+                newState[isIndex] = {
+                    ...newState[isIndex],
+                    respuesta: respuesta
+                };
+                return newState;
+            });
+        }
+    },[resumen,textoAdicional])
+    
     
     const distrubucionDeLaCasaOptions = () => {
         return [<option key='sapt-default' value="">Seleccione la clasificacion</option>,...parametros.map((param) => (
@@ -1155,7 +1215,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                         )
                 })}
                 
-                {formData.map((item,index) => {
+                {formData.map((item,index) => { 
                     return item?.seccion && item.seccion === 'descripcion' && (                 
                         <div  key={'pes-'+idPregunta+'-'+index} className="row col-12">
                                     
@@ -1173,8 +1233,9 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                             <div className="col-12 p-1"> 
                                 
                                 <textarea
-                                    value={item.respuesta ?? ''}
-                                    onChange={(e) => {textChange(e,index)}}
+                                    value={item.respuesta}
+                                    onKeyDown={handleKeyDownPuntoYComa}
+                                    onChange={(e) => {setIsIndex(index); updateTestoAdicional(e);}} 
                                     maxLength={300}
                                     style={{
                                         width: '100%',
