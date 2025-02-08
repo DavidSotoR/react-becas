@@ -102,5 +102,7 @@ export default function ExcelTablaEncuestas({parametros, data,fileName}){
       XLSX.writeFile(workbook, "Datos.xlsx");
     }
 
-    return ( <button type="button" className="btn btn-light btn-sm" onClick={exportToExcel}>Excel</button> )
+    return ( <button type="button" className="btn btn-outline text-success" title='Descargar en Excel' onClick={exportToExcel}>
+      <i class="bi bi-filetype-exe" style={{ fontSize: '1.4rem' }}></i>
+    </button> )
 }

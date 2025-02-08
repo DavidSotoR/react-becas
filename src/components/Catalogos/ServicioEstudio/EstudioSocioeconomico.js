@@ -52,6 +52,17 @@ function ServicioEstudio() {
   const [loadign, setLoading] = useState(false);
 
   const [openModalCargarArchivo, setOpenModalCargarArchivo] = useState(false);
+
+  const [showModalSendMail, setShowModalSendMail] = useState(false);
+
+  const handleModalSendMailShow = () => {
+    setShowModalSendMail(true);
+  };
+  const handleModalSendMailHide = () => {
+    setShowModalSendMail(false);
+  };
+  const [dataSelectedSE, setDataSelectedSE] = useState(null);
+
   const changeOpenModalArchivo = () => {
     setOpenModalCargarArchivo(!openModalCargarArchivo);
     setShowErrors(false);
@@ -102,6 +113,11 @@ function ServicioEstudio() {
         setProyectos(resp.data);
       })
       .catch((resp) => {
+        if (resp.response) {
+          if (resp.response.status == 401) {
+            logout();
+          }
+        }
         console.log(resp);
       });
   };
@@ -230,33 +246,6 @@ function ServicioEstudio() {
     }
   };
 
-  useEffect(() => {
-    getProyectos();
-  }, []);
-
-  useEffect(() => {
-    getProyectoClientes();
-  }, [preyecto]);
-
-  useEffect(() => {
-    getOrdenesServicio();
-  }, [fromData.id_cliente]);
-
-  useEffect(() => {
-    if (openModalCargarArchivo === false) {
-      console.log(openModalCargarArchivo);
-      getEstudiosSocioeconomicos();
-    }
-  }, [openModalCargarArchivo]);
-
-  useEffect(() => {
-    if (fromData.id_proyecto) {
-      getEstudiosSocioeconomicos();
-    } else {
-      getEstudiosSocioeconomicos([]);
-    }
-  }, [fromData.id_proyecto, fromData.id_cliente, fromData.id_orden_servicio]);
-
   const allEstudiosSocioeconomicosFiltrados = allEstudiosSocioeconomicos.filter(
     (item) => item.candidato.toLowerCase().includes(search.toLowerCase())
   );
@@ -281,7 +270,13 @@ function ServicioEstudio() {
     );
   };
 
-  const sendCorreo = (data) => {
+  const openModalSendEmail = (data) => {
+    setDataSelectedSE(data);
+    handleModalSendMailShow();
+  };
+
+  const sendCorreo = () => {
+    var data = dataSelectedSE;
     var idFamilia = data.id_familia;
 
     axios
@@ -291,12 +286,12 @@ function ServicioEstudio() {
         config
       )
       .then((resp) => {
+        handleModalSendMailHide()
         console.log(resp);
       })
       .catch((err) => {
         console.log(err);
       });
-    console.log(data);
   };
 
   const renderFilasTablaEstudiosSocioeconomicos = () => {
@@ -323,24 +318,26 @@ function ServicioEstudio() {
         </td>
         <td>
           <div className="d-flex justify-content-end bd-highlight">
-            <Link title="Editar Familia Estudio"
-              className="btn btn-info text-white"
+            <Link
+              title="Editar Familia Estudio"
+              className="btn btn-outline text-primary"
               to={`/estudio-socioeconomico/editar-familia/${estudio.id}`}
             >
               <i className="bi bi-pencil-square"></i>
             </Link>
-            <button title="Reenvio Correo Usuario"
-              onClick={() => sendCorreo(estudio)}
-              className="btn btn-secondary mx-1 d-flex justify-content-center align-items-center"
+            <Link
+              title="Reenvio Correo Usuario"
+              onClick={() => openModalSendEmail(estudio)}
+              className="btn btn-outline text-secondary"
             >
-              <ion-icon name="mail-outline"></ion-icon>
-            </button>
-            <Link title="Editar Estudio"
-              className="btn btn-info text-white"
+              <i class="bi bi-envelope"></i>
+            </Link>
+            <Link
+              title="Editar Estudio"
+              className="btn btn-outline text-primary"
               to={`/estudio-socioeconomico/${estudio.id}`}
             >
               <i className="bi bi-clipboard2-fill"></i>
-
             </Link>
           </div>
         </td>
@@ -525,6 +522,33 @@ function ServicioEstudio() {
     }
   };
 
+  useEffect(() => {
+    getProyectos();
+  }, []);
+
+  useEffect(() => {
+    getProyectoClientes();
+  }, [preyecto]);
+
+  useEffect(() => {
+    getOrdenesServicio();
+  }, [fromData.id_cliente]);
+
+  useEffect(() => {
+    if (openModalCargarArchivo === false) {
+      console.log(openModalCargarArchivo);
+      getEstudiosSocioeconomicos();
+    }
+  }, [openModalCargarArchivo]);
+
+  useEffect(() => {
+    if (fromData.id_proyecto) {
+      getEstudiosSocioeconomicos();
+    } else {
+      getEstudiosSocioeconomicos([]);
+    }
+  }, [fromData.id_proyecto, fromData.id_cliente, fromData.id_orden_servicio]);
+
   return (
     <>
       <div className="container">
@@ -535,7 +559,19 @@ function ServicioEstudio() {
         </div>
         <hr />
         <div className="row">
-          <div className="col-6 col-md-6 col-lg-2  mb-3">
+          <div className="col-6 col-md-6 col-lg-3">
+            <label htmlFor="search" className="form-label mb-0">
+              Buscar:
+            </label>
+            <input
+              type="text"
+              className="form-control form-control-sm"
+              placeholder="Buscar..."
+              value={search}
+              onChange={searchText}
+            />
+          </div>
+          <div className="col-6 col-md-6 col-lg-3  mb-3">
             <label
               htmlFor="id_proyecto"
               className="form-label"
@@ -627,32 +663,16 @@ function ServicioEstudio() {
           )}
         </div>
         <hr />
-        <div className="row">
-          <div className="col-12 col-md-4 row">
-            <label htmlFor="search" className="col-sm-2 col-form-label">
-              Buscar:
-            </label>
-            <div className="col-10">
-              <input
-                type="text"
-                className="form-control form-control-sm"
-                placeholder="Buscar..."
-                value={search}
-                onChange={searchText}
-              />
-            </div>
-          </div>
-        </div>
 
         <br />
         <div
           style={{
             overflowX: "auto",
             overflowY: "auto",
-            height: "50vh",
+            height: "55vh",
           }}
         >
-          <table className="table" style={{ minWidth: "700px" }}>
+          <table className="table" style={{ minWidth: "900px" }}>
             <thead>
               <tr>
                 <th scope="col" className="col-id">
@@ -662,7 +682,7 @@ function ServicioEstudio() {
                 <th scope="col">Descripción</th>
                 <th scope="col">Email</th>
                 <th scope="col">Colaborador</th>
-                <th scope="col" className="text-end">
+                <th scope="col" className="text-center">
                   Opciones
                 </th>
               </tr>
@@ -822,6 +842,45 @@ function ServicioEstudio() {
             onClick={subirArchivoFamiliaSE}
           >
             Subir Archivo
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showModalSendMail} onHide={handleModalSendMailHide}>
+        <Modal.Header closeButton>
+          <Modal.Title>Enviar correo de reset Cuenta</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {dataSelectedSE && (
+            <div>
+              <p>
+                Familia:{" "}
+                <span className="fw-bold">{dataSelectedSE.candidato}</span>
+              </p>
+              <p>
+                Cliente:{" "}
+                <span className="fw-bold">{dataSelectedSE.cliente.nombre}</span>
+              </p>
+              {dataSelectedSE.padre &&
+                dataSelectedSE.padre.contecto_principal && (
+                  <p>Contacto: <span className="fw-bold">{dataSelectedSE.padre.email}</span></p>
+                )}
+              {dataSelectedSE.madre &&
+                dataSelectedSE.madre.contecto_principal && (
+                  <p>Contacto: <span className="fw-bold">{dataSelectedSE.madre.email}</span></p>
+                )}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleModalSendMailHide}>
+            Cancelar
+          </Button>
+          <Button
+            className="btn btn-primary mt-2"
+            variant="primary"
+            onClick={sendCorreo}
+          >
+            Enviar Correo
           </Button>
         </Modal.Footer>
       </Modal>

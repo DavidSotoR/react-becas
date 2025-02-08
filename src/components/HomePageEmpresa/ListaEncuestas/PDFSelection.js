@@ -57,8 +57,8 @@ export default function PDFSelection({seleccionRow}){
 
   return ( 
     <button
-      onClick={downloadZipEstudiosSeleccionados}
-      className={`btn btn-light btn-sm ${loading ? "disabled" : ""}`}
+      onClick={downloadZipEstudiosSeleccionados} title="Descargar PDFs" style={{ fontSize: loading ? '.9rem' : '1.4rem ' }}
+      className={`btn btn-outline text-danger ${loading ? "disabled" : ""}`}
       disabled={loading}
     >
       {loading ? (
@@ -66,12 +66,13 @@ export default function PDFSelection({seleccionRow}){
           <span
             className="spinner-border spinner-border-sm me-2"
             role="status"
-            aria-hidden="true"
+            aria-hidden="true" style={{ fontSize: '1rem' }}
           ></span>
           Procesando...
         </>
       ) : (
-        "Descargar PDFs"
+        <i class="bi bi-filetype-pdf"></i>
+        
       )}
     </button>
   );
