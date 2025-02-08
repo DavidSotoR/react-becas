@@ -158,7 +158,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                 <hr/>
             </div>
             <div className="row mb-3">
-                <div className="col-sm-6">
+                <div className="col-12 col-md-6 col-lg-5">
                     <div className="card m-1 shadow-sm">
                     <div className="card-body">
                         <div className="row">
