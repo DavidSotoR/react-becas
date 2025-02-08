@@ -1085,7 +1085,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
         const data = dataSeleccionable();
 
         const resumenNumerico = data
-        .map((item) =>  item?.monto && parseInt(item.monto) > 0 && item?.texto ? `${item.monto} ${item.texto.toUpperCase()}, ` : null )
+        .map((item) =>  item?.monto && parseInt(item.monto) > 0 && item?.texto ? `${item.monto} ${item.texto.toUpperCase()} ${item.monto > 1 ? '(S)' : ''}, ` : null )
         .join("");
         
         const resumenSeleccionable = data
@@ -1232,11 +1232,14 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                             </div>
                             <div className="col-12 p-1"> 
                                 
+                                <div>
+                                    {longitudTexto(item.respuesta,longitudRespuesta)}
+                                </div>
                                 <textarea
                                     value={item.respuesta}
                                     onKeyDown={handleKeyDownPuntoYComa}
                                     onChange={(e) => {setIsIndex(index); updateTestoAdicional(e);}} 
-                                    maxLength={300}
+                                    maxLength={longitudRespuesta}
                                     style={{
                                         width: '100%',
                                         height: '200px',
