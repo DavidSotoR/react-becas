@@ -209,6 +209,7 @@ function OrdenesServicios() {
       .then((resp) => {
         console.log(resp);
         handleCloseNuevoOrdenServicio();
+        getOrdenesServicios()
       })
       .catch((resp) => {
         console.log(resp);
@@ -240,6 +241,7 @@ function OrdenesServicios() {
     .then((resp) => {
       console.log(resp);
       handleCloseEditarOrdenServicio();
+      getOrdenesServicios()
     })
     .catch((resp) => {
       console.log(resp);
