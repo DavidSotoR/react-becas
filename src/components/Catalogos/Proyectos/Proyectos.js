@@ -21,6 +21,8 @@ function Proyectos() {
 
   const [showAlert, setShowAlert] = useState(false);
   const [showAlertError, setShowAlertError] = useState(false);
+  const [listaErrores, setListaErrores] = useState({});
+  
 
   const [activos, setActivos] = useState("all");
   const [tipoCliente, setTipoCliente] = useState("Escuelas");
@@ -104,7 +106,6 @@ function Proyectos() {
       if (error?.response.status === 401) {
         logout();
       } else {
-        console.log(error);
         setShowAlertError(true)
         //alert("Error al solicitar información");
       }
@@ -126,6 +127,8 @@ function Proyectos() {
       if (error?.response.status === 401) {
         logout();
       } else {
+        console.log(error);
+        error?.response && setListaErrores(error.response.data);
         setShowAlertError(true)
         console.log(error);
         //alert("Error al solicitar información");
@@ -452,9 +455,18 @@ function Proyectos() {
           </p>
       </Alert>
       <Alert show={showAlertError} onClose={()=>{ setShowAlertError(false) }} variant="danger" className="alert-flotante" dismissible>
-          <Alert.Heading>Success</Alert.Heading>
+          <Alert.Heading>Error</Alert.Heading>
           <p>
-              Ocurrio un ERROR al realizar Request.
+            {listaErrores?.errors?.message ? listaErrores.errors.message.length > 0 && (
+                <ul style={{ color: "red" }}>
+                  {listaErrores.errors.message.map((msg, index) => (
+                    <li key={index}>{msg}</li>
+                  ))}
+                </ul>
+              ) 
+              : 
+              'Ocurrio un ERROR al realizar Request.'
+            }
           </p>
       </Alert>
     </div>
