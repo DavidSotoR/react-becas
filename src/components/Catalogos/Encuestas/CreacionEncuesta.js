@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import TablaPreguntas from "./Preguntas/TablaPreguntas";
 import TablaParametros from "./Parametros/TablaParametros";
+import TablaDePuntos from "./Puntos/TablaDePuntos";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -56,6 +57,7 @@ function CreacionEncuesta() {
 				<TabList>
 					<Tab>Preguntas</Tab>
 					<Tab>Parametros</Tab>
+                    <Tab>Ponderación de porcentajes sugerido</Tab>
 				</TabList>
  
 				<TabPanel>
@@ -64,6 +66,9 @@ function CreacionEncuesta() {
 				<TabPanel>
                     <TablaParametros ID={ID}/>
 				</TabPanel>
+                <TabPanel>
+                    <TablaDePuntos ID={ID}/>
+                </TabPanel>
 			</Tabs>
         </div>
     )
