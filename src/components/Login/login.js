@@ -7,7 +7,7 @@ function Login() {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPass, setInputPass] = useState("");
   const navigate = useNavigate();
-  const { login, isLoggedIn } = useContext(AuthContext);
+  const { login, isLoggedIn, execShowAlert  } = useContext(AuthContext);
 
   const changeEmail = (e) => {
     setInputEmail(e.target.value);
@@ -30,8 +30,12 @@ function Login() {
     };
 
     const loged = await login(dataPost);
+    console.log(loged);
+    
     if (loged) {
       navigate("/");
+    } else {
+      execShowAlert({type: 'danger', title: 'Error de Autorización', message: 'Credenciales no validas.'})
     }
   };
 
