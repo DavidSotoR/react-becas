@@ -11,6 +11,7 @@ import ModalNumeroFamiliaColegio from "./ModalNumeroFamiliaColegio";
 import ExcelTablaEncuestas from "./ExcelTablaEncuestas";
 import { useState, useMemo } from "react";
 import PDFSelection from "./PDFSelection";
+import PdfTablaEncuestas from "./PdfTablaEncuestas";
 
 export default function TablaEncuestas({
   listaParametros = [],
@@ -81,7 +82,7 @@ export default function TablaEncuestas({
             row?.hijo?.id && row.hijo?.id ? "?id_hijo=" + row.hijo.id : ""
           }`}
         >
-          <i class="bi bi-eye-fill"></i>
+          <i className="bi bi-eye-fill"></i>
         </Link>
       ),
       width: "90px",
@@ -107,7 +108,7 @@ export default function TablaEncuestas({
               handleShow(row.id, row?.hijo?.id ? row.hijo.id : null)
             }
           >
-            <i class="bi bi-percent"></i>
+            <i className="bi bi-percent"></i>
           </button>
         ),
       ignoreRowClick: true,
@@ -131,7 +132,7 @@ export default function TablaEncuestas({
               handleShowClaveFamilia(row.id, row.clave_familia_colegio)
             }
           >
-            <i class="bi bi-plus-circle" style={{fontSize: '1.2rem'}}></i>
+            <i className="bi bi-plus-circle" style={{fontSize: '1.2rem'}}></i>
           </button>
         ),
       ignoreRowClick: true,
@@ -142,7 +143,7 @@ export default function TablaEncuestas({
         <div className="d-inline-flex">
           <div>
             {/* <Avatar src="/img/user.jpg" size="30" round={true} /> */}
-            <i class="bi bi-person-fill text-gray" style={{ fontSize: '1.2rem' }}></i>
+            <i className="bi bi-person-fill text-gray" style={{ fontSize: '1.2rem' }}></i>
           </div>
           <div className="ps-1 align-self-center">
             <span>{row.candidato}</span>
@@ -199,12 +200,24 @@ export default function TablaEncuestas({
               Columnas: {rowSelect.length} seleccionada(s)
             </div>
           )}
-          {rowSelect.length !== 0 && <PDFSelection seleccionRow={rowSelect} />}
-          <ExcelTablaEncuestas
-            parametros={listaParametros}
-            data={listaEstudios}
-            fileName={"Lista Edtidios"}
-          />
+          {rowSelect.length !== 0 && (
+            <div className="d-flex align-items-center">
+              <p className="m-0 fw-bold">Descargar Reporte: </p>
+              <PDFSelection seleccionRow={rowSelect} />
+            </div>
+          )}
+          <div className="d-flex align-items-center">
+          <p className="m-0 fw-bold">Descargar Datos Tabla: </p>
+            <ExcelTablaEncuestas
+              parametros={listaParametros}
+              data={listaEstudios}
+              fileName={"Lista Edtidios"}
+            />
+            <PdfTablaEncuestas parametros={listaParametros}
+              data={listaEstudios}
+              fileName={"Lista Edtidios"}></PdfTablaEncuestas>
+          </div>
+          
         </div>
         {/* <div className="d-flex justify-content-start">
         <ExcelTablaEncuestas parametros={listaParametros} data={listaEstudios} fileName={"Lista Edtidios"}/>
