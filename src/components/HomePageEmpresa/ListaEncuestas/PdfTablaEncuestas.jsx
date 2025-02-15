@@ -14,9 +14,9 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
     console.log(data);
     const doc = new jsPDF();
 
+    let startY = 10; // Inicializar startY fuera del forEach
+
     data.forEach((element, index) => {
-      // Configuración inicial
-      const startY = 10 + index * 60; // Espacio entre cada elemento
       const marginLeft = 20; // Margen izquierdo para simular un tab
 
       // PROYECTO (sin margen)
@@ -146,6 +146,9 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
           doc.getTextWidth(" - OTORGADO: "),
         startY + 60
       );
+
+      // Incrementar startY para el siguiente elemento
+      startY += 80; // Ajusta este valor según el espacio que ocupe cada elemento
     });
     doc.save("reporte.pdf");
   };
