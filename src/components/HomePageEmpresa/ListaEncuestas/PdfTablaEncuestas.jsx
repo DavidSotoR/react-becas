@@ -159,7 +159,7 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
       type="button"
       className="btn btn-outline text-danger"
       title="Descargar Tabla en PDF"
-      onClick={test}
+      onClick={exportToPdf}
     >
       <i class="bi bi-filetype-pdf" style={{ fontSize: '1.4rem' }}></i>
 
