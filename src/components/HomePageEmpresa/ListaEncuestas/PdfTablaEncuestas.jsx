@@ -4,19 +4,21 @@ import {
   getPuntosParametros,
   getTotalPuntosParametros,
   getPorcentajeSugerido,
+  getTotalPuntosParametrosPdf,
 } from "lib/estudios-functions";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
 export default function PdfTablaEncuestas({ parametros, data, fileName }) {
   const exportToPdf = () => {
-    console.log(parametros);
-    console.log(data);
+    /* console.log(parametros);
+    console.log(data); */
     const doc = new jsPDF();
+    const headers = [ "N°", "FAMILIA", "PATRIMONIO", "LIQUIDEZ", "TOTAL"]
 
     let startY = 10; // Inicializar startY fuera del forEach
 
-    data.forEach((element, index) => {
+    /* data.forEach((element, index) => {
       const marginLeft = 20; // Margen izquierdo para simular un tab
 
       // PROYECTO (sin margen)
@@ -149,12 +151,50 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
 
       // Incrementar startY para el siguiente elemento
       startY += 80; // Ajusta este valor según el espacio que ocupe cada elemento
+    }); */
+    
+    let dataReport = []
+
+    
+
+    const tableData = data.map((element) => [
+      element.id,
+      element.candidato,
+      50, // PATRIMONIO
+      50, // LIQUIDEZ
+      getTotalPuntosParametrosPdf(parametros, element), // TOTAL
+    ]);
+
+    
+    doc.autoTable({
+      head: [headers], // Encabezados
+      body: tableData, // Datos
+      startY: 20, // Posición Y donde comienza la tabla
+      theme: "grid", // Estilo de la tabla (puede ser "striped", "grid", "plain")
+      styles: {
+        fontSize: 10, // Tamaño de la fuente
+        cellPadding: 2, // Espaciado interno de las celdas
+      },
+      headStyles: {
+        fillColor: [71, 209, 214], // Color de fondo del encabezado (azul)
+        textColor: [255, 255, 255], // Color del texto del encabezado (blanco)
+        fontStyle: "bold", // Negritas en el encabezado
+      },
+      columnStyles: {
+        0: { cellWidth: 15 }, // Ancho de la columna ID
+        1: { cellWidth: 30 }, // Ancho de la columna Nombre
+        2: { cellWidth: 40 }, // Ancho de la columna Email
+        3: { cellWidth: 30 }, // Ancho de la columna Fecha
+        4: { cellWidth: 40 }, // Ancho de la columna Proyecto
+        5: { cellWidth: 50 }, // Ancho de la columna Orden de Servicio
+      },
     });
-    doc.save("reporte.pdf");
+    //doc.save("reporte.pdf");
   };
 
   const test = () => {
-    console.log(parametros);
+    console.log(data);
+
     
   }
   return (
