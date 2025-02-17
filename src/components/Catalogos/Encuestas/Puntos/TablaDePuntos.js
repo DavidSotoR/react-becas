@@ -15,6 +15,7 @@ export default function TablaDePuntos({ID}){
     }
     
     const [numberSave, setNumberSave] = useState(0);
+    const [editarItem, setEditarItem] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     
@@ -23,8 +24,12 @@ export default function TablaDePuntos({ID}){
         {id:2,limite_inferior:21,limite_superior:40,porcentaje_sujerido:40},
     ]);
 
-    const handleEditClick = (id) => {
-        alert(id)
+    const handleEditClick = (item) => {
+        setEditarItem(item)
+    }
+
+    const onSave = () => {
+        setEditarItem(null);
     }
 
     const getListaParametrosItem = () => {
@@ -57,7 +62,9 @@ export default function TablaDePuntos({ID}){
     }
 
     const listaTablaPuntosItem = () => allPuntos.map((puntos_item,index) => {
-        return (
+        return (editarItem !== null && editarItem.id === puntos_item.id ) ? 
+        (<ModalNuevoPuntoItems item={editarItem} idEncuesta={ID} onSave={onSave} setNumberSave={setNumberSave}/>)
+        :(
                 <tr key={'tabpari-'+index}>
                     <td>
                         <span style={{ fontWeight: "bold" }}>{puntos_item.limite_inferior}</span>
@@ -76,7 +83,7 @@ export default function TablaDePuntos({ID}){
                     </td>
                     <td>
                         <div style={{ display: "flex" }}>
-                            <Button variant="light" onClick={() => handleEditClick(puntos_item.id)} >
+                            <Button variant="light" onClick={() => handleEditClick(puntos_item)} >
                                 <ion-icon name="create-outline"></ion-icon>
                             </Button>
                             <Button 
@@ -91,26 +98,25 @@ export default function TablaDePuntos({ID}){
                 )
     })
     return (<>
-    
-    <div>
-            <div className="seccion-table-parametros">
-                <table key={'tabpar-0'} className="table items-parametros">
-                    <thead>
-                        <tr>
-                            <th>Rango Inferiro</th>
-                            <th></th>
-                            <th>Rango superiro</th>
-                            <th></th>
-                            <th>Porcentaje sujerido</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {listaTablaPuntosItem()}
-                        <ModalNuevoPuntoItems idEncuesta={ID} numberSave={numberSave} setNumberSave={setNumberSave}/>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </>)
+                <div>
+                        <div className="seccion-table-parametros">
+                            <table key={'tabpar-0'} className="table items-parametros">
+                                <thead>
+                                    <tr>
+                                        <th>Rango Inferiro</th>
+                                        <th></th>
+                                        <th>Rango superiro</th>
+                                        <th></th>
+                                        <th>Porcentaje sujerido</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {listaTablaPuntosItem()}
+                                    <ModalNuevoPuntoItems idEncuesta={ID} numberSave={numberSave} setNumberSave={setNumberSave}/>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>)
 }
