@@ -13,7 +13,7 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 export default function PageUpdateUsuario() {
     const { id } = useParams();
-    const { logout } = useContext(AuthContext);
+    const { logout, execShowAlert } = useContext(AuthContext);
     const [esExterno, setEsExterno] = useState(false);
     const navigate = useNavigate()
 
@@ -264,14 +264,12 @@ export default function PageUpdateUsuario() {
     }
 
     const searchDireccion = () => {
-        console.log('search');
         
         getDireccionGSP();
     }
 
     const seleccionarUbicacion = (direccion) => {
-        console.log(direccion);
-        console.log(direccionUser);
+       
         if (convertirAMayusculas(direccion.display_name) === direccionUser) {
             console.log('entro===');
             
@@ -479,13 +477,16 @@ export default function PageUpdateUsuario() {
         console.log(dataUpdate);
         if ( esExterno && (dataUpdate.id_cliente === null || dataUpdate.id_cliente === undefined)) {
             setFormValid(false)
-            alert('Se debe asignar un cliente a Usuario')
+            execShowAlert({ type: 'danger', title: 'Error al Actualizar', message: 'Se debe asignar un cliente a Usuario.' })
         } else {
             axios.put(APIURL+'/usuarios',dataUpdate,config).then((resp)=>{
                 console.log(resp);
                 navigate(PathConstants.USUARIOS)
+                execShowAlert({ type: 'success', title: 'Usuario Actualizado', message: 'EL usuario ' + dataUpdate.email + ' se ha actualizado.' })
+
             }).catch((error)=>{
                 console.log(error);
+                execShowAlert({ type: 'danger', title: 'Error al Actualizar', message: 'EL usuario ' + dataUpdate.email + ' no se actualizo.' })
             })
         }
         

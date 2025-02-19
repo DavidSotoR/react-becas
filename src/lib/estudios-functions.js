@@ -9,10 +9,17 @@ export const getPuntosParametros = (list, id) => {
 }
 
 export const getTotalPuntosParametros = (list) => {
-    return list.reduce((total, item) => {
+    
+    return list.reduce((total, item) => {        
       const valorNumerico = parseFloat(item.puntos.valor); // Convertir a número
       return total + (isNaN(valorNumerico) ? 0 : valorNumerico); // Validar y sumar
     }, 0);
+}
+
+export const getTotalPuntosParametrosPdf = (list, element) =>{
+    console.log(list,element);
+    
+    return 50
 }
 
 export const getMaximosPuntosParametros = (list) => {

@@ -200,14 +200,18 @@ export default function Estudio(){
                             <div className="col-1"/>
                         </div>
                         <br/>
-                        <div className="row">
-                            <div className="col-1"/>
-                            <div className="col-10 text-start">OBSERVACION</div>
-                            <div className="col-1"/>
-                            <div className="col-1"/>
-                            <div className="col-10 border border-dark" style={{minHeight:'300px'}}></div>
-                            <div className="col-1"/>
-                        </div>
+                        { encuesta?.estudio?.aniadir_observaciones && encuesta.estudio.aniadir_observaciones === 1  && (
+                            <div className="row">
+                                <div className="col-1"/>
+                                <div className="col-10 text-start">RESUMEN</div>
+                                <div className="col-1"/>
+                                <div className="col-1"/>
+                                <div className="col-10 text-start border border-dark" style={{minHeight:'300px'}}>
+                                    {encuesta.estudio.observaciones}
+                                </div>
+                                <div className="col-1"/>
+                            </div>
+                        )}
                         <br/>
                         
                         <div className="row">

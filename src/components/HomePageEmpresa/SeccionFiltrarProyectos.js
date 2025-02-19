@@ -59,9 +59,9 @@ export default function SeccionFiltrarProyectos({search,setSearch}){
                 })); 
             }
 
-            console.log("Proyectos ---> ",proyectoActivo);
+            /* console.log("Proyectos ---> ",proyectoActivo);
             console.log("Proyectos ---> ",search);
-            console.log(resp.data);
+            console.log(resp.data); */
         }).catch((resp)=>{
             console.log(resp);
             if ( resp?.response?.status && resp.response.status === 401) {

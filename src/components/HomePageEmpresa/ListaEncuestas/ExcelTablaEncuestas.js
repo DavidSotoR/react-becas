@@ -64,6 +64,7 @@ export default function ExcelTablaEncuestas({parametros, data,fileName}){
       width: "300px",
     },
   ];
+  
   const transformDataForExcel = () => {
     return data.map((row) => {
       const transformedRow = {};

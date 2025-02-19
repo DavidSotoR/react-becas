@@ -7,6 +7,7 @@ import { useParams,useNavigate } from "react-router-dom";
 import Preguntas from "./Preguntas/Preguntas";
 import Evidencias from "./Preguntas/Evidencias";
 import EncuestaPDF from "./EncuestaPDF/EncuestaPDF";
+import Observaciones from "./Observaciones/Observaciones";
 
 
 function Socioeconomico(){
@@ -199,7 +200,11 @@ function Socioeconomico(){
                 updateListaTotales={updateListaTotales}
                 totalPorParametros={totalPorParametros}
             />
-
+            {encuesta?.estudio && (<Observaciones 
+                idEstudio={idEstudio}
+                encuesta={encuesta.estudio}
+                columnRow={columnRow} 
+                callback={getEsrudioSocioeconomico}/>)}
             <Evidencias
                 idEstudio={idEstudio}
                 columnRow={columnRow}

@@ -1,12 +1,17 @@
 // src/context/AuthContext.js
 import axios from 'axios';
+import { Toast, ToastContainer } from 'react-bootstrap';
 import React, { createContext, useState } from 'react';
+import ToastHeader from '../../node_modules/react-bootstrap/esm/ToastHeader';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const APIURL = process.env.REACT_APP_API_URL;
 
+  const [ showAlertContext, setShowAlertContext ] = useState(false)
+  const [ dataAlertContext, setDataAlertContext ] = useState({ type: 'warning', title: 'Error API', message: 'Error al enviar datos.' })
+  
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('login') === 'true');
   const [roleSession, setRoleSession] = useState(localStorage.getItem('role'))
   const [userSession, setUserSession] = useState(localStorage.getItem('user'))
@@ -63,17 +68,33 @@ export const AuthProvider = ({ children }) => {
       /* var message = error.response.data.error
       console.log(error.response.data.error); */
       if (resp === 'Unauthorized') {
-        alert('Usuario no autorizado.')
+        mostrarAlerta({ type: 'warning', title: 'Error Autenticación', message: 'Usuario no esta autorizado.' })
+        //alert('Usuario no autorizado.')
       } else {
-        alert('Error al enviar datos.')
+        mostrarAlerta({ type: 'warning', title: 'Error API', message: 'Error al enviar datos.' })
+        //alert('Error al enviar datos.')
       }
       
     }
-    
-    console.log(resp);
-    
     return loggedSuccess
   };
+
+  const mostrarAlerta = (data = { type: 'warning', title: 'Sin Titulo', message: 'No hay mensaje para mostrar.' }) => {
+    console.log('exec alerta context');
+    
+    return (
+      <ToastContainer className="position-fixed bottom-0 end-0 p-3">
+        <Toast bg={ data.type }>
+          <Toast.Header>
+            <strong>{ data.title }</strong>
+          </Toast.Header>
+          <Toast.Body>
+            <p>{ data.message }</p>
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
+    )
+  }
 
   const logout = () => {
     localStorage.clear();
@@ -81,9 +102,36 @@ export const AuthProvider = ({ children }) => {
     window.location.replace('/')
   };
 
+  const execShowAlert = (data) =>{
+    setShowAlertContext(true)
+    setDataAlertContext(data)
+    mostrarAlerta(data)
+  }
+
+  const execHideAlert = (data) =>{
+    setShowAlertContext(false)
+  }
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession,userID, userActive, login, logout, ua }}>
+    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession,userID, 
+    userActive, login, logout, ua, 
+    showAlertContext, execShowAlert, execHideAlert }}>
       {children}
+      <ToastContainer className="position-fixed bottom-0 end-0 p-3">
+        <Toast 
+         show={showAlertContext}
+         onClose={execHideAlert}
+         bg={dataAlertContext.type}
+         delay={3000}
+         autohide>
+          <Toast.Header>
+            <strong>{ dataAlertContext.title }</strong>
+          </Toast.Header>
+          <Toast.Body>
+            <p>{ dataAlertContext.message }</p>
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
     </AuthContext.Provider>
   );
 };

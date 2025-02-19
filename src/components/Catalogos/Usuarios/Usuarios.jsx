@@ -329,7 +329,6 @@ function Usuarios() {
   );
 
   const showDataUsuario = (data) => {
-    console.log(data);
     navigate("/usuarios/" + data.id + "/ver");
 
   };
@@ -337,7 +336,6 @@ function Usuarios() {
   useEffect(() => {
     if (!hasInitialized) {
       // Carga inicial
-      console.log('Carga inicial de datos');
       getAllDataUsuarios();
       setHasInitialized(true);
     }

@@ -212,7 +212,7 @@ function TablaPreguntas({ ID }) {
                             <b>PARAMETROS: </b>
                             {pregunta?.clasificacion_parametro && (
                                 <>
-                                    <div className="tag-color" style={{ backgroundColor: pregunta.clasificacion_parametro.color }}></div>
+                                    <span className="tag-color" style={{ backgroundColor: pregunta.clasificacion_parametro.color }}></span>
                                     {pregunta.clasificacion_parametro.nombre}
                                 </>
                             )}
