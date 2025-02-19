@@ -367,14 +367,14 @@ function Proyectos() {
                   />
                 </Form>
               </div>
-              <p className="mb-2 fw-bold">Clinte Tipo:</p>
+              {/* <p className="mb-2 fw-bold">Clinte Tipo:</p>
               <Form.Select name="id_tipo_cliente"
                 aria-label="Default select example" onChange={ (e) => { editarDatosProyecto(e) } }
                 value={proyectoToEdit.id_tipo_cliente}
               >
                 <option value="1">Escuela</option>
                 <option value="2">Empresa</option>
-              </Form.Select>
+              </Form.Select> */}
             </div>
           )}
         </Modal.Body>
