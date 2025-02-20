@@ -6,7 +6,9 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import RangosSugeridos from "../Graficas/RangosSugeridos";
 import TablaEncuestas from "./TablaEncuestas";
-import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions"
+import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions";
+
+import DistribucionDelGastoGrafica from "../Graficas/DistribucionDelGastoGrafica";
 
 export default function ListaEncuestas({idProyecto, idOrdenServicio}){
     
@@ -39,7 +41,12 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
         let conf = config;
         if(idOrdenServicio){
             conf.params = {
-                id_orden_servicio: idOrdenServicio
+                id_orden_servicio: idOrdenServicio,
+                distribucion_del_gasto:1
+            };
+        }else{
+            conf.params = {
+                distribucion_del_gasto:1
             };
         }
 
@@ -256,7 +263,78 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                 </div>
                                 </div>
                             </div>
+                            {/*<div className="col-sm-6">
+                                <div className="card m-1 shadow-sm">
+                                <div className="card-body">
+                                    
+                                    <DistribucionDelGastoGrafica datos={[
+                                            {
+                                                categoria: "Necesidades esenciales",
+                                                total: 36000
+                                            },
+                                            {
+                                                categoria: "Viajes",
+                                                total: 50000
+                                            },
+                                            {
+                                                categoria: "Educación",
+                                                total: 12880
+                                            },
+                                            {
+                                                categoria: "Lujos",
+                                                total: 28000
+                                            }
+                                        ]} />
+                                </div>
+                                </div>
+                            </div>*/}
+
                         </div>
+
+                        
+                        {listaEstudios.map((estudio, index) => {
+
+                                const data = estudio?.distribucion_del_gasto ?  estudio.distribucion_del_gasto : [] ;
+
+                                return data.length > 0 && (<div key={"lgi+"+index} className="row mb-3">
+                                    <div className="col-sm-6">
+                                        <div className="card m-1 shadow-sm">
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col-5"><b>Familia:</b></div>
+                                                <div className="col-7">{estudio.candidato}</div>
+                                                
+                                            </div>
+                                            <br/>
+                                            <table className="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Categoria</th>
+                                                        <th>monto</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {data.map((gasto,index_gasto) =>(
+                                                        <tr key={"gigt-"+index_gasto}>
+                                                            <td>{gasto.categoria}</td>
+                                                            <td>${gasto.total}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <div className="card m-1 shadow-sm">
+                                        <div className="card-body">
+                                            <DistribucionDelGastoGrafica datos={data} />
+                                        </div>
+                                        </div>
+                                    </div>
+        
+                                </div>)
+                            })}
                     </div>
 				</TabPanel>
 			</Tabs>
