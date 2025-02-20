@@ -17,7 +17,7 @@ export const getTotalPuntosParametros = (list) => {
 }
 
 export const getTotalPuntosParametrosPdf = (list, element) =>{
-    console.log(list,element);
+    //console.log(list,element);
     
     return 50
 }

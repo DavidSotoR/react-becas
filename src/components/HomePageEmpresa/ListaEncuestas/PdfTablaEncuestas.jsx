@@ -9,20 +9,41 @@ import {
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 export default function PdfTablaEncuestas({ parametros, data, fileName }) {
+  console.log(parametros);
+  
   const getHeadersParameters = async () => {
     let headersTable = [
-      "N°",
-      "CANDIDATO",
+      "FOLIO",
+      "FAMILIA",
+      "ESTUDIANTE",
       "TOTAL",
       "% RECOMENDADO",
       "% ASIGNADO",
     ];
     let headers = [];
     parametros.forEach((element) => {
-      headers.push(element.nombre);
+      if (element.nombre === "PATRIMONIO REPORTADO" || element.nombre === "NUMERO DE HIJOS INSCRITOS EN ESTE COLEGIO" || element.nombre === "ANTIGÜEDAD DE LA FAMILIA EN EL COLEGIO" ) {
+        if (element.nombre === "PATRIMONIO REPORTADO") {
+          headers.push("PATRIMONIO");
+        }
+  
+        if (element.nombre === "NUMERO DE HIJOS INSCRITOS EN ESTE COLEGIO") {
+          headers.push("NUM. HIJOS");
+        }
+  
+        if (element.nombre === "ANTIGÜEDAD DE LA FAMILIA EN EL COLEGIO") {
+          headers.push("ANTIGÜEDAD EN COLEGIO");
+        }
+      } else {
+        headers.push(element.nombre)
+      }
+      
+
+      
+      
     });
 
-    headersTable.splice(2, 0, ...headers);
+    headersTable.splice(3, 0, ...headers);
 
     return headersTable;
   };
@@ -53,14 +74,11 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
 
     const pageWidth = doc.internal.pageSize.getWidth();
 
+    console.log(data);
+    
     const tableData = data.map((element, index) => [
       index + 1,
       element.candidato,
-      50, // PATRIMONIO
-      50, // LIQUIDEZ
-      getTotalPuntosParametrosPdf(parametros, element), // TOTAL
-      10,
-      15,
     ]);
     doc.setFontSize(8);
     let titleCliente = `Cliente: ${clientes[0]}`;
@@ -112,7 +130,7 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
       title="Descargar Tabla en PDF"
       onClick={exportToPdf}
     >
-      <i class="bi bi-filetype-pdf" style={{ fontSize: "1.4rem" }}></i>
+      <i className="bi bi-filetype-pdf" style={{ fontSize: "1.4rem" }}></i>
     </button>
   );
 }
