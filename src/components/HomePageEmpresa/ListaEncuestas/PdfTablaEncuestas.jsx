@@ -8,14 +8,22 @@ import {
 } from "lib/estudios-functions";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import axios from "../../../../node_modules/axios/index";
 export default function PdfTablaEncuestas({ parametros, data, fileName }) {
   console.log(parametros);
+
+  const APIURL = process.env.REACT_APP_API_URL;
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
   
   const getHeadersParameters = async () => {
     let headersTable = [
       "FOLIO",
       "FAMILIA",
-      "ESTUDIANTE",
+      "ALUMNO",
       "TOTAL",
       "% RECOMENDADO",
       "% ASIGNADO",
@@ -37,9 +45,6 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
       } else {
         headers.push(element.nombre)
       }
-      
-
-      
       
     });
 
@@ -71,6 +76,23 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
     const headers = await getHeadersParameters(); //["N°", "FAMILIA", "PATRIMONIO", "LIQUIDEZ", "TOTAL"];
     const proyectos = await getProyetosTitles();
     const clientes = await getClientesData();
+    let ordenes_servicio = [];
+    data.forEach(ele=>{
+      ordenes_servicio.push(ele.orden_servicio.id)
+    })
+    ordenes_servicio = [...new Set(ordenes_servicio)];
+
+    const datosBody = await getCalificacionesParametrosFamilias(ordenes_servicio);
+
+    
+
+    
+
+    console.log(data);
+    console.log(datosBody);
+
+    return 0;
+    
 
     const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -119,6 +141,15 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
     });
     doc.save("reporte.pdf");
   };
+
+
+  const getCalificacionesParametrosFamilias = async (data = []) => {
+    let body = {
+      ordenes_servicio: data
+    }
+    const resp = await axios.post(APIURL + "/estudio/socioeconomico/reporte/familias/parametros",body, config);
+    return resp;
+  }
 
   const test = () => {
     console.log(data);
