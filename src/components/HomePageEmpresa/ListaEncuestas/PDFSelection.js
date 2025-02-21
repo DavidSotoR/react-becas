@@ -71,7 +71,7 @@ export default function PDFSelection({seleccionRow}){
           Procesando...
         </>
       ) : (
-        <i class="bi bi-filetype-pdf"></i>
+        <i className="bi bi-filetype-pdf"></i>
         
       )}
     </button>

@@ -58,6 +58,53 @@ export default function TablaEncuestas({
   const mostrarColumnaHijo = () => {
     return listaEstudios.some((row) => row.hasOwnProperty("hijo"));
   };
+
+  const seccionPordentajeOtorgado = (row) => {
+
+    if(row?.hijo?.id){
+      return row.hijo.porcentaje_otorgado ? (
+        <button title="Cambiar %"
+          className="btn btn-link btn-sm text-dark"
+          onClick={() =>
+            handleShow(row.id,row.hijo.id)
+          }
+        >
+          {row.hijo.porcentaje_otorgado}
+          %
+        </button>
+      ) : (
+        <button title="Añadir %"
+          className="btn btn-link btn-sm text-dark"
+          onClick={() =>
+            handleShow(row.id,row.hijo.id)
+          }
+        >
+          <i className="bi bi-percent"></i>
+        </button>
+      )
+    }else{
+      return  row.porcentaje_otorgado ? (
+        <button title="Cambiar %"
+          className="btn btn-link btn-sm text-dark"
+          onClick={() =>
+            handleShow(row.id,null)
+          }
+        >
+          {row.porcentaje_otorgado}
+          %
+        </button>
+      ) : (
+        <button title="Añadir %"
+          className="btn btn-link btn-sm text-dark"
+          onClick={() =>
+            handleShow(row.id,null)
+          }
+        >
+          <i className="bi bi-percent"></i>
+        </button>
+      )
+    }
+  }
   
   const columns = [
     {
@@ -90,15 +137,15 @@ export default function TablaEncuestas({
     },
     {
       name: <div style={{ whiteSpace: "pre-wrap" }}>Porcentaje Otorgado</div>,
-      cell: (row) =>
-        row.porcentaje_otorgado ? (
+      cell: (row) => seccionPordentajeOtorgado(row)
+        /*row.porcentaje_otorgado ? (
           <button title="Cambiar %"
             className="btn btn-link btn-sm text-dark"
             onClick={() =>
               handleShow(row.id, row?.hijo?.id ? row.hijo.id : null)
             }
           >
-            {row?.hijo ? row.hijo.porcentaje_otorgado : row.porcentaje_otorgado}
+            {row?.hijo?.id ? row.hijo.porcentaje_otorgado : row.porcentaje_otorgado}
             %
           </button>
         ) : (
@@ -110,7 +157,7 @@ export default function TablaEncuestas({
           >
             <i className="bi bi-percent"></i>
           </button>
-        ),
+        )*/,
       ignoreRowClick: true,
     },
     {

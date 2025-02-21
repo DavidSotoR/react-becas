@@ -325,7 +325,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                         </div>
                                         </div>
                                     </div>
-                                    <div className="col-sm-6">
+                                    <div className="col-sm-3">
                                         <div className="card m-1 shadow-sm">
                                         <div className="card-body">
                                             <DistribucionDelGastoGrafica datos={data} />
