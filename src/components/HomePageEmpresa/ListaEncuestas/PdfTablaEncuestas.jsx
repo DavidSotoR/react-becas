@@ -19,113 +19,207 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
     },
   };
   
+  const mostrarColumnaHijo = () => {
+      return data.some(row => row.hasOwnProperty('hijo'));
+    };
+  
+  const columns = [
+    {
+      name: "No Estudio",
+      selector: (row) => row.id,
+    },
+    {
+      name: "Familia",
+      selector: (row) => row.candidato,
+      width: "300px",
+    },
+    
+    mostrarColumnaHijo() && {      
+      name: "Hijo",
+      selector: (row) => row.nombre_hijo,
+      width: "300px",
+    },
+
+    ...parametros.map((parametro) => ({
+      name: parametro.nombre,
+      selector: (row) => {
+        const param = row.parametros.find((p) => p.id === parametro.id);
+        return param ? getPuntosParametros(row.parametros, parametro.id) : "-";
+      },
+    })),
+    {
+      name: "Total",
+      selector: (row) => getTotalPuntosParametros(row.parametros),
+    },
+    {
+      name: "Porcentaje Sugerido",
+      selector: (row) => `${getPorcentajeSugerido(row.parametros)}%`,
+    },
+    {
+      name: "Porcentaje Otorgado",
+      cell: (row) =>  {return (row.porcentaje_otorgado !==null )  ?  `${row.porcentaje_otorgado}%` : '' },
+    },
+    {
+      name: "No. Familia Colegio",
+      cell: (row) => {return (row.clave_familia_colegio !==null )  ? row.clave_familia_colegio : "" },
+    },
+
+    
+    {
+      name: "Proyecto",
+      cell: (row) => {return (row?.proyecto && row.proyecto?.nombre && row.proyecto.nombre !==null )  ? row.proyecto.nombre : "" },
+      width: "300px",
+    },
+    
+    {
+      name: "Orden de servicio",
+      cell: (row) => {return (row?.orden_servicio && row.orden_servicio?.descripcion &&row.orden_servicio.descripcion !==null )  ?  `#${row.orden_servicio.id} ${row.orden_servicio.descripcion}` : "" },
+      width: "300px",
+    },
+  ];
+  
+  const transformDataForExcel = () => {
+    return data.map((row) => {
+      const transformedRow = {};
+      columns.forEach((col) => {
+        if (col.selector) {
+          // Si el selector es una función, evaluarlo
+          transformedRow[col.name] = typeof col.selector === "function" 
+            ? col.selector(row) 
+            : row[col.selector];
+        } else if (col.cell) {
+          // Para celdas con lógica compleja, agregar texto representativo
+          transformedRow[col.name] = typeof col.cell === "function"
+                    ? col.cell(row)
+                    : "null";
+        }
+      });
+
+      return transformedRow;
+    });
+  };
+
   const getHeadersParameters = async () => {
+    const renamingMap = {
+      "PATRIMONIO REPORTADO": "PATRIMONIO",
+      "NUMERO DE HIJOS INSCRITOS EN ESTE COLEGIO": "NUM. HIJOS",
+      "ANTIGÜEDAD DE LA FAMILIA EN EL COLEGIO": "ANTIGÜEDAD EN COLEGIO",
+    };
+  
+    let headers = [];
+    parametros.forEach((element) => {
+      if (renamingMap[element.nombre]) {
+        headers.push(renamingMap[element.nombre]);
+      } else {
+        headers.push(element.nombre);
+      }
+    });
+  
     let headersTable = [
       "FOLIO",
       "FAMILIA",
       "ALUMNO",
       "TOTAL",
       "% RECOMENDADO",
-      "% ASIGNADO",
+      "% ASIGNADO"
     ];
-    let headers = [];
-    parametros.forEach((element) => {
-      if (element.nombre === "PATRIMONIO REPORTADO" || element.nombre === "NUMERO DE HIJOS INSCRITOS EN ESTE COLEGIO" || element.nombre === "ANTIGÜEDAD DE LA FAMILIA EN EL COLEGIO" ) {
-        if (element.nombre === "PATRIMONIO REPORTADO") {
-          headers.push("PATRIMONIO");
-        }
-  
-        if (element.nombre === "NUMERO DE HIJOS INSCRITOS EN ESTE COLEGIO") {
-          headers.push("NUM. HIJOS");
-        }
-  
-        if (element.nombre === "ANTIGÜEDAD DE LA FAMILIA EN EL COLEGIO") {
-          headers.push("ANTIGÜEDAD EN COLEGIO");
-        }
-      } else {
-        headers.push(element.nombre)
-      }
-      
-    });
-
-    headersTable.splice(3, 0, ...headers);
-
+    
+    headersTable.splice(3, 0, ...headers); // Insertar después de "TOTAL"
+    
     return headersTable;
   };
-
-  const getProyetosTitles = async () => {
-    let proyectos = [];
-    data.forEach((element) => {
-      proyectos.push(element.proyecto.nombre);
-    });
-
-    return proyectos;
-  };
-
-  const getClientesData = async () => {
-    let clientes = [];
-    data.forEach((element) => {
-      clientes.push(element.cliente.nombre);
-    });
-
-    return clientes;
-  };
+  
 
   const exportToPdf = async () => {
     const doc = new jsPDF();
-    const headers = await getHeadersParameters(); //["N°", "FAMILIA", "PATRIMONIO", "LIQUIDEZ", "TOTAL"];
-    const proyectos = await getProyetosTitles();
-    const clientes = await getClientesData();
-    let ordenes_servicio = [];
-    data.forEach(ele=>{
-      ordenes_servicio.push(ele.orden_servicio.id)
-    })
-    ordenes_servicio = [...new Set(ordenes_servicio)];
-
-    const datosBody = await getCalificacionesParametrosFamilias(ordenes_servicio);
-
+    const headers = await getHeadersParameters();
+    const transformedData = transformDataForExcel();
+  
+    const proyectosUnicos = [...new Set(transformedData.map(item => item.Proyecto))];
+    let proyectos = proyectosUnicos;
     
-
-    
-
-    console.log(data);
-    console.log(datosBody);
-
-    return 0;
-    
-
     const pageWidth = doc.internal.pageSize.getWidth();
-
-    console.log(data);
-    
-    const tableData = data.map((element, index) => [
-      index + 1,
-      element.candidato,
-    ]);
     doc.setFontSize(8);
-    let titleCliente = `Cliente: ${clientes[0]}`;
-    let textWidthCliente = doc.getTextWidth(titleCliente); // Obtener el ancho del texto
-    let xPosition = (pageWidth - textWidthCliente) / 2;
-    doc.text(`${clientes[0]}`, xPosition, 10);
+  
+    // Título del proyecto
+    let titleProyecto = `Proyecto: ${proyectos[0]}`;
+    let textWidthProyecto = doc.getTextWidth(titleProyecto);
+    let xPosition = (pageWidth - textWidthProyecto) / 2;
+    doc.text(titleProyecto, xPosition, 15);
+  
+    // Crear el cuerpo de la tabla
+    console.log(transformedData);
 
-    let tilteProyecto = `Proyecto: ${proyectos[0]}`;
-    let textWidthProyecto = doc.getTextWidth(tilteProyecto); // Obtener el ancho del texto
-    xPosition = (pageWidth - textWidthProyecto) / 2;
 
-    doc.text(`${proyectos[0]}`, xPosition, 15);
+    const headersFull = [
+        "FOLIO",
+        "FAMILIA",
+        "ALUMNO",
+        "TOTAL",
+        "% RECOMENDADO",
+        "% ASIGNADO",
+        "PATRIMONIO",
+        "NIVEL DE LIQUIDEZ",
+        "CALIDAD DE VIDA",
+        "NUM. HIJOS",
+        "ANTIGÜEDAD EN COLEGIO",
+        "PROMEDIO ACADÉMICO",
+        "CONDUCTA"
+    ];
+    
+    // Mapeo de los headers a los nombres correctos en el objeto de datos
+    const headerToKeyMap = {
+        "FOLIO": "No Estudio",
+        "FAMILIA": "Familia",
+        "ALUMNO": "Hijo",
+        "TOTAL": "Total",
+        "% RECOMENDADO": "Porcentaje Sugerido",
+        "% ASIGNADO": "Porcentaje Otorgado",
+        "PATRIMONIO": "PATRIMONIO REPORTADO",
+        "NIVEL DE LIQUIDEZ": "NIVEL DE LIQUIDES",
+        "CALIDAD DE VIDA": "CALIDAD DE VIDA",
+        "NUM. HIJOS": "NUMERO DE HIJOS INSCRITOS EN ESTE COLEGIO",
+        "ANTIGÜEDAD EN COLEGIO": "ANTIGÜEDAD DE LA FAMILIA EN EL COLEGIO",
+        "PROMEDIO ACADÉMICO": "PROMEDIO ACADÉMICO",
+        "CONDUCTA": "CONDUCTA"
+    };
+    
+    /* let body = transformedData.map(item => {
+      return [
+        item["No Estudio"],          // FOLIO
+        item["Familia"],             // FAMILIA
+        item["Hijo"],                // ALUMNO
+        item["Total"],               // TOTAL
+        item["Porcentaje Sugerido"], // % RECOMENDADO
+        item["Porcentaje Otorgado"], // % ASIGNADO
+        ...headers.slice(6).map(header => item[header]) // Otros campos dinámicos
+      ];
+    }); */
+    
 
+    const body = transformedData.map(item =>
+        headersFull.map(header => item[headerToKeyMap[header]] || "") // Si no encuentra el valor, pone ""
+    );
+
+    console.log(parametros);
+    
+    console.log(headers);
+    
+    console.log(body);
+    
+  
     doc.autoTable({
       head: [headers], // Encabezados
-      body: tableData, // Datos
-      startY: 20, // Posición Y donde comienza la tabla
-      theme: "grid", // Estilo de la tabla (puede ser "striped", "grid", "plain")
+      body: body,      // Datos
+      startY: 20,      // Posición Y donde comienza la tabla
+      theme: "grid",   // Estilo de la tabla
       styles: {
         fontSize: 4, // Tamaño de la fuente
         cellPadding: 1, // Espaciado interno de las celdas
       },
       headStyles: {
-        fillColor: [71, 209, 214], // Color de fondo del encabezado (azul)
-        textColor: [255, 255, 255], // Color del texto del encabezado (blanco)
+        fillColor: [71, 209, 214], // Color de fondo del encabezado
+        textColor: [255, 255, 255], // Color del texto del encabezado
         fontStyle: "bold", // Negritas en el encabezado
       },
       columnStyles: {
@@ -139,8 +233,10 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
         7: { cellWidth: "auto" }, // Ancho de la columna Orden de Servicio
       },
     });
+  
     doc.save("reporte.pdf");
   };
+  
 
 
   const getCalificacionesParametrosFamilias = async (data = []) => {
@@ -151,9 +247,6 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
     return resp;
   }
 
-  const test = () => {
-    console.log(data);
-  };
   return (
     <button
       type="button"
