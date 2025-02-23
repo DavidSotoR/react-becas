@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import RangosSugeridos from "../Graficas/RangosSugeridos";
+import SeccionRangos from "../Graficas/SeccionRangos";
 import TablaEncuestas from "./TablaEncuestas";
 import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions";
 
@@ -195,6 +196,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 				<TabList>
 					<Tab>Encuestas</Tab>
 					<Tab>Análisis de datos</Tab>
+					<Tab>Distribución del gasto</Tab>
 				</TabList>
  
 				<TabPanel>
@@ -214,7 +216,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 
                         
                         <div className="row mb-3">
-                            <div className="col-sm-6">
+                            {/*<div className="col-sm-6">
                                 <div className="card m-1 shadow-sm">
                                 <div className="card-body">
                                     <table className="table">
@@ -262,7 +264,9 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                     <RangosSugeridos/>
                                 </div>
                                 </div>
-                            </div>
+                            </div>*/}
+
+                            <SeccionRangos idProyecto={idProyecto} idOrdenServicio={idOrdenServicio}/>
                             {/*<div className="col-sm-6">
                                 <div className="card m-1 shadow-sm">
                                 <div className="card-body">
@@ -291,6 +295,9 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 
                         </div>
 
+                    </div>
+				</TabPanel>
+				<TabPanel>
                         
                         {listaEstudios.map((estudio, index) => {
 
@@ -335,7 +342,6 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
         
                                 </div>)
                             })}
-                    </div>
 				</TabPanel>
 			</Tabs>
 
