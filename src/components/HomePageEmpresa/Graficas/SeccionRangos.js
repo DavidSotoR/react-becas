@@ -194,8 +194,8 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th className="text-center">Estudio</th>
-                                    <th className="text-center">Familia</th>
+                                    <th>Estudio</th>
+                                    <th>Familia</th>
                                     <th className="text-center">Valor</th>
                                 </tr>
                             </thead>
