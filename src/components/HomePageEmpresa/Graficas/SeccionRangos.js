@@ -119,9 +119,21 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
             <tr key={'igbsr'-index}
             onClick={() => { setItemSeleccionado((dataSelected?.id ? dataSelected.id : '')+''+item.id); setDataEstudios(item.estudios)}}
             >
-                <td className="text-end">{item.limiten_inferior < 1 ? 'O MENOS' : formatNumber(item.limiten_inferior)}</td>
-                <td className="text-end">{String(item.limite_superior) === String(0) ? 'O MAS' : formatNumber(item.limite_superior)}</td>
-                <td className="text-end">{formatNumber(item.total_estudios)}</td>
+                <td className="text-end"
+                    style={{backgroundColor: `${dataSelected?.id || ''}${item.id}` === itemSeleccionado ? 'aliceblue' : 'var(--bs-table-bg)'}}
+                >
+                    {item.limiten_inferior < 1 ? 'O MENOS' : formatNumber(item.limiten_inferior)}
+                </td>
+                <td className="text-end"
+                    style={{backgroundColor: `${dataSelected?.id || ''}${item.id}` === itemSeleccionado ? 'aliceblue' : 'var(--bs-table-bg)'}}
+                >
+                    {String(item.limite_superior) === String(0) ? 'O MAS' : formatNumber(item.limite_superior)}
+                </td>
+                <td className="text-end"
+                    style={{backgroundColor: `${dataSelected?.id || ''}${item.id}` === itemSeleccionado ? 'aliceblue' : 'var(--bs-table-bg)'}}
+                >
+                    {formatNumber(item.total_estudios)}
+                </td>
             </tr>
         ))
     }
@@ -174,10 +186,42 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
                 </div>
                 </div>
             </div>
+            
+            {dataEstudios.length > 0 && (
+                <div className="col-sm-6">
+                    <div className="card m-1 shadow-sm">
+                    <div className="card-body">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th className="text-center">Estudio</th>
+                                    <th className="text-center">Familia</th>
+                                    <th className="text-center">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {dataEstudios.length > 0 && dataEstudios.map( (estudio ,index) => (
+                                        <tr key={'esfil'-index}>
+                                            <td>
+                                            {estudio.id}
+                                            </td>
+                                            <td>
+                                                {estudio.candidato}
+                                            </td>
+                                            <td className="text-end">
+                                                { estudio?.parametros && estudio?.parametros.map((item, index) => {
+                                                    return item.id === dataSelected.id && formatNumber(item.puntos.sumatoria)
+                                                }) }
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                </div>
+            )}
             <div className="col-12">
-                {dataEstudios.length > 0 && dataEstudios.map( (estudio ,index) => 
-                    (<div key={'esfil-'+index}><h5>{estudio.id} - {estudio.candidato} </h5></div>)
-                )}
             </div>
             </>)}
         </div>

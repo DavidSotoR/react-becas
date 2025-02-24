@@ -35,6 +35,7 @@ export default function SeccionFiltrarProyectos({search,setSearch}){
     const [opcionesOrdenesServicio,setOpcionesOrdenesServicio] = useState([])
     const renderOpcionesOrdenesServicio = (opciones) =>{
         let opcioneslista = [];
+        opcioneslista.push({value:'',label:'Todas'});
         opciones.forEach((h)=>{
             var option = { value: '', label:'' }
             option.label = '#'+h.id+' '+h.descripcion

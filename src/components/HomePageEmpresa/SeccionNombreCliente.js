@@ -13,7 +13,7 @@ export default function SeccionNombreCliente({}){
     const { logout } = useContext(AuthContext);
 
     const [cliente,setCliente] = useState(null);
-    const [user,setUser] = useState(null);
+    //const [user,setUser] = useState(null);
 
     
     const getClienteUsuario = () => {
@@ -27,7 +27,7 @@ export default function SeccionNombreCliente({}){
         })
     }
     
-    const getUsuario = () => {
+    /*const getUsuario = () => {
         axios.post(`${APIURL}/me`,{},config).then((resp)=>{
             setUser(resp.data);
         }).catch((resp)=>{
@@ -36,18 +36,16 @@ export default function SeccionNombreCliente({}){
                 logout()
             }
         })
-    }
+    }*/
     
     useEffect(() => {
         getClienteUsuario();
-        getUsuario();
+        //getUsuario();
     },[])
 
     return (
     <>
         <h3>{cliente && cliente.nombre}</h3>
-        <br/>
-        <h5>{user?.name && `${user.name}`}</h5>
     </>
     )
 }
