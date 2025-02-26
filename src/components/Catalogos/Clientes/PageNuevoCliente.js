@@ -10,7 +10,20 @@ import DocumentWord from "./Document";
 //import 'react-quill/dist/quill.snow.css';
 
 function PageNuevoCliente() {
+    const [preview, setPreview] = useState(null);
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setPreview(reader.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+
     const [instance, updateInstance] = usePDF({ document: DocumentWord });
+    
     const [content, setContent] = useState('');
     const handleChange = (value) => {
         console.log(value);
@@ -867,6 +880,22 @@ function PageNuevoCliente() {
             
                     
             </div>
+            <hr></hr>
+            <div className="row">
+                <div className="12">
+                    <p className="fw-bold">Imagen para Logo de Cliente</p>
+                </div>
+                <div className="col-5">
+                    <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
+                </div>
+                {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
+               {/*  <div className="col d-flex justify-content-center align-items-center">
+                    <div className="d-flex align-items-center justify-content-center" style={{ background: 'black', width:'250px', height: '250px' }}>
+                        <p className="m-0 text-white">SIN IMAGEN</p>
+                    </div>
+                </div> */}
+
+            </div>
 
             <hr></hr>
                 <div id="editor">
@@ -877,6 +906,7 @@ function PageNuevoCliente() {
                     modules={modules} // Personalizamos la barra de herramientas
                     theme="snow"
                     />
+                    
                     {/* <div style={{ marginTop: '20px' }}>
                         <h3>Contenido actual:</h3>
                         <div className="ql-editor" dangerouslySetInnerHTML={{ __html: content }} />

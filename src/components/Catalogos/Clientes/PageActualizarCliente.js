@@ -7,6 +7,17 @@ import PathConstants from "../../../routes/pathsConstants";
 import ReactQuill from 'react-quill';
 
 function PageActualizarCliente() {
+    const [preview, setPreview] = useState(null);
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setPreview(reader.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      };
     const [content, setContent] = useState('');
     const handleChange = (value) => {
         console.log(value);
@@ -57,6 +68,7 @@ function PageActualizarCliente() {
         id_catalogo_encuesta: '',
         documentacion_digital: false,
         requiere_facturar: false,
+        habilitar_resumen: false,
         rso: '',
         nombre_uno: '',
         telefono_uno: '',
@@ -142,6 +154,7 @@ function PageActualizarCliente() {
         actualData.id_catalogo_encuesta =  data.id_catalogo_encuesta ?? ''
         actualData.documentacion_digital = data.documentacion_digital === 1 ? true : false
         actualData.requiere_facturar = data.requiere_facturar === 1 ? true : false
+        actualData.habilitar_resumen = data.habilitar_resumen ?? false
         actualData.rso =  data.rso ?? ''
         actualData.nombre_uno =  data.nombre_uno ?? ''
         actualData.telefono_uno =  data.telefono_uno ?? ''
@@ -909,7 +922,7 @@ function PageActualizarCliente() {
                                 { contieneErrorInput(21) && <span className="error-msg"> {obtenerErrorMensaje(21)} </span> }
                             </div>
                         </div>
-                        <div className="col-7 mt-4">
+                        <div className="col-3 mt-4">
                             <div className="d-flex">
                                 <Form.Check className="mx-2" type="switch">
                                     <Form.Check.Input name="documentacion_digital" checked={formData.documentacion_digital} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
@@ -919,10 +932,36 @@ function PageActualizarCliente() {
                             </div>
                             
                         </div>
+                        <div className="col-3 mt-4">
+                            <div className="d-flex">
+                                <Form.Check className="mx-2" type="switch">
+                                    <Form.Check.Input name="documentacion_digital" checked={formData.habilitar_resumen ?? false} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Resumen </span></Form.Check.Label>
+                                </Form.Check>
+                                                                
+                            </div>
+                            
+                        </div>
                     </div>
                 </div> 
             
                     
+            </div>
+            <hr></hr>
+            <div className="row">
+                <div className="12">
+                    <p className="fw-bold">Imagen para Logo de Cliente</p>
+                </div>
+                <div className="col-5">
+                    <input class="form-control" type="file" id="formFileLogo"/>
+                </div>
+                {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
+                {/* <div className="col d-flex justify-content-center align-items-center">
+                    <div className="d-flex align-items-center justify-content-center" style={{ background: 'black', width:'250px', height: '250px' }}>
+                        <p className="m-0 text-white">SIN IMAGEN</p>
+                    </div>
+                </div> */}
+
             </div>
 
             <hr></hr>
