@@ -600,13 +600,13 @@ function PageNuevoCliente() {
     }
 
     const sendDataClienteNuevo = () =>{
-        //console.log(formData);
+        console.log(formData);
         var dataPOST = {
             "id_tipo_cliente": parseInt(formData.id_tipo_cliente,10),
             "nombre": formData.nombre,
             "descripcion": formData.descripcion,
             "notificaciones_email": formData.notificaciones_email,
-            "id_clientes_hermanos": formData.id_tipo_cliente === '1' ? parseInt(formData.id_clientes_hermanos,10) : null,
+            "id_clientes_hermanos": formData.id_tipo_cliente === '1' ? (parseInt(formData.id_clientes_hermanos, 10) || '') : '',
             "rfc": formData.rfc,
             "rso": formData.rso,
             "nombre_uno": formData.nombre_uno,

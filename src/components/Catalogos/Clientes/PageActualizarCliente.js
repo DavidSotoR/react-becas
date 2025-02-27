@@ -7,6 +7,8 @@ import PathConstants from "../../../routes/pathsConstants";
 import ReactQuill from 'react-quill';
 
 function PageActualizarCliente() {
+    const urlIMG = "http://127.0.0.1:8000/storage/";
+
     const [preview, setPreview] = useState(null);
     const [fileLogo, setFileLogo] = useState(null);
     const handleFileChange = (event) => {
@@ -48,7 +50,6 @@ function PageActualizarCliente() {
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data'
         }
     }
     const [ valueCliente, setValueCliente ] = useState(null)
@@ -72,6 +73,7 @@ function PageActualizarCliente() {
         documentacion_digital: false,
         requiere_facturar: false,
         habilitar_resumen: false,
+        ubicacion_logo: '',
         rso: '',
         nombre_uno: '',
         telefono_uno: '',
@@ -165,7 +167,7 @@ function PageActualizarCliente() {
         actualData.id_catalogo_encuesta =  data.id_catalogo_encuesta ?? ''
         actualData.documentacion_digital = data.documentacion_digital === 1 ? true : false
         actualData.requiere_facturar = data.requiere_facturar === 1 ? true : false
-        actualData.habilitar_resumen = data.habilitar_resumen ?? false
+        actualData.habilitar_resumen = data.habilitar_resumen === 1 ? true : false
         actualData.rso =  data.rso ?? ''
         actualData.nombre_uno =  data.nombre_uno ?? ''
         actualData.telefono_uno =  data.telefono_uno ?? ''
@@ -182,6 +184,7 @@ function PageActualizarCliente() {
         actualData.rason_social =  data.rason_social ?? ''
         actualData.rfc = data.rfc ?? ''
         actualData.tipo_persona = data.tipo_persona ?? ''
+        actualData.ubicacion_logo = data.ubicacion_logo
         actualData.terminos = data.terminos
         actualData.habilitar_resumen = data.habilitar_resumen === 1 ? true : false
         setContent(data.terminos)
@@ -688,7 +691,7 @@ function PageActualizarCliente() {
             "nombre": formData.nombre,
             "descripcion": formData.descripcion,
             "notificaciones_email": formData.notificaciones_email,
-            "id_clientes_hermanos": parseInt(formData.id_clientes_hermanos,10),
+            "id_clientes_hermanos": formData.id_tipo_cliente === '1' ? (parseInt(formData.id_clientes_hermanos, 10) || '') : '',//parseInt(formData.id_clientes_hermanos,10),
             "id_catalogo_encuesta": parseInt(formData.id_catalogo_encuesta, 10) ,
             "rso": formData.rso,
             "rfc": formData.rfc,
@@ -711,14 +714,13 @@ function PageActualizarCliente() {
             "requiere_facturar": formData.requiere_facturar ? 1 : 0,
             'terminos': content,
         }
-        console.log(dataPOST);
-
-        let formDataSend = new FormData();
+        
+        const formDataSend = new FormData();
         
         Object.keys(dataPOST).forEach(key => {
-            if (dataPOST[key] !== null && dataPOST[key] !== undefined) {
+            //if (dataPOST[key] !== null && dataPOST[key] !== undefined) {
                 formDataSend.append(key, dataPOST[key]);
-            }
+            //}
         });
 
         if (fileLogo) {
@@ -729,8 +731,10 @@ function PageActualizarCliente() {
             alert('El campo Colegio Hermanos es obligatorio.')
             return 0
         }
+        
+        formDataSend.append('test', 'test')        
 
-        axios.put(APIURL+'/clientes/'+dataPOST.id , formDataSend ,config).then((resp)=>{
+        axios.post(APIURL+'/clientes/'+dataPOST.id , formDataSend ,config).then((resp)=>{
             console.log(resp);
             //window.location.replace('http://localhost:3000/clientes')
             navigate("/clientes")
@@ -905,7 +909,7 @@ function PageActualizarCliente() {
                     <p className="fw-bold pb-1 mb-1"> Seleccione el tipo de persona fiscal al que pertenece: </p>
                     <div className="d-flex pb-3">
 {/*                         <p>{ tipoPersona }</p>
- */}                        <Form.Check checked={ tipoPersona === "fisica" } className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
+ */}                    <Form.Check checked={ tipoPersona === "fisica" } className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
                         <Form.Check checked={ tipoPersona === "moral" } type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
                     </div>
                     
@@ -984,12 +988,18 @@ function PageActualizarCliente() {
                 <div className="col-5">
                     <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
                 </div>
-                {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
-                {/* <div className="col d-flex justify-content-center align-items-center">
-                    <div className="d-flex align-items-center justify-content-center" style={{ background: 'black', width:'250px', height: '250px' }}>
-                        <p className="m-0 text-white">SIN IMAGEN</p>
-                    </div>
-                </div> */}
+
+                
+                {preview && formData?.ubicacion_logo !== '' ? (
+                    <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />
+                ) : (
+                    <img
+                        src={urlIMG + formData.ubicacion_logo}
+                        className="d-block w-100 h-50 rounded" style={{ maxWidth: "250px", maxHeight: "250px" }}
+                        alt={'img-logo'}
+                    />
+                )}
+                
 
             </div>
 
