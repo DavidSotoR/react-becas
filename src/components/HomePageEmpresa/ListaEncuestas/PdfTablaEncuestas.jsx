@@ -184,7 +184,6 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
 
     console.log(body);
     
-  
     doc.autoTable({
       head: [headers], // Encabezados
       body: body,      // Datos

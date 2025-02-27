@@ -8,16 +8,18 @@ import ReactQuill from 'react-quill';
 
 function PageActualizarCliente() {
     const [preview, setPreview] = useState(null);
+    const [fileLogo, setFileLogo] = useState(null);
     const handleFileChange = (event) => {
         const file = event.target.files[0];
+        setFileLogo(file)
         if (file) {
-          const reader = new FileReader();
-          reader.onloadend = () => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
             setPreview(reader.result);
-          };
-          reader.readAsDataURL(file);
+            };
+            reader.readAsDataURL(file);
         }
-      };
+    };
     const [content, setContent] = useState('');
     const handleChange = (value) => {
         console.log(value);
@@ -45,7 +47,8 @@ function PageActualizarCliente() {
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data'
         }
     }
     const [ valueCliente, setValueCliente ] = useState(null)
@@ -131,6 +134,14 @@ function PageActualizarCliente() {
             }));
             return 0;
         }
+        if (name === 'habilitar_resumen') {            
+            var newValue = !formData.habilitar_resumen
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: newValue
+            }));
+            return 0;
+        }
         setFormData(prevState => ({
             ...prevState,
             [name]: value
@@ -172,6 +183,7 @@ function PageActualizarCliente() {
         actualData.rfc = data.rfc ?? ''
         actualData.tipo_persona = data.tipo_persona ?? ''
         actualData.terminos = data.terminos
+        actualData.habilitar_resumen = data.habilitar_resumen === 1 ? true : false
         setContent(data.terminos)
         setFormData(actualData)
         setFormDataOld(actualData)
@@ -232,11 +244,10 @@ function PageActualizarCliente() {
                     'id_clientes_hermanos', 'rso', 'tipo_persona', 'nombre_uno', 'telefono_uno',
                     'nombre_dos', 'telefono_dos', 'telefono_mobil', 'requiere_facturar',
                     'documentacion_digital', 'calle', 'entre_cale', 'colonia', 'codigo_postal',
-                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc'
+                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc', 'habilitar_resumen', 'terminos'
                 ].includes(key)) {
                     return true; // Ignora este campo y continúa
                 }
-                
                 console.log(isValidValue(valor));
                 return isValidValue(valor);
             });
@@ -246,11 +257,11 @@ function PageActualizarCliente() {
                     'id_clientes_hermanos', 'rso', 'tipo_persona', 'nombre_uno', 'telefono_uno',
                     'nombre_dos', 'telefono_dos', 'telefono_mobil', 'requiere_facturar',
                     'documentacion_digital', 'calle', 'entre_cale', 'colonia', 'codigo_postal',
-                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc'
+                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc', 'habilitar_resumen', 'terminos'
                 ].includes(key)) {
                     return true; // Ignora este campo y continúa
                 }
-    
+                
                 console.log(isValidValue(valor));
                 return isValidValue(valor);
             });
@@ -696,12 +707,30 @@ function PageActualizarCliente() {
             "pais": formData.pais,
             "rason_social": formData.rason_social,
             "documentacion_digital": formData.documentacion_digital ? 1 : 0,
+            "habilitar_resumen": formData.habilitar_resumen ? 1 : 0,
             "requiere_facturar": formData.requiere_facturar ? 1 : 0,
             'terminos': content,
         }
+        console.log(dataPOST);
 
-        console.log(dataPOST)
-        axios.put(APIURL+'/clientes',dataPOST,config).then((resp)=>{
+        let formDataSend = new FormData();
+        
+        Object.keys(dataPOST).forEach(key => {
+            if (dataPOST[key] !== null && dataPOST[key] !== undefined) {
+                formDataSend.append(key, dataPOST[key]);
+            }
+        });
+
+        if (fileLogo) {
+            formDataSend.append("logo", fileLogo);
+        }
+
+        if (dataPOST.id_tipo_cliente === 1 && dataPOST.id_clientes_hermanos === 'null' && esColegioComun) {
+            alert('El campo Colegio Hermanos es obligatorio.')
+            return 0
+        }
+
+        axios.put(APIURL+'/clientes/'+dataPOST.id , formDataSend ,config).then((resp)=>{
             console.log(resp);
             //window.location.replace('http://localhost:3000/clientes')
             navigate("/clientes")
@@ -935,7 +964,7 @@ function PageActualizarCliente() {
                         <div className="col-3 mt-4">
                             <div className="d-flex">
                                 <Form.Check className="mx-2" type="switch">
-                                    <Form.Check.Input name="documentacion_digital" checked={formData.habilitar_resumen ?? false} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Input name="habilitar_resumen" checked={formData.habilitar_resumen ?? false} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                     <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Resumen </span></Form.Check.Label>
                                 </Form.Check>
                                                                 
@@ -953,7 +982,7 @@ function PageActualizarCliente() {
                     <p className="fw-bold">Imagen para Logo de Cliente</p>
                 </div>
                 <div className="col-5">
-                    <input class="form-control" type="file" id="formFileLogo"/>
+                    <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
                 </div>
                 {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
                 {/* <div className="col d-flex justify-content-center align-items-center">
