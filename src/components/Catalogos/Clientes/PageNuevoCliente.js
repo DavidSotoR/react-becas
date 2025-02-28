@@ -74,6 +74,7 @@ function PageNuevoCliente() {
         id_catalogo_encuesta: '',
         documentacion_digital: false,
         requiere_facturar: false,
+        habilitar_resumen: false,
         rso: '',
         nombre_uno: '',
         telefono_uno: '',

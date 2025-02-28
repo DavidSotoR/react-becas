@@ -24,7 +24,6 @@ function PageActualizarCliente() {
     };
     const [content, setContent] = useState('');
     const handleChange = (value) => {
-        console.log(value);
         setFormData(prevState => ({
             ...prevState,
             terminos: value,
@@ -239,7 +238,6 @@ function PageActualizarCliente() {
     };
     
     const validarValoresBtn = (form) =>{
-        console.log(form);
                 
         if (form.id_tipo_cliente === '1' || form.id_tipo_cliente === 1) {
             return Object.entries(form).every(([key, valor]) => {
@@ -247,11 +245,13 @@ function PageActualizarCliente() {
                     'id_clientes_hermanos', 'rso', 'tipo_persona', 'nombre_uno', 'telefono_uno',
                     'nombre_dos', 'telefono_dos', 'telefono_mobil', 'requiere_facturar',
                     'documentacion_digital', 'calle', 'entre_cale', 'colonia', 'codigo_postal',
-                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc', 'habilitar_resumen', 'terminos'
+                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc', 'habilitar_resumen', 'terminos', 'ubicacion_logo'
                 ].includes(key)) {
                     return true; // Ignora este campo y continúa
                 }
-                console.log(isValidValue(valor));
+                //console.log(key);
+                
+                //console.log(isValidValue(valor));
                 return isValidValue(valor);
             });
         } else if (formData.id_tipo_cliente === '2' || form.id_tipo_cliente === 2) {
@@ -260,16 +260,15 @@ function PageActualizarCliente() {
                     'id_clientes_hermanos', 'rso', 'tipo_persona', 'nombre_uno', 'telefono_uno',
                     'nombre_dos', 'telefono_dos', 'telefono_mobil', 'requiere_facturar',
                     'documentacion_digital', 'calle', 'entre_cale', 'colonia', 'codigo_postal',
-                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc', 'habilitar_resumen', 'terminos'
+                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc', 'habilitar_resumen', 'terminos', 'ubicacion_logo'
                 ].includes(key)) {
                     return true; // Ignora este campo y continúa
                 }
-                
-                console.log(isValidValue(valor));
+                //console.log(isValidValue(valor));
                 return isValidValue(valor);
             });
         }
-        console.log('return flase');
+        //console.log('return flase');
         
         return false;
         
@@ -731,8 +730,8 @@ function PageActualizarCliente() {
             alert('El campo Colegio Hermanos es obligatorio.')
             return 0
         }
+        console.log(formDataSend);
         
-        formDataSend.append('test', 'test')        
 
         axios.post(APIURL+'/clientes/'+dataPOST.id , formDataSend ,config).then((resp)=>{
             console.log(resp);
@@ -743,6 +742,10 @@ function PageActualizarCliente() {
             setShowAlertError(true)
             if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
                 console.log(resp.response.data);
+            }
+
+            if (resp.response.status === 401) {
+                logout()
             }
             console.log(resp);
         })

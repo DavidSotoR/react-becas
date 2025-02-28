@@ -254,15 +254,20 @@ export default function TablaEncuestas({
             </div>
           )}
           <div className="d-flex align-items-center">
-          <p className="m-0 fw-bold">Descargar Datos Tabla: </p>
+
+            <p className="m-0 fw-bold">Descargar Datos Tabla: </p>
             <ExcelTablaEncuestas
               parametros={listaParametros}
-              data={listaEstudios}
-              fileName={"Lista Edtidios"}
+              data={rowSelect.length === 0 ? listaEstudios : rowSelect}
+              fileName={"Lista Estudios"}
             />
             <PdfTablaEncuestas parametros={listaParametros}
-              data={listaEstudios}
-              fileName={"Lista Edtidios"}></PdfTablaEncuestas>
+              data={ rowSelect.length === 0 ? listaEstudios : rowSelect }
+              tipo_reporte={"completo"}></PdfTablaEncuestas>
+
+            <PdfTablaEncuestas parametros={listaParametros}
+              data={ rowSelect.length === 0 ? listaEstudios : rowSelect }
+              tipo_reporte={"porcentaje_asignado"}></PdfTablaEncuestas>
           </div>
           
         </div>

@@ -9,8 +9,7 @@ import {
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import axios from "../../../../node_modules/axios/index";
-export default function PdfTablaEncuestas({ parametros, data, fileName }) {
-  console.log(parametros);
+export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
 
   const APIURL = process.env.REACT_APP_API_URL;
   const config = {
@@ -57,7 +56,7 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
     },
     {
       name: "Porcentaje Otorgado",
-      cell: (row) =>  {return (row.porcentaje_otorgado !==null )  ?  `${row.porcentaje_otorgado}%` : '' },
+      cell: (row) =>  {return (row.porcentaje_otorgado !== null )  ?  `${row.porcentaje_otorgado}%` : row.hijo ? row.hijo.porcentaje_otorgado : 'SIN DATO' },
     },
     {
       name: "No. Familia Colegio",
@@ -80,15 +79,13 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
   
   const transformDataForExcel = () => {
     return data.map((row) => {
+      console.log(row);
+      
       const transformedRow = {};
-      columns.forEach((col) => {
-        console.log(col);
-        
+      columns.forEach((col) => {        
         if (col.selector) {
           // Si el selector es una función, evaluarlo
-          transformedRow[col.name] = typeof col.selector === "function" 
-            ? col.selector(row) 
-            : row[col.selector];
+          transformedRow[col.name] = typeof col.selector === "function" ? col.selector(row) : row[col.selector];
         } else if (col.cell) {
           // Para celdas con lógica compleja, agregar texto representativo
           transformedRow[col.name] = typeof col.cell === "function"
@@ -142,7 +139,7 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
     
     const pageWidth = doc.internal.pageSize.getWidth();
     doc.setFontSize(8);
-    console.log(headers);
+    //console.log(headers);
   
     
 
@@ -184,50 +181,76 @@ export default function PdfTablaEncuestas({ parametros, data, fileName }) {
 
     console.log(body);
     
-    doc.autoTable({
-      head: [headers], // Encabezados
-      body: body,      // Datos
-      startY: 20,      // Posición Y donde comienza la tabla
-      theme: "grid",   // Estilo de la tabla
-      styles: {
-        fontSize: 4, // Tamaño de la fuente
-        cellPadding: 1, // Espaciado interno de las celdas
-      },
-      headStyles: {
-        fillColor: [71, 209, 214], // Color de fondo del encabezado
-        textColor: [255, 255, 255], // Color del texto del encabezado
-        fontStyle: "bold", // Negritas en el encabezado
-      },
-      columnStyles: {
-        0: { cellWidth: 10 }, // Ancho de la columna ID
-        1: { cellWidth: "wrap" }, // Ancho de la columna Nombre
-        2: { cellWidth: "auto" }, // Ancho de la columna Email
-        3: { cellWidth: "auto" }, // Ancho de la columna Fecha
-        4: { cellWidth: "auto" }, // Ancho de la columna Proyecto
-        5: { cellWidth: "auto" }, // Ancho de la columna Orden de Servicio
-        6: { cellWidth: "auto" }, // Ancho de la columna Proyecto
-        7: { cellWidth: "auto" }, // Ancho de la columna Orden de Servicio
-      },
-    });
+    
+
+    if (tipo_reporte === 'completo') {
+      doc.autoTable({
+        head: [headers], // Encabezados
+        body: body,      // Datos
+        startY: 20,      // Posición Y donde comienza la tabla
+        theme: "grid",   // Estilo de la tabla
+        styles: {
+          fontSize: 4, // Tamaño de la fuente
+          cellPadding: 1, // Espaciado interno de las celdas
+        },
+        headStyles: {
+          fillColor: [71, 209, 214], // Color de fondo del encabezado
+          textColor: [255, 255, 255], // Color del texto del encabezado
+          fontStyle: "bold", // Negritas en el encabezado
+        },
+        columnStyles: {
+          0: { cellWidth: 10 }, // Ancho de la columna ID
+          1: { cellWidth: "wrap" }, // Ancho de la columna Nombre
+          2: { cellWidth: "auto" }, // Ancho de la columna Email
+          3: { cellWidth: "auto" }, // Ancho de la columna Fecha
+          4: { cellWidth: "auto" }, // Ancho de la columna Proyecto
+          5: { cellWidth: "auto" }, // Ancho de la columna Orden de Servicio
+          6: { cellWidth: "auto" }, // Ancho de la columna Proyecto
+          7: { cellWidth: "auto" }, // Ancho de la columna Orden de Servicio
+        },
+      });
+    }
+
+    if (tipo_reporte === 'porcentaje_asignado') {
+      let headerPorcentaje = [
+        "FOLIO",
+        "FAMILIA",
+        "ALUMNO",
+        "% ASIGNADO"
+      ]
+
+      doc.autoTable({
+        head: [headerPorcentaje], // Encabezados
+        body: body,      // Datos
+        startY: 20,      // Posición Y donde comienza la tabla
+        theme: "grid",   // Estilo de la tabla
+        styles: {
+          fontSize: 4, // Tamaño de la fuente
+          cellPadding: 1, // Espaciado interno de las celdas
+        },
+        headStyles: {
+          fillColor: [71, 209, 214], // Color de fondo del encabezado
+          textColor: [255, 255, 255], // Color del texto del encabezado
+          fontStyle: "bold", // Negritas en el encabezado
+        },
+        columnStyles: {
+          0: { cellWidth: 10 },
+          1: { cellWidth: "wrap" },
+          2: { cellWidth: "auto" }, 
+          3: { cellWidth: "auto" }, 
+        },
+      });
+      
+    }
   
     doc.save("reporte.pdf");
   };
-  
-
-
-  const getCalificacionesParametrosFamilias = async (data = []) => {
-    let body = {
-      ordenes_servicio: data
-    }
-    const resp = await axios.post(APIURL + "/estudio/socioeconomico/reporte/familias/parametros",body, config);
-    return resp;
-  }
 
   return (
     <button
       type="button"
       className="btn btn-outline text-danger"
-      title="Descargar Tabla en PDF"
+      title={ tipo_reporte=== 'completo' ? "Reporte PDF completo" : "Reporte % Asignado" }
       onClick={exportToPdf}
     >
       <i className="bi bi-filetype-pdf" style={{ fontSize: "1.4rem" }}></i>
