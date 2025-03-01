@@ -7,20 +7,23 @@ import PathConstants from "../../../routes/pathsConstants";
 import ReactQuill from 'react-quill';
 
 function PageActualizarCliente() {
+    const urlIMG = "http://127.0.0.1:8000/storage/";
+
     const [preview, setPreview] = useState(null);
+    const [fileLogo, setFileLogo] = useState(null);
     const handleFileChange = (event) => {
         const file = event.target.files[0];
+        setFileLogo(file)
         if (file) {
-          const reader = new FileReader();
-          reader.onloadend = () => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
             setPreview(reader.result);
-          };
-          reader.readAsDataURL(file);
+            };
+            reader.readAsDataURL(file);
         }
-      };
+    };
     const [content, setContent] = useState('');
     const handleChange = (value) => {
-        console.log(value);
         setFormData(prevState => ({
             ...prevState,
             terminos: value,
@@ -45,7 +48,7 @@ function PageActualizarCliente() {
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         }
     }
     const [ valueCliente, setValueCliente ] = useState(null)
@@ -69,6 +72,7 @@ function PageActualizarCliente() {
         documentacion_digital: false,
         requiere_facturar: false,
         habilitar_resumen: false,
+        ubicacion_logo: '',
         rso: '',
         nombre_uno: '',
         telefono_uno: '',
@@ -131,6 +135,14 @@ function PageActualizarCliente() {
             }));
             return 0;
         }
+        if (name === 'habilitar_resumen') {            
+            var newValue = !formData.habilitar_resumen
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: newValue
+            }));
+            return 0;
+        }
         setFormData(prevState => ({
             ...prevState,
             [name]: value
@@ -154,7 +166,7 @@ function PageActualizarCliente() {
         actualData.id_catalogo_encuesta =  data.id_catalogo_encuesta ?? ''
         actualData.documentacion_digital = data.documentacion_digital === 1 ? true : false
         actualData.requiere_facturar = data.requiere_facturar === 1 ? true : false
-        actualData.habilitar_resumen = data.habilitar_resumen ?? false
+        actualData.habilitar_resumen = data.habilitar_resumen === 1 ? true : false
         actualData.rso =  data.rso ?? ''
         actualData.nombre_uno =  data.nombre_uno ?? ''
         actualData.telefono_uno =  data.telefono_uno ?? ''
@@ -171,7 +183,9 @@ function PageActualizarCliente() {
         actualData.rason_social =  data.rason_social ?? ''
         actualData.rfc = data.rfc ?? ''
         actualData.tipo_persona = data.tipo_persona ?? ''
+        actualData.ubicacion_logo = data.ubicacion_logo
         actualData.terminos = data.terminos
+        actualData.habilitar_resumen = data.habilitar_resumen === 1 ? true : false
         setContent(data.terminos)
         setFormData(actualData)
         setFormDataOld(actualData)
@@ -224,7 +238,6 @@ function PageActualizarCliente() {
     };
     
     const validarValoresBtn = (form) =>{
-        console.log(form);
                 
         if (form.id_tipo_cliente === '1' || form.id_tipo_cliente === 1) {
             return Object.entries(form).every(([key, valor]) => {
@@ -232,12 +245,13 @@ function PageActualizarCliente() {
                     'id_clientes_hermanos', 'rso', 'tipo_persona', 'nombre_uno', 'telefono_uno',
                     'nombre_dos', 'telefono_dos', 'telefono_mobil', 'requiere_facturar',
                     'documentacion_digital', 'calle', 'entre_cale', 'colonia', 'codigo_postal',
-                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc'
+                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc', 'habilitar_resumen', 'terminos', 'ubicacion_logo'
                 ].includes(key)) {
                     return true; // Ignora este campo y continúa
                 }
+                //console.log(key);
                 
-                console.log(isValidValue(valor));
+                //console.log(isValidValue(valor));
                 return isValidValue(valor);
             });
         } else if (formData.id_tipo_cliente === '2' || form.id_tipo_cliente === 2) {
@@ -246,16 +260,15 @@ function PageActualizarCliente() {
                     'id_clientes_hermanos', 'rso', 'tipo_persona', 'nombre_uno', 'telefono_uno',
                     'nombre_dos', 'telefono_dos', 'telefono_mobil', 'requiere_facturar',
                     'documentacion_digital', 'calle', 'entre_cale', 'colonia', 'codigo_postal',
-                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc'
+                    'ciudad', 'estado', 'pais', 'rason_social', 'rfc', 'habilitar_resumen', 'terminos', 'ubicacion_logo'
                 ].includes(key)) {
                     return true; // Ignora este campo y continúa
                 }
-    
-                console.log(isValidValue(valor));
+                //console.log(isValidValue(valor));
                 return isValidValue(valor);
             });
         }
-        console.log('return flase');
+        //console.log('return flase');
         
         return false;
         
@@ -677,7 +690,7 @@ function PageActualizarCliente() {
             "nombre": formData.nombre,
             "descripcion": formData.descripcion,
             "notificaciones_email": formData.notificaciones_email,
-            "id_clientes_hermanos": parseInt(formData.id_clientes_hermanos,10),
+            "id_clientes_hermanos": formData.id_tipo_cliente === '1' ? (parseInt(formData.id_clientes_hermanos, 10) || '') : '',//parseInt(formData.id_clientes_hermanos,10),
             "id_catalogo_encuesta": parseInt(formData.id_catalogo_encuesta, 10) ,
             "rso": formData.rso,
             "rfc": formData.rfc,
@@ -696,12 +709,31 @@ function PageActualizarCliente() {
             "pais": formData.pais,
             "rason_social": formData.rason_social,
             "documentacion_digital": formData.documentacion_digital ? 1 : 0,
+            "habilitar_resumen": formData.habilitar_resumen ? 1 : 0,
             "requiere_facturar": formData.requiere_facturar ? 1 : 0,
             'terminos': content,
         }
+        
+        const formDataSend = new FormData();
+        
+        Object.keys(dataPOST).forEach(key => {
+            //if (dataPOST[key] !== null && dataPOST[key] !== undefined) {
+                formDataSend.append(key, dataPOST[key]);
+            //}
+        });
 
-        console.log(dataPOST)
-        axios.put(APIURL+'/clientes',dataPOST,config).then((resp)=>{
+        if (fileLogo) {
+            formDataSend.append("logo", fileLogo);
+        }
+
+        if (dataPOST.id_tipo_cliente === 1 && dataPOST.id_clientes_hermanos === 'null' && esColegioComun) {
+            alert('El campo Colegio Hermanos es obligatorio.')
+            return 0
+        }
+        console.log(formDataSend);
+        
+
+        axios.post(APIURL+'/clientes/'+dataPOST.id , formDataSend ,config).then((resp)=>{
             console.log(resp);
             //window.location.replace('http://localhost:3000/clientes')
             navigate("/clientes")
@@ -710,6 +742,10 @@ function PageActualizarCliente() {
             setShowAlertError(true)
             if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
                 console.log(resp.response.data);
+            }
+
+            if (resp.response.status === 401) {
+                logout()
             }
             console.log(resp);
         })
@@ -876,7 +912,7 @@ function PageActualizarCliente() {
                     <p className="fw-bold pb-1 mb-1"> Seleccione el tipo de persona fiscal al que pertenece: </p>
                     <div className="d-flex pb-3">
 {/*                         <p>{ tipoPersona }</p>
- */}                        <Form.Check checked={ tipoPersona === "fisica" } className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
+ */}                    <Form.Check checked={ tipoPersona === "fisica" } className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
                         <Form.Check checked={ tipoPersona === "moral" } type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
                     </div>
                     
@@ -935,7 +971,7 @@ function PageActualizarCliente() {
                         <div className="col-3 mt-4">
                             <div className="d-flex">
                                 <Form.Check className="mx-2" type="switch">
-                                    <Form.Check.Input name="documentacion_digital" checked={formData.habilitar_resumen ?? false} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Input name="habilitar_resumen" checked={formData.habilitar_resumen ?? false} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                     <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Resumen </span></Form.Check.Label>
                                 </Form.Check>
                                                                 
@@ -953,14 +989,20 @@ function PageActualizarCliente() {
                     <p className="fw-bold">Imagen para Logo de Cliente</p>
                 </div>
                 <div className="col-5">
-                    <input class="form-control" type="file" id="formFileLogo"/>
+                    <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
                 </div>
-                {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
-                {/* <div className="col d-flex justify-content-center align-items-center">
-                    <div className="d-flex align-items-center justify-content-center" style={{ background: 'black', width:'250px', height: '250px' }}>
-                        <p className="m-0 text-white">SIN IMAGEN</p>
-                    </div>
-                </div> */}
+
+                
+                {preview && formData?.ubicacion_logo !== '' ? (
+                    <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />
+                ) : (
+                    <img
+                        src={urlIMG + formData.ubicacion_logo}
+                        className="d-block w-100 h-50 rounded" style={{ maxWidth: "250px", maxHeight: "250px" }}
+                        alt={'img-logo'}
+                    />
+                )}
+                
 
             </div>
 

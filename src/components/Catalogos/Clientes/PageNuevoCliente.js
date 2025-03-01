@@ -11,16 +11,18 @@ import DocumentWord from "./Document";
 
 function PageNuevoCliente() {
     const [preview, setPreview] = useState(null);
+    const [fileLogo, setFileLogo] = useState(null);
     const handleFileChange = (event) => {
         const file = event.target.files[0];
+        setFileLogo(file)
         if (file) {
-          const reader = new FileReader();
-          reader.onloadend = () => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
             setPreview(reader.result);
-          };
-          reader.readAsDataURL(file);
+            };
+            reader.readAsDataURL(file);
         }
-      };
+    };
 
     const [instance, updateInstance] = usePDF({ document: DocumentWord });
     
@@ -72,6 +74,7 @@ function PageNuevoCliente() {
         id_catalogo_encuesta: '',
         documentacion_digital: false,
         requiere_facturar: false,
+        habilitar_resumen: false,
         rso: '',
         nombre_uno: '',
         telefono_uno: '',
@@ -124,9 +127,18 @@ function PageNuevoCliente() {
             return 0;
         }
         if (name === 'documentacion_digital') {
-            console.log('entra');
             
             var newValue = !formData.documentacion_digital
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: newValue
+            }));
+            return 0;
+        }
+
+        if (name === 'habilitar_resumen') {
+            
+            var newValue = !formData.habilitar_resumen
             setFormData(prevState => ({
                 ...prevState,
                 [name]: newValue
@@ -589,13 +601,13 @@ function PageNuevoCliente() {
     }
 
     const sendDataClienteNuevo = () =>{
-        //console.log(formData);
+        console.log(formData);
         var dataPOST = {
             "id_tipo_cliente": parseInt(formData.id_tipo_cliente,10),
             "nombre": formData.nombre,
             "descripcion": formData.descripcion,
             "notificaciones_email": formData.notificaciones_email,
-            "id_clientes_hermanos": formData.id_tipo_cliente === '1' ? parseInt(formData.id_clientes_hermanos,10) : null,
+            "id_clientes_hermanos": formData.id_tipo_cliente === '1' ? (parseInt(formData.id_clientes_hermanos, 10) || '') : '',
             "rfc": formData.rfc,
             "rso": formData.rso,
             "nombre_uno": formData.nombre_uno,
@@ -614,11 +626,22 @@ function PageNuevoCliente() {
             "rason_social": formData.rason_social,
             "requiere_facturar": formData.requiere_facturar ? 1 : 0,
             "documentacion_digital": formData.documentacion_digital ? 1 : 0,
+            "habilitar_resumen": formData.habilitar_resumen ? 1 : 0,
             "id_catalogo_encuesta": formData.id_catalogo_encuesta,
             "terminos": content,
         }
-        console.log(dataPOST);
-        console.log(arrayErrors);
+
+        let formDataSend = new FormData();
+        
+        Object.keys(dataPOST).forEach(key => {
+            if (dataPOST[key] !== null && dataPOST[key] !== undefined) {
+                formDataSend.append(key, dataPOST[key]);
+            }
+        });
+
+        if (fileLogo) {
+            formDataSend.append("logo", fileLogo);
+        }
 
         if (dataPOST.id_tipo_cliente === 1 && dataPOST.id_clientes_hermanos === 'null' && esColegioComun) {
             alert('El campo Colegio Hermanos es obligatorio.')
@@ -627,7 +650,7 @@ function PageNuevoCliente() {
         
         
         //navigate("/clientes")
-        axios.post(APIURL+'/clientes',dataPOST,config).then((resp)=>{
+        axios.post(APIURL+'/clientes',formDataSend,config).then((resp)=>{
             console.log(resp);
             navigate("/clientes")
        
@@ -644,7 +667,6 @@ function PageNuevoCliente() {
     }
 
     const validarValoresBtn = (form) =>{
-         console.log(form);
          
         if (form.id_tipo_cliente === '1') {
             //console.log('tipo 1');
@@ -678,7 +700,6 @@ function PageNuevoCliente() {
                 return valor !== '' && valor !== null && valor !== '0';
             });
         } else if (formData.id_tipo_cliente === '2') {
-            console.log('tipo 2');
             return Object.entries(form).every(([key, valor]) => {
                 if (key === 'id_clientes_hermanos' || key === "rso" ||
                     key === "nombre_uno" ||
@@ -857,21 +878,31 @@ function PageNuevoCliente() {
                 
                 <div className="col-12 mt-2">
                     <div className="row">
-                    <div className="col-4">
-                        <div className="mb-3">
-                            <label className="fw-bold">Encuesta a aplicar:</label>
-                            <Form.Select aria-label="Default select example" name="id_catalogo_encuesta" onChange={(e)=> {formInputChange(e);}}>
-                                { renderOptionsEncuestas }
-                            </Form.Select>
-                            { contieneErrorInput(21) && <span className="error-msg"> {obtenerErrorMensaje(21)} </span> }
+                        <div className="col-4">
+                            <div className="mb-3">
+                                <label className="fw-bold">Encuesta a aplicar:</label>
+                                <Form.Select aria-label="Default select example" name="id_catalogo_encuesta" onChange={(e)=> {formInputChange(e);}}>
+                                    { renderOptionsEncuestas }
+                                </Form.Select>
+                                { contieneErrorInput(21) && <span className="error-msg"> {obtenerErrorMensaje(21)} </span> }
+                            </div>
                         </div>
-                    </div>
-                        <div className="col-7 mt-4">
+                        <div className="col-3 mt-4">
                             <div className="d-flex">
                                 <Form.Check type="switch" className="mx-2 pt-2">
                                     <Form.Check.Input name="documentacion_digital" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                     <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Documentos Digital </span></Form.Check.Label>
                                 </Form.Check>                                
+                            </div>
+                            
+                        </div>
+                        <div className="col-3 mt-4">
+                            <div className="d-flex">
+                                <Form.Check className="mx-2 pt-2" type="switch">
+                                    <Form.Check.Input name="habilitar_resumen" checked={formData.habilitar_resumen ?? false} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Resumen </span></Form.Check.Label>
+                                </Form.Check>
+                                                                
                             </div>
                             
                         </div>
