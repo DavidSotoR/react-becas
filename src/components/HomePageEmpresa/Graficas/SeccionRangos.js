@@ -46,6 +46,7 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
     const [data,setData] = useState([]);
 
     const [dataSelected,setDataSelected] = useState({});
+    const [estudioSelected,setEstudioSelected] = useState(null);
     const [itemSeleccionado,setItemSeleccionado] = useState('');
     const [dataEstudios,setDataEstudios] = useState([]);
  
@@ -140,7 +141,6 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
     return(
         <div className="row mb-3">
             <div className="col-12">
-                
             <div className="mb-3 row">
                         <label htmlFor="id" className="col-sm-2 col-form-label"><h5>Reporte de:</h5></label>
                         <div className="col-sm-10">
@@ -201,7 +201,7 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
                             </thead>
                             <tbody>
                                     {dataEstudios.length > 0 && dataEstudios.map( (estudio ,index) => (
-                                        <tr key={'esfil'-index}>
+                                        <tr key={'esfil'-index} onClick={() =>{setEstudioSelected(estudio)}}>
                                             <td>
                                             {estudio.id}
                                             </td>
@@ -221,6 +221,26 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
                     </div>
                 </div>
             )}
+            
+            {estudioSelected !== null && (
+                    
+                    <div className="col-sm-6">
+                    <div className="card m-1 shadow-sm">
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-md-4">Estudio:</div>
+                            <div className="col-md-6">{estudioSelected.id}</div>
+
+                            <div className="col-md-4">Familia:</div>
+                            <div className="col-md-6">{estudioSelected.candidato}</div>
+
+                            <div className="col-md-12">Observaciones:</div>
+                            <div className="col-md-12">{estudioSelected.observaciones}</div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                    )}
             <div className="col-12">
             </div>
             </>)}

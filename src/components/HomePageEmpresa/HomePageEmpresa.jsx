@@ -21,6 +21,7 @@ export const HomePageEmpresa = () =>{
     const [search,setSearch] = useState({
         id_proyecto:'',
         id_orden_servicio:'',
+        id_estado:'',
     })
     
     

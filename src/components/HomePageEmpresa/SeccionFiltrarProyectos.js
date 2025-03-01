@@ -19,7 +19,6 @@ export default function SeccionFiltrarProyectos({search,setSearch}){
 
 
     const animatedComponents = makeAnimated;
-    const [listaProyecctos, serListaProyectos] = useState([])
     const [opcionesProyectos,setOpcionesProyectos] = useState([])
     const renderOpcionesProyectos  = (opciones) =>{
         const opcioneslista = opciones.map((h) => ({
@@ -43,6 +42,19 @@ export default function SeccionFiltrarProyectos({search,setSearch}){
             opcioneslista.push(option)
         })
         setOpcionesOrdenesServicio(opcioneslista)
+    }
+    
+    const [opcionesEstados,setOpcionesEstados] = useState([])
+    const renderOpcionesEstados = (opciones) =>{
+        let opcioneslista = [];
+        opcioneslista.push({value:'',label:'Todas'});
+        opciones.forEach((h)=>{
+            var option = { value: '', label:'' }
+            option.label = h.nombre
+            option.value = h.id
+            opcioneslista.push(option)
+        })
+        setOpcionesEstados(opcioneslista)
     }
     
     const getProyectos = () => {
@@ -83,9 +95,20 @@ export default function SeccionFiltrarProyectos({search,setSearch}){
             }
         })
     }
+    const getEstadosEstudios = () => {
+        axios.get(`${APIURL}/estudios/enproceso/estados`,config).then((resp)=>{
+            renderOpcionesEstados(resp.data);
+        }).catch((resp)=>{
+            console.log(resp);
+            if ( resp?.response?.status && resp.response.status === 401) {
+                logout()
+            }
+        })
+    }
     
     useEffect(() => {
         getProyectos();
+        getEstadosEstudios();
     },[])
 
     useEffect(() => {
@@ -135,6 +158,28 @@ export default function SeccionFiltrarProyectos({search,setSearch}){
                             setSearch(prevState => ({
                                 ...prevState,
                                 id_orden_servicio: e.value
+                            })); 
+                        }
+                    }>
+                </Select>
+            </div>
+            <div className="col-md-3">
+                <label 
+                    htmlFor="id_estado" 
+                    className="form-label"
+                    style={{marginBottom: "1px",color: "darkolivegreen"}}
+                >Estado:
+                </label>
+                <Select 
+                    name="id_estado" 
+                    id="id_estado" 
+                    components={animatedComponents}
+                    options={ opcionesEstados } 
+                    onChange={
+                        (e)=> {
+                            setSearch(prevState => ({
+                                ...prevState,
+                                id_estado: e.value
                             })); 
                         }
                     }>

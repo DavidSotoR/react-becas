@@ -826,6 +826,24 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
         )
     }
     // 11 .-  Vehículos
+    
+    const veiculosPropietarioOptions = () => {
+        return [
+                <option key='vpo-default' value="">
+                    
+                </option>,
+                <option key={'vpo-0'} value="PROPIO">
+                    PROPIO
+                </option>,
+                <option key={'vpo-2'} value="PRESTADO">
+                    PRESTADO
+                </option>,
+                <option key={'vpo-3'} value="EMPRESA">
+                    EMPRESA
+                </option>
+               ]
+    }
+
     const preguntaVeiculos = ()=>{
         return (
             <div>
@@ -873,7 +891,7 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                         />
                     </div>
                     <div className="col-sm-3 p-1">
-                        <input
+                        {/*<input
                             className="form-control form-control-sm"
                             name="propietario" 
                             key={`propietario-${index}`}
@@ -881,7 +899,18 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                             onKeyDown={(e) => handleKeyDown(e, index, propietarioRefs)}
                             value={item.propietario ?? ''}
                             onChange={(e) => {formInputChange(e,index)}}
-                        />
+                        />*/}
+                        
+                        <select
+                                    className="form-select form-control-sm" 
+                                    name="propietario"
+                                    key={`propietario-${index}`}
+                                    value={item.propietario ?? ''}
+                                    ref={(el) => (propietarioRefs.current[index] = el)}
+                                    onChange={(e) => {formInputChange(e,index)}}
+                                >
+                                    {veiculosPropietarioOptions()}
+                                </select>
                     </div>
                     <div className="col-sm-2 p-1">
                         <input
@@ -914,6 +943,24 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
         )
     }
     // 12 .-  Propiedades Hipotecarias / casa Habitacion
+    
+    const casaHabitacionOptions = () => {
+        return [
+                <option key='cho-default' value="">
+                    
+                </option>,
+                <option key={'cho-0'} value="PROPIA">
+                    PROPIA
+                </option>,
+                <option key={'cho-2'} value="RENTADA">
+                    RENTADA
+                </option>,
+                <option key={'cho-3'} value="HIPOTECADA">
+                    HIPOTECADA
+                </option>
+               ]
+    }
+
     const casaHabitacion = () => {
         return (
             <div className="row">
@@ -926,12 +973,14 @@ export default function Respuestas({idEstudio,idPregunta,idParametro,longitudRes
                                     <div className="row">
                                         <div className="col-1"></div>
                                         <div className="col-10">
-                                            <input
-                                                className="form-control form-control-sm"
-                                                name="respuesta" 
+                                            <select
+                                                className="form-select form-control-sm" 
+                                                name="respuesta"
                                                 value={item.respuesta ?? ''}
                                                 onChange={(e) => {formInputChange(e,index)}}
-                                            />
+                                            >
+                                                {casaHabitacionOptions()}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
