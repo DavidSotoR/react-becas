@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useContext, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext"; 
+import SeccionRangosPreguntas from "./SeccionRangosPreguntas";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -91,6 +92,10 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
     const formatNumber = (num) => {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
+
+    const getItemById = (array, id) => {
+        return array.find(item => item.id === id);
+    };
     
     const getRangosMensuales = () => {
         let conf = config;
@@ -110,6 +115,7 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
             console.log(resp);
         })
     }
+    
 
     useEffect(() =>{
         getRangosMensuales();
@@ -228,14 +234,21 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
                     <div className="card m-1 shadow-sm">
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-md-4">Estudio:</div>
+                            <div className="col-md-4"><b>ESTUDIO:</b></div>
                             <div className="col-md-6">{estudioSelected.id}</div>
 
-                            <div className="col-md-4">Familia:</div>
+                            <div className="col-md-4"><b>FAMILIA:</b></div>
                             <div className="col-md-6">{estudioSelected.candidato}</div>
 
-                            <div className="col-md-12">Observaciones:</div>
-                            <div className="col-md-12">{estudioSelected.observaciones}</div>
+                            <div className="col-md-12"><b>OBSERVACIONES:</b></div>
+                            <div className="col-md-12 mt-1">{estudioSelected.observaciones}</div>
+                            <br></br>
+                            <br></br>
+                            {estudioSelected?.parametros && dataSelected?.id &&
+                                getItemById(estudioSelected.parametros, dataSelected.id)?.preguntas.map( (pregunta,p_index) => 
+                                    (<SeccionRangosPreguntas key={'srpc'+p_index}  pregunta={pregunta}/>)
+                                    )
+                                }
                         </div>
                     </div>
                     </div>

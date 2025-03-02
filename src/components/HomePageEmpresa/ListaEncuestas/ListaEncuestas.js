@@ -33,6 +33,18 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
         {rango:100,nombre:'de 80 a 100%'},
     ]
 
+    const [estudioSelectedGraficar,setEstudioSelectedGraficar] = useState({});
+    const getItemByKey = (array,campo, val) => {
+        return array.find(item => item[campo] === val);
+    };
+    const sumatoriaKey = (respuestas,campo) => {
+
+        return respuestas.reduce((acc, item) => {
+            const value = parseFloat(item[campo]);
+            return acc + (isNaN(value) ? 0 : value); // Solo suma si es un número válido
+          }, 0);
+    }
+
     const getListaEstudios = () => {
         
         if(!idProyecto){
@@ -298,49 +310,68 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 				</TabPanel>
 				<TabPanel>
                         
-                        {listaEstudios.map((estudio, index) => {
-
-                                const data = estudio?.distribucion_del_gasto ?  estudio.distribucion_del_gasto : [] ;
-
-                                return data.length > 0 && (<div key={"lgi+"+index} className="row mb-3">
-                                    <div className="col-sm-6">
+                        <div className="row mb-3">
+                                    <div className={estudioSelectedGraficar?.distribucion_del_gasto ? "col-sm-8": "col-12"}>
                                         <div className="card m-1 shadow-sm">
                                         <div className="card-body">
-                                            <div className="row">
-                                                <div className="col-5"><b>Familia:</b></div>
-                                                <div className="col-7">{estudio.candidato}</div>
-                                                
-                                            </div>
                                             <br/>
                                             <table className="table">
                                                 <thead>
                                                     <tr>
-                                                        <th>Categoria</th>
-                                                        <th>monto</th>
+                                                        <th>Estudio</th>
+                                                        <th>Familia</th>
+                                                        <th>Necesidades esenciales</th>
+                                                        <th>Viajes</th>
+                                                        <th>Educación</th>
+                                                        <th>Lujos</th>
+                                                        <th>Total</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {data.map((gasto,index_gasto) =>(
-                                                        <tr key={"gigt-"+index_gasto}>
-                                                            <td>{gasto.categoria}</td>
-                                                            <td>${gasto.total}</td>
-                                                        </tr>
-                                                    ))}
+                                                    {listaEstudios.map((estudio, index) => {
+                                                        const data = estudio?.distribucion_del_gasto ?  estudio.distribucion_del_gasto : [] ;
+                                                        const total_gasto = sumatoriaKey(estudio.distribucion_del_gasto,'total');
+                                                        const nececidades_esenciales = getItemByKey(estudio.distribucion_del_gasto,'categoria','Necesidades esenciales').total;
+                                                        const viajes = getItemByKey(estudio.distribucion_del_gasto,'categoria','Viajes').total
+                                                        const educacion =getItemByKey(estudio.distribucion_del_gasto,'categoria','Educación').total;
+                                                        const lujos = getItemByKey(estudio.distribucion_del_gasto,'categoria','Lujos').total;
+                                                        const gasto_prociento = total_gasto/4;
+                                                        return data.length > 0 && (
+                                                        <tr 
+                                                            key={"lgi+"+index} 
+                                                            onClick={() =>{setEstudioSelectedGraficar(estudio)}}
+                                                        >
+                                                            <td>#{estudio.id}</td>
+                                                            <td>{estudio.candidato}</td>
+                                                            <td style={{ color: nececidades_esenciales>gasto_prociento ? 'red' : 'black' }}>{nececidades_esenciales}</td>
+                                                            <td style={{ color: viajes>gasto_prociento ? 'red' : 'black' }}>{viajes}</td>
+                                                            <td style={{ color: educacion>gasto_prociento ? 'red' : 'black' }}>{educacion}</td>
+                                                            <td style={{ color: lujos>gasto_prociento ? 'red' : 'black' }}>{lujos}</td>
+                                                            <td>{total_gasto}</td>
+                                                        </tr>)
+                                                     })}
                                                 </tbody>
                                             </table>
                                         </div>
                                         </div>
                                     </div>
-                                    <div className="col-sm-3">
-                                        <div className="card m-1 shadow-sm">
-                                        <div className="card-body">
-                                            <DistribucionDelGastoGrafica datos={data} />
+                                    {estudioSelectedGraficar?.distribucion_del_gasto && (
+                                        <div className="col-sm-4">
+                                            <div className="card m-1 shadow-sm">
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-5"><b>Estudio</b></div>
+                                                    <div className="col-7">#{estudioSelectedGraficar.id}</div>
+                                                    <div className="col-5"><b>Familia</b></div>
+                                                    <div className="col-7">{estudioSelectedGraficar.candidato}</div>
+                                                </div>
+                                                <DistribucionDelGastoGrafica datos={estudioSelectedGraficar.distribucion_del_gasto} />
+                                            </div>
+                                            </div>
                                         </div>
-                                        </div>
-                                    </div>
+                                    )}
         
-                                </div>)
-                            })}
+                                </div>
 				</TabPanel>
 			</Tabs>
 
