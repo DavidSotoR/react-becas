@@ -35,8 +35,12 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 
     const [estudioSelectedGraficar,setEstudioSelectedGraficar] = useState({});
     const getItemByKey = (array,campo, val) => {
-        return array.find(item => item[campo] === val);
+        return array.find(item => convertirAMayusculas(item[campo]) === convertirAMayusculas(val));
     };
+    
+    const convertirAMayusculas = (texto) => {
+        return texto.toUpperCase();
+    }
     const sumatoriaKey = (respuestas,campo) => {
 
         return respuestas.reduce((acc, item) => {
