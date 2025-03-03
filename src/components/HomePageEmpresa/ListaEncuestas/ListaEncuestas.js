@@ -45,6 +45,10 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
           }, 0);
     }
 
+    const formatNumber = (num) => {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    };
+
     const getListaEstudios = () => {
         
         if(!idProyecto){
@@ -314,6 +318,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                     <div className={estudioSelectedGraficar?.distribucion_del_gasto ? "col-sm-8": "col-12"}>
                                         <div className="card m-1 shadow-sm">
                                         <div className="card-body">
+                                            <div><i>Los campos en color rojo están considerados como gastos que superan más del 20% del gasto</i></div>
                                             <br/>
                                             <table className="table">
                                                 <thead>
@@ -324,7 +329,9 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                                         <th>Viajes</th>
                                                         <th>Educación</th>
                                                         <th>Lujos</th>
-                                                        <th>Total</th>
+                                                        <th>Gasto mensual total</th>
+                                                        <th>Ingreso Familia</th>
+                                                        <th colSpan={2}>Saldo Disponible</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -335,7 +342,9 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                                         const viajes = getItemByKey(estudio.distribucion_del_gasto,'categoria','Viajes').total
                                                         const educacion =getItemByKey(estudio.distribucion_del_gasto,'categoria','Educación').total;
                                                         const lujos = getItemByKey(estudio.distribucion_del_gasto,'categoria','Lujos').total;
-                                                        const gasto_prociento = total_gasto/4;
+                                                        const nivel_liquides = getItemByKey(estudio.parametros,'nombre','Nivel de liquidez');
+                                                        const ingreso_familia = nivel_liquides?.puntos ? nivel_liquides.puntos.sumatoria : 0;
+                                                        const gasto_prociento = ingreso_familia/5;
                                                         return data.length > 0 && (
                                                         <tr 
                                                             key={"lgi+"+index} 
@@ -343,11 +352,32 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                                         >
                                                             <td>#{estudio.id}</td>
                                                             <td>{estudio.candidato}</td>
-                                                            <td style={{ color: nececidades_esenciales>gasto_prociento ? 'red' : 'black' }}>{nececidades_esenciales}</td>
-                                                            <td style={{ color: viajes>gasto_prociento ? 'red' : 'black' }}>{viajes}</td>
-                                                            <td style={{ color: educacion>gasto_prociento ? 'red' : 'black' }}>{educacion}</td>
-                                                            <td style={{ color: lujos>gasto_prociento ? 'red' : 'black' }}>{lujos}</td>
-                                                            <td>{total_gasto}</td>
+                                                            <td style={{ color: nececidades_esenciales>gasto_prociento ? 'red' : 'black' }} className="text-end border-start">
+                                                                ${formatNumber(nececidades_esenciales)}
+                                                            </td>
+                                                            <td style={{ color: viajes>gasto_prociento ? 'red' : 'black' }} className="text-end">
+                                                            ${formatNumber(viajes)}
+                                                            </td>
+                                                            <td style={{ color: educacion>gasto_prociento ? 'red' : 'black' }} className="text-end">
+                                                            ${formatNumber(educacion)}
+                                                            </td>
+                                                            <td style={{ color: lujos>gasto_prociento ? 'red' : 'black' }} className="text-end">
+                                                            ${formatNumber(lujos)}
+                                                            </td>
+                                                            <td className="text-end border-start">
+                                                            ${formatNumber(total_gasto)}
+                                                            </td>
+                                                            <td className="text-end border-start">
+                                                            ${formatNumber(ingreso_familia)}
+                                                            </td>
+                                                            
+                                                            <td className="text-end border-start">
+                                                            ${formatNumber(ingreso_familia-total_gasto)}
+                                                            </td>
+                                                            <td className="text-end ">
+                                                            {formatNumber( parseInt(((ingreso_familia-total_gasto)/ingreso_familia)*100,10) )}%
+                                                            </td>
+
                                                         </tr>)
                                                      })}
                                                 </tbody>
@@ -370,7 +400,6 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                             </div>
                                         </div>
                                     )}
-        
                                 </div>
 				</TabPanel>
 			</Tabs>
