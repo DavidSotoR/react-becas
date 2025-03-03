@@ -5,6 +5,7 @@ import { AuthContext } from "../../../context/AuthContext";
 function TiposClientes() {
     const [ allTiposClientes, setAllTiposClientes ] = useState([])
     const { logout } = useContext(AuthContext);
+    const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -12,7 +13,7 @@ function TiposClientes() {
     }
     const getTiposClientesList = async () => {
         try {
-            const resp = await axios.get('http://localhost:8000/api/auth/clientes/tipos', config);
+            const resp = await axios.get(`${APIURL}/clientes/tipos`, config);
             if (Array.isArray(resp.data)) {
                 setAllTiposClientes(resp.data);
             } else {

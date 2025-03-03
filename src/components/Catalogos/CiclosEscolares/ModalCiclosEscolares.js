@@ -4,6 +4,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 
 function ModalCiclosEscolares({ show, handleClose }) {
+    const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -84,7 +85,7 @@ function ModalCiclosEscolares({ show, handleClose }) {
         /* var geo = navigator.geolocation.getCurrentPosition(success)
         console.log(geo);
         console.log(newData); */
-        axios.post('http://localhost:8000/api/auth/ciclos',newData,config).then((resp)=>{
+        axios.post(`${APIURL}/ciclos`,newData,config).then((resp)=>{
             console.log(resp);
             handleClose()
         }).catch((resp)=>{

@@ -13,6 +13,7 @@ function CatalogoFamilias() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -20,7 +21,7 @@ function CatalogoFamilias() {
     }
 
     const getDatosFamilia = () =>{
-        axios.get('http://localhost:8000/api/auth/familias',config).then((resp)=>{
+        axios.get(`${APIURL}/familias`,config).then((resp)=>{
             console.log(resp);
             setAllFamilias(resp.data)
         }).catch((resp)=>{
@@ -30,7 +31,7 @@ function CatalogoFamilias() {
 
     const getCiclosEscolaresList = async () => {
         try {
-            const resp = await axios.get('http://localhost:8000/api/auth/ciclos', config);
+            const resp = await axios.get(`${APIURL}/ciclos`, config);
             setAllCiclosEscolares(resp.data);
 
         } catch (error) {
