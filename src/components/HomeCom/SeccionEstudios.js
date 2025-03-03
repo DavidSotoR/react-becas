@@ -140,7 +140,7 @@ export default function SeccionEstudios(){
         axios.get(`${APIURL}/proyectos?activo=1&id_tipo_cliente=${tipoClienteSeleccionado}`,config).then((resp)=>{
             renderOpcionesProyectos(resp.data);
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if (response?.data?.status && resp.response.status === 401) {
                 logout()
             }
             console.log(resp);
@@ -151,7 +151,7 @@ export default function SeccionEstudios(){
         axios.get(`${APIURL}/estudios/enproceso/estados`,config).then((resp)=>{
             renderOpcionesEstados(resp.data);
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if (response?.data?.status && resp.response.status === 401) {
                 logout()
             }
             console.log(resp);
@@ -162,7 +162,7 @@ export default function SeccionEstudios(){
         axios.get(`${APIURL}/estudio/calidad`,config).then((resp)=>{
             renderOpcionesCalidad(resp.data);
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if (response?.data?.status && resp.response.status === 401) {
                 logout()
             }
             console.log(resp);
@@ -176,7 +176,7 @@ export default function SeccionEstudios(){
         axios.get(`${APIURL}/proyectos/${preyecto}/clientes`,config).then((resp)=>{
             renderOpcionesClientes(resp.data)
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if (response?.data?.status && resp.response.status === 401) {
                 logout()
             }
             console.log(resp);
@@ -192,7 +192,7 @@ export default function SeccionEstudios(){
         axios.get(`${APIURL}/proyectos/${preyecto}/clientes/${cliente}/ordenes-servicio`,config).then((resp)=>{
             renderOpcionesOrdenesServicio(resp.data);
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if (response?.data?.status && resp.response.status === 401) {
                 logout()
             }
             console.log(resp);
@@ -202,7 +202,7 @@ export default function SeccionEstudios(){
         axios.get(`${APIURL}/estudios/enproceso`,{params:fromData,headers:config.headers}).then((resp)=>{
             setAllEstudios(resp.data);
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if (response?.data?.status && resp.response.status === 401) {
                 logout()
             }
             console.log(resp);
@@ -215,7 +215,7 @@ export default function SeccionEstudios(){
             setSelectedOption(null);
             getListaEstudiosEnProceso();
         }).catch((resp)=>{
-            if (resp.response.status === 401) {
+            if (response?.data?.status && resp.response.status === 401) {
                 logout()
             }
         })
