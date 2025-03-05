@@ -175,6 +175,10 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     return osArray;
   };
 
+  function getFileExtension(filePath) {
+      return filePath.split('.').pop().toUpperCase();
+  }
+
   const exportToPdf = async () => {
     const doc = new jsPDF();
     const headers = await getHeadersParameters();
@@ -186,7 +190,7 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     if (clienteReporte.ubicacion_logo) {
       logo = clienteReporte.ubicacion_logo;
     }
-
+    let extencionLogo = getFileExtension(logo)
     console.log(logo);
     
 
@@ -239,7 +243,7 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     const marginRight = 10; // Margen desde el borde derecho
     //const marginTop = 5;    // Margen desde la parte superior
 
-    doc.addImage(logo, 'PNG', pageWidth - logoSize - marginRight, 0, logoSize, logoSize);
+    doc.addImage(logo, extencionLogo, pageWidth - logoSize - marginRight, 0, logoSize, logoSize);
 
     let titleProyecto = `Proyecto: ${proyectos[0]}`;
     let textWidthProyecto = doc.getTextWidth(titleProyecto);
