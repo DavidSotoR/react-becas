@@ -9,6 +9,8 @@ import {
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
+
+  const APISTORAGE = process.env.SERVER_STORAGE;
   const mostrarColumnaHijo = () => {
     return data.some((row) => row.hasOwnProperty("hijo"));
   };
@@ -188,7 +190,7 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     const clienteReporte = data[0].cliente;
     let logo = window.location.origin + '/img/logo_principal_negro.png';
     if (clienteReporte.ubicacion_logo) {
-      logo = clienteReporte.ubicacion_logo;
+      logo = APISTORAGE + clienteReporte.ubicacion_logo;
     }
     let extencionLogo = getFileExtension(logo)
     console.log(logo);
