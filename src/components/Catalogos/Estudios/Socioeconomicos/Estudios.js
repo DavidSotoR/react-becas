@@ -175,7 +175,7 @@ export default function Estudios() {
   };
   const getListaColaboradores = () => {
     axios
-      .get(APIURL + "/estudio/colaboradores", config)
+      .get(APIURL + "/estudio/colaboradores/asignar", config)
       .then((resp) => {
         renderOpcionesColaboradores(resp.data);
       })

@@ -91,8 +91,6 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
 
   const transformDataForExcel = () => {
     return data.map((row) => {
-      console.log(row);
-
       const transformedRow = {};
       columns.forEach((col) => {
         if (col.selector) {
@@ -113,8 +111,6 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
   };
 
   const contieneHijos = () => {
-    console.log('ejecuta validacion hijo');
-    console.log(data);
     return data.some(
       (element) => element.hijo !== null && element.hijo !== undefined
     );
@@ -135,7 +131,9 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
         headers.push(element.nombre);
       }
     });
+
     let headersTable;
+
     if (contieneHijos()) {
       headersTable = [
         "FOLIO",
@@ -168,11 +166,29 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     return headersTable;
   };
 
+  const getOrdenesServicioDescripciones = () => {
+    let osArray = [];
+    data.forEach((element) => {
+      osArray.push(element.orden_servicio.descripcion);
+    });
+
+    return osArray;
+  };
+
   const exportToPdf = async () => {
     const doc = new jsPDF();
     const headers = await getHeadersParameters();
     const transformedData = transformDataForExcel();
-    console.log(transformedData);
+
+    const allOS = getOrdenesServicioDescripciones();
+    const clienteReporte = data[0].cliente;
+    let logo = window.location.origin + '/img/logo_principal_negro.png';
+    if (clienteReporte.ubicacion_logo) {
+      logo = clienteReporte.ubicacion_logo;
+    }
+
+    console.log(logo);
+    
 
     const proyectosUnicos = [
       ...new Set(transformedData.map((item) => item.Proyecto)),
@@ -199,26 +215,46 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
       CONDUCTA: "CONDUCTA",
     };
 
-    console.log(transformedData);
-
     const body = transformedData.map(
       (item) => headers.map((header) => item[headerToKeyMap[header]] || "") // Si no encuentra el valor, pone ""
     );
 
     // Título del proyecto
-    let titleProyecto = `Proyecto: ${proyectos[0]}`;
+    /* let titleProyecto = `Proyecto: ${proyectos[0]}`;
     let textWidthProyecto = doc.getTextWidth(titleProyecto);
     let xPosition = (pageWidth - textWidthProyecto) / 2;
     doc.text(titleProyecto, xPosition, 10);
 
-    let ordenServicio = transformedData[0]["Orden de servicio"];
+    let ordenServicio = allOS[0] ?? "SIN DATO"; //transformedData[0]["Orden de servicio"];
 
+    let OS = "Orden Servicio: " + ordenServicio;
+
+    let textWidthOS = doc.getTextWidth(OS);
+    let xPositionOS = (pageWidth - textWidthOS) / 2;
+    doc.text(OS, xPositionOS, 15); */
+    // Agregar título centrado
+
+    // Agregar logo en la parte superior derecha (40x40 cuadrado)
+    const logoSize = 30;  // Ancho y alto del logo
+    const marginRight = 10; // Margen desde el borde derecho
+    //const marginTop = 5;    // Margen desde la parte superior
+
+    doc.addImage(logo, 'PNG', pageWidth - logoSize - marginRight, 0, logoSize, logoSize);
+
+    let titleProyecto = `Proyecto: ${proyectos[0]}`;
+    let textWidthProyecto = doc.getTextWidth(titleProyecto);
+    let xPosition = (pageWidth - textWidthProyecto) / 2;
+    doc.text(titleProyecto, xPosition, 15);
+
+    // Agregar subtítulo centrado
+    let ordenServicio = allOS[0] ?? "SIN DATO"; 
     let OS = "Orden Servicio: " + ordenServicio;
     let textWidthOS = doc.getTextWidth(OS);
     let xPositionOS = (pageWidth - textWidthOS) / 2;
-    doc.text(OS, xPositionOS, 15);
+    doc.text(OS, xPositionOS, 20);
 
-    console.log(body);
+    
+
 
     if (tipo_reporte === "completo") {
       let columnas = {};
@@ -247,7 +283,7 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
       doc.autoTable({
         head: [headers], // Encabezados
         body: body, // Datos
-        startY: 20, // Posición Y donde comienza la tabla
+        startY: 30, // Posición Y donde comienza la tabla
         theme: "grid", // Estilo de la tabla
         styles: {
           fontSize: 4, // Tamaño de la fuente
@@ -290,7 +326,7 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
       doc.autoTable({
         head: [headerPorcentaje], // Encabezados
         body: body, // Datos
-        startY: 20, // Posición Y donde comienza la tabla
+        startY: 30, // Posición Y donde comienza la tabla
         theme: "grid", // Estilo de la tabla
         styles: {
           fontSize: 6, // Tamaño de la fuente

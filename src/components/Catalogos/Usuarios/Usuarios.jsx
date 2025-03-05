@@ -12,6 +12,7 @@ function Usuarios() {
   const APIURL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
+  const [ esExterno, setEsExterno ] = useState(false);
   const [clearForm, setClearForm] = useState(false);
   const [btnEnable, setBtnEnable] = useState(true);
   const [allUsuarios, setAllUsuarios] = useState([]);
@@ -83,7 +84,7 @@ function Usuarios() {
 
   const getAllDataUsuarios = async () => {
     var qPerfil = searchPorPerfil;
-    var qCliente = searchPorCliente;
+    var qCliente = esExterno ? searchPorCliente : 0;
     var qText = search;
     var qActivo = searchPorActivo;
     try {
@@ -91,7 +92,7 @@ function Usuarios() {
         `${APIURL}/usuarios?search=${qText}&perfil=${qPerfil}&cliente=${qCliente}&activo=${qActivo}`,
         config
       );
-      console.log(resp);
+      // console.log(resp);
       var listaUsuarios = resp.data;
 
       setAllUsuarios(listaUsuarios);
@@ -305,6 +306,11 @@ function Usuarios() {
   const searchUsuarioPorPerfil = (e) => {
     var value = e.target.value;
     setSearchPorPerfil(value);
+    if (value === '5' || value === '6') {
+      setEsExterno(true);
+    } else {
+      setEsExterno(false)
+    }
   };
 
   const searchUsuarioPorCliente = (e) => {
@@ -422,7 +428,7 @@ function Usuarios() {
               {renderFiltroPerfiles()}
             </select>
           </div>
-          <div className="col-6 col-md-3 col-lg-2 mb-2">
+          <div className="col-6 col-md-3 col-lg-2 mb-2" style={{ display: esExterno ? 'block' : 'none' }}>
             <select
               className="form-select form-select-sm"
               aria-label="Default select example"
