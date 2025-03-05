@@ -243,7 +243,7 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     const marginRight = 10; // Margen desde el borde derecho
     //const marginTop = 5;    // Margen desde la parte superior
 
-    doc.addImage(logo, extencionLogo, pageWidth - logoSize - marginRight, 0, logoSize, logoSize);
+    doc.addImage(logo, extencionLogo === 'JPG' ? "JPEG" : extencionLogo, pageWidth - logoSize - marginRight, 0, logoSize, logoSize);
 
     let titleProyecto = `Proyecto: ${proyectos[0]}`;
     let textWidthProyecto = doc.getTextWidth(titleProyecto);
