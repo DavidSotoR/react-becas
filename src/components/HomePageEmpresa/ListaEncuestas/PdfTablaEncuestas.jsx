@@ -10,7 +10,8 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
 
-  const APISTORAGE = process.env.SERVER_STORAGE;
+  const APISTORAGE = "http://127.0.0.1:8000/storage/";//process.env.SERVER_STORAGE;
+
   const mostrarColumnaHijo = () => {
     return data.some((row) => row.hasOwnProperty("hijo"));
   };
@@ -189,9 +190,11 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     const allOS = getOrdenesServicioDescripciones();
     const clienteReporte = data[0].cliente;
     let logo = window.location.origin + '/img/logo_principal_negro.png';
-    if (clienteReporte.ubicacion_logo) {
+    console.log(APISTORAGE);
+    
+    /* if (clienteReporte.ubicacion_logo) {
       logo = APISTORAGE + clienteReporte.ubicacion_logo;
-    }
+    } */
     let extencionLogo = getFileExtension(logo)
     console.log(logo);
     
@@ -244,8 +247,14 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     const logoSize = 30;  // Ancho y alto del logo
     const marginRight = 10; // Margen desde el borde derecho
     //const marginTop = 5;    // Margen desde la parte superior
-
-    doc.addImage(logo, extencionLogo === 'JPG' ? "JPEG" : extencionLogo, pageWidth - logoSize - marginRight, 0, logoSize, logoSize);
+    try {
+      doc.addImage(logo, extencionLogo === 'JPG' ? "JPEG" : extencionLogo, pageWidth - logoSize - marginRight, 0, logoSize, logoSize);
+    } catch (error) {
+      console.log(error);
+      
+      return 0
+    }
+    
 
     let titleProyecto = `Proyecto: ${proyectos[0]}`;
     let textWidthProyecto = doc.getTextWidth(titleProyecto);
