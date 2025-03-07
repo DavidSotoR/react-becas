@@ -190,14 +190,11 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     const allOS = getOrdenesServicioDescripciones();
     const clienteReporte = data[0].cliente;
     let logo = window.location.origin + '/img/logo_principal_negro.png';
-    console.log(APISTORAGE);
     
     /* if (clienteReporte.ubicacion_logo) {
       logo = APISTORAGE + clienteReporte.ubicacion_logo;
     } */
-    let extencionLogo = getFileExtension(logo)
-    console.log(logo);
-    
+    let extencionLogo = getFileExtension(logo)    
 
     const proyectosUnicos = [
       ...new Set(transformedData.map((item) => item.Proyecto)),
@@ -228,21 +225,6 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
       (item) => headers.map((header) => item[headerToKeyMap[header]] || "") // Si no encuentra el valor, pone ""
     );
 
-    // Título del proyecto
-    /* let titleProyecto = `Proyecto: ${proyectos[0]}`;
-    let textWidthProyecto = doc.getTextWidth(titleProyecto);
-    let xPosition = (pageWidth - textWidthProyecto) / 2;
-    doc.text(titleProyecto, xPosition, 10);
-
-    let ordenServicio = allOS[0] ?? "SIN DATO"; //transformedData[0]["Orden de servicio"];
-
-    let OS = "Orden Servicio: " + ordenServicio;
-
-    let textWidthOS = doc.getTextWidth(OS);
-    let xPositionOS = (pageWidth - textWidthOS) / 2;
-    doc.text(OS, xPositionOS, 15); */
-    // Agregar título centrado
-
     // Agregar logo en la parte superior derecha (40x40 cuadrado)
     const logoSize = 30;  // Ancho y alto del logo
     const marginRight = 10; // Margen desde el borde derecho
@@ -255,21 +237,23 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
       return 0
     }
     
+    let ClienteTitle = `${clienteReporte.nombre}`;
+    
+    let textWidthProyectoCliente = doc.getTextWidth(ClienteTitle);
+    let xPositionCliente = (pageWidth - textWidthProyectoCliente) / 2;
+    doc.text(ClienteTitle, xPositionCliente, 13);
 
     let titleProyecto = `Proyecto: ${proyectos[0]}`;
     let textWidthProyecto = doc.getTextWidth(titleProyecto);
     let xPosition = (pageWidth - textWidthProyecto) / 2;
-    doc.text(titleProyecto, xPosition, 15);
+    doc.text(titleProyecto, xPosition, 18);
 
     // Agregar subtítulo centrado
     let ordenServicio = allOS[0] ?? "SIN DATO"; 
     let OS = "Orden Servicio: " + ordenServicio;
     let textWidthOS = doc.getTextWidth(OS);
     let xPositionOS = (pageWidth - textWidthOS) / 2;
-    doc.text(OS, xPositionOS, 20);
-
-    
-
+    doc.text(OS, xPositionOS, 23);
 
     if (tipo_reporte === "completo") {
       let columnas = {};
@@ -314,13 +298,11 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     }
 
     if (tipo_reporte === "porcentaje_asignado") {
-      console.log("PORCRNTAJE REPORTE SIGNADO");
 
       let headerPorcentaje;
       let columnsPorcentaje;
 
       if (contieneHijos()) {
-        console.log("PORCRNTAJE REPORTE SIGNADO - HIJOS");
         headerPorcentaje = ["FOLIO", "FAMILIA", "ALUMNO", "% ASIGNADO"];
         columnsPorcentaje = {
           0: { cellWidth: 10 },
@@ -329,7 +311,6 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
           3: { cellWidth: "auto" },
         };
       } else {
-        console.log("PORCRNTAJE REPORTE SIGNADO - SIN HIJOS");
         headerPorcentaje = ["FOLIO", "FAMILIA", "% ASIGNADO"];
         columnsPorcentaje = {
           0: { cellWidth: 10 },
