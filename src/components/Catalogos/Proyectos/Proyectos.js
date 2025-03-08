@@ -177,6 +177,12 @@ function Proyectos() {
   const allProyectosFiltrados = allProyectos.filter((item) =>
     item.nombre.toLowerCase().includes(search.toLowerCase())
   );
+  const obtenerAnio = (fecha) => { 
+
+    const date = new Date(fecha);
+    return isNaN(date.getTime()) ? '' : date.getUTCFullYear();
+  };
+
   const renderFilasTablaProyectos = () => {
     return allProyectosFiltrados.map((proyecto, index) => (
       <tr key={"tr-proyecto-" + index}>
@@ -185,6 +191,11 @@ function Proyectos() {
         <td>
           <p>
             <ResaltarTexto texto={proyecto.nombre} reslatar={search} />
+          </p>
+        </td>
+        <td>
+          <p>
+            {obtenerAnio(proyecto.anio ?? '')}
           </p>
         </td>
         <td>
@@ -312,6 +323,7 @@ function Proyectos() {
                         <th className="">#</th>
                         <th className="">Activo</th>
                         <th>Nombre</th>
+                        <th>Año</th>
                         <th>Añadir</th>
                       </tr>
                     </thead>
@@ -349,6 +361,23 @@ function Proyectos() {
                   name="nombre"
                   placeholder="Proyecto"
                   value={proyectoToEdit.nombre}
+                  onChange={ (e) => { editarDatosProyecto(e) } }
+                />
+              </div>
+              <div class="mb-3">
+                <label
+                  for="anio"
+                  className="form-label fw-bold"
+                >
+                  Año:
+                </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  name="anio"
+                  id="anio"
+                  placeholder="Año"
+                  value={proyectoToEdit.anio}
                   onChange={ (e) => { editarDatosProyecto(e) } }
                 />
               </div>

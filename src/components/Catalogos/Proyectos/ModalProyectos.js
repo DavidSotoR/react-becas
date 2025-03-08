@@ -89,6 +89,12 @@ function ModalProyectos({ show, handleClose,idTipoCliente,TipoCliente  }) {
                     <label> Nombre: </label>
                     <input className="form-control" name="nombre" type="text" onChange={(e) => {formInputChange(e)}}/>
                 </div>
+
+                <div className="mb-3">
+                    <label> Año: </label>
+                    <input className="form-control" name="anio" type="date" onChange={(e) => {formInputChange(e)}}/>
+                </div>
+                
                 <div className="form-check form-switch">
                     <input className="form-check-input" name="activo" type="checkbox" checked={formData.activo}
                     role="switch" id="flexSwitchCheckChecked" onChange={(e) => {formInputChange(e)}}/>
