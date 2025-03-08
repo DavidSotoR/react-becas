@@ -42,7 +42,7 @@ function PageActualizarCliente() {
           ['clean'] // Botón para limpiar formato
         ],
       };
-    const { logout } = useContext(AuthContext);
+    const { logout, execShowAlert } = useContext(AuthContext);
     const { ID } = useParams()
     const navigate = useNavigate();
     const APIURL = process.env.REACT_APP_API_URL;
@@ -735,13 +735,14 @@ function PageActualizarCliente() {
 
         axios.post(APIURL+'/clientes/'+dataPOST.id , formDataSend ,config).then((resp)=>{
             console.log(resp);
-            //window.location.replace('http://localhost:3000/clientes')
+            execShowAlert({ type: 'success', title: 'Cliente Actualizado', message: 'Datos del cliente actualizados.'})
             navigate("/clientes")
        
         }).catch((resp)=>{
             setShowAlertError(true)
             if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
                 console.log(resp.response.data);
+                execShowAlert({ type: 'danger', title: 'Error al actualizar', message: 'Revisar los datos ingresados.'})
             }
 
             if (resp.response.status === 401) {

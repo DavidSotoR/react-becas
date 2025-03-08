@@ -259,24 +259,24 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
       let columnas = {};
       if (contieneHijos()) {
         columnas = {
-          0: { cellWidth: 10 }, // Ancho de la columna ID
-          1: { cellWidth: "wrap" }, // Ancho de la columna Nombre
-          2: { cellWidth: "auto" }, // Ancho de la columna Email
-          3: { cellWidth: "auto" }, // Ancho de la columna Fecha
-          4: { cellWidth: "auto" }, // Ancho de la columna Proyecto
-          5: { cellWidth: "auto" }, // Ancho de la columna Orden de Servicio
-          6: { cellWidth: "auto" }, // Ancho de la columna Proyecto
-          7: { cellWidth: "auto" }, // Ancho de la columna Orden de Servicio
+          0: { cellWidth: 10 }, 
+          1: { cellWidth: "wrap" }, 
+          2: { cellWidth: "auto" }, 
+          3: { cellWidth: "auto" }, 
+          4: { cellWidth: "auto" }, 
+          5: { cellWidth: "auto" }, 
+          6: { cellWidth: "auto" },
+          7: { cellWidth: "auto" }, 
         };
       } else {
         columnas = {
-          0: { cellWidth: 10 }, // Ancho de la columna ID
-          1: { cellWidth: "wrap" }, // Ancho de la columna Nombre
-          2: { cellWidth: "auto" }, // Ancho de la columna Email
-          3: { cellWidth: "auto" }, // Ancho de la columna Fecha
-          4: { cellWidth: "auto" }, // Ancho de la columna Proyecto
-          5: { cellWidth: "auto" }, // Ancho de la columna Orden de Servicio
-          6: { cellWidth: "auto" }, // Ancho de la columna Proyecto
+          0: { cellWidth: 10 },
+          1: { cellWidth: "wrap" }, 
+          2: { cellWidth: "auto" }, 
+          3: { cellWidth: "auto" }, 
+          4: { cellWidth: "auto" }, 
+          5: { cellWidth: "auto" }, 
+          6: { cellWidth: "auto" },
         };
       }
       doc.autoTable({

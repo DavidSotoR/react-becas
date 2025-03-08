@@ -80,16 +80,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const mostrarAlerta = (data = { type: 'warning', title: 'Sin Titulo', message: 'No hay mensaje para mostrar.' }) => {
-    console.log('exec alerta context');
     
     return (
       <ToastContainer className="position-fixed bottom-0 end-0 p-3">
         <Toast bg={ data.type }>
-          <Toast.Header>
-            <strong>{ data.title }</strong>
+          <Toast.Header >
+            <strong className="text-white">{ data.title }</strong>
           </Toast.Header>
-          <Toast.Body>
-            <p>{ data.message }</p>
+          <Toast.Body >
+            <p className="text-white">{ data.message }</p>
           </Toast.Body>
         </Toast>
       </ToastContainer>

@@ -9,7 +9,7 @@ import { PDFDownloadLink, PDFViewer, usePDF } from "@react-pdf/renderer";
 import DocumentWord from "./Document";
 //import 'react-quill/dist/quill.snow.css';
 
-function PageNuevoCliente() {
+function PageNuevoCliente() {    
     const [preview, setPreview] = useState(null);
     const [fileLogo, setFileLogo] = useState(null);
     const handleFileChange = (event) => {
@@ -45,7 +45,7 @@ function PageNuevoCliente() {
         ],
       };
 
-    const { logout } = useContext(AuthContext);
+    const { logout, execShowAlert } = useContext(AuthContext);
     const navigate = useNavigate();
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -653,6 +653,7 @@ function PageNuevoCliente() {
         axios.post(APIURL+'/clientes',formDataSend,config).then((resp)=>{
             console.log(resp);
             navigate("/clientes")
+            execShowAlert({ type: 'success', title: 'Cliente Creado', message: 'Nuevo cliente creado: '+formData.nombre })
        
         }).catch((resp)=>{
             setShowAlertError(true)
@@ -661,6 +662,7 @@ function PageNuevoCliente() {
             }
             if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
                 console.log(resp.response.data);
+                execShowAlert({ type: 'danger', title: 'Error al Crear Cliente', message: 'Validar datos del Cliente.' })
             }
         })
         
