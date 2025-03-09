@@ -253,3 +253,6 @@ mark {
   font-size: .85rem;
   font-weight: 600;
 }
+.rdt_TableHead {
+  z-index: unset !important              /* Cambia el z-index */
+}

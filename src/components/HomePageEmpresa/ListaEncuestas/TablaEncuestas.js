@@ -15,11 +15,13 @@ import PdfTablaEncuestas from "./PdfTablaEncuestas";
 
 export default function TablaEncuestas({
   listaParametros = [],
-  listaEstudios = [],
+  listaEstudios = [], 
   callBackPorcentajeOtorgado,
 }) {
   const [idEstudio, setIdEstudio] = useState(null);
   const [idEstudioHijo, setIdEstudioHijo] = useState(null);
+
+  const [filterText, setFilterText] = useState("");
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -193,7 +195,7 @@ export default function TablaEncuestas({
             <i className="bi bi-person-fill text-gray" style={{ fontSize: '1.2rem' }}></i>
           </div>
           <div className="ps-1 align-self-center">
-            <span>{row.candidato}</span>
+            <HighlightedText text={row.candidato} highlight={filterText} />
           </div>
         </div>
       ),
@@ -238,53 +240,79 @@ export default function TablaEncuestas({
     uniqueKey: `${row.id}-${index + 1}`, // Combina `id` y `index`
   }));
 
+  const customStyles = {
+    headCells: {
+      style: {
+        zIndex: 'unset',                // Ajustar el z-index (aunque no siempre aplica para tablas estáticas)
+      },
+    },
+  }
+
+  const filteredData = dataWithUniqueKeys.filter(row =>
+    row.candidato.toLowerCase().includes(filterText.toLowerCase())
+  );
+  
   return (
     <>
       <div className="d-flex justify-content-between">
         <div className="d-flex justify-content-start">
-          {rowSelect.length !== 0 && (
-            <div className="btn btn-light btn-sm d-flex align-items-center">
-              Columnas: {rowSelect.length} seleccionada(s)
-            </div>
-          )}
-          {rowSelect.length !== 0 && (
+            {rowSelect.length !== 0 && (
+              <div className="btn btn-light btn-sm d-flex align-items-center">
+                Columnas: {rowSelect.length} seleccionada(s)
+              </div>
+            )}
+            {rowSelect.length !== 0 && (
+              <div className="d-flex align-items-center">
+                <p className="m-0 fw-bold">Descargar Reporte: </p>
+                <PDFSelection seleccionRow={rowSelect} />
+              </div>
+            )}
             <div className="d-flex align-items-center">
-              <p className="m-0 fw-bold">Descargar Reporte: </p>
-              <PDFSelection seleccionRow={rowSelect} />
+
+              <p className="m-0 fw-bold">Descargar Datos Tabla: </p>
+              <ExcelTablaEncuestas
+                parametros={listaParametros}
+                data={rowSelect.length === 0 ? listaEstudios : rowSelect}
+                fileName={"Lista Estudios"}
+              />
+              <PdfTablaEncuestas parametros={listaParametros}
+                data={ rowSelect.length === 0 ? listaEstudios : rowSelect }
+                tipo_reporte={"completo"}></PdfTablaEncuestas>
+
+              <PdfTablaEncuestas parametros={listaParametros}
+                data={ rowSelect.length === 0 ? listaEstudios : rowSelect }
+                tipo_reporte={"porcentaje_asignado"}></PdfTablaEncuestas>
             </div>
-          )}
-          <div className="d-flex align-items-center">
+          <div>
 
-            <p className="m-0 fw-bold">Descargar Datos Tabla: </p>
-            <ExcelTablaEncuestas
-              parametros={listaParametros}
-              data={rowSelect.length === 0 ? listaEstudios : rowSelect}
-              fileName={"Lista Estudios"}
-            />
-            <PdfTablaEncuestas parametros={listaParametros}
-              data={ rowSelect.length === 0 ? listaEstudios : rowSelect }
-              tipo_reporte={"completo"}></PdfTablaEncuestas>
-
-            <PdfTablaEncuestas parametros={listaParametros}
-              data={ rowSelect.length === 0 ? listaEstudios : rowSelect }
-              tipo_reporte={"porcentaje_asignado"}></PdfTablaEncuestas>
           </div>
-          
         </div>
         {/* <div className="d-flex justify-content-start">
         <ExcelTablaEncuestas parametros={listaParametros} data={listaEstudios} fileName={"Lista Edtidios"}/>
       </div> */}
+      
+          <div >
+            <input
+              type="text"
+              className="form-control form-control-sm"
+              placeholder="Buscar familia..."
+              value={filterText}
+              onChange={e => setFilterText(e.target.value)}
+            />
+          </div>
       </div>
 
       <DataTable
         columns={columns}
-        data={dataWithUniqueKeys}
+        data={filteredData}
         pagination
         dense
         selectableRows
         keyField="uniqueKey"
         fixedHeader
         fixedHeaderScrollHeight="400px"
+        customStyles={customStyles}
+        defaultSortFieldId={6}
         onSelectedRowsChange={handleChange}
       />
 
@@ -303,3 +331,19 @@ export default function TablaEncuestas({
     </>
   );
 }
+
+const HighlightedText = ({ text, highlight }) => {
+  if (!highlight) return text;
+  
+  const parts = text.split(new RegExp(`(${highlight})`, "gi"));
+  
+  return parts.map((part, index) =>
+    part.toLowerCase() === highlight.toLowerCase() ? (
+      <span key={index} style={{ backgroundColor: "yellow", fontWeight: "bold" }}>
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+};
