@@ -11,7 +11,7 @@ export default function Observaciones({idEstudio,encuesta,callback,columnRow}){
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const longitudRespuesta = 1200;
+    const longitudRespuesta = 900;
     const [colClass,setColClass] = useState('col-8');
     const [observaciones,setObservaciones] = useState('');
 
