@@ -145,7 +145,7 @@ export default function SeccionRangosPreguntas({pregunta}){
                             </div>
                             <div className="col-3">
                                 <div className="text-end align-text-bottom border-bottom">
-                                    ${formatNumber(getItemByKey(pregunta.respuestas,'seccion','valor').monto+sumatoriaSeccionKey(pregunta.respuestas,'seccion','body_otros','monto'))}
+                                    ${formatNumber((getItemByKey(pregunta.respuestas,'seccion','valor').monto ?? 0)+sumatoriaSeccionKey(pregunta.respuestas,'seccion','body_otros','monto'))}
                                 </div>
                             </div>
                         </div>

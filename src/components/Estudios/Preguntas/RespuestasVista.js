@@ -770,7 +770,7 @@ export default function RespuestasVista({idEstudio,idPregunta,longitudRespuesta,
                                         whiteSpace: 'pre-wrap',
                                     }}
                                 >
-                                    OBSERVAMOS QUE LA FAMILIA CUENTA CON: {item.respuesta || <>&nbsp;</>}
+                                    {item.respuesta || <>&nbsp;</>}
                                 </div>
                         </div>
                     );
