@@ -135,6 +135,9 @@ export default function SeccionRangosPreguntas({pregunta}){
                 )
             break;
             case 12:
+
+                const seccion_valor = getItemByKey(pregunta.respuestas,'seccion','valor');
+                const seccion_valor_monto = (seccion_valor !== null && seccion_valor?.monto ) ? seccion_valor.monto : 0;
                 return (
                     <div className="col-12 pt-3">
                         <div className="row">
@@ -145,7 +148,7 @@ export default function SeccionRangosPreguntas({pregunta}){
                             </div>
                             <div className="col-3">
                                 <div className="text-end align-text-bottom border-bottom">
-                                    ${formatNumber((getItemByKey(pregunta.respuestas,'seccion','valor').monto ?? 0)+sumatoriaSeccionKey(pregunta.respuestas,'seccion','body_otros','monto'))}
+                                    ${formatNumber( seccion_valor_monto  + sumatoriaSeccionKey(pregunta.respuestas,'seccion','body_otros','monto'))}
                                 </div>
                             </div>
                         </div>
