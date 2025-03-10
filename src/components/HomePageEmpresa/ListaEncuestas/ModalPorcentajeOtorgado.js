@@ -20,7 +20,9 @@ export default function ModalPorcentajeOtorgado({ show, handleClose, idEstudio, 
     const [formData, setFormData] = useState({ porcentaje_otorgado: '' })
     const [rangoPordentaje,setRangoPordentaje] = useState([])
     const renderOpcionesRangoPordentaje  = (opciones) =>{
-        var opcioneslista = []
+        var opcioneslista = [];
+        
+        opcioneslista.push({ value: '0', label:'0%' })
         opciones.forEach((h)=>{
             var option = { value: '', label:'' }
             option.label = `${h.porcentaje}%`
@@ -33,6 +35,7 @@ export default function ModalPorcentajeOtorgado({ show, handleClose, idEstudio, 
     
     const getListaRangoPordentaje = () =>{
         axios.get(`${APIURL}/estudio/${idEstudio}/rangos`,config).then((resp)=>{
+            console.log("rangoPordentaje",resp.data)
             renderOpcionesRangoPordentaje(resp.data)
         }).catch((resp)=>{
             if (resp.response.status === 401) {

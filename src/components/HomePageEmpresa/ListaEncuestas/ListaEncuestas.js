@@ -324,74 +324,76 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                         <div className="card-body">
                                             <div><i>Los campos en color rojo están considerados como gastos que superan más del 20% del gasto</i></div>
                                             <br/>
-                                            <table className="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Estudio</th>
-                                                        <th>Familia</th>
-                                                        <th>Necesidades esenciales</th>
-                                                        <th>Viajes</th>
-                                                        <th>Educación</th>
-                                                        <th>Lujos</th>
-                                                        <th>Otros</th>
-                                                        <th>Gasto mensual total</th>
-                                                        <th>Ingreso Familia</th>
-                                                        <th colSpan={2}>Saldo Disponible</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {listaEstudios.map((estudio, index) => {
-                                                        const data          = estudio?.distribucion_del_gasto ?  estudio.distribucion_del_gasto : [] ;
-                                                        const total_gasto   = sumatoriaKey(estudio.distribucion_del_gasto,'total');
-                                                        const nececidades_esenciales = getItemByKey(estudio.distribucion_del_gasto,'categoria','Necesidades esenciales').total;
-                                                        const viajes            = getItemByKey(estudio.distribucion_del_gasto,'categoria','Viajes').total
-                                                        const educacion         =getItemByKey(estudio.distribucion_del_gasto,'categoria','Educación').total;
-                                                        const lujos             = getItemByKey(estudio.distribucion_del_gasto,'categoria','Lujos').total;
-                                                        const otros             = getItemByKey(estudio.distribucion_del_gasto,'categoria','Otros').total;;
-                                                        const nivel_liquides    = getItemByKey(estudio.parametros,'nombre','Nivel de liquidez');
-                                                        const ingreso_familia   = nivel_liquides?.puntos ? nivel_liquides.puntos.sumatoria : 0;
-                                                        const gasto_prociento   = ingreso_familia/5;
-                                                        return data.length > 0 && (
-                                                        <tr 
-                                                            key={"lgi+"+index} 
-                                                            onClick={() =>{setEstudioSelectedGraficar(estudio)}}
-                                                            style={{backgroundColor: ((estudioSelectedGraficar.id ?? '') === estudio.id ) ? 'aliceblue' : 'var(--bs-table-bg)'}}
-                                                        >
-                                                            <td className="bg-transparent" >#{estudio.id}</td>
-                                                            <td className="bg-transparent" >{estudio.candidato}</td>
-                                                            <td style={{ color: nececidades_esenciales>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end border-start">
-                                                                ${formatNumber(nececidades_esenciales)}
-                                                            </td>
-                                                            <td style={{ color: viajes>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end">
-                                                                ${formatNumber(viajes)}
-                                                            </td>
-                                                            <td style={{ color: educacion>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end">
-                                                                ${formatNumber(educacion)}
-                                                            </td>
-                                                            <td style={{ color: lujos>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end">
-                                                                ${formatNumber(lujos)}
-                                                            </td>
-                                                            <td style={{ color: otros>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end">
-                                                                ${formatNumber(otros)}
-                                                            </td>
-                                                            <td className="bg-transparent text-end border-start">
-                                                                ${formatNumber(total_gasto)}
-                                                            </td>
-                                                            <td className="bg-transparent text-end border-start">
-                                                                ${formatNumber(ingreso_familia)}
-                                                            </td>
-                                                            
-                                                            <td className="bg-transparent text-end border-start">
-                                                                ${formatNumber(ingreso_familia-total_gasto)}
-                                                            </td>
-                                                            <td className="bg-transparent text-end">
-                                                                {formatNumber( parseInt(((ingreso_familia-total_gasto)/ingreso_familia)*100,10) )}%
-                                                            </td>
+                                            <div style={{ overflowY: 'auto', height: '450px'}}>
+                                                <table className="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Estudio</th>
+                                                            <th>Familia</th>
+                                                            <th>Necesidades esenciales</th>
+                                                            <th>Viajes</th>
+                                                            <th>Educación</th>
+                                                            <th>Lujos</th>
+                                                            <th>Otros</th>
+                                                            <th>Gasto mensual total</th>
+                                                            <th>Ingreso Familia</th>
+                                                            <th colSpan={2}>Saldo Disponible</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {listaEstudios.map((estudio, index) => {
+                                                            const data          = estudio?.distribucion_del_gasto ?  estudio.distribucion_del_gasto : [] ;
+                                                            const total_gasto   = sumatoriaKey(estudio.distribucion_del_gasto,'total');
+                                                            const nececidades_esenciales = getItemByKey(estudio.distribucion_del_gasto,'categoria','Necesidades esenciales').total;
+                                                            const viajes            = getItemByKey(estudio.distribucion_del_gasto,'categoria','Viajes').total
+                                                            const educacion         =getItemByKey(estudio.distribucion_del_gasto,'categoria','Educación').total;
+                                                            const lujos             = getItemByKey(estudio.distribucion_del_gasto,'categoria','Lujos').total;
+                                                            const otros             = getItemByKey(estudio.distribucion_del_gasto,'categoria','Otros').total;;
+                                                            const nivel_liquides    = getItemByKey(estudio.parametros,'nombre','Nivel de liquidez');
+                                                            const ingreso_familia   = nivel_liquides?.puntos ? nivel_liquides.puntos.sumatoria : 0;
+                                                            const gasto_prociento   = ingreso_familia/5;
+                                                            return data.length > 0 && (
+                                                            <tr 
+                                                                key={"lgi+"+index} 
+                                                                onClick={() =>{setEstudioSelectedGraficar(estudio)}}
+                                                                style={{backgroundColor: ((estudioSelectedGraficar.id ?? '') === estudio.id ) ? 'aliceblue' : 'var(--bs-table-bg)'}}
+                                                            >
+                                                                <td className="bg-transparent" >#{estudio.id}</td>
+                                                                <td className="bg-transparent" >{estudio.candidato}</td>
+                                                                <td style={{ color: nececidades_esenciales>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end border-start">
+                                                                    ${formatNumber(nececidades_esenciales)}
+                                                                </td>
+                                                                <td style={{ color: viajes>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end">
+                                                                    ${formatNumber(viajes)}
+                                                                </td>
+                                                                <td style={{ color: educacion>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end">
+                                                                    ${formatNumber(educacion)}
+                                                                </td>
+                                                                <td style={{ color: lujos>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end">
+                                                                    ${formatNumber(lujos)}
+                                                                </td>
+                                                                <td style={{ color: otros>gasto_prociento ? 'red' : 'black' }} className="bg-transparent text-end">
+                                                                    ${formatNumber(otros)}
+                                                                </td>
+                                                                <td className="bg-transparent text-end border-start">
+                                                                    ${formatNumber(total_gasto)}
+                                                                </td>
+                                                                <td className="bg-transparent text-end border-start">
+                                                                    ${formatNumber(ingreso_familia)}
+                                                                </td>
+                                                                
+                                                                <td className="bg-transparent text-end border-start">
+                                                                    ${formatNumber(ingreso_familia-total_gasto)}
+                                                                </td>
+                                                                <td className="bg-transparent text-end">
+                                                                    {formatNumber( parseInt(((ingreso_familia-total_gasto)/ingreso_familia)*100,10) )}%
+                                                                </td>
 
-                                                        </tr>)
-                                                     })}
-                                                </tbody>
-                                            </table>
+                                                            </tr>)
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                         </div>
                                     </div>

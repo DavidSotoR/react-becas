@@ -197,32 +197,34 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
                 <div className="col-sm-6">
                     <div className="card m-1 shadow-sm">
                     <div className="card-body">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Estudio</th>
-                                    <th>Familia</th>
-                                    <th className="text-center">Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                    {dataEstudios.length > 0 && dataEstudios.map( (estudio ,index) => (
-                                        <tr key={'esfil'-index} onClick={() =>{setEstudioSelected(estudio)}}>
-                                            <td>
-                                            {estudio.id}
-                                            </td>
-                                            <td>
-                                                {estudio.candidato}
-                                            </td>
-                                            <td className="text-end">
-                                                { estudio?.parametros && estudio?.parametros.map((item, index) => {
-                                                    return item.id === dataSelected.id && formatNumber(item.puntos.sumatoria)
-                                                }) }
-                                            </td>
-                                        </tr>
-                                    ))}
-                            </tbody>
-                        </table>
+                        <div style={{ overflowY: 'auto', height: '350px'}}>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>Estudio</th>
+                                        <th>Familia</th>
+                                        <th className="text-center">Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        {dataEstudios.length > 0 && dataEstudios.map( (estudio ,index) => (
+                                            <tr key={'esfil'-index} onClick={() =>{setEstudioSelected(estudio)}}>
+                                                <td>
+                                                {estudio.id}
+                                                </td>
+                                                <td>
+                                                    {estudio.candidato}
+                                                </td>
+                                                <td className="text-end">
+                                                    { estudio?.parametros && estudio?.parametros.map((item, index) => {
+                                                        return item.id === dataSelected.id && formatNumber(item.puntos.sumatoria)
+                                                    }) }
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     </div>
                 </div>
