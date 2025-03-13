@@ -11,6 +11,7 @@ import { Modal, Button } from 'react-bootstrap'
 import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions";
 
 import DistribucionDelGastoGrafica from "../Graficas/DistribucionDelGastoGrafica";
+import TablaEnvioEmail from "./TablaEnvioEmail";
 
 export default function ListaEncuestas({idProyecto, idOrdenServicio}){
     
@@ -158,16 +159,25 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
         ));
     }
 
+    const addIDEstudioToSend = (e) => {
+        let {value, name} = e.target;
+        console.log(value, name);
+        
+    }
+
     const rowsEmailsSendedPorcentajes = () => {
         console.log(listaEstudios);
         
         return Array.isArray(listaEstudios) && listaEstudios.map((estudio,index) => (
         <tr key={'remailsend-'+index}>
+            <td className="text-center">
+                <input class="form-check-input" value={estudio.id} type="checkbox" name="input_check" id="input_check" onChange={(e)=> {addIDEstudioToSend(e)}}/>
+            </td>
             <td>{estudio.id}</td>
             <td>Envido</td>
             <td>{ estudio.clave_familia_colegio }</td>
             <td>{estudio.candidato}</td>
-            <td>{estudio.hijo ? estudio.hijo.nombre : 'SIN DATO'}</td>
+            <td>{estudio.hijo ? estudio.hijo.nombre : 'NO APLICA'}</td>
             <td>
                 <button className="btn btn-primary btn-sm" onClick={() => getValuesToSendData(estudio)}>Enviar Email</button>
             </td>
@@ -444,11 +454,26 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                 </div>
 				</TabPanel>
                 <TabPanel>
-                    <div>
+                    {
+                        listaEstudios.length > 0 
+                        && (
+                            <TablaEnvioEmail
+                            listaParametros={listaParametros}
+                            listaEstudios={listaEstudios}
+                            callBackPorcentajeOtorgado={getListaEstudios}
+                            />)
+                    }
+                    {/* <div>
                         Contenido de notificaionews
                         <table className="table">
                             <thead>
                                 <tr>
+                                    <th className="text-center">
+                                        <div className="d-flex justify-content-center align-item-start">
+                                        <input onChange={(e)=>{ addIDEstudioToSend(e) }} class="form-check-input" style={{position: 'relative'}} type="checkbox" value="all" id="flexCheckDefault"/>
+                                        </div>
+                                        
+                                    </th>
                                     <th>No. Estudio</th>
                                     <th>Correo Enviado</th>
                                     <th>No. Familia Colegio</th>
@@ -482,7 +507,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                             <Button variant="primary">Enviar</Button>
                         </Modal.Footer>
                         </Modal>
-                    </div>
+                    </div> */}
                 </TabPanel>
 			</Tabs>
 
