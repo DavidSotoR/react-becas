@@ -31,6 +31,13 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
         }
     }
     const { logout } = useContext(AuthContext);
+
+    const [data,setData] = useState([]);
+
+    const [dataSelected,setDataSelected] = useState({});
+    const [estudioSelected,setEstudioSelected] = useState(null);
+    const [itemSeleccionado,setItemSeleccionado] = useState('');
+    const [dataEstudios,setDataEstudios] = useState([]);
     const options = {
         responsive: true,
         plugins: {
@@ -39,18 +46,10 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
           },
           title: {
             display: true,
-            text: 'Chart.js Bar Chart',
+            text: 'GRAFICA DE RANGOS',
           },
         },
       };
-
-    const [data,setData] = useState([]);
-
-    const [dataSelected,setDataSelected] = useState({});
-    const [estudioSelected,setEstudioSelected] = useState(null);
-    const [itemSeleccionado,setItemSeleccionado] = useState('');
-    const [dataEstudios,setDataEstudios] = useState([]);
- 
     const labels = () => {
         return dataSelected?.items ? dataSelected.items.map(item => `${item.limiten_inferior < 1 ? 'O MENOS' : formatNumber(item.limiten_inferior)} - ${item.limite_superior === '0' ? 'O MAS' : formatNumber(item.limite_superior)}`) : [] ;
     }

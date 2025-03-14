@@ -391,6 +391,8 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                                             const nivel_liquides    = getItemByKey(estudio.parametros,'nombre','Nivel de liquidez');
                                                             const ingreso_familia   = nivel_liquides?.puntos ? nivel_liquides.puntos.sumatoria : 0;
                                                             const gasto_prociento   = ingreso_familia/5;
+                                                            const calcular_porcentaje = parseInt(((ingreso_familia-total_gasto)/ingreso_familia)*100,10);
+                                                            const porcentaje_estudio = !isNaN(calcular_porcentaje) ? calcular_porcentaje : 0;
                                                             return data.length > 0 && (
                                                             <tr 
                                                                 key={"lgi+"+index} 
@@ -425,7 +427,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                                                     ${formatNumber(ingreso_familia-total_gasto)}
                                                                 </td>
                                                                 <td className="bg-transparent text-end">
-                                                                    {formatNumber( parseInt(((ingreso_familia-total_gasto)/ingreso_familia)*100,10) )}%
+                                                                    { porcentaje_estudio }%
                                                                 </td>
 
                                                             </tr>)
