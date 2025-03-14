@@ -465,51 +465,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                             callBackPorcentajeOtorgado={getListaEstudios}
                             />)
                     }
-                    {/* <div>
-                        Contenido de notificaionews
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th className="text-center">
-                                        <div className="d-flex justify-content-center align-item-start">
-                                        <input onChange={(e)=>{ addIDEstudioToSend(e) }} class="form-check-input" style={{position: 'relative'}} type="checkbox" value="all" id="flexCheckDefault"/>
-                                        </div>
-                                        
-                                    </th>
-                                    <th>No. Estudio</th>
-                                    <th>Correo Enviado</th>
-                                    <th>No. Familia Colegio</th>
-                                    <th>Familia</th>
-                                    <th>Alumno</th>
-                                    <th>Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { rowsEmailsSendedPorcentajes() }
-                            </tbody>
-                        </table>
-                        <Modal
-                        show={showSendEmailPorcentaje}
-                        onHide={handleCloseSendEmailPorcentaje}
-                        backdrop="static"
-                        keyboard={false}
-                        >
-                        <Modal.Header closeButton>
-                            <Modal.Title>FAMILIA: {estudioSelectedData ? estudioSelectedData.candidato : ''}</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>Enviar correo a contacto principal</p>
-                            <p>Padre:</p>
-                            <p>Email:</p>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleCloseSendEmailPorcentaje}>
-                                Cancelar
-                            </Button>
-                            <Button variant="primary">Enviar</Button>
-                        </Modal.Footer>
-                        </Modal>
-                    </div> */}
+
                 </TabPanel>
 			</Tabs>
 
