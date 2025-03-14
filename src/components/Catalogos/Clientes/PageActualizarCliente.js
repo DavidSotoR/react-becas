@@ -748,7 +748,7 @@ function PageActualizarCliente() {
             if (resp.response.status === 401) {
                 logout()
             }
-            console.log(resp);
+            console.log(resp);                                                                 
         })
         
     }

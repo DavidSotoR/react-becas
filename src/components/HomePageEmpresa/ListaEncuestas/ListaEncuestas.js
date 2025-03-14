@@ -7,9 +7,11 @@ import 'react-tabs/style/react-tabs.css';
 import RangosSugeridos from "../Graficas/RangosSugeridos";
 import SeccionRangos from "../Graficas/SeccionRangos";
 import TablaEncuestas from "./TablaEncuestas";
+import { Modal, Button } from 'react-bootstrap'
 import {getPuntosParametros, getTotalPuntosParametros, getPorcentajeSugerido} from "lib/estudios-functions";
 
 import DistribucionDelGastoGrafica from "../Graficas/DistribucionDelGastoGrafica";
+import TablaEnvioEmail from "./TablaEnvioEmail";
 
 export default function ListaEncuestas({idProyecto, idOrdenServicio}){
     
@@ -24,6 +26,11 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
     const [listaEstudios,setListaEstudios] = useState([]);
     const [proyecto,setProyecto] = useState(null);
     const [listaParametros,setlistaParametros] =  useState([])
+
+    const [ estudioSelectedData, setEstudioSelectedData ] = useState(null);
+    const [showSendEmailPorcentaje, setShowSendEmailPorcentaje] = useState(false);
+    const handleCloseSendEmailPorcentaje = () => setShowSendEmailPorcentaje(false);
+    const handleShowSendEmailPorcentaje = () => setShowSendEmailPorcentaje(true);
 
     const rango_pordentaje = [
         {rango:20,nombre:'de 0 a 20%'},
@@ -73,7 +80,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 
         axios.get(`${APIURL}/estudios/concluidos/proyecto/${idProyecto}`,config).then((resp)=>{
             setListaEstudios(resp.data);
-            console.log(resp.data);
+            //console.log(resp.data);
         }).catch((resp)=>{
             if (resp?.response?.status && resp.response.status === 401) {
                 logout()
@@ -151,8 +158,39 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
         </tr>
         ));
     }
-   
 
+    const addIDEstudioToSend = (e) => {
+        let {value, name} = e.target;
+        console.log(value, name);
+        
+    }
+
+    const rowsEmailsSendedPorcentajes = () => {
+        console.log(listaEstudios);
+        
+        return Array.isArray(listaEstudios) && listaEstudios.map((estudio,index) => (
+        <tr key={'remailsend-'+index}>
+            <td className="text-center">
+                <input class="form-check-input" value={estudio.id} type="checkbox" name="input_check" id="input_check" onChange={(e)=> {addIDEstudioToSend(e)}}/>
+            </td>
+            <td>{estudio.id}</td>
+            <td>Envido</td>
+            <td>{ estudio.clave_familia_colegio }</td>
+            <td>{estudio.candidato}</td>
+            <td>{estudio.hijo ? estudio.hijo.nombre : 'NO APLICA'}</td>
+            <td>
+                <button className="btn btn-primary btn-sm" onClick={() => getValuesToSendData(estudio)}>Enviar Email</button>
+            </td>
+        </tr>
+        ));
+    }
+
+    const getValuesToSendData = (data = null) => {
+        if (data) {
+            setEstudioSelectedData(data)
+        }
+        handleShowSendEmailPorcentaje();
+    }
 
     const resumenEstudiosSocioeconomicos = () => {
         return Array.isArray(listaEstudios) && listaEstudios.map((estudio,index) => {
@@ -216,6 +254,7 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
 					<Tab>Encuestas</Tab>
 					<Tab>Análisis de datos</Tab>
 					<Tab>Distribución del gasto</Tab>
+                    <Tab>Notificación %</Tab>
 				</TabList>
  
 				<TabPanel>
@@ -414,6 +453,62 @@ export default function ListaEncuestas({idProyecto, idOrdenServicio}){
                                     )}
                                 </div>
 				</TabPanel>
+                <TabPanel>
+                    {
+                        listaEstudios.length > 0 
+                        && (
+                            <TablaEnvioEmail
+                            listaParametros={listaParametros}
+                            listaEstudios={listaEstudios}
+                            callBackPorcentajeOtorgado={getListaEstudios}
+                            />)
+                    }
+                    {/* <div>
+                        Contenido de notificaionews
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th className="text-center">
+                                        <div className="d-flex justify-content-center align-item-start">
+                                        <input onChange={(e)=>{ addIDEstudioToSend(e) }} class="form-check-input" style={{position: 'relative'}} type="checkbox" value="all" id="flexCheckDefault"/>
+                                        </div>
+                                        
+                                    </th>
+                                    <th>No. Estudio</th>
+                                    <th>Correo Enviado</th>
+                                    <th>No. Familia Colegio</th>
+                                    <th>Familia</th>
+                                    <th>Alumno</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { rowsEmailsSendedPorcentajes() }
+                            </tbody>
+                        </table>
+                        <Modal
+                        show={showSendEmailPorcentaje}
+                        onHide={handleCloseSendEmailPorcentaje}
+                        backdrop="static"
+                        keyboard={false}
+                        >
+                        <Modal.Header closeButton>
+                            <Modal.Title>FAMILIA: {estudioSelectedData ? estudioSelectedData.candidato : ''}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p>Enviar correo a contacto principal</p>
+                            <p>Padre:</p>
+                            <p>Email:</p>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseSendEmailPorcentaje}>
+                                Cancelar
+                            </Button>
+                            <Button variant="primary">Enviar</Button>
+                        </Modal.Footer>
+                        </Modal>
+                    </div> */}
+                </TabPanel>
 			</Tabs>
 
         </div>
