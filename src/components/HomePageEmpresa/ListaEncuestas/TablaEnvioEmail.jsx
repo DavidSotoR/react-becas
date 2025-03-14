@@ -127,7 +127,7 @@ export default function TablaEnvioEmail({
       name: "Correo Enviado",
       selector: (row) => (
         <span>
-          { row.email_enviado ? (<p className="bg-success p-1 rounded text-white">Enviado</p>) : (<p className="bg-danger p-1 rounded text-white">No Enviado</p>) }
+          { row.email_enviado ? (<p className="bg-success p-1 rounded text-white mt-1">Enviado</p>) : (<p className="bg-danger p-1 rounded text-white mt-1">No Enviado</p>) }
         </span>
       ),
       sortable: true,
@@ -234,17 +234,28 @@ export default function TablaEnvioEmail({
 
     rowSelect.forEach(element => {
       if (element.hijo) {
-        console.log('tiene hijo');
-        data.push({ id: element.hijo.id , hijo: true})
+        data.push({ id: element.hijo.id , hijo: true,
+          candidato: element.candidato, 
+          cliente: element.cliente.nombre,
+          contacto: (element.padre && element.padre.contecto_principal) ? element.padre.email : element.madre.email,
+          hijo_dato: element.hijo ? element.hijo.nombre : null,
+          porcentaje_otorgado: element.hijo ? element.hijo.porcentaje_otorgado : element.porcentaje_otorgado
+        })
       } else {
-        console.log('no tiene hijo');
-        data.push({ id: element.id , hijo: false})
+        data.push({ id: element.id , hijo: false,
+          candidato: element.candidato, 
+          cliente: element.cliente.nombre,
+          contacto: (element.padre && element.padre.contecto_principal) ? element.padre.email : element.madre.email,
+          hijo_dato: element.hijo ? element.hijo.nombre : null,
+          porcentaje_otorgado: element.hijo ? element.hijo.porcentaje_otorgado : element.porcentaje_otorgado
+        })
       }
   
     })
     
     axios.post(APIURL + '/estudio/socioeconomico/enviar/correos', data, config).then((resp)=>{
       console.log(resp);
+      handleCloseSendMasiveEmailPorcentaje()
       
     }).catch(err=>{
       console.log(err);
@@ -254,18 +265,32 @@ export default function TablaEnvioEmail({
   }
 
   const enviarDataParaCorreo = () => {
-    console.log(estudioSelectedData);
     let data = []
     if (estudioSelectedData.hijo) {
       console.log('tiene hijo');
-      data.push({ id: estudioSelectedData.hijo.id , hijo: true})
+      data.push({ 
+        id: estudioSelectedData.hijo.id , 
+        hijo: true, 
+        candidato: estudioSelectedData.candidato, 
+        cliente: estudioSelectedData.cliente.nombre,
+        contacto: (estudioSelectedData.padre && estudioSelectedData.padre.contecto_principal) ? estudioSelectedData.padre.email : estudioSelectedData.madre.email,
+        hijo_dato: estudioSelectedData.hijo ? estudioSelectedData.hijo.nombre : null,
+        porcentaje_otorgado: estudioSelectedData.hijo ? estudioSelectedData.hijo.porcentaje_otorgado : estudioSelectedData.porcentaje_otorgado
+      })
     } else {
       console.log('no tiene hijo');
-      data.push({ id: estudioSelectedData.id , hijo: false})
+      data.push({ id: estudioSelectedData.id , hijo: false,
+        candidato: estudioSelectedData.candidato, 
+        cliente: estudioSelectedData.cliente.nombre,
+        contacto: (estudioSelectedData.padre && estudioSelectedData.padre.contecto_principal) ? estudioSelectedData.padre.email : estudioSelectedData.madre.email,
+        hijo_dato: estudioSelectedData.hijo ? estudioSelectedData.hijo.nombre : null,
+        porcentaje_otorgado: estudioSelectedData.hijo ? estudioSelectedData.hijo.porcentaje_otorgado : estudioSelectedData.porcentaje_otorgado
+      })
     }
 
     axios.post(APIURL + '/estudio/socioeconomico/enviar/correos', data, config).then((resp)=>{
       console.log(resp);
+      handleCloseSendEmailPorcentaje()
       
     }).catch(err=>{
       console.log(err);
@@ -334,9 +359,15 @@ export default function TablaEnvioEmail({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Enviar correo a contacto principal</p>
-          <p>Padre:</p>
-          <p>Email:</p>
+          { estudioSelectedData && (
+            <>
+            <p>Enviar correo a contacto principal</p>
+            <p>Contacto: { (estudioSelectedData.padre && estudioSelectedData.padre.contecto_principal) ? estudioSelectedData.padre.nombre : estudioSelectedData.madre.nombre  }</p>
+            <p>Email: { (estudioSelectedData.padre && estudioSelectedData.padre.contecto_principal) ? estudioSelectedData.padre.email : estudioSelectedData.madre.email  }</p>
+            <p>Porcentaje Asignado: {estudioSelectedData.hijo ? estudioSelectedData.hijo.porcentaje_otorgado : estudioSelectedData.porcentaje_otorgado} %</p>
+            </>
+          ) }
+          
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseSendEmailPorcentaje}>
