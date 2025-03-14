@@ -155,6 +155,24 @@ export default function SeccionRangosPreguntas({pregunta}){
                     </div>
                 )
             break;
+            case 15:
+                return (
+                    <div className="col-12 pt-3">
+                        <div className="row">
+                            <div className="col-9">
+                                <div>
+                                    <b>{convertirAMayusculas(pregunta.pregunta)}</b>
+                                </div>
+                            </div>
+                            <div className="col-3">
+                                <div className="text-end align-text-bottom border-bottom">
+                                    ${formatNumber(sumatoriaKey(pregunta.respuestas,'padre_monto'))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            break;
             default:
                 return (<div className="col-md-12">
                     <div className="mt-3">
