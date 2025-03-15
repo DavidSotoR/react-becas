@@ -57,7 +57,7 @@ export default function PDFSelection({seleccionRow}){
 
   return ( 
     <button
-      onClick={downloadZipEstudiosSeleccionados} title="Descargar PDFs" style={{ fontSize: loading ? '.9rem' : '1.4rem ' }}
+      onClick={downloadZipEstudiosSeleccionados} title="Descargar Zip Reportes" style={{ fontSize: loading ? '.9rem' : '1.4rem ' }}
       className={`btn btn-outline text-danger ${loading ? "disabled" : ""}`}
       disabled={loading}
     >
@@ -71,7 +71,7 @@ export default function PDFSelection({seleccionRow}){
           Procesando...
         </>
       ) : (
-        <i className="bi bi-filetype-pdf"></i>
+        <i class="bi bi-file-zip"></i>
         
       )}
     </button>

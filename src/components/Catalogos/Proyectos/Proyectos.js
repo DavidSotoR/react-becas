@@ -198,7 +198,7 @@ function Proyectos() {
             {obtenerAnio(proyecto.anio ?? '')}
           </p>
         </td>
-        <td>
+        <td className="ps-0">
           <div className="d-flex justify-content-start">
             <Link
               className="btn"
@@ -211,7 +211,7 @@ function Proyectos() {
               className="btn"
               to={`/proyectos/${proyecto.id}`}
             >
-              <i className="bi bi-files text-blue" title="Archivo Proyecto"></i>
+              <i class="bi bi-archive text-blue" title="Archivo Proyecto"></i>
             </Link>
             <Link
               className="btn"

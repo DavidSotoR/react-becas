@@ -7,7 +7,7 @@ import {
 
 import { useState, useMemo, useContext } from "react";
 import { Modal, Button } from "react-bootstrap";
-import Spinner from 'react-bootstrap/Spinner';
+import Spinner from "react-bootstrap/Spinner";
 import axios from "../../../../node_modules/axios/index";
 import { AuthContext } from "context/AuthContext";
 
@@ -19,10 +19,10 @@ export default function TablaEnvioEmail({
   const { logout, execShowAlert } = useContext(AuthContext);
   const APIURL = process.env.REACT_APP_API_URL;
   const config = {
-      headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-  }
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
   const [idEstudio, setIdEstudio] = useState(null);
   const [idEstudioHijo, setIdEstudioHijo] = useState(null);
 
@@ -30,7 +30,8 @@ export default function TablaEnvioEmail({
 
   const [estudioSelectedData, setEstudioSelectedData] = useState(null);
   const [showSendEmailPorcentaje, setShowSendEmailPorcentaje] = useState(false);
-  const handleCloseSendEmailPorcentaje = () => setShowSendEmailPorcentaje(false);
+  const handleCloseSendEmailPorcentaje = () =>
+    setShowSendEmailPorcentaje(false);
   const handleShowSendEmailPorcentaje = () => setShowSendEmailPorcentaje(true);
 
   const [showSendMasiveEmailPorcentaje, setShowSendMasiveEmailPorcentaje] =
@@ -132,10 +133,10 @@ export default function TablaEnvioEmail({
         const match = row.notificacion_correo_porcentaje?.find(
           (item) => item.uniquekey === row.uniqueKey
         );
-    
+
         let statusText = "No Enviado";
         let bgColor = "bg-danger";
-    
+
         if (match) {
           if (match.contador === 1) {
             statusText = "Enviado";
@@ -145,7 +146,7 @@ export default function TablaEnvioEmail({
             bgColor = "bg-warning";
           }
         }
-    
+
         return (
           <p className={`${bgColor} p-1 rounded text-white mt-1 fw-bold`}>
             {statusText}
@@ -156,7 +157,7 @@ export default function TablaEnvioEmail({
       cellClassName: "fixed-column",
     },
     {
-      name: 'Porcentaje Otorgado',
+      name: "Porcentaje Otorgado",
       cell: (row) => seccionPordentajeOtorgado(row),
       ignoreRowClick: true,
     },
@@ -209,6 +210,7 @@ export default function TablaEnvioEmail({
           </div>
         </div>
       ),
+      width: '200px',
       sortable: true,
     },
 
@@ -220,13 +222,14 @@ export default function TablaEnvioEmail({
     {
       name: "Acciones",
       cell: (row) => (
-        <button 
-          className="btn btn-sm btn-primary h-75 fw-bold" style={{fontSize: '.7rem', lineHeight: '1rem'}}
+        <button
+          className="btn btn-sm btn-primary fw-bold"
+          style={{ fontSize: "1rem", lineHeight: "1rem", height: "70%" }}
           onClick={() => {
             getValuesToSendData(row);
           }}
         >
-          Enviar Correo
+          <i className="bi bi-envelope"></i>
         </button>
       ),
       ignoreRowClick: true,
@@ -252,94 +255,147 @@ export default function TablaEnvioEmail({
 
   const enviarDatasParaCorreos = () => {
     console.log(rowSelect);
-    let data = []
+    let data = [];
 
-    rowSelect.forEach(element => {
+    rowSelect.forEach((element) => {
       if (element.hijo) {
-        data.push({ id: element.hijo.id , hijo: true,
-          candidato: element.candidato, 
+        data.push({
+          id: element.hijo.id,
+          hijo: true,
+          candidato: element.candidato,
           cliente: element.cliente.nombre,
-          contacto: (element.padre && element.padre.contecto_principal) ? element.padre.email : element.madre.email,
+          contacto:
+            element.padre && element.padre.contecto_principal
+              ? element.padre.email
+              : element.madre.email,
           hijo_dato: element.hijo ? element.hijo.nombre : null,
-          porcentaje_otorgado: element.hijo ? element.hijo.porcentaje_otorgado : element.porcentaje_otorgad,
+          porcentaje_otorgado: element.hijo
+            ? element.hijo.porcentaje_otorgado
+            : element.porcentaje_otorgad,
           id_servicio_estudio: element.id,
           id_proyecto: element.proyecto.id,
           uniqueKey: element.uniqueKey ?? null,
-        })
+        });
       } else {
-        data.push({ id: element.id , hijo: false,
-          candidato: element.candidato, 
+        data.push({
+          id: element.id,
+          hijo: false,
+          candidato: element.candidato,
           cliente: element.cliente.nombre,
-          contacto: (element.padre && element.padre.contecto_principal) ? element.padre.email : element.madre.email,
+          contacto:
+            element.padre && element.padre.contecto_principal
+              ? element.padre.email
+              : element.madre.email,
           hijo_dato: element.hijo ? element.hijo.nombre : null,
-          porcentaje_otorgado: element.hijo ? element.hijo.porcentaje_otorgado : element.porcentaje_otorgado,
+          porcentaje_otorgado: element.hijo
+            ? element.hijo.porcentaje_otorgado
+            : element.porcentaje_otorgado,
           id_servicio_estudio: element.id,
           id_proyecto: element.proyecto.id,
           uniqueKey: element.uniqueKey ?? null,
-        })
+        });
       }
-  
-    })
-    setShowShowSpinner(true)
-    axios.post(APIURL + '/estudio/socioeconomico/enviar/correos', data, config).then((resp)=>{
-      console.log(resp);
-      execShowAlert({type: 'success', title: 'Correos Enviados Exitosamente', message: 'Se han enviado correctamente las notificaciones de los estudios seleccionados.'})
-      handleCloseSendMasiveEmailPorcentaje()
-      callBackPorcentajeOtorgado()
-      setShowShowSpinner(false)
-    }).catch(err=>{
-      console.log(err);
-      execShowAlert({type: 'warning', title: 'Error al Enviar los Correos', message: 'Ocurrio un error inesperado del lado del servidor.'})
-      setShowShowSpinner(false)
-    })
-    
-  }
+    });
+    setShowShowSpinner(true);
+    axios
+      .post(APIURL + "/estudio/socioeconomico/enviar/correos", data, config)
+      .then((resp) => {
+        console.log(resp);
+        execShowAlert({
+          type: "success",
+          title: "Correos Enviados Exitosamente",
+          message:
+            "Se han enviado correctamente las notificaciones de los estudios seleccionados.",
+        });
+        handleCloseSendMasiveEmailPorcentaje();
+        callBackPorcentajeOtorgado();
+        setShowShowSpinner(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        execShowAlert({
+          type: "warning",
+          title: "Error al Enviar los Correos",
+          message: "Ocurrio un error inesperado del lado del servidor.",
+        });
+        setShowShowSpinner(false);
+      });
+  };
 
   const enviarDataParaCorreo = () => {
     console.log(estudioSelectedData);
-    
-    let data = []
+
+    let data = [];
     if (estudioSelectedData.hijo) {
-      console.log('tiene hijo');
-      data.push({ 
-        id: estudioSelectedData.hijo.id , 
-        hijo: true, 
-        candidato: estudioSelectedData.candidato, 
+      console.log("tiene hijo");
+      data.push({
+        id: estudioSelectedData.hijo.id,
+        hijo: true,
+        candidato: estudioSelectedData.candidato,
         cliente: estudioSelectedData.cliente.nombre,
-        contacto: (estudioSelectedData.padre && estudioSelectedData.padre.contecto_principal) ? estudioSelectedData.padre.email : estudioSelectedData.madre.email,
-        hijo_dato: estudioSelectedData.hijo ? estudioSelectedData.hijo.nombre : null,
-        porcentaje_otorgado: estudioSelectedData.hijo ? estudioSelectedData.hijo.porcentaje_otorgado : estudioSelectedData.porcentaje_otorgado,
+        contacto:
+          estudioSelectedData.padre &&
+          estudioSelectedData.padre.contecto_principal
+            ? estudioSelectedData.padre.email
+            : estudioSelectedData.madre.email,
+        hijo_dato: estudioSelectedData.hijo
+          ? estudioSelectedData.hijo.nombre
+          : null,
+        porcentaje_otorgado: estudioSelectedData.hijo
+          ? estudioSelectedData.hijo.porcentaje_otorgado
+          : estudioSelectedData.porcentaje_otorgado,
         id_servicio_estudio: estudioSelectedData.id,
         id_proyecto: estudioSelectedData.proyecto.id,
         uniqueKey: estudioSelectedData.uniqueKey ?? null,
-      })
+      });
     } else {
-      console.log('no tiene hijo');
-      data.push({ id: estudioSelectedData.id , hijo: false,
-        candidato: estudioSelectedData.candidato, 
+      console.log("no tiene hijo");
+      data.push({
+        id: estudioSelectedData.id,
+        hijo: false,
+        candidato: estudioSelectedData.candidato,
         cliente: estudioSelectedData.cliente.nombre,
-        contacto: (estudioSelectedData.padre && estudioSelectedData.padre.contecto_principal) ? estudioSelectedData.padre.email : estudioSelectedData.madre.email,
-        hijo_dato: estudioSelectedData.hijo ? estudioSelectedData.hijo.nombre : null,
-        porcentaje_otorgado: estudioSelectedData.hijo ? estudioSelectedData.hijo.porcentaje_otorgado : estudioSelectedData.porcentaje_otorgado,
+        contacto:
+          estudioSelectedData.padre &&
+          estudioSelectedData.padre.contecto_principal
+            ? estudioSelectedData.padre.email
+            : estudioSelectedData.madre.email,
+        hijo_dato: estudioSelectedData.hijo
+          ? estudioSelectedData.hijo.nombre
+          : null,
+        porcentaje_otorgado: estudioSelectedData.hijo
+          ? estudioSelectedData.hijo.porcentaje_otorgado
+          : estudioSelectedData.porcentaje_otorgado,
         id_servicio_estudio: estudioSelectedData.id,
         id_proyecto: estudioSelectedData.proyecto.id,
         uniqueKey: estudioSelectedData.uniqueKey ?? null,
-      })
+      });
     }
-    setShowShowSpinner(true)
-    axios.post(APIURL + '/estudio/socioeconomico/enviar/correos', data, config).then((resp)=>{
-      console.log(resp);
-      handleCloseSendEmailPorcentaje()
-      callBackPorcentajeOtorgado()
-      setShowShowSpinner(false)
-      execShowAlert({type: 'success', title: 'Correo Enviado Exitosamente', message: 'Se ha enviado correctamente la notificacion del Porcentaje Otorgado.'})
-    }).catch(err=>{
-      console.log(err);
-      execShowAlert({type: 'warning', title: 'Error al Enviar los Correos', message: 'Ocurrio un error inesperado del lado del servidor.'})
-      setShowShowSpinner(false)
-    })
-    
-  }
+    setShowShowSpinner(true);
+    axios
+      .post(APIURL + "/estudio/socioeconomico/enviar/correos", data, config)
+      .then((resp) => {
+        console.log(resp);
+        handleCloseSendEmailPorcentaje();
+        callBackPorcentajeOtorgado();
+        setShowShowSpinner(false);
+        execShowAlert({
+          type: "success",
+          title: "Correo Enviado Exitosamente",
+          message:
+            "Se ha enviado correctamente la notificacion del Porcentaje Otorgado.",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        execShowAlert({
+          type: "warning",
+          title: "Error al Enviar los Correos",
+          message: "Ocurrio un error inesperado del lado del servidor.",
+        });
+        setShowShowSpinner(false);
+      });
+  };
 
   return (
     <>
@@ -358,11 +414,13 @@ export default function TablaEnvioEmail({
                 }}
                 className="btn btn-sm btn-primary"
               >
-                Enviar Correos a seleccionados
+                <i className="bi bi-send-fill me-2"></i>
+                Enviar Correos
               </button>
             </div>
           )}
-          <div></div>
+          <div>
+          </div>
         </div>
         <div>
           <input
@@ -401,31 +459,58 @@ export default function TablaEnvioEmail({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          { estudioSelectedData && (
+          {estudioSelectedData && (
             <>
-            <p>Enviar correo a contacto principal</p>
-            <p>Contacto: { (estudioSelectedData.padre && estudioSelectedData.padre.contecto_principal) ? estudioSelectedData.padre.nombre : estudioSelectedData.madre.nombre  }</p>
-            <p>Email: { (estudioSelectedData.padre && estudioSelectedData.padre.contecto_principal) ? estudioSelectedData.padre.email : estudioSelectedData.madre.email  }</p>
-            <p>Porcentaje Asignado: {estudioSelectedData.hijo ? estudioSelectedData.hijo.porcentaje_otorgado : estudioSelectedData.porcentaje_otorgado} %</p>
+              <p>Enviar correo a contacto principal</p>
+              <p>
+                Contacto:{" "}
+                {estudioSelectedData.padre &&
+                estudioSelectedData.padre.contecto_principal
+                  ? estudioSelectedData.padre.nombre
+                  : estudioSelectedData.madre.nombre}
+              </p>
+              <p>
+                Email:{" "}
+                {estudioSelectedData.padre &&
+                estudioSelectedData.padre.contecto_principal
+                  ? estudioSelectedData.padre.email
+                  : estudioSelectedData.madre.email}
+              </p>
+              <p>
+                Porcentaje Asignado:{" "}
+                {estudioSelectedData.hijo
+                  ? estudioSelectedData.hijo.porcentaje_otorgado
+                  : estudioSelectedData.porcentaje_otorgado}{" "}
+                %
+              </p>
             </>
-          ) }
-          
+          )}
         </Modal.Body>
         <Modal.Footer>
-          { showSpinner ? (
-             <div className="d-flex justify-content-center">
-              <Spinner animation="border" variant="primary" />
+          {showSpinner ? (
+            <div className="d-flex justify-content-center">
+              <div className="spinner-border text-info" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
             </div>
           ) : (
             <>
-            <Button variant="secondary" onClick={handleCloseSendEmailPorcentaje}>
-              Cancelar
-            </Button>
-            <Button variant="primary" onClick={()=>{enviarDataParaCorreo()}}>Enviar</Button>
+              <Button
+                variant="secondary"
+                onClick={handleCloseSendEmailPorcentaje}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  enviarDataParaCorreo();
+                }}
+              >
+                Enviar
+              </Button>
             </>
-          )
-
-          }
+          )}
         </Modal.Footer>
       </Modal>
 
@@ -443,20 +528,30 @@ export default function TablaEnvioEmail({
           familias seleccionadas.
         </Modal.Body>
         <Modal.Footer>
-          { showSpinner ? (
+          {showSpinner ? (
             <div className="d-flex justify-content-center">
-              <Spinner animation="border" variant="primary" />
+              <div className="spinner-border text-info" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
             </div>
           ) : (
             <>
-            <Button variant="secondary" onClick={handleCloseSendMasiveEmailPorcentaje}>
-              Cancelar
-            </Button>
-            <Button variant="primary" onClick={()=>{enviarDatasParaCorreos()}} >Enviar</Button>
+              <Button
+                variant="secondary"
+                onClick={handleCloseSendMasiveEmailPorcentaje}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  enviarDatasParaCorreos();
+                }}
+              >
+                Enviar
+              </Button>
             </>
-          )
-
-          }        
+          )}
         </Modal.Footer>
       </Modal>
     </>
