@@ -7,7 +7,7 @@ import Select from "react-select"
 import makeAnimated from 'react-select/animated';
 
 function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
-    const { logout } = useContext(AuthContext);
+    const { logout, execShowAlert } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
@@ -82,8 +82,18 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
         axios.post(`${APIURL}/proyectos/${idProyecto}/clientes`,formData,config).then((resp)=>{
             console.log(resp);
             handleClose()
+            execShowAlert({ type: 'success', title: 'Colegios Agregados', message: 'Se agregarón exitosamente los colegios.' })
         }).catch((resp)=>{
-            console.log(resp);
+            
+            if (resp?.response.status === 401) {
+                logout()
+                execShowAlert({ type: 'danger', title: 'Sesión Expirada', message: 'La sesión expiro, vuelva a iniciar para continuar.' })
+            } else {
+                console.log(resp);
+                execShowAlert({ type: 'danger', title: 'ERROR', message: 'Ocurrio un error al agregarse los colegios.' })
+                
+            }
+            
         })
     }
     
@@ -94,9 +104,10 @@ function ModalEnlazarCliente({ show, handleClose ,idProyecto, idTipoCliente}) {
         }).catch((error)=>{
             if (error?.response.status === 401) {
                 logout()
+                execShowAlert({ type: 'danger', title: 'Sesión Expirada', message: 'La sesión expiro, vuelva a iniciar para continuar.' })
             } else {
                 console.log(error);
-                alert('Error al solicitar información');
+                
             }
         })
         

@@ -10,7 +10,7 @@ export default function ModalNumeroFamiliaColegio({show,handleClose,idEstudio,cl
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const { logout } = useContext(AuthContext);
+    const { logout, execShowAlert } = useContext(AuthContext);
 
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({ clave_familia_colegio:  '' })
@@ -19,10 +19,12 @@ export default function ModalNumeroFamiliaColegio({show,handleClose,idEstudio,cl
     const postClaveFamiliaEstudio = () =>{
         axios.post(`${APIURL}/estudio/${idEstudio}/no-familia-colegio`,formData,config).then((resp)=>{
             handleClose()
+            execShowAlert({ type: 'success', title: 'Referencia Asignada', message: resp.data.message })
         }).catch((resp)=>{
             if (resp?.status && resp.status === 401) {
                 logout()
             }
+            execShowAlert({ type: 'danger', title: 'Porcentaje Otorgado', message: 'Error al asignar Referencia.' })
         })
     }
     

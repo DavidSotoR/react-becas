@@ -12,7 +12,7 @@ export default function ModalPorcentajeOtorgado({ show, handleClose, idEstudio, 
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const { logout } = useContext(AuthContext);
+    const { logout, execShowAlert } = useContext(AuthContext);
 
     const animatedComponents = makeAnimated;
 
@@ -35,7 +35,6 @@ export default function ModalPorcentajeOtorgado({ show, handleClose, idEstudio, 
     
     const getListaRangoPordentaje = () =>{
         axios.get(`${APIURL}/estudio/${idEstudio}/rangos`,config).then((resp)=>{
-            console.log("rangoPordentaje",resp.data)
             renderOpcionesRangoPordentaje(resp.data)
         }).catch((resp)=>{
             if (resp.response.status === 401) {
@@ -46,11 +45,31 @@ export default function ModalPorcentajeOtorgado({ show, handleClose, idEstudio, 
 
     const postPuntosEstudio = () =>{
         axios.post(`${APIURL}/estudio/${idEstudio}/porcentaje${idEstudioHijo !== null ? '?id_hijo='+idEstudioHijo : ''}`,formData,config).then((resp)=>{
+            console.log(resp);
+            
             handleClose()
+            execShowAlert({
+                type: "success",
+                title: "Porcentaje Otorgado",
+                message: 'Elemento Actualizado',
+            });
         }).catch((resp)=>{
             if (resp.status === 401) {
                 logout()
+                execShowAlert({
+                    type: "success",
+                    title: "Sesion Expirada",
+                    message:"Su sesión a expirado. Vuelva a iniciar sesión para continuar.",
+                });
+            } else {
+                execShowAlert({
+                    type: "success",
+                    title: "Porcentaje No Otorgado",
+                    message:
+                        "Error al asignar Porcentaje a Familia",
+                });
             }
+            
         })
     }
     
@@ -100,11 +119,11 @@ export default function ModalPorcentajeOtorgado({ show, handleClose, idEstudio, 
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Pordentaje otorgado {idEstudioHijo}</Modal.Title>
+                <Modal.Title>Porcentaje otorgado {idEstudioHijo}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="mb-2">
-                    <label htmlFor="tipo-pregunta" className="form-label">Pordenraje de Beca: {formData.porcentaje_otorgado}%</label>
+                    <label htmlFor="tipo-pregunta" className="form-label">Porcentaje de Beca: {formData.porcentaje_otorgado}%</label>
                     <Select 
                         options={ rangoPordentaje }
                         onChange={(e)=>handlerChangeSelect(e)}
