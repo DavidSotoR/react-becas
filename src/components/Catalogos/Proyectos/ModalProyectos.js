@@ -92,7 +92,8 @@ function ModalProyectos({ show, handleClose,idTipoCliente,TipoCliente  }) {
 
                 <div className="mb-3">
                     <label> Año: </label>
-                    <input className="form-control" name="anio" type="date" onChange={(e) => {formInputChange(e)}}/>
+                    {/* <input className="form-control" name="anio" type="date" onChange={(e) => {formInputChange(e)}}/> */}
+                    <input className="form-control" name="anio" type="number" min="2010" max="2099" onChange={(e) => {formInputChange(e)}}/>
                 </div>
                 
                 <div className="form-check form-switch">

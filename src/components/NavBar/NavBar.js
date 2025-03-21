@@ -62,6 +62,12 @@ function Navbar() {
                   </ul>
                 </li>
                 }
+                { roleSession === 'Empresas' &&
+                <li className="nav-item">
+                  <Link className="nav-link active" aria-current="page" to="/configuracion">Configuracion</Link>
+                </li>
+
+                }
                 
             </ul>
             <div>

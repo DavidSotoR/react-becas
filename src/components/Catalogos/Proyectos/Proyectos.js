@@ -23,7 +23,7 @@ function Proyectos() {
   const [showAlertError, setShowAlertError] = useState(false);
   const [listaErrores, setListaErrores] = useState({});
   
-
+  const [anioDefault, setAnioDefault] = useState(new Date().getFullYear());
   const [activos, setActivos] = useState("all");
   const [tipoCliente, setTipoCliente] = useState("Escuelas");
   const [idTipoCliente, setIdTipoCliente] = useState(1);
@@ -372,6 +372,17 @@ function Proyectos() {
                   Año:
                 </label>
                 <input
+                  type="number"
+                  class="form-control"
+                  name="anio"
+                  id="anio"
+                  placeholder="Año"
+                  min="2010"
+                  max="2099"
+                  value={anioDefault} 
+                  onChange={ (e) => { editarDatosProyecto(e) } }
+                />
+                {/* <input
                   type="date"
                   class="form-control"
                   name="anio"
@@ -379,7 +390,7 @@ function Proyectos() {
                   placeholder="Año"
                   value={proyectoToEdit.anio}
                   onChange={ (e) => { editarDatosProyecto(e) } }
-                />
+                /> */}
               </div>
               <p className="mb-1 fw-bold">Estatus:</p>
               <div className="mb-3">

@@ -7,6 +7,8 @@ import PathConstants from "../../../routes/pathsConstants";
 import ReactQuill from 'react-quill';
 import { PDFDownloadLink, PDFViewer, usePDF } from "@react-pdf/renderer";
 import DocumentWord from "./Document";
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 //import 'react-quill/dist/quill.snow.css';
 
 function PageNuevoCliente() {    
@@ -774,122 +776,277 @@ function PageNuevoCliente() {
 
     return (
         <div className="container">
-            <p><Link className="btn btn-primary btn-sm" to={PathConstants.CLIENTES}> Regresar a Catalogo Clientes</Link></p>
+            <p><Link className="btn btn-info btn-sm text-white fw-bold" to={PathConstants.CLIENTES}>
+            <i className="bi bi-arrow-left me-2"></i>
+            Regresar</Link></p>
             <p className="fw-bold title-forms">CREAR CLIENTE</p>
-            <p className="fw-bold">DATOS DEL CLIENTE:</p>
-            <div className="row">
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Tipo Cliente</label>
-                        <Form.Select aria-label="Default select example" name="id_tipo_cliente" onChange={(e)=> {formInputChange(e);}}>
-                            <option value="null">Seleccione una Opción</option>
-                            <option value="1">Escuela</option>
-                            <option value="2">Empresa</option>
-                        </Form.Select>
-                        { contieneErrorInput(1) && <span className="error-msg"> {obtenerErrorMensaje(1)} </span> }
-                    </div>
-                </div>
-                <div className="col-3 d-flex align-items-center">
-                    <div className="mb-3 d-grid">
-                        <Form.Check className="p-0">
-                            <Form.Check.Label >Es Colegio Comun</Form.Check.Label>
-                            <br></br>
-                            <div className="mt-2 d-flex justify-content-center align-items-center">
-                            <Form.Check.Input type='checkbox' name="es_colegio_comun" value="1" checked={esColegioComun} onChange={(e)=> selectEsColegioComun(e)}/>
-                            </div>
-                        </Form.Check>
-                    </div>
-                </div>
-                {(formData.id_tipo_cliente === "1" && esColegioComun === true )&& (
-                <div className="col-5">
-                    <div className="mb-3" >
-                        <label className="fw-bold">Colegios hermanos</label>
-                        <Form.Select name="id_clientes_hermanos" id="id_clientes_hermanos" onChange={(e)=> formInputChange(e)}>
-                            {renderOptionsColegiosComunes()}
-                        </Form.Select>
-                    </div>
-                </div>
-                )}
-                
-            </div>            
-            <div className="row">
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Nombre</label>
-                        <input type="text" className="form-control form-control-sm" name="nombre" onChange={(e)=> formInputChange(e)}/>
-                          { contieneErrorInput(3) && <span className="error-msg"> {obtenerErrorMensaje(3)} </span> }
-                    </div>
-                </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Descripción</label>
-                        <input type="text" className="form-control form-control-sm" name="descripcion" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(4) && <span className="error-msg"> {obtenerErrorMensaje(4)} </span> }
-                    </div>
-                </div>
-                
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Notificaciones Email</label>
-                        <input type="email" className="form-control form-control-sm" name="notificaciones_email" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(5) && <span className="error-msg"> {obtenerErrorMensaje(5)} </span> }
-                    </div>
-                </div>
-                
-                  
-            </div>
-            <div className="row">
-                <div className="col-12 pt-3">
-                    <p className="fw-bold pb-1 mb-1"> Seleccione el tipo de persona fiscal al que pertenece: </p>
-                    <div className="d-flex pb-3">
-                        <Form.Check className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
-                        <Form.Check type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
-                    </div>
-                    
-                </div>
-                
-                { tipoPersona !== '' &&
-                    <>
-                    <div className="col-5">
-                        <label className="fw-bold">RFC</label>
-                        <input type="text" className="form-control form-control-sm" name="rfc" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(20) && <span className="error-msg"> {obtenerErrorMensaje(20)} </span> }
-                    </div>
-                    <div className="col-5">
-                        <div className="mb-3">
-                            <label className="fw-bold">RSO</label>
-                            <input type="text" className="form-control form-control-sm" name="rso" onChange={(e)=> formInputChange(e)}/>
-                            { contieneErrorInput(6) && <span className="error-msg"> {obtenerErrorMensaje(6)} </span> }
-                        </div>
-                    </div>
-                    <div className="col-5">
-                        <div className="mb-3">
-                            <label className="fw-bold">Razón Social</label>
-                            <input type="text" className="form-control form-control-sm" name="rason_social" onChange={(e)=> formInputChange(e)}/>
-                            { contieneErrorInput(7) && <span className="error-msg"> {obtenerErrorMensaje(7)} </span> }
-                        </div>
-                    </div>
-                    <div className="col-5 pt-4">
-                        <Form.Check className="mx-2 pt-2" type="switch">
-                            <Form.Check.Input name="requiere_facturar" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
-                            <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere facturar </span></Form.Check.Label>
-                        </Form.Check>
-                    </div>
-                    </>
-                }
-                
-                <div className="col-12 mt-2">
+            <Tabs
+            defaultActiveKey="datos"
+            id="uncontrolled-tab-example"
+            className="mb-3"
+            >
+                <Tab eventKey="datos" title="DATOS CLIENTE">
+                    <p className="fw-bold">DATOS DEL CLIENTE:</p>
                     <div className="row">
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Tipo Cliente</label>
+                                <Form.Select aria-label="Default select example" name="id_tipo_cliente" onChange={(e)=> {formInputChange(e);}}>
+                                    <option value="null">Seleccione una Opción</option>
+                                    <option value="1">Escuela</option>
+                                    <option value="2">Empresa</option>
+                                </Form.Select>
+                                { contieneErrorInput(1) && <span className="error-msg"> {obtenerErrorMensaje(1)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-5 col-md-3 d-flex align-items-center justify-content-center">
+                            <div className="mb-3 d-grid">
+                                <Form.Check className="p-0">
+                                    <Form.Check.Label >Es Colegio Comun</Form.Check.Label>
+                                    <br></br>
+                                    <div className="mt-2 d-flex justify-content-center align-items-center">
+                                    <Form.Check.Input type='checkbox' name="es_colegio_comun" value="1" checked={esColegioComun} onChange={(e)=> selectEsColegioComun(e)}/>
+                                    </div>
+                                </Form.Check>
+                            </div>
+                        </div>
+                        {(formData.id_tipo_cliente === "1" && esColegioComun === true )&& (
+                        <div className="col-5">
+                            <div className="mb-3" >
+                                <label className="fw-bold">Colegios hermanos</label>
+                                <Form.Select name="id_clientes_hermanos" id="id_clientes_hermanos" onChange={(e)=> formInputChange(e)}>
+                                    {renderOptionsColegiosComunes()}
+                                </Form.Select>
+                            </div>
+                        </div>
+                        )}
+                        
+                    </div>            
+                    <div className="row">
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Nombre</label>
+                                <input type="text" className="form-control form-control-sm" name="nombre" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(3) && <span className="error-msg"> {obtenerErrorMensaje(3)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Descripción</label>
+                                <input type="text" className="form-control form-control-sm" name="descripcion" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(4) && <span className="error-msg"> {obtenerErrorMensaje(4)} </span> }
+                            </div>
+                        </div>
+                        
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Notificaciones Email</label>
+                                <input type="email" className="form-control form-control-sm" name="notificaciones_email" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(5) && <span className="error-msg"> {obtenerErrorMensaje(5)} </span> }
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                    <div className="row">
+                        <div className="col-12 pt-3">
+                            <p className="fw-bold pb-1 mb-1"> Seleccione el tipo de persona fiscal al que pertenece: </p>
+                            <div className="d-flex pb-3">
+                                <Form.Check className="me-5" type="radio" id="persona_fisica" name="tipo_persona" label="Persona Fisica" value="fisica" onChange={(e)=> formInputChange(e)}/>
+                                <Form.Check type="radio" id="persona_moral" name="tipo_persona" label="Persona Moral" value="moral" onChange={(e)=> formInputChange(e)}/>
+                            </div>
+                            
+                        </div>
+                        
+                        { tipoPersona !== '' &&
+                            <>
+                            <div className="col-5">
+                                <label className="fw-bold">RFC</label>
+                                <input type="text" className="form-control form-control-sm" name="rfc" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(20) && <span className="error-msg"> {obtenerErrorMensaje(20)} </span> }
+                            </div>
+                            <div className="col-5">
+                                <div className="mb-3">
+                                    <label className="fw-bold">RSO</label>
+                                    <input type="text" className="form-control form-control-sm" name="rso" onChange={(e)=> formInputChange(e)}/>
+                                    { contieneErrorInput(6) && <span className="error-msg"> {obtenerErrorMensaje(6)} </span> }
+                                </div>
+                            </div>
+                            <div className="col-5">
+                                <div className="mb-3">
+                                    <label className="fw-bold">Razón Social</label>
+                                    <input type="text" className="form-control form-control-sm" name="rason_social" onChange={(e)=> formInputChange(e)}/>
+                                    { contieneErrorInput(7) && <span className="error-msg"> {obtenerErrorMensaje(7)} </span> }
+                                </div>
+                            </div>
+                            
+                            </>
+                        }
+                        
+                        <div className="col-12 mt-2">
+                            <div className="row">
+                                <div className="col-4">
+                                    <div className="mb-3">
+                                        <label className="fw-bold">Encuesta a aplicar:</label>
+                                        <Form.Select aria-label="Default select example" name="id_catalogo_encuesta" onChange={(e)=> {formInputChange(e);}}>
+                                            { renderOptionsEncuestas }
+                                        </Form.Select>
+                                        { contieneErrorInput(21) && <span className="error-msg"> {obtenerErrorMensaje(21)} </span> }
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div> 
+                    
+                            
+                    </div>
+                    <hr></hr>
+                    <div className="row">
+                        <div className="12">
+                            <p className="fw-bold">Imagen para Logo de Cliente</p>
+                        </div>
+                        <div className="col-5">
+                            <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
+                        </div>
+                        {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
+                    {/*  <div className="col d-flex justify-content-center align-items-center">
+                            <div className="d-flex align-items-center justify-content-center" style={{ background: 'black', width:'250px', height: '250px' }}>
+                                <p className="m-0 text-white">SIN IMAGEN</p>
+                            </div>
+                        </div> */}
+
+                    </div>
+
+                    <hr></hr>
+                        <div id="editor">
+                            <p className="fw-bold">Terminos de encuesta</p>
+                            <ReactQuill
+                            value={content}
+                            onChange={handleChange}
+                            modules={modules} // Personalizamos la barra de herramientas
+                            theme="snow"
+                            />
+                            
+                            {/* <div style={{ marginTop: '20px' }}>
+                                <h3>Contenido actual:</h3>
+                                <div className="ql-editor" dangerouslySetInnerHTML={{ __html: content }} />
+                            </div> */}
+                        </div>
+                    <hr></hr>
+
+                    <div className="row mb-3">
+                        <div className="col-12">
+                            <p className="fw-bold"> CONTACTO: </p>  
+                        </div>
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Nombre 1</label>
+                                <input type="text" className="form-control form-control-sm" name="nombre_uno" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(8) && <span className="error-msg"> {obtenerErrorMensaje(8)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Teléfono 1</label>
+                                <input type="text" className="form-control form-control-sm" name="telefono_uno" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(9) && <span className="error-msg"> {obtenerErrorMensaje(9)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Nombre 2</label>
+                                <input type="text" className="form-control form-control-sm" name="nombre_dos" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(10) && <span className="error-msg"> {obtenerErrorMensaje(10)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Teléfono 2</label>
+                                <input type="text" className="form-control form-control-sm" name="telefono_dos" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(11) && <span className="error-msg"> {obtenerErrorMensaje(11)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Teléfono Móvil</label>
+                                <input type="text" className="form-control form-control-sm" name="telefono_mobil" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(12) && <span className="error-msg"> {obtenerErrorMensaje(12)} </span> }
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr></hr>
+                    
+                    <div className="row mb-3">
+                        <div className="col-12">
+                            <p className="fw-bold"> DIRECCIÓN: </p>  
+                        </div>
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Calle</label>
+                                <input type="text" className="form-control form-control-sm" name="calle" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(13) && <span className="error-msg"> {obtenerErrorMensaje(13)} </span> }
+                            </div>  
+                        </div>
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Entre Calles</label>
+                                <input type="text" className="form-control form-control-sm" name="entre_cale" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(14) && <span className="error-msg"> {obtenerErrorMensaje(14)} </span> }
+                            </div>  
+                        </div>
+                        <div className="col-5">
+                            <div className="mb-3">
+                                <label className="fw-bold">Colonia</label>
+                                <input type="text" className="form-control form-control-sm" name="colonia" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(15) && <span className="error-msg"> {obtenerErrorMensaje(15)} </span> }
+                            </div> 
+                        </div>
                         <div className="col-4">
                             <div className="mb-3">
-                                <label className="fw-bold">Encuesta a aplicar:</label>
-                                <Form.Select aria-label="Default select example" name="id_catalogo_encuesta" onChange={(e)=> {formInputChange(e);}}>
-                                    { renderOptionsEncuestas }
-                                </Form.Select>
-                                { contieneErrorInput(21) && <span className="error-msg"> {obtenerErrorMensaje(21)} </span> }
+                                <label className="fw-bold">Codigo Postal</label>
+                                <input type="text" className="form-control form-control-sm" name="codigo_postal" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(16) && <span className="error-msg"> {obtenerErrorMensaje(16)} </span> }
                             </div>
                         </div>
-                        <div className="col-3 mt-4">
+                        <div className="col-4">
+                            <div className="mb-3">
+                                <label className="fw-bold">Ciudad</label>
+                                <input type="text" className="form-control form-control-sm" name="ciudad" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(17) && <span className="error-msg"> {obtenerErrorMensaje(17)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-4">
+                            <div className="mb-3">
+                                <label className="fw-bold">Estado</label>
+                                <input type="text" className="form-control form-control-sm" name="estado" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(18) && <span className="error-msg"> {obtenerErrorMensaje(18)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-4">
+                            <div className="mb-3">
+                                <label className="fw-bold">Pais</label>
+                                <input type="text" className="form-control form-control-sm" name="pais" onChange={(e)=> formInputChange(e)}/>
+                                { contieneErrorInput(19) && <span className="error-msg"> {obtenerErrorMensaje(19)} </span> }
+                            </div>
+                        </div>
+                        <div className="col-12 mt-3 d-flex justify-content-center align-items-center">
+                            <div className="mb-3 d-flex">
+                            <Link className="btn btn-secondary mx-2" to={PathConstants.CLIENTES}>REGRESAR</Link>
+                                <button onClick={ sendDataClienteNuevo } className="btn btn-primary mx-2" disabled={ formValid }>GUARDAR DATOS</button>
+                            </div>
+                        </div>
+                    </div>
+                </Tab>
+                <Tab eventKey="configuracion" title="CONFIGURACION">
+                    <div className="row">
+                        <div className="col-8 col-md-3 pt-4">
+                            <Form.Check className="mx-2 pt-2" type="switch">
+                                <Form.Check.Input name="requiere_facturar" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Requiere Facturar </span></Form.Check.Label>
+                            </Form.Check>
+                        </div>
+                        <div className="col-8 col-md-3 mt-4">
                             <div className="d-flex">
                                 <Form.Check type="switch" className="mx-2 pt-2">
                                     <Form.Check.Input name="documentacion_digital" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
@@ -898,7 +1055,7 @@ function PageNuevoCliente() {
                             </div>
                             
                         </div>
-                        <div className="col-3 mt-4">
+                        <div className="col-8 col-md-3 mt-4">
                             <div className="d-flex">
                                 <Form.Check className="mx-2 pt-2" type="switch">
                                     <Form.Check.Input name="habilitar_resumen" checked={formData.habilitar_resumen ?? false} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
@@ -908,148 +1065,22 @@ function PageNuevoCliente() {
                             </div>
                             
                         </div>
+                        <div className="col-8 col-md-3 mt-3">
+                            <div className="d-flex">
+                                <Form.Check className="mx-2" type="switch">
+                                    <Form.Check.Input name="habilitar_alta_link"  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
+                                </Form.Check>
+                                                                
+                            </div>
+                            
+                        </div>
                     </div>
-                </div> 
-            
                     
-            </div>
-            <hr></hr>
-            <div className="row">
-                <div className="12">
-                    <p className="fw-bold">Imagen para Logo de Cliente</p>
-                </div>
-                <div className="col-5">
-                    <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
-                </div>
-                {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
-               {/*  <div className="col d-flex justify-content-center align-items-center">
-                    <div className="d-flex align-items-center justify-content-center" style={{ background: 'black', width:'250px', height: '250px' }}>
-                        <p className="m-0 text-white">SIN IMAGEN</p>
-                    </div>
-                </div> */}
+                </Tab>
 
-            </div>
-
-            <hr></hr>
-                <div id="editor">
-                    <p className="fw-bold">Terminos de encuesta</p>
-                    <ReactQuill
-                    value={content}
-                    onChange={handleChange}
-                    modules={modules} // Personalizamos la barra de herramientas
-                    theme="snow"
-                    />
-                    
-                    {/* <div style={{ marginTop: '20px' }}>
-                        <h3>Contenido actual:</h3>
-                        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: content }} />
-                    </div> */}
-                </div>
-            <hr></hr>
-
-            <div className="row mb-3">
-                <div className="col-12">
-                    <p className="fw-bold"> CONTACTO: </p>  
-                </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Nombre 1</label>
-                        <input type="text" className="form-control form-control-sm" name="nombre_uno" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(8) && <span className="error-msg"> {obtenerErrorMensaje(8)} </span> }
-                    </div>
-                </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Teléfono 1</label>
-                        <input type="text" className="form-control form-control-sm" name="telefono_uno" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(9) && <span className="error-msg"> {obtenerErrorMensaje(9)} </span> }
-                    </div>
-                </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Nombre 2</label>
-                        <input type="text" className="form-control form-control-sm" name="nombre_dos" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(10) && <span className="error-msg"> {obtenerErrorMensaje(10)} </span> }
-                    </div>
-                </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Teléfono 2</label>
-                        <input type="text" className="form-control form-control-sm" name="telefono_dos" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(11) && <span className="error-msg"> {obtenerErrorMensaje(11)} </span> }
-                    </div>
-                </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Teléfono Móvil</label>
-                        <input type="text" className="form-control form-control-sm" name="telefono_mobil" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(12) && <span className="error-msg"> {obtenerErrorMensaje(12)} </span> }
-                    </div>
-                </div>
-            </div>
-
-            <hr></hr>
+            </Tabs>
             
-            <div className="row mb-3">
-                <div className="col-12">
-                    <p className="fw-bold"> DIRECCIÓN: </p>  
-                </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Calle</label>
-                        <input type="text" className="form-control form-control-sm" name="calle" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(13) && <span className="error-msg"> {obtenerErrorMensaje(13)} </span> }
-                    </div>  
-                </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Entre Calles</label>
-                        <input type="text" className="form-control form-control-sm" name="entre_cale" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(14) && <span className="error-msg"> {obtenerErrorMensaje(14)} </span> }
-                    </div>  
-                </div>
-                <div className="col-5">
-                    <div className="mb-3">
-                        <label className="fw-bold">Colonia</label>
-                        <input type="text" className="form-control form-control-sm" name="colonia" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(15) && <span className="error-msg"> {obtenerErrorMensaje(15)} </span> }
-                    </div> 
-                </div>
-                <div className="col-4">
-                    <div className="mb-3">
-                        <label className="fw-bold">Codigo Postal</label>
-                        <input type="text" className="form-control form-control-sm" name="codigo_postal" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(16) && <span className="error-msg"> {obtenerErrorMensaje(16)} </span> }
-                    </div>
-                </div>
-                <div className="col-4">
-                    <div className="mb-3">
-                        <label className="fw-bold">Ciudad</label>
-                        <input type="text" className="form-control form-control-sm" name="ciudad" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(17) && <span className="error-msg"> {obtenerErrorMensaje(17)} </span> }
-                    </div>
-                </div>
-                <div className="col-4">
-                    <div className="mb-3">
-                        <label className="fw-bold">Estado</label>
-                        <input type="text" className="form-control form-control-sm" name="estado" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(18) && <span className="error-msg"> {obtenerErrorMensaje(18)} </span> }
-                    </div>
-                </div>
-                <div className="col-4">
-                    <div className="mb-3">
-                        <label className="fw-bold">Pais</label>
-                        <input type="text" className="form-control form-control-sm" name="pais" onChange={(e)=> formInputChange(e)}/>
-                        { contieneErrorInput(19) && <span className="error-msg"> {obtenerErrorMensaje(19)} </span> }
-                    </div>
-                </div>
-                <div className="col-12 mt-3 d-flex justify-content-center align-items-center">
-                    <div className="mb-3 d-flex">
-                    <Link className="btn btn-secondary mx-2" to={PathConstants.CLIENTES}>REGRESAR</Link>
-                        <button onClick={ sendDataClienteNuevo } className="btn btn-primary mx-2" disabled={ formValid }>GUARDAR DATOS</button>
-                    </div>
-                </div>
-            </div>
 
             <Alert show={showAlert} onClose={()=>{ setShowAlert(false) }} variant="success" className="alert-flotante" dismissible>
                 <Alert.Heading>Success</Alert.Heading>

@@ -315,6 +315,18 @@ export default function Layout() {
                   </>
                 )}
 
+                { roleSession === 'Empresas' && (
+                  <MenuItem component={<Link to={PathConstants.ESTUDIOS} />}>
+                    {collapsed ? (
+                      <div className="ion-text-center">
+                        <ion-icon name="settings-outline" size="large"></ion-icon>
+                      </div>
+                    ) : (
+                      <p>CONFIGURACIÓN</p>
+                    )}
+                  </MenuItem>
+                ) }
+
                 <MenuItem onClick={Logout} className="ps-1">
                   {collapsed ? (
                     <ion-icon name="log-out" size="large" />
@@ -332,11 +344,12 @@ export default function Layout() {
           >
             { isLoggedIn && (
               <div className="d-flex justify-content-end">
-                <div>
+                <div className="d-flex align-items-center">
                   <Avatar name={localStorage.getItem('name')} size="30" round={true} />
                 </div>
                 <div className="ps-1 align-self-center">
-                  <span className="fw-bold">{localStorage.getItem('name') ?? 'SIN DATO'}</span>
+                  {/* <p className="fw-bold m-0">{localStorage.getItem('name') ?? 'SIN DATO'}</p> */}
+                  <p className="fw-bold m-0">{localStorage.getItem('user') ?? 'SIN DATO'}</p>
                 </div>
               </div>
             )
