@@ -316,7 +316,7 @@ export default function Layout() {
                 )}
 
                 { roleSession === 'Empresas' && (
-                  <MenuItem component={<Link to={PathConstants.ESTUDIOS} />}>
+                  <MenuItem component={<Link to={PathConstants.CONFIGURACIONES} />}>
                     {collapsed ? (
                       <div className="ion-text-center">
                         <ion-icon name="settings-outline" size="large"></ion-icon>

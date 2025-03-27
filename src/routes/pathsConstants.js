@@ -36,6 +36,7 @@ const PathConstants = {
     ESTUDIOSID: '/estudios/:idEstudio',
     ESTUDIO_SOCIOECONOMICO_ID: '/estudio-socioeconomico/:idEstudio',
     ENCUESTAPROYECTOID: '/encuesta/proyecto/:idProyecto',
+    CONFIGURACIONES: '/configuraciones',
     
 }
 

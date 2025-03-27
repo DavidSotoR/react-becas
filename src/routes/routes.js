@@ -40,6 +40,7 @@ const EstudioSocioeconomicoID = React.lazy(() => import('../components/Estudios/
 const EstudioSocioeconomicoIDFamilia = React.lazy(() => import('../components/Catalogos/ServicioEstudio/EditarFamiliaEstudioSocioeconomico'))
 const EncuestaProyectoID = React.lazy(() => import('../components/HomePageEmpresa/Proyecto/Proyecto'))
 const EmpresaEstudio = React.lazy(() => import('../components/HomeCom/Estudio'))
+const EmpresaConfig = React.lazy(() => import('../components/HomePageEmpresa/Configuraciones/ConfiguracionPage'))
 
 const OrdenesServicio = React.lazy(()=> import('../components/Catalogos/OrdenesServicios/OrdenesServicios'))
 //const Details = React.lazy(() => import("../pages/details/details"))
@@ -106,18 +107,21 @@ const PrivateRoute = ({ path, element }) => {
       PathConstants.ESTUDIOID,
       PathConstants.ESTUDIOSID,
       PathConstants.ESTUDIO_SOCIOECONOMICO_ID,
-      PathConstants.ENCUESTAPROYECTOID
+      PathConstants.ENCUESTAPROYECTOID,
+      PathConstants.CONFIGURACIONES,
       // Agrega más rutas aquí
     ],
     Empresas: [
       PathConstants.HOME,
       PathConstants.ENCUESTAPROYECTOID,
       PathConstants.ESTUDIOSID,
+      PathConstants.CONFIGURACIONES,
     ],
     Familias: [
       PathConstants.HOME,
       PathConstants.FAMILIASFILES,
       PathConstants.DATOSFAMILIA,
+      PathConstants.CONFIGURACIONES,
     ],
   };
 
@@ -150,6 +154,7 @@ const routes = [
   generateRoute(PathConstants.ESTUDIOS, <Estudios />),
   generateRoute(PathConstants.ENCUESTAPROYECTOID, <EncuestaProyectoID />),
   generateRoute(PathConstants.ESTUDIOID, <Estudio />),
+  generateRoute(PathConstants.CONFIGURACIONES, <EmpresaConfig />, 'Empresas'),
   generateRoute(PathConstants.ESTUDIO_SOCIOECONOMICO_ID, <EstudioSocioeconomicoID />),
   generateRoute(PathConstants.ORDENESSERVICIOS, <OrdenesServicio />, 'Administrador'),
   generateRoute(PathConstants.USUARIOS, <CatUsuarios />, 'Administrador'),
