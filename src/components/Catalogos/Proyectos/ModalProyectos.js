@@ -69,7 +69,15 @@ function ModalProyectos({ show, handleClose,idTipoCliente,TipoCliente  }) {
                 if (resp.status === 401) {
                     logout()
                 } else {
-                    execShowAlert({type:'warning', title: 'Error Servidor', message: 'Ocurrio un error del lado del Servidor.'})
+                    console.log(resp);
+                    if(resp.response.data.errors.anio_proyecto){
+                        execShowAlert({ type: 'danger', title:'Error al Actualizar', message: resp.response.data.errors.anio_proyecto[0] })
+                    } else if(resp.response.data.errors.nombre) {
+                        execShowAlert({ type: 'danger', title:'Error al Actualizar', message: resp.response.data.errors.nombre[0] })
+                    } else {
+                        execShowAlert({type:'danger', title: 'Error Servidor', message: 'Ocurrio un error del lado del Servidor.'})
+                    }
+                    
                 }
             })
         }
