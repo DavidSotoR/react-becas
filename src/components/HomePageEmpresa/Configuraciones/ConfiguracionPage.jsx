@@ -13,11 +13,25 @@ export default function ConfiguracionPage() {
     }
     const [roleSession, setRoleSession] = useState(localStorage.getItem('role') || '')
     const { logout } = useContext(AuthContext);
+    const [fileLogo, setFileLogo] = useState(null);
+    const [preview, setPreview] = useState(null);
 
     const formInputChange =(e) => {
         console.log(e.target.checked);
         
     }
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setFileLogo(file)
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+            setPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     return (
         <div className="container">
@@ -57,6 +71,26 @@ export default function ConfiguracionPage() {
                                                         
                     </div>
                     
+                </div>
+                <div className="col-12 mt-5">
+                    
+                <div className="row">
+                        <div className="12">
+                            <p className="fw-bold fs-6 mb-1">Imagen para Logo de Cliente</p>
+                        </div>
+                        <div className="col-12 d-flex mb-3">
+                            <Form.Check className="mx-2 pt-2" type="switch">
+                                <Form.Check.Input name="habilitar_alta_link"  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Imagen Logo en Reportes</span></Form.Check.Label>
+                            </Form.Check>
+                                                            
+                        </div>
+                        <div className="col-5">
+                            <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
+                        </div>
+                        {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
+
+                    </div>
                 </div>
             </div>
         </div>
