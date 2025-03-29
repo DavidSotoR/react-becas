@@ -11,7 +11,7 @@ import ResaltarTexto from "../../ResaltarTexto/ResaltarTexto";
 import { Link } from "react-router-dom";
 
 function Proyectos() {
-  const { logout } = useContext(AuthContext);
+  const { logout, execShowAlert } = useContext(AuthContext);
   const APIURL = process.env.REACT_APP_API_URL;
   const config = {
     headers: {
@@ -33,6 +33,8 @@ function Proyectos() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [search, setSearch] = useState("");
+
+  const [ showSpin, setShowSpin ] = useState(false);
 
   const [showActiveProyecto, setShowActiveProyecto] = useState(false);
   const handleCloseActiveProyecto = () => setShowActiveProyecto(false);
@@ -92,36 +94,54 @@ function Proyectos() {
   };
 
   const updateProyectoID = async () => {
+    const proyectoToEditSend = {
+      ...proyectoToEdit,
+      anio_proyecto: proyectoToEdit.anio_proyecto ? Number(proyectoToEdit.anio_proyecto) : null
+    };
+    setShowSpin(true)
     try {
       const resp = await axios.post(
         APIURL + `/proyectos/editar`,
-        proyectoToEdit,
+        proyectoToEditSend,
         config
       );
       getProyectosList()
-      setShowActiveProyecto(false)
-      setShowAlert(true)
-      console.log(resp);
+      //setShowActiveProyecto(false)
+      //setShowAlert(true)
+      execShowAlert({ type: 'success', title:'Proyecto Actualizado', message: 'Proyecto se atualizo correctamente.' })
+      setShowSpin(false)
+      handleCloseActiveProyecto()
     } catch (error) {
+      setShowSpin(false)
       if (error?.response.status === 401) {
         logout();
       } else {
-        setShowAlertError(true)
+        //setShowAlertError(true)
         //alert("Error al solicitar información");
+        if(error.response.data.anio_proyecto){
+          execShowAlert({ type: 'danger', title:'Error al Actualizar', message: error.response.data.anio_proyecto[0] })
+        } else {
+          execShowAlert({ type: 'danger', title:'Error al Actualizar', message: 'Proyecto NO SE atualizo correctamente.' })
+        }
+        
       }
     }
   };
 
   const borrarProyecto = async () => {
+    const proyectoToEditSend = {
+      ...proyectoToEdit,
+      anio_proyecto: proyectoToEdit.anio_proyecto ? Number(proyectoToEdit.anio_proyecto) : null
+    };
     try {
       const resp = await axios.put(
         APIURL + `/proyectos/borrar`,
-        proyectoToEdit,
+        proyectoToEditSend,
         config
       );
       getProyectosList()
       setShowEliminarProyecto(false)
-      setShowAlert(true)
+      //setShowAlert(true)
       console.log(resp);
     } catch (error) {
       if (error?.response.status === 401) {
@@ -129,7 +149,7 @@ function Proyectos() {
       } else {
         console.log(error);
         error?.response && setListaErrores(error.response.data);
-        setShowAlertError(true)
+        //setShowAlertError(true)
         console.log(error);
         //alert("Error al solicitar información");
       }
@@ -195,7 +215,7 @@ function Proyectos() {
         </td>
         <td>
           <p>
-            {obtenerAnio(proyecto.anio ?? '')}
+            {proyecto.anio_proyecto ?? 'SIN DATO'}
           </p>
         </td>
         <td className="ps-0">
@@ -374,12 +394,12 @@ function Proyectos() {
                 <input
                   type="number"
                   class="form-control"
-                  name="anio"
-                  id="anio"
+                  name="anio_proyecto"
+                  id="anio_proyecto"
                   placeholder="Año"
                   min="2010"
                   max="2099"
-                  value={anioDefault} 
+                  value={proyectoToEdit.anio_proyecto} 
                   onChange={ (e) => { editarDatosProyecto(e) } }
                 />
                 {/* <input
@@ -419,20 +439,31 @@ function Proyectos() {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <button
-            className="btn btn-secondary"
-            onClick={() => {
-              handleCloseActiveProyecto();
-            }}
-          >
-            Cancelar
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={() => updateProyectoID()}
-          >
-            Actualizar
-          </button>
+          { !showSpin ? 
+          ( <>
+              <button
+                className="btn btn-secondary"
+                onClick={() => {
+                  handleCloseActiveProyecto();
+                }}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => updateProyectoID()}
+              >
+                Actualizar
+              </button>
+          </> ) : (
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          )
+
+          }
+          
+          
         </Modal.Footer>
       </Modal>
 

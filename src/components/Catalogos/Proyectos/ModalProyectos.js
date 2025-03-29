@@ -10,7 +10,7 @@ function ModalProyectos({ show, handleClose,idTipoCliente,TipoCliente  }) {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
-    const { logout } = useContext(AuthContext);
+    const { logout, execShowAlert } = useContext(AuthContext);
     const [msgError, setMsgError] = useState('')
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
@@ -63,10 +63,13 @@ function ModalProyectos({ show, handleClose,idTipoCliente,TipoCliente  }) {
         if (formValid) {
             axios.post(APIURL+'/proyectos',formData,config).then((resp)=>{
                 console.log(resp);
+                execShowAlert({type: 'success', title: 'Proyecto Creado', message: 'El proyecto se creo correctamente.'})
                 handleClose()
             }).catch((resp)=>{
                 if (resp.status === 401) {
                     logout()
+                } else {
+                    execShowAlert({type:'warning', title: 'Error Servidor', message: 'Ocurrio un error del lado del Servidor.'})
                 }
             })
         }
@@ -93,7 +96,7 @@ function ModalProyectos({ show, handleClose,idTipoCliente,TipoCliente  }) {
                 <div className="mb-3">
                     <label> Año: </label>
                     {/* <input className="form-control" name="anio" type="date" onChange={(e) => {formInputChange(e)}}/> */}
-                    <input className="form-control" name="anio" type="number" min="2010" max="2099" onChange={(e) => {formInputChange(e)}}/>
+                    <input className="form-control" name="anio_proyecto" type="number" min="2010" max="2099" onChange={(e) => {formInputChange(e)}}/>
                 </div>
                 
                 <div className="form-check form-switch">
