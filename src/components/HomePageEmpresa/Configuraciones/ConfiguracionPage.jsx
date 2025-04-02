@@ -15,8 +15,16 @@ export default function ConfiguracionPage() {
     const { logout } = useContext(AuthContext);
     const [fileLogo, setFileLogo] = useState(null);
     const [preview, setPreview] = useState(null);
+    const [dataConfig, setDataConfig] = useState({
+        requiere_facturar: false,
+        documento_digital: false,
+        habilitar_resumen: false,
+        altas_familia_link: false,
+    })
 
     const formInputChange =(e) => {
+        var name = e.target.name;
+        console.log(name);
         console.log(e.target.checked);
         
     }
@@ -35,7 +43,7 @@ export default function ConfiguracionPage() {
 
     return (
         <div className="container">
-            <p className="fw-bold fs-6 mt-3" >Configuraciones de Cuenta</p>
+            <p className="fw-bold fs-5 mt-3" >Configuración de Cuenta</p>
             <div className="row">
                 <div className="col-8 col-md-5 pt-4">
                     <Form.Check className="mx-2 pt-2" type="switch">
@@ -65,7 +73,7 @@ export default function ConfiguracionPage() {
                 <div className="col-8 col-md-5 mt-4">
                     <div className="d-flex">
                         <Form.Check className="mx-2 pt-2" type="switch">
-                            <Form.Check.Input name="habilitar_alta_link"  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                            <Form.Check.Input name="habilitar_alta_link" onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                             <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
                         </Form.Check>
                                                         
@@ -91,6 +99,9 @@ export default function ConfiguracionPage() {
                         {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
 
                     </div>
+                </div>
+                <div className="d-flex justify-content-start mt-3 ms-1">
+                    <button className="btn btn-primary">Guardar</button>
                 </div>
             </div>
         </div>
