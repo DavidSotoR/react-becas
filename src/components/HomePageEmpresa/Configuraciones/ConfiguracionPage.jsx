@@ -8,24 +8,60 @@ export default function ConfiguracionPage() {
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
         headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
         }
     }
     const [roleSession, setRoleSession] = useState(localStorage.getItem('role') || '')
-    const { logout } = useContext(AuthContext);
+    const { logout, execShowAlert } = useContext(AuthContext);
     const [fileLogo, setFileLogo] = useState(null);
     const [preview, setPreview] = useState(null);
     const [dataConfig, setDataConfig] = useState({
         requiere_facturar: false,
-        documento_digital: false,
+        documentacion_digital: false,
         habilitar_resumen: false,
-        altas_familia_link: false,
+        habilitar_altas_familias: false,
+        habilitar_logo: false,
     })
 
     const formInputChange =(e) => {
         var name = e.target.name;
         console.log(name);
         console.log(e.target.checked);
+
+        setDataConfig(prevState => ({
+            ...prevState,
+            [name]: e.target.checked,
+        }));
+        
+    }
+
+    const updateDataConfiguracionCuenta = () => {
+        console.log(dataConfig);
+        const formData = new FormData();
+
+        Object.keys(dataConfig).forEach(key => {
+            formData.append(key, dataConfig[key]);
+        });
+        if (fileLogo) {
+            formData.append("logo", fileLogo);
+        }
+
+        axios.post(APIURL+'/clientes/configuraciones', formData ,config).then((resp)=>{
+            console.log(resp);
+            execShowAlert({ type: 'success', title: 'Cliente Actualizado', message: 'Datos del cliente actualizados.'})
+       
+        }).catch((resp)=>{
+            if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
+                console.log(resp.response.data);
+                execShowAlert({ type: 'danger', title: 'Error al actualizar', message: 'Revisar los datos ingresados.'})
+            }
+
+            if (resp.response.status === 401) {
+                logout()
+            }
+            console.log(resp);                                                                 
+        })
         
     }
 
@@ -73,7 +109,7 @@ export default function ConfiguracionPage() {
                 <div className="col-8 col-md-5 mt-4">
                     <div className="d-flex">
                         <Form.Check className="mx-2 pt-2" type="switch">
-                            <Form.Check.Input name="habilitar_alta_link" onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                            <Form.Check.Input name="habilitar_altas_familias" onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                             <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
                         </Form.Check>
                                                         
@@ -88,12 +124,12 @@ export default function ConfiguracionPage() {
                         </div>
                         <div className="col-12 d-flex mb-3">
                             <Form.Check className="mx-2 pt-2" type="switch">
-                                <Form.Check.Input name="habilitar_alta_link"  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                <Form.Check.Input name="habilitar_logo" onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                 <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Imagen Logo en Reportes</span></Form.Check.Label>
                             </Form.Check>
                                                             
                         </div>
-                        <div className="col-5">
+                        <div className="col-5" style={{ display: dataConfig.habilitar_logo ? 'block' : 'none' }}>
                             <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
                         </div>
                         {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
@@ -101,7 +137,7 @@ export default function ConfiguracionPage() {
                     </div>
                 </div>
                 <div className="d-flex justify-content-start mt-3 ms-1">
-                    <button className="btn btn-primary">Guardar</button>
+                    <button className="btn btn-primary" onClick={() => { updateDataConfiguracionCuenta() }}>Guardar</button>
                 </div>
             </div>
         </div>
