@@ -176,32 +176,45 @@ export default function ConfiguracionPage() {
                             <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
                         </div>
 
-                        {preview || dataCliente?.ubicacion_logo !== '' ? (
-                            preview ? (
-                                <div className="col-12 col-md-5">
+                        <div className="col-12 col-md-5">
+                            {dataCliente?.ubicacion_logo && dataCliente?.habilitar_alta_familias ? (
+                                !!preview ? (
                                     <img
-                                        src={ preview}
-                                        className="d-block w-100 h-50 rounded" style={{ maxWidth: "250px", maxHeight: "250px" }}
-                                        alt={'img-logo'}
+                                        src={preview}
+                                        className="d-block w-100 h-50 rounded"
+                                        style={{ maxWidth: "250px", maxHeight: "250px" }}
+                                        alt="img-logo"
                                     />
-                                </div>
+                                ) : (
+                                    <img
+                                        src={urlIMG + dataCliente.ubicacion_logo}
+                                        className="d-block w-100 h-50 rounded"
+                                        style={{ maxWidth: "250px", maxHeight: "250px" }}
+                                        alt="img-logo"
+                                    />
+                                )
+                            ) : !!preview ? (
+                                <img
+                                    src={preview}
+                                    className="d-block w-100 h-50 rounded"
+                                    style={{ maxWidth: "250px", maxHeight: "250px" }}
+                                    alt="img-logo"
+                                />
                             ) : (
-                                <div className="col-12 col-md-5">
-                                    <img
-                                        src={ urlIMG + dataCliente?.ubicacion_logo}
-                                        className="d-block w-100 h-50 rounded" style={{ maxWidth: "250px", maxHeight: "250px" }}
-                                        alt={'img-logo'}
-                                    />
+                                <div
+                                    className="d-flex justify-content-center align-items-center rounded"
+                                    style={{
+                                        background: 'black',
+                                        color: 'white',
+                                        width: '150px',
+                                        height: '150px',
+                                    }}
+                                >
+                                    <p className="m-0">SIN IMAGEN</p>
                                 </div>
-                            )
-                            
-                        ) : (
-                            <div className="d-flex justify-content-center align-items-center rounded" style={{background: 'black', color: 'white', width: '150px', height: '150px'}}>
-                                <p className="m-0">SIN IMAGEN</p>
-                            </div>
-                            
-                        )}
-                       {/*  {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />} */}
+                            )}
+                        </div>
+
 
                     </div>
                 </div>
