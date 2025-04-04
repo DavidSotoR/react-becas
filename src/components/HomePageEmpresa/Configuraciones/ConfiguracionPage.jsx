@@ -161,7 +161,7 @@ export default function ConfiguracionPage() {
                 </div>
                 <div className="col-12 mt-5">
                     
-                <div className="row">
+                    <div className="row">
                         <div className="12">
                             <p className="fw-bold fs-6 mb-1">Imagen para Logo de Cliente</p>
                         </div>
@@ -177,7 +177,7 @@ export default function ConfiguracionPage() {
                         </div>
 
                         <div className="col-12 col-md-5">
-                            {dataCliente?.ubicacion_logo && dataCliente?.habilitar_alta_familias ? (
+                            {dataCliente?.ubicacion_logo && dataCliente?.habilitar_logo ? (
                                 !!preview ? (
                                     <img
                                         src={preview}

@@ -74,6 +74,8 @@ function PageActualizarCliente() {
         documentacion_digital: false,
         requiere_facturar: false,
         habilitar_resumen: false,
+        habilitar_logo: false,
+        habilitar_alta_familias: false,
         ubicacion_logo: '',
         rso: '',
         nombre_uno: '',
@@ -145,6 +147,25 @@ function PageActualizarCliente() {
             }));
             return 0;
         }
+
+        if (name === 'habilitar_alta_familias') {            
+            var newValue = !formData.habilitar_alta_familias
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: newValue
+            }));
+            return 0;
+        }
+
+        if (name === 'habilitar_logo') {            
+            var newValue = !formData.habilitar_logo
+            setFormData(prevState => ({
+                ...prevState,
+                [name]: newValue
+            }));
+            return 0;
+        }
+
         setFormData(prevState => ({
             ...prevState,
             [name]: value
@@ -713,6 +734,8 @@ function PageActualizarCliente() {
             "documentacion_digital": formData.documentacion_digital ? 1 : 0,
             "habilitar_resumen": formData.habilitar_resumen ? 1 : 0,
             "requiere_facturar": formData.requiere_facturar ? 1 : 0,
+            "habilitar_alta_familias": formData.habilitar_alta_familias ? 1 : 0,
+            "habilitar_logo": formData.habilitar_logo ? 1 : 0, 
             'terminos': content,
         }
         
@@ -964,7 +987,7 @@ function PageActualizarCliente() {
                 
                         
                 </div>
-                <hr></hr>
+                {/* <hr></hr>
                 <div className="row">
                     <div className="12">
                         <p className="fw-bold">Imagen para Logo de Cliente</p>
@@ -988,7 +1011,7 @@ function PageActualizarCliente() {
                     )}
                     
 
-                </div>
+                </div> */}
 
                 <hr></hr>
                 <div id="editor">
@@ -1139,15 +1162,74 @@ function PageActualizarCliente() {
                             </div>
                             
                         </div>
-                        <div className="col-7 col-md-3 mt-3">
+                        <div className="col-8 col-md-5 mt-4">
                             <div className="d-flex">
-                                <Form.Check className="mx-2" type="switch">
-                                    <Form.Check.Input name="habilitar_alta_link"  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
-                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar altas Familias por Link </span></Form.Check.Label>
+                                <Form.Check className="mx-2 pt-2" type="switch">
+                                    <Form.Check.Input name="habilitar_alta_familias" checked={formData.habilitar_alta_familias} onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
                                 </Form.Check>
                                                                 
                             </div>
                             
+                        </div>
+                        <div className="col-12 mt-5">
+                            
+                            <div className="row">
+                                <div className="12">
+                                    <p className="fw-bold fs-6 mb-1">Imagen para Logo de Cliente</p>
+                                </div>
+                                <div className="col-12 d-flex mb-3">
+                                    <Form.Check className="mx-2 pt-2" type="switch">
+                                        <Form.Check.Input name="habilitar_logo" checked={formData.habilitar_logo} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                        <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Imagen Logo en Reportes</span></Form.Check.Label>
+                                    </Form.Check>
+                                                                    
+                                </div>
+                                <div className="col-12 col-md-5" style={{ display: formData.habilitar_logo ? 'block' : 'none' }}>
+                                    <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
+                                </div>
+
+                                <div className="col-12 col-md-5">
+                                    {formData?.ubicacion_logo && formData?.habilitar_logo ? (
+                                        !!preview ? (
+                                            <img
+                                                src={preview}
+                                                className="d-block w-100 h-50 rounded"
+                                                style={{ maxWidth: "250px", maxHeight: "250px" }}
+                                                alt="img-logo"
+                                            />
+                                        ) : (
+                                            <img
+                                                src={urlIMG + formData.ubicacion_logo}
+                                                className="d-block w-100 h-50 rounded"
+                                                style={{ maxWidth: "250px", maxHeight: "250px" }}
+                                                alt="img-logo"
+                                            />
+                                        )
+                                    ) : !!preview ? (
+                                        <img
+                                            src={preview}
+                                            className="d-block w-100 h-50 rounded"
+                                            style={{ maxWidth: "250px", maxHeight: "250px" }}
+                                            alt="img-logo"
+                                        />
+                                    ) : (
+                                        <div
+                                            className="d-flex justify-content-center align-items-center rounded"
+                                            style={{
+                                                background: 'black',
+                                                color: 'white',
+                                                width: '150px',
+                                                height: '150px',
+                                            }}
+                                        >
+                                            <p className="m-0">SIN IMAGEN</p>
+                                        </div>
+                                    )}
+                                </div>
+
+
+                            </div>
                         </div>
                     </div>
                 </Tab>

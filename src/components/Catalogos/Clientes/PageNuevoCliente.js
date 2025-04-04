@@ -77,6 +77,8 @@ function PageNuevoCliente() {
         documentacion_digital: false,
         requiere_facturar: false,
         habilitar_resumen: false,
+        habilitar_alta_familias: false,
+        habilitar_logo: false,
         rso: '',
         nombre_uno: '',
         telefono_uno: '',
@@ -629,6 +631,8 @@ function PageNuevoCliente() {
             "requiere_facturar": formData.requiere_facturar ? 1 : 0,
             "documentacion_digital": formData.documentacion_digital ? 1 : 0,
             "habilitar_resumen": formData.habilitar_resumen ? 1 : 0,
+            'habilitar_alta_familias': formData.habilitar_alta_familias ? 1 : 0,
+            'habilitar_logo': formData.habilitar_logo ? 1 : 0,
             "id_catalogo_encuesta": formData.id_catalogo_encuesta,
             "terminos": content,
         }
@@ -900,7 +904,7 @@ function PageNuevoCliente() {
                     
                             
                     </div>
-                    <hr></hr>
+                    {/* <hr></hr>
                     <div className="row">
                         <div className="12">
                             <p className="fw-bold">Imagen para Logo de Cliente</p>
@@ -909,13 +913,8 @@ function PageNuevoCliente() {
                             <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
                         </div>
                         {preview && <img src={preview} title="Vista previa" style={{ maxWidth: "250px", maxHeight: "250px" }} />}
-                    {/*  <div className="col d-flex justify-content-center align-items-center">
-                            <div className="d-flex align-items-center justify-content-center" style={{ background: 'black', width:'250px', height: '250px' }}>
-                                <p className="m-0 text-white">SIN IMAGEN</p>
-                            </div>
-                        </div> */}
 
-                    </div>
+                    </div> */}
 
                     <hr></hr>
                         <div id="editor">
@@ -1065,15 +1064,58 @@ function PageNuevoCliente() {
                             </div>
                             
                         </div>
-                        <div className="col-8 col-md-3 mt-3">
+                        <div className="col-8 col-md-5 mt-4">
                             <div className="d-flex">
-                                <Form.Check className="mx-2" type="switch">
-                                    <Form.Check.Input name="habilitar_alta_link"  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                <Form.Check className="mx-2 pt-2" type="switch">
+                                    <Form.Check.Input name="habilitar_alta_familias" checked={formData.habilitar_alta_familias} onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                     <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
                                 </Form.Check>
                                                                 
                             </div>
                             
+                        </div>
+                        <div className="col-12 mt-5">
+                            
+                            <div className="row">
+                                <div className="12">
+                                    <p className="fw-bold fs-6 mb-1">Imagen para Logo de Cliente</p>
+                                </div>
+                                <div className="col-12 d-flex mb-3">
+                                    <Form.Check className="mx-2 pt-2" type="switch">
+                                        <Form.Check.Input name="habilitar_logo" checked={formData.habilitar_logo} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                        <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Imagen Logo en Reportes</span></Form.Check.Label>
+                                    </Form.Check>
+                                                                    
+                                </div>
+                                <div className="col-12 col-md-5" style={{ display: formData.habilitar_logo ? 'block' : 'none' }}>
+                                    <input className="form-control" type="file" id="formFileLogo" accept="image/*" onChange={handleFileChange}/>
+                                </div>
+
+                                <div className="col-12 col-md-5">
+                                    { !!preview ? (
+                                        <img
+                                            src={preview}
+                                            className="d-block w-100 h-50 rounded"
+                                            style={{ maxWidth: "250px", maxHeight: "250px" }}
+                                            alt="img-logo"
+                                        />
+                                    ) : (
+                                        <div
+                                            className="d-flex justify-content-center align-items-center rounded"
+                                            style={{
+                                                background: 'black',
+                                                color: 'white',
+                                                width: '150px',
+                                                height: '150px',
+                                            }}
+                                        >
+                                            <p className="m-0">SIN IMAGEN</p>
+                                        </div>
+                                    )}
+                                </div>
+
+
+                            </div>
                         </div>
                     </div>
                     
