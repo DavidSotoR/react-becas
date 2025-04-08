@@ -134,6 +134,7 @@ function Proyectos() {
       anio_proyecto: proyectoToEdit.anio_proyecto ? Number(proyectoToEdit.anio_proyecto) : null
     };
     try {
+      setShowSpin(true)
       const resp = await axios.put(
         APIURL + `/proyectos/borrar`,
         proyectoToEditSend,
@@ -141,17 +142,16 @@ function Proyectos() {
       );
       getProyectosList()
       setShowEliminarProyecto(false)
+      setShowSpin(false)
       //setShowAlert(true)
       console.log(resp);
     } catch (error) {
+      setShowSpin(false)
       if (error?.response.status === 401) {
         logout();
       } else {
-        console.log(error);
         error?.response && setListaErrores(error.response.data);
-        //setShowAlertError(true)
         console.log(error);
-        //alert("Error al solicitar información");
       }
     }
   }
@@ -168,31 +168,6 @@ function Proyectos() {
     }
     
   };
-
-  useEffect(() => {
-    getTiposClientes();
-    getProyectosList();
-  }, []);
-
-  useEffect(() => {
-    getProyectosList();
-    setSearch("");
-  }, [activos, idTipoCliente]);
-
-  useEffect(() => {
-    if (!show) {
-      getProyectosList();
-    }
-  }, [show]);
-
-  useEffect(() => {
-    const tipoClienteObj = allTiposClientes.find(
-      (tc) => tc.id === idTipoCliente
-    );
-    if (tipoClienteObj) {
-      setTipoCliente(tipoClienteObj.nombre);
-    }
-  }, [idTipoCliente, allTiposClientes]);
 
   const allProyectosFiltrados = allProyectos.filter((item) =>
     item.nombre.toLowerCase().includes(search.toLowerCase())
@@ -220,29 +195,27 @@ function Proyectos() {
         </td>
         <td className="ps-0">
           <div className="d-flex justify-content-start">
-            <Link
-              className="btn"
-               title="Editar Datos"
-              onClick={() => openEditProyecto(proyecto, 'editar')}
-            >
-              <i className="bi bi-pencil-square"></i>
-            </Link>
-            <Link
-              className="btn"
-              to={`/proyectos/${proyecto.id}`}
-            >
-              <i class="bi bi-archive text-blue" title="Archivo Proyecto"></i>
-            </Link>
-            <Link
-              className="btn"
-              title="Eliminar Proyecto"
-              onClick={() => openEditProyecto(proyecto, 'eliminar')}
-            >
-              <i
-                className="bi bi-trash text-danger"
-                title="Archivo Proyecto"
-              ></i>
-            </Link>
+            
+            { proyecto.borrado ? (
+              <Link className="btn" title="Reintegrar Proyecto" onClick={() => openEditProyecto(proyecto, 'eliminar')}>
+                <i class="bi bi-plus-square text-success"></i>
+              </Link>
+            ) : (
+              <>
+                <Link className="btn" title="Editar Datos" onClick={() => openEditProyecto(proyecto, 'editar')}>
+                  <i className="bi bi-pencil-square"></i>
+                </Link>
+                <Link className="btn" to={`/proyectos/${proyecto.id}`}>
+                  <i class="bi bi-archive text-blue" title="Archivo Proyecto"></i>
+                </Link>
+                <Link className="btn" title="Eliminar Proyecto" onClick={() => openEditProyecto(proyecto, 'eliminar')}>
+                  <i className="bi bi-trash text-danger" title="Archivo Proyecto"></i>
+                </Link>
+              </>
+            )
+
+            }
+            
           </div>
         </td>
       </tr>
@@ -267,6 +240,31 @@ function Proyectos() {
       [name]: value
     }));
   }
+
+  useEffect(() => {
+    getTiposClientes();
+    getProyectosList();
+  }, []);
+
+  useEffect(() => {
+    getProyectosList();
+    setSearch("");
+  }, [activos, idTipoCliente]);
+
+  useEffect(() => {
+    if (!show) {
+      getProyectosList();
+    }
+  }, [show]);
+
+  useEffect(() => {
+    const tipoClienteObj = allTiposClientes.find(
+      (tc) => tc.id === idTipoCliente
+    );
+    if (tipoClienteObj) {
+      setTipoCliente(tipoClienteObj.nombre);
+    }
+  }, [idTipoCliente, allTiposClientes]);
 
   return (
     <div className="container mt-3">
@@ -308,6 +306,7 @@ function Proyectos() {
               <option value="all">Activos/Inactivos</option>
               <option value="1">Activo</option>
               <option value="0">Inactivo</option>
+              <option value="borrado">Borrados</option>
             </Form.Select>
           </div>
           <div className="col-12 col-md-3 d-flex justify-content-end justify-content-md-start ">
@@ -344,7 +343,7 @@ function Proyectos() {
                         <th className="">Activo</th>
                         <th>Nombre</th>
                         <th>Año</th>
-                        <th>Añadir</th>
+                        <th>Opciones</th>
                       </tr>
                     </thead>
                     <tbody>{renderFilasTablaProyectos()}</tbody>
@@ -494,20 +493,22 @@ function Proyectos() {
           </p>
         </Modal.Body>
         <Modal.Footer>
-          <button
-            className="btn btn-secondary"
-            onClick={() => {
-              handleCloseEliminarProyecto();
-            }}
-          >
-            Cancelar
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={() => borrarProyecto()}
-          >
-            Eliminar
-          </button>
+          
+          { !showSpin ? 
+          ( <>
+              <button className="btn btn-secondary" onClick={() => { handleCloseEliminarProyecto();}}>
+                Cancelar
+              </button>
+              <button className="btn btn-primary" onClick={() => borrarProyecto()}>
+                Eliminar
+              </button>
+          </> ) : (
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          )
+
+          }
         </Modal.Footer>
       </Modal>
 
