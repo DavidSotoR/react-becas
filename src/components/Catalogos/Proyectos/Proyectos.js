@@ -45,6 +45,10 @@ function Proyectos() {
   const handleCloseEliminarProyecto = () => setShowEliminarProyecto(false);
   const handleShowEliminarProyecto = () => setShowEliminarProyecto(true);
 
+  const [showReintegrarProyecto, setShowReintegrarProyecto] = useState(false);
+  const handleCloseReintegrarProyecto = () => setShowReintegrarProyecto(false);
+  const handleShowReintegrarProyecto = () => setShowReintegrarProyecto(true);
+
   const searchText = (e) => {
     const buscar = e.target.value;
     setSearch(buscar);
@@ -106,8 +110,6 @@ function Proyectos() {
         config
       );
       getProyectosList()
-      //setShowActiveProyecto(false)
-      //setShowAlert(true)
       execShowAlert({ type: 'success', title:'Proyecto Actualizado', message: 'Proyecto se atualizo correctamente.' })
       setShowSpin(false)
       handleCloseActiveProyecto()
@@ -143,10 +145,35 @@ function Proyectos() {
       getProyectosList()
       setShowEliminarProyecto(false)
       setShowSpin(false)
+      execShowAlert({ type: 'success', title:'Proyecto Borrado', message: 'Proyecto se BORRO correctamente.' })
       //setShowAlert(true)
       console.log(resp);
     } catch (error) {
       setShowSpin(false)
+      if (error?.response.status === 401) {
+        logout();
+      } else {
+        console.log(error.response.data);
+        let data = error.response.data
+        execShowAlert({ type: 'danger', title:'Error Borrado', message: data.errors})
+        ///error?.response && setListaErrores(error.response.data);
+        
+      }
+    }
+  }
+
+  const reintegrarProyecto = async () => {
+    try {
+      setShowSpin(true)
+      const resp = await axios.put(APIURL + `/proyectos/reintegrar`, proyectoToEdit, config);
+      getProyectosList()
+      handleCloseReintegrarProyecto()
+      setShowSpin(false)
+      let data = resp.data
+      execShowAlert({ type: 'success', title: 'Reintegrado Exitosamente', 'message': data.message })
+    } catch (error) {
+      setShowSpin(false)
+      handleCloseReintegrarProyecto()
       if (error?.response.status === 401) {
         logout();
       } else {
@@ -166,17 +193,16 @@ function Proyectos() {
     if (option === 'editar') {
       setShowActiveProyecto(true);
     }
+
+    if (option === 'reintegrar') {
+      handleShowReintegrarProyecto()
+    }
     
   };
 
   const allProyectosFiltrados = allProyectos.filter((item) =>
     item.nombre.toLowerCase().includes(search.toLowerCase())
   );
-  const obtenerAnio = (fecha) => { 
-
-    const date = new Date(fecha);
-    return isNaN(date.getTime()) ? '' : date.getUTCFullYear();
-  };
 
   const renderFilasTablaProyectos = () => {
     return allProyectosFiltrados.map((proyecto, index) => (
@@ -197,8 +223,8 @@ function Proyectos() {
           <div className="d-flex justify-content-start">
             
             { proyecto.borrado ? (
-              <Link className="btn" title="Reintegrar Proyecto" onClick={() => openEditProyecto(proyecto, 'eliminar')}>
-                <i class="bi bi-plus-square text-success"></i>
+              <Link className="btn" title="Reintegrar Proyecto" onClick={() => openEditProyecto(proyecto, 'reintegrar')}>
+                <i className="bi bi-plus-square text-success"></i>
               </Link>
             ) : (
               <>
@@ -206,7 +232,7 @@ function Proyectos() {
                   <i className="bi bi-pencil-square"></i>
                 </Link>
                 <Link className="btn" to={`/proyectos/${proyecto.id}`}>
-                  <i class="bi bi-archive text-blue" title="Archivo Proyecto"></i>
+                  <i className="bi bi-archive text-blue" title="Archivo Proyecto"></i>
                 </Link>
                 <Link className="btn" title="Eliminar Proyecto" onClick={() => openEditProyecto(proyecto, 'eliminar')}>
                   <i className="bi bi-trash text-danger" title="Archivo Proyecto"></i>
@@ -251,11 +277,11 @@ function Proyectos() {
     setSearch("");
   }, [activos, idTipoCliente]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!show) {
       getProyectosList();
     }
-  }, [show]);
+  }, [show]); */
 
   useEffect(() => {
     const tipoClienteObj = allTiposClientes.find(
@@ -366,74 +392,25 @@ function Proyectos() {
         <Modal.Body>
           {proyectoToEdit && (
             <div>
-              {/* <p>Proyecto: {proyectoToEdit.nombre}</p> */}
-              <div class="mb-3">
-                <label
-                  for="exampleFormControlInput1"
-                  className="form-label fw-bold"
-                >
-                  Proyecto:
-                </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="nombre"
-                  placeholder="Proyecto"
-                  value={proyectoToEdit.nombre}
-                  onChange={ (e) => { editarDatosProyecto(e) } }
-                />
+              <div className="mb-3">
+                <label for="exampleFormControlInput1" className="form-label fw-bold" >Proyecto:</label>
+                <input type="text" className="form-control" name="nombre" placeholder="Proyecto" value={proyectoToEdit.nombre} onChange={ (e) => { editarDatosProyecto(e) } } />
               </div>
-              <div class="mb-3">
-                <label
-                  for="anio"
-                  className="form-label fw-bold"
-                >
-                  Año:
-                </label>
-                <input
-                  type="number"
-                  class="form-control"
-                  name="anio_proyecto"
-                  id="anio_proyecto"
-                  placeholder="Año"
-                  min="2010"
-                  max="2099"
-                  value={proyectoToEdit.anio_proyecto} 
-                  onChange={ (e) => { editarDatosProyecto(e) } }
-                />
-                {/* <input
-                  type="date"
-                  class="form-control"
-                  name="anio"
-                  id="anio"
-                  placeholder="Año"
-                  value={proyectoToEdit.anio}
-                  onChange={ (e) => { editarDatosProyecto(e) } }
-                /> */}
+              <div className="mb-3">
+                <label for="anio" className="form-label fw-bold" > Año: </label>
+                <input type="number" className="form-control" name="anio_proyecto" id="anio_proyecto"  placeholder="Año" min="2010" max="2099" value={proyectoToEdit.anio_proyecto} 
+                  onChange={ (e) => { editarDatosProyecto(e) } } />
               </div>
               <p className="mb-1 fw-bold">Estatus:</p>
               <div className="mb-3">
                 <Form>
-                  <Form.Check // prettier-ignore
-                    type="switch"
-                    id="custom-switch"
-                    label="Activo"
-                    name="activo"
-                    onChange={(e) => {
-                      activarProyecto(e);
-                    }}
+                  <Form.Check type="switch" id="custom-switch" label="Activo"
+                    name="activo" onChange={(e) => { activarProyecto(e); }}
                     checked={proyectoToEdit.activo}
                   />
                 </Form>
               </div>
-              {/* <p className="mb-2 fw-bold">Clinte Tipo:</p>
-              <Form.Select name="id_tipo_cliente"
-                aria-label="Default select example" onChange={ (e) => { editarDatosProyecto(e) } }
-                value={proyectoToEdit.id_tipo_cliente}
-              >
-                <option value="1">Escuela</option>
-                <option value="2">Empresa</option>
-              </Form.Select> */}
+
             </div>
           )}
         </Modal.Body>
@@ -455,8 +432,8 @@ function Proyectos() {
                 Actualizar
               </button>
           </> ) : (
-            <div class="spinner-border text-info" role="status">
-              <span class="visually-hidden">Loading...</span>
+            <div className="spinner-border text-info" role="status">
+              <span className="visually-hidden">Loading...</span>
             </div>
           )
 
@@ -503,8 +480,8 @@ function Proyectos() {
                 Eliminar
               </button>
           </> ) : (
-            <div class="spinner-border text-info" role="status">
-              <span class="visually-hidden">Loading...</span>
+            <div className="spinner-border text-info" role="status">
+              <span className="visually-hidden">Loading...</span>
             </div>
           )
 
@@ -512,6 +489,54 @@ function Proyectos() {
         </Modal.Footer>
       </Modal>
 
+      <Modal
+        show={showReintegrarProyecto}
+        onHide={handleCloseReintegrarProyecto}
+        animation={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Reintegración de Proyecto</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {proyectoToEdit && (
+            <div>
+              <p className="mb-1 fw-bold">Proyecto: {proyectoToEdit.nombre}</p>
+              <p className="mb-1 fw-bold">
+                Estatus: {proyectoToEdit.activo === 1 ? "Activo" : "Inactivo"}
+              </p>
+              <p className="mb-2 fw-bold">
+                Clinte Tipo:{" "}
+                {proyectoToEdit.id_tipo_cliente === 1 ? "Escuela" : "Empresa"}
+              </p>
+              <p className="mb-2 fw-bold">Borrado: {proyectoToEdit.borrado === 1 ? "SI" : "NO"}</p>
+
+              <p className="text-info fw-bold">
+                El proyecto "{ proyectoToEdit.nombre }" se encuentra en estatus de BORRADO. Para reintegrar este elemento de nuevo debe asegurar los siguientes datos:
+                Si el proyecto tiene un año asignado no debe coincidir con los actualemente activos.
+              </p>
+            </div>
+          )}
+         
+        </Modal.Body>
+        <Modal.Footer>
+          
+          { !showSpin ? 
+          ( <>
+              <button className="btn btn-secondary" onClick={() => { handleCloseReintegrarProyecto();}}>
+                Cancelar
+              </button>
+              <button className="btn btn-primary" onClick={() => reintegrarProyecto()}>
+                Reintegrar
+              </button>
+          </> ) : (
+            <div className="spinner-border text-info" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          )
+
+          }
+        </Modal.Footer>
+      </Modal>
       <ModalProyectos
         key="mp"
         show={show}
