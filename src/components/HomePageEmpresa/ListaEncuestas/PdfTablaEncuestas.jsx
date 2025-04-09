@@ -6,11 +6,20 @@ import {
   getPorcentajeSugerido,
   getTotalPuntosParametrosPdf,
 } from "lib/estudios-functions";
+import axios from "axios";
+
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
 
   const APISTORAGE = "http://127.0.0.1:8000/storage/";//process.env.SERVER_STORAGE;
+  const APIURL = process.env.REACT_APP_API_URL;
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
 
   const mostrarColumnaHijo = () => {
     return data.some((row) => row.hasOwnProperty("hijo"));
@@ -190,15 +199,29 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     const allOS = getOrdenesServicioDescripciones();
     const clienteReporte = data[0].cliente;
     let logo = window.location.origin + '/img/logo_principal_negro.png';
-    
-    /* if (clienteReporte.ubicacion_logo) {
-      logo = APISTORAGE + clienteReporte.ubicacion_logo;
+    var dataPost = { logo: clienteReporte.ubicacion_logo, id: clienteReporte.id }
+    let img64 = await axios.post(APIURL + '/logo/clientes',dataPost,config);
+
+    /* if (img64?.response?.data.error === 'No encontrado') {
+      alert('no encontrado')
+      return 0;
     } */
-    let extencionLogo = getFileExtension(logo)    
+  let extencionLogo
+   if (clienteReporte.habilitar_logo === 1) {
+      if (clienteReporte.ubicacion_logo) {
+        logo = img64.data.base64 //APISTORAGE + clienteReporte.ubicacion_logo;
+        console.log(logo);
+        
+      }
+
+      extencionLogo = getFileExtension(clienteReporte.ubicacion_logo)    
+   }
+    
 
     const proyectosUnicos = [
       ...new Set(transformedData.map((item) => item.Proyecto)),
     ];
+    
     let proyectos = proyectosUnicos;
 
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -230,7 +253,10 @@ export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
     const marginRight = 10; // Margen desde el borde derecho
     //const marginTop = 5;    // Margen desde la parte superior
     try {
-      doc.addImage(logo, extencionLogo === 'JPG' ? "JPEG" : extencionLogo, pageWidth - logoSize - marginRight, 0, logoSize, logoSize);
+      if (clienteReporte.habilitar_logo === 1) {
+        doc.addImage(logo, extencionLogo === 'JPG' ? "JPEG" : extencionLogo, pageWidth - logoSize - marginRight, 0, logoSize, logoSize);
+      }
+      
     } catch (error) {
       console.log(error);
       
