@@ -209,6 +209,8 @@ function PageActualizarCliente() {
         actualData.ubicacion_logo = data.ubicacion_logo
         actualData.terminos = data.terminos
         actualData.habilitar_resumen = data.habilitar_resumen === 1 ? true : false
+        actualData.habilitar_alta_familias = data.habilitar_alta_familias === 1 ? true : false
+        actualData.habilitar_logo = data.habilitar_logo === 1 ? true : false
         setContent(data.terminos)
         setFormData(actualData)
         setFormDataOld(actualData)
@@ -874,7 +876,7 @@ function PageActualizarCliente() {
             id="uncontrolled-tab-example"
             className="mb-3"
             >
-                <Tab eventKey="home" title="DATOS DEL CLIENTE">
+                <Tab eventKey="home" title="DATOS DEL CLIENTE" style={{ height: '55vh', overflowY: 'scroll', overflowX: 'clip' }}>
                 <div className="row">
                     <div className="col-5">
                         <div className="mb-3">
@@ -1125,16 +1127,11 @@ function PageActualizarCliente() {
                             { contieneErrorInput(19) && <span className="error-msg"> {obtenerErrorMensaje(19)} </span> }
                         </div>
                     </div>
-                    <div className="col-12 mt-3 d-flex justify-content-center align-items-center">
-                        <div className="mb-3">
-                            <Link className="btn btn-secondary mx-2" to={PathConstants.CLIENTES}>Cancelar</Link>
-                            <button className="btn btn-primary" onClick={ sendUpdateCliente } disabled={ formValid }>GUARDAR DATOS</button>
-                        </div>
-                    </div>
+                   
                 </div>
                     
                 </Tab>
-                <Tab eventKey="profile" title="CONFIGURACIONES">
+                <Tab eventKey="profile" title="CONFIGURACIONES" style={{ height: '55vh', overflowY: 'scroll', overflowX: 'clip' }}>
                     <div className="row">
                         <div className="col-12 col-md-3 mt-3">
                             <Form.Check className="mx-2" type="switch">
@@ -1165,7 +1162,7 @@ function PageActualizarCliente() {
                         <div className="col-8 col-md-5 mt-4">
                             <div className="d-flex">
                                 <Form.Check className="mx-2 pt-2" type="switch">
-                                    <Form.Check.Input name="habilitar_alta_familias" checked={formData.habilitar_alta_familias} onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                    <Form.Check.Input name="habilitar_alta_familias" checked={formData.habilitar_alta_familias ?? false} onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                     <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
                                 </Form.Check>
                                                                 
@@ -1180,7 +1177,7 @@ function PageActualizarCliente() {
                                 </div>
                                 <div className="col-12 d-flex mb-3">
                                     <Form.Check className="mx-2 pt-2" type="switch">
-                                        <Form.Check.Input name="habilitar_logo" checked={formData.habilitar_logo} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                        <Form.Check.Input name="habilitar_logo" checked={formData.habilitar_logo ?? false} onChange={(e)=> {formInputChange(e)}} style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                         <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Imagen Logo en Reportes</span></Form.Check.Label>
                                     </Form.Check>
                                                                     
@@ -1234,7 +1231,14 @@ function PageActualizarCliente() {
                     </div>
                 </Tab>
             </Tabs>
-            
+            <div className="row">
+                <div className="col-12 mt-3 d-flex justify-content-center align-items-center">
+                    <div className="mb-3">
+                        <Link className="btn btn-secondary mx-2" to={PathConstants.CLIENTES}>Cancelar</Link>
+                        <button className="btn btn-primary" onClick={ sendUpdateCliente } disabled={ formValid }>GUARDAR DATOS</button>
+                    </div>
+                </div>
+            </div>
 
             <Alert show={showAlert} onClose={()=>{ setShowAlert(false) }} variant="success" className="alert-flotante" dismissible>
                 <Alert.Heading>Success</Alert.Heading>

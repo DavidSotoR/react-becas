@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import ModalCliente from "./ModalCliente";
 import ResaltarTexto from "../../ResaltarTexto/ResaltarTexto";
@@ -7,8 +7,10 @@ import { Link } from "react-router-dom";
 import PathConstants from "../../../routes/pathsConstants";
 import Table from "../../../../node_modules/react-bootstrap/esm/Table";
 import { json } from "../../../../node_modules/react-router-dom/dist/index";
+import { AuthContext } from "context/AuthContext";
 
 function Clientes() {
+  const { logout, execShowAlert } = useContext(AuthContext);
   const APIURL = process.env.REACT_APP_API_URL;
   const [allClientes, setAllClientes] = useState([]);
   const [allTiposClientes, setallTiposClientes] = useState([]);
@@ -44,7 +46,10 @@ function Clientes() {
         setAllClientes(resp.data);
       })
       .catch((resp) => {
-        console.log(resp);
+        if (resp.response.status === 401) {
+          logout()
+        }
+        console.log(resp.response);
       });
   };
   const getDataTiposClientes = () => {
