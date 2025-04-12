@@ -39,7 +39,16 @@
   margin: 10px; /* Opcional: Espaciado desde los bordes */
 }
 
+.background-login {
+  background: #47d1d6;
+  padding-inline: 30vw;
+}
+
 @media (max-width: 768px) {
+  .background-login {
+    background: #47d1d6;
+    padding-inline: 5vw;
+  }
   /*query para ocultar testo de btns para solo dejar icono*/
   .btn-text-display {
     display: none;
@@ -100,11 +109,6 @@ body {
   top: 0;
   bottom: 0;
   overflow-y: auto;
-}
-
-.background-login {
-  background: #47d1d6;
-  padding-inline: 30vw;
 }
 
 .div-login {
