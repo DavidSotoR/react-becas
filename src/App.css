@@ -44,6 +44,27 @@
   padding-inline: 30vw;
 }
 
+/* ESTILOS PARA FORM REGISTRO EXTERNO */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  height: 90vh; /* Toma toda la altura disponible */
+  padding: 0 1rem;
+}
+
+.tab-content-scroll {
+  max-height: 100%;
+  overflow-y: auto;
+}
+.form-footer {
+  flex: 0 0 auto;
+  padding: 1rem 0;
+  border-top: 1px solid #dee2e6;
+  background: white;
+  text-align: right;
+  z-index: 2;
+}
+/* FIN DE ESTILOS  */
 @media (max-width: 768px) {
   .background-login {
     background: #47d1d6;

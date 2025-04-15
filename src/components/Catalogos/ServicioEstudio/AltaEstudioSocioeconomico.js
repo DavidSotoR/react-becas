@@ -31,7 +31,7 @@ function AltaEstudioSocioeconomico(){
 
     const [proyecto,setProyecto] = useState({nombre:''})
     const [proyectoCliente,setProyectoCliente] = useState({nomre:'',documentacion_digital:false})
-    const [ordenServicio,setOrdenServicio] = useState({descripcion:''})
+    const [ordenServicio,setOrdenServicio] = useState(null)
     const [colaboradores,setColaboradores] = useState([])
     const [tipoClienteSeleccionado] = useState('1')
     const [clientesComunes,setClientesComunes] = useState([])
@@ -273,7 +273,9 @@ function AltaEstudioSocioeconomico(){
         })
     }
     const getOrdenServicio = () => {
-        axios.get(`${APIURL}/proyectos/clientes/ordenes-servicio/${idOrdenServicio}`,config).then((resp)=>{
+        axios.get(`${APIURL}/proyectos/clientes/ordenes-servicio/${idOrdenServicio}/datos`,config).then((resp)=>{
+            console.log(resp.data);
+            
             setOrdenServicio(resp.data);
         }).catch((resp)=>{
             console.log(resp);
@@ -836,7 +838,7 @@ function AltaEstudioSocioeconomico(){
                         htmlFor="id_orden_servicio" 
                         className="form-label"
                         style={{marginBottom: "1px",color: "darkolivegreen"}}
-                    >Orden de servicio: {ordenServicio.descripcion}
+                    >Orden de servicio: {  ordenServicio?.descripcion}
                     </label>
                 </div>
             </div>
