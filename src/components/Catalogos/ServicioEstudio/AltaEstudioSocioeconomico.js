@@ -383,6 +383,7 @@ function AltaEstudioSocioeconomico(){
     const convertirAMayusculas = (texto) => {
         return texto.toUpperCase();
     }
+
     const obtenerUbicacionMasCercana = (lat, lon, ubicaciones) => {
         const radianes = (grados) => (grados * Math.PI) / 180;
       
@@ -412,7 +413,7 @@ function AltaEstudioSocioeconomico(){
         });
       
         return ubicacionMasCercana;
-      }
+    }
       
     const cambiarCaloborador= () => {
         const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
@@ -492,8 +493,6 @@ function AltaEstudioSocioeconomico(){
         fromData.codigo_postal,
         fromData.pais,
     ])
-    
-
     
     const ultimasFamiliasAñadidas = () => {
         return (
