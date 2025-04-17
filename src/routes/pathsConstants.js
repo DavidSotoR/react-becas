@@ -1,7 +1,7 @@
 const PathConstants = {
     HOME: '',
     LOGIN: '/login',
-    REGISTRO: '/registro',
+    REGISTRO: '/registro/:idProyecto/:idCliente/:idOrdenServicio',
     ESEBP2: '/form-1',
     DATOSFAMILIA: '/datos-familia',
     COLABORADOR: '/colaborador',

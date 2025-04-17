@@ -1,7 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 
 const telefonoRegex = /^(?:\d{10})?$/;
@@ -9,13 +11,20 @@ const textoRegex = /^(?!.* {2})[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/;
 const correoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function RegistroPage(){
-    const APIURL = process.env.REACT_APP_API_URL;
+    const APIURL = process.env.REACT_APP_API_URL_REGISTRO;
     const CONFIG = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     }
+
+    const {idProyecto, idCliente, idOrdenServicio} = useParams()
+
     const { logout, execShowAlert } = useContext(AuthContext);
+
+    const [dataCliente , setDataCliente] = useState(null)
+
+    const [showSpinner , setShowSpinner] = useState(false)
 
     const [dataRegistroCuenta, setDataRegistroCuenta] = useState({
         id_servicio_estado: 0,
@@ -251,9 +260,31 @@ function RegistroPage(){
     }
 
     const sendDataRegistro = () => {
-        console.log(dataRegistroCuenta);
         
+        console.log(dataRegistroCuenta);
     }
+
+    const getDataCliente = async () => {
+        try {
+            const resp = await axios.get(APIURL+'/clientes/'+idCliente).then(res => res)
+            console.log(resp.data);
+            
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(()=>{
+        if (idProyecto && idOrdenServicio && idCliente) {
+            setDataRegistroCuenta(prevState => ({
+                ...prevState,
+                id_proyecto: Number(idProyecto),
+                id_cliente: Number(idCliente),
+                id_orden_servicio: Number(idOrdenServicio),
+            }));
+        }
+        getDataCliente()
+    },[])
 
 
     return (
