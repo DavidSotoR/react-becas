@@ -265,13 +265,11 @@ function RegistroPage(){
     }
 
     const getDataCliente = async () => {
-        try {
-            const resp = await axios.get(APIURL+'/clientes/'+idCliente).then(res => res)
-            console.log(resp.data);
-            
-        } catch (error) {
-            console.error(error);
-        }
+        axios.get('http://localhost:8000/api/registro/link/'+ idCliente).then(resp=>{
+            console.log(resp);
+            setDataCliente(resp.data)
+        })
+        console.log(dataCliente);
     }
 
     useEffect(()=>{

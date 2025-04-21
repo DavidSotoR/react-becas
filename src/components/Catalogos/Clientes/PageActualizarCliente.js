@@ -674,6 +674,16 @@ function PageActualizarCliente() {
         ))]
             
     }, [allOptionsSelectEncuestas])
+
+    const generarLinkRegistro = (data) => {
+        var dataCliente = data;
+        axios.get('http://localhost:8000/api/registro/link/'+ dataCliente.id).then(resp=>{
+            console.log(resp);
+            
+        })
+        console.log(dataCliente);
+        
+    }
     
     const getAllColegiosHermanos = async (id_tipo_cliente) => {
         
@@ -785,6 +795,7 @@ function PageActualizarCliente() {
             const resp = await axios.get(APIURL+'/clientes/'+ID, config).then(res => res)
             setValoresDeCliente(resp.data)
             setTipoPersona(resp.data.tipo_persona)
+            generarLinkRegistro(resp.data)
             console.log(resp.data);
             
             
@@ -1160,13 +1171,21 @@ function PageActualizarCliente() {
                             
                         </div>
                         <div className="col-8 col-md-5 mt-4">
-                            <div className="d-flex">
-                                <Form.Check className="mx-2 pt-2" type="switch">
-                                    <Form.Check.Input name="habilitar_alta_familias" checked={formData.habilitar_alta_familias ?? false} onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
-                                    <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
-                                </Form.Check>
-                                                                
+                            <div className="row">
+                                <div className="col-12 mb-2">
+                                    <div className="d-flex">
+                                        <Form.Check className="mx-2 pt-2" type="switch">
+                                            <Form.Check.Input name="habilitar_alta_familias" checked={formData.habilitar_alta_familias ?? false} onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
+                                            <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
+                                        </Form.Check>
+                                                                        
+                                    </div>
+                                </div>
+                                <div className="col-12">
+                                    <input class="form-control" type="text" value="link de incripcion." aria-label="readonly input example"/>
+                                </div>
                             </div>
+                            
                             
                         </div>
                         <div className="col-12 mt-5">
