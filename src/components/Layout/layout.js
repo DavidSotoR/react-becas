@@ -348,7 +348,6 @@ export default function Layout() {
                   <Avatar name={localStorage.getItem('name')} size="30" round={true} />
                 </div>
                 <div className="ps-1 align-self-center">
-                  {/* <p className="fw-bold m-0">{localStorage.getItem('name') ?? 'SIN DATO'}</p> */}
                   <p className="fw-bold m-0">{localStorage.getItem('user') ?? 'SIN DATO'}</p>
                 </div>
               </div>
