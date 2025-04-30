@@ -264,5 +264,5 @@ mark {
   font-weight: 600;
 }
 .rdt_TableHead {
-  z-index: unset !important              /* Cambia el z-index */
+  z-index: 1 !important              /* Cambia el z-index */
 }

@@ -118,7 +118,7 @@ export default function SeccionFiltrarProyectos({search,setSearch}){
     return (<>
         <hr/>
         <div className="row">
-            <div className="col-md-3">
+            <div className="col-md-3" style={{zIndex:10}}>
                 <label 
                     htmlFor="id_proyecto" 
                     className="form-label"
@@ -141,7 +141,7 @@ export default function SeccionFiltrarProyectos({search,setSearch}){
                     }>
                 </Select>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3" style={{zIndex:10}}>
                 <label 
                     htmlFor="id_orden_servicio" 
                     className="form-label"
@@ -163,7 +163,7 @@ export default function SeccionFiltrarProyectos({search,setSearch}){
                     }>
                 </Select>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-3" style={{zIndex:10}}>
                 <label 
                     htmlFor="id_estado" 
                     className="form-label"

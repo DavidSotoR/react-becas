@@ -145,26 +145,28 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
     }
     return(
         <div className="row mb-3">
+            {/* Seccion de filtros */}
             <div className="col-12">
-            <div className="mb-3 row">
-                        <label htmlFor="id" className="col-sm-2 col-form-label"><h5>Reporte de:</h5></label>
-                        <div className="col-sm-10">
-                            <select
-                                className="form-select form-control-sm" 
-                                name="id"
-                                value={dataSelected?.id ? dataSelected.id : ''}
-                                onChange={(e) => {formSelectionChange(e)}}
-                            >
-                                {opcionesSelect()}
-                            </select>
-                        </div>
+                <div className="mb-3 row">
+                    <label htmlFor="id" className="col-sm-2 col-form-label"><h5>Reporte de:</h5></label>
+                    <div className="col-sm-10">
+                        <select
+                            className="form-select form-control-sm" 
+                            name="id"
+                            value={dataSelected?.id ? dataSelected.id : ''}
+                            onChange={(e) => {formSelectionChange(e)}}
+                        >
+                            {opcionesSelect()}
+                        </select>
                     </div>
+                </div>
             </div>
             {/* 
             <div className="col-12">
                 <h4>{dataSelected?.nombre && dataSelected.nombre}</h4>
             </div>
             */}
+            {/* Seccion de graficas y tablas */}
             {dataSelected?.id && (<>
             <div className="col-sm-6">
                 <div className="card m-1 shadow-sm">
@@ -192,6 +194,7 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
                 </div>
             </div>
             
+            {/* Seccion lista de estudios por rango seleccionado*/}
             {dataEstudios.length > 0 && (
                 <div className="col-sm-6">
                     <div className="card m-1 shadow-sm">
@@ -229,6 +232,7 @@ export default function SeccionRangos({idProyecto,idOrdenServicio}){
                 </div>
             )}
             
+            {/* Seccion de detalle de estudio seleccionado */}
             {estudioSelected !== null && (
                     
                     <div className="col-sm-6">
