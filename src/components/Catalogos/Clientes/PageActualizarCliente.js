@@ -66,7 +66,7 @@ function PageActualizarCliente() {
 
     const [formData, setFormData] = useState({
         id_tipo_cliente: '',
-        nombre:'',
+        nombre: '',
         descripcion: '',
         notificaciones_email: '',
         id_clientes_hermanos: '',
@@ -795,7 +795,7 @@ function PageActualizarCliente() {
             const resp = await axios.get(APIURL+'/clientes/'+ID, config).then(res => res)
             setValoresDeCliente(resp.data)
             setTipoPersona(resp.data.tipo_persona)
-            generarLinkRegistro(resp.data)
+            //generarLinkRegistro(resp.data)
             console.log(resp.data);
             
             
