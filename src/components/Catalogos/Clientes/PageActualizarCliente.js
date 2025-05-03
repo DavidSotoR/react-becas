@@ -61,6 +61,9 @@ function PageActualizarCliente() {
     const [showAlertError, setShowAlertError] = useState(false);
     const [formValid, setFormValid] = useState(true)
     const [tipoPersona, setTipoPersona] = useState('')
+    const [ errorLink, setErrorLink ] = useState(null)
+
+    const [ linkRegistro, setLinkRegistro ] = useState(null)
 
     const [ allOptionsSelectEncuestas, setAllOptionsSelectEncuestas ] = useState([])
 
@@ -677,8 +680,10 @@ function PageActualizarCliente() {
 
     const generarLinkRegistro = (data) => {
         var dataCliente = data;
-        axios.get('http://localhost:8000/api/registro/link/'+ dataCliente.id).then(resp=>{
+        axios.get(APIURL+'/clientes/'+dataCliente.id+'/link/registro', config).then(resp=>{
             console.log(resp);
+            var data = resp.data
+            setLinkRegistro(data)
             
         })
         console.log(dataCliente);
@@ -771,9 +776,15 @@ function PageActualizarCliente() {
         
 
         axios.post(APIURL+'/clientes/'+dataPOST.id , formDataSend ,config).then((resp)=>{
-            console.log(resp);
+            console.log(resp.data);
             execShowAlert({ type: 'success', title: 'Cliente Actualizado', message: 'Datos del cliente actualizados.'})
-            navigate("/clientes")
+            if (resp.data.tokenData === null) {
+                setErrorLink(resp.data.error_link)
+                execShowAlert({ type: 'warning', title: 'Cliente Actualizado', message: 'Se requiere asignar cliente a proyecto para generar LINK.'})
+            } else {
+                navigate("/clientes")
+            }
+            
        
         }).catch((resp)=>{
             setShowAlertError(true)
@@ -795,7 +806,7 @@ function PageActualizarCliente() {
             const resp = await axios.get(APIURL+'/clientes/'+ID, config).then(res => res)
             setValoresDeCliente(resp.data)
             setTipoPersona(resp.data.tipo_persona)
-            //generarLinkRegistro(resp.data)
+            generarLinkRegistro(resp.data)
             console.log(resp.data);
             
             
@@ -1178,11 +1189,12 @@ function PageActualizarCliente() {
                                             <Form.Check.Input name="habilitar_alta_familias" checked={formData.habilitar_alta_familias ?? false} onChange={(e)=> {formInputChange(e)}}  style={{ width:"2rem" }} className="pt-3" type="checkbox" />
                                             <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
                                         </Form.Check>
-                                                                        
+                                        
                                     </div>
                                 </div>
                                 <div className="col-12">
-                                    <input class="form-control" type="text" value="link de incripcion." aria-label="readonly input example"/>
+                                    <input class="form-control" type="text" value={ linkRegistro ? linkRegistro.link_registro : 'SIN DATO' } aria-label="readonly input example" />
+                                    <span className="fw-bold text-danger">{ errorLink ?? '' }</span>
                                 </div>
                             </div>
                             
