@@ -110,10 +110,7 @@ function PageActualizarCliente() {
         setInputSeleccionado(name)
         var value = e.target.value //(e.target.value === "null") ? null : e.target.value;
 
-        console.log(name, value);
-
         if (name === 'id_tipo_cliente' && value === '1') {
-            console.log('Se ejecuta get colegios hermanos');
             getAllColegiosHermanos()
         }
 
@@ -151,8 +148,15 @@ function PageActualizarCliente() {
             return 0;
         }
 
-        if (name === 'habilitar_alta_familias') {            
+        if (name === 'habilitar_alta_familias') {       
+            
             var newValue = !formData.habilitar_alta_familias
+            
+            if (newValue === true) {
+                console.log('Generar link');
+                generarLinkRegistro(formData)
+            }
+
             setFormData(prevState => ({
                 ...prevState,
                 [name]: newValue
@@ -678,15 +682,13 @@ function PageActualizarCliente() {
             
     }, [allOptionsSelectEncuestas])
 
-    const generarLinkRegistro = (data) => {
-        var dataCliente = data;
-        axios.get(APIURL+'/clientes/'+dataCliente.id+'/link/registro', config).then(resp=>{
-            console.log(resp);
+    const generarLinkRegistro = () => {
+        //var dataCliente = data;
+        axios.get(APIURL+'/clientes/'+ID+'/link/registro', config).then(resp=>{
             var data = resp.data
+            console.log(resp);
             setLinkRegistro(data)
-            
         })
-        console.log(dataCliente);
         
     }
     
@@ -806,9 +808,7 @@ function PageActualizarCliente() {
             const resp = await axios.get(APIURL+'/clientes/'+ID, config).then(res => res)
             setValoresDeCliente(resp.data)
             setTipoPersona(resp.data.tipo_persona)
-            generarLinkRegistro(resp.data)
-            console.log(resp.data);
-            
+            generarLinkRegistro()
             
         } catch (error) {
             console.error(error);
@@ -1192,7 +1192,7 @@ function PageActualizarCliente() {
                                         
                                     </div>
                                 </div>
-                                <div className="col-12">
+                                <div className="col-12" hidden={!formData.habilitar_alta_familias}>
                                     <input class="form-control" type="text" value={ linkRegistro ? linkRegistro.link_registro : 'SIN DATO' } aria-label="readonly input example" />
                                     <span className="fw-bold text-danger">{ errorLink ?? '' }</span>
                                 </div>
