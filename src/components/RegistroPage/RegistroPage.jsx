@@ -18,13 +18,15 @@ function RegistroPage(){
         }
     }
 
-    const {idProyecto, idCliente, idOrdenServicio} = useParams()
+    const { token } = useParams()
 
     const { logout, execShowAlert } = useContext(AuthContext);
 
     const [dataCliente , setDataCliente] = useState(null)
 
-    const [showSpinner , setShowSpinner] = useState(false)
+    const [showSpinner , setShowSpinner] = useState(true)
+
+    const [ validToken, setValidToken ] = useState(false)
 
     const [dataRegistroCuenta, setDataRegistroCuenta] = useState({
         id_servicio_estado: 0,
@@ -265,29 +267,43 @@ function RegistroPage(){
     }
 
     const getDataCliente = async () => {
-        axios.get('http://localhost:8000/api/registro/link/'+ idCliente).then(resp=>{
+        axios.get('http://localhost:8000/api/registro/escuela/'+ token).then(resp=>{
             console.log(resp);
+            var respData = resp
+            if (respData.cliente !== null || respData.proyecto !== null || respData.orden_servicio !== null) {
+                console.log('NO ESTA FUNCIONANDO');
+                
+            }
             setDataCliente(resp.data)
         })
-        console.log(dataCliente);
+        //console.log(dataCliente);
     }
 
     useEffect(()=>{
-        if (idProyecto && idOrdenServicio && idCliente) {
-            setDataRegistroCuenta(prevState => ({
-                ...prevState,
-                id_proyecto: Number(idProyecto),
-                id_cliente: Number(idCliente),
-                id_orden_servicio: Number(idOrdenServicio),
-            }));
+        if (token) {
+            console.log(token);
+            getDataCliente()
+            
         }
-        getDataCliente()
+        //getDataCliente()
     },[])
 
 
     return (
             <div className="card p-2 pt-4" /* className="card form-container" */>
-                <div className="row">
+                <div className="d-flex align-items-center justify-content-center" style={{height: '50vh'}} hidden={!showSpinner}>
+                    <div>
+                        <h3 className="fw-bold text-center mb-2">Cargando formulario de registro</h3>
+                        
+                        <div className="d-flex justify-content-center">
+                            <div class="spinner-border text-info" role="status" style={{ width: '3rem', height: '3rem' }}>
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div className="row" hidden={showSpinner}>
                     <div className="col-12">
                         <p className="fw-bold text-center mb-2">Registro de Estudio Socioeconomico</p>
                         <p className="fw-bold text-center mb-2">Escuela: </p>

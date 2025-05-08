@@ -819,6 +819,18 @@ function PageActualizarCliente() {
         }
     }
 
+    const copiarLink = async () => {
+        console.log('copiando LINK');
+        console.log(linkRegistro);
+        var link = linkRegistro.link_registro;
+        try {
+        await navigator.clipboard.writeText(link);
+        console.log("Texto copiado al portapapeles");
+        } catch (err) {
+        console.error("Error al copiar el texto:", err);
+        }
+    }
+
     useEffect(()=>{
         if (tipoPersona === 'fisica' || tipoPersona === 'moral') {
             if (validarRFC(formData.rfc)) {
@@ -1181,7 +1193,7 @@ function PageActualizarCliente() {
                             </div>
                             
                         </div>
-                        <div className="col-8 col-md-5 mt-4">
+                        <div className="col-12 col-md-7 mt-4">
                             <div className="row">
                                 <div className="col-12 mb-2">
                                     <div className="d-flex">
@@ -1192,8 +1204,14 @@ function PageActualizarCliente() {
                                         
                                     </div>
                                 </div>
-                                <div className="col-12" hidden={!formData.habilitar_alta_familias}>
+                                <div className="col-12 d-flex" hidden={!formData.habilitar_alta_familias}>
                                     <input class="form-control" type="text" value={ linkRegistro ? linkRegistro.link_registro : 'SIN DATO' } aria-label="readonly input example" />
+                                    <button className="btn btn-sm btn-info text-white mx-1" onClick={()=>{ copiarLink() }}>
+                                        <i class="bi bi-copy"></i>
+                                    </button>
+                                    <button className="btn btn-sm btn-info text-white mx-1">
+                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                    </button>
                                     <span className="fw-bold text-danger">{ errorLink ?? '' }</span>
                                 </div>
                             </div>
