@@ -26,11 +26,29 @@ export default function ConfiguracionPage() {
         habilitar_alta_familias: false,
         habilitar_logo: false,
     })
+    const [ errorLink, setErrorLink ] = useState(null)
+    const [ linkRegistro, setLinkRegistro ] = useState(null)
+    const [ showInputLink, setShowInputLink ] = useState(true);
+
+    const copiarLink = async () => {
+        console.log('copiando LINK');
+        console.log(linkRegistro);
+        var link = linkRegistro.link_registro;
+        try {
+        await navigator.clipboard.writeText(link);
+        console.log("Texto copiado al portapapeles");
+        } catch (err) {
+        console.error("Error al copiar el texto:", err);
+        }
+    }
+
 
     const formInputChange =(e) => {
         var name = e.target.name;
-        console.log(name);
-        console.log(e.target.checked);
+
+        if (name === 'habilitar_alta_familias') {
+            setShowInputLink(e.target.checked)
+        }
 
         setDataConfig(prevState => ({
             ...prevState,
@@ -39,8 +57,20 @@ export default function ConfiguracionPage() {
         
     }
 
+    const generarLinkRegistro = () => {
+        //var dataCliente = data;
+        //console.log(dataCliente);
+        if (dataCliente) {
+            axios.get(APIURL+'/clientes/'+dataCliente.id+'/link/registro', config).then(resp=>{
+                var data = resp.data
+                setLinkRegistro(data)
+            })
+        }
+        
+        
+    }
+
     const updateDataConfiguracionCuenta = () => {
-        console.log(dataConfig);
         setShowSpinner(true);
         const formData = new FormData();
 
@@ -54,21 +84,18 @@ export default function ConfiguracionPage() {
         formData.append('id_user', localStorage.getItem('id'))
 
         axios.post(APIURL+'/cuenta/configuraciones', formData ,config).then((resp)=>{
-            console.log(resp);
             setShowSpinner(false);
             execShowAlert({ type: 'success', title: 'Cliente Actualizado', message: 'Datos del cliente actualizados.'})
        
         }).catch((resp)=>{
             setShowSpinner(false);
             if(resp.code === "ERR_BAD_REQUEST" && resp.response.hasOwnProperty('data')){
-                console.log(resp.response.data);
                 execShowAlert({ type: 'danger', title: 'Error al actualizar', message: 'Revisar los datos ingresados.'})
             }
 
             if (resp.response.status === 401) {
                 logout()
             }
-            console.log(resp);                                                                 
         })
         
     }
@@ -76,6 +103,10 @@ export default function ConfiguracionPage() {
     const getDataConfiguracionesCuenta = () => {
         axios.get(APIURL+'/cuenta/configuraciones',config).then((resp)=>{
             console.log(resp);
+            var configCuenta = resp.data;
+            if (configCuenta.habilitar_alta_familias) {
+                generarLinkRegistro()
+            }
             setDataCliente(resp.data);
             setDataConfig(prev => ({
                 ...prev,
@@ -92,7 +123,7 @@ export default function ConfiguracionPage() {
                 execShowAlert({ type: 'danger', title: 'Error al Obtener Datos', message: 'Cuenta no esta asignada a un cliente.'})
             }
 
-            if (resp.response.status === 401) {
+            if (resp.response?.status === 401) {
                 logout()
             }
             console.log(resp);                                                                 
@@ -118,6 +149,11 @@ export default function ConfiguracionPage() {
 
     useEffect(()=>{
         console.log(dataConfig);
+        if (dataConfig) {
+            if (dataConfig.habilitar_alta_familias === true) {
+                generarLinkRegistro()
+            }
+        }
     }, [dataConfig])
 
     return (
@@ -156,6 +192,16 @@ export default function ConfiguracionPage() {
                             <Form.Check.Label><span className="fw-bold fs-6 ms-2"> Habilitar Altas Familias por Link </span></Form.Check.Label>
                         </Form.Check>
                                                         
+                    </div>
+                    <div className="col-12 d-flex" hidden={showInputLink}>
+                        <input className="form-control" type="text" value={ linkRegistro ? linkRegistro.link_registro : 'SIN DATO' } aria-label="readonly input example" />
+                        <button className="btn btn-sm btn-info text-white mx-1" onClick={()=>{ copiarLink() }}>
+                            <i className="bi bi-copy"></i>
+                        </button>
+                        <button className="btn btn-sm btn-info text-white mx-1">
+                            <i className="bi bi-arrow-counterclockwise"></i>
+                        </button>
+                        <span className="fw-bold text-danger">{ errorLink ?? '' }</span>
                     </div>
                     
                 </div>

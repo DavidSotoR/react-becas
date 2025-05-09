@@ -26,6 +26,8 @@ function RegistroPage(){
 
     const [showSpinner , setShowSpinner] = useState(true)
 
+    const [ errorLink, setErrorLink ] = useState(false)
+
     const [ validToken, setValidToken ] = useState(false)
 
     const [dataRegistroCuenta, setDataRegistroCuenta] = useState({
@@ -262,21 +264,41 @@ function RegistroPage(){
     }
 
     const sendDataRegistro = () => {
+
+        var dataPost = dataRegistroCuenta;
+
+        dataPost.id_cliente = dataCliente.cliente.id
+        dataPost.id_proyecto = dataCliente.proyecto.id
+        dataPost.id_orden_servicio = dataCliente.orden_servicio.id
         
-        console.log(dataRegistroCuenta);
+        postDataRegistro(dataPost);
+        console.log(dataPost);
     }
 
     const getDataCliente = async () => {
         axios.get('http://localhost:8000/api/registro/escuela/'+ token).then(resp=>{
             console.log(resp);
-            var respData = resp
-            if (respData.cliente !== null || respData.proyecto !== null || respData.orden_servicio !== null) {
+            var respData = resp.data
+            if (respData.cliente !== null && respData.proyecto !== null && respData.orden_servicio !== null) {
+                setDataCliente(resp.data)
+                setShowSpinner(false)
+            } else {
                 console.log('NO ESTA FUNCIONANDO');
-                
+                setErrorLink(true)
             }
-            setDataCliente(resp.data)
+            
         })
         //console.log(dataCliente);
+    }
+
+    const postDataRegistro = (dataPost) => {
+        axios.post('http://localhost:8000/api/registro/escuela/'+ token, dataPost).then(resp => {
+            console.log(resp);
+            
+        }).catch(error => {
+            console.log(error);
+            
+        })
     }
 
     useEffect(()=>{
@@ -291,22 +313,28 @@ function RegistroPage(){
 
     return (
             <div className="card p-2 pt-4" /* className="card form-container" */>
-                <div className="d-flex align-items-center justify-content-center" style={{height: '50vh'}} hidden={!showSpinner}>
-                    <div>
+                <div className={ showSpinner ? 'd-flex align-items-center justify-content-center' : 'd-none' } style={{height: '50vh'}}>
+                    <div className={errorLink ? 'd-none' : 'd-block'}>
                         <h3 className="fw-bold text-center mb-2">Cargando formulario de registro</h3>
                         
                         <div className="d-flex justify-content-center">
-                            <div class="spinner-border text-info" role="status" style={{ width: '3rem', height: '3rem' }}>
-                                <span class="visually-hidden">Loading...</span>
+                            <div className="spinner-border text-info" role="status" style={{ width: '3rem', height: '3rem' }}>
+                                <span className="visually-hidden">Loading...</span>
                             </div>
                         </div>
                     </div>
+                    <div className={errorLink ? 'd-block p-3' : 'd-none'}>
+                        <h3 className="fw-bold text-center mb-4 text-danger">ERROR EN LINK DE REGISTRO</h3>
+                        <p className="fw-bold text-center mb-1">No se logro validar el link de registro generado por su proveedor. 
+                            Debe contactar con su escuela/empresa para mas información.</p>
+                        {/* <p className="fw-bold text-center">Debe contactar con su escuela/empresa para mas información.</p> */}
+                    </div>
                     
                 </div>
-                <div className="row" hidden={showSpinner}>
+                <div className={showSpinner ? 'd-none' : 'row'} >
                     <div className="col-12">
                         <p className="fw-bold text-center mb-2">Registro de Estudio Socioeconomico</p>
-                        <p className="fw-bold text-center mb-2">Escuela: </p>
+                        <p className="fw-bold text-center mb-2">Escuela: { dataCliente ? dataCliente.cliente.nombre : 'SIN DATO' }</p>
                     </div>
                     <div className="col-12">
                         <Tabs 
@@ -317,11 +345,11 @@ function RegistroPage(){
                             <Tab eventKey="familia" title="CUENTA">
                                 <div className="tab-content-scroll">
                                     <div className="row px-2">
-                                        <div className="col-12 mb-3">
+                                        {/* <div className="col-12 mb-3">
                                             <label htmlFor="matricula" className="form-label"> Matricula: </label>
                                             <input type="text" className="form-control-sm form-control" 
                                             id="matricula" name="matricula" onChange={(e) => {changeInputValue(e)}}/>
-                                        </div>
+                                        </div> */}
                                         <div className="col-12 mb-3">
                                             <label htmlFor="candidato" className="form-label p-0">Nombre Familia:</label>
                                             <input key={"AES-candidato"} value={dataRegistroCuenta.candidato} type="text" onChange={(e) => {changeInputValue(e)}}
@@ -330,7 +358,7 @@ function RegistroPage(){
                                         <div className="col-12 mb-3">
                                             <label htmlFor="situacion" className="form-label">Situacion:</label>
                                             <textarea id="situacion" name="situacion" onChange={(e) => {changeInputValue(e)}}
-                                                placeholder="situacion..." rows="4" cols="50" style={{ width: '100%' }} z/>
+                                                placeholder="situacion..." rows="4" cols="50" style={{ width: '100%' }}/>
                                         </div>
                                     
                                         <div className="row">
@@ -396,7 +424,7 @@ function RegistroPage(){
                             </Tab>
                         </Tabs>
                     </div>
-                    <div className="col-12 text-center">
+                    <div className="col-12 text-center my-2">
                         <button className="btn btn-info text-white fw-bold" onClick={()=> { sendDataRegistro() }}>Registrar</button>
                     </div>
                 </div>
