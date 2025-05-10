@@ -807,8 +807,13 @@ function PageActualizarCliente() {
         try {
             const resp = await axios.get(APIURL+'/clientes/'+ID, config).then(res => res)
             setValoresDeCliente(resp.data)
+            var dataCli = resp.data;
             setTipoPersona(resp.data.tipo_persona)
-            generarLinkRegistro()
+
+            if (dataCli.habilitar_alta_familias == true || dataCli.habilitar_alta_familias == 1) {
+                generarLinkRegistro()
+            }
+            
             
         } catch (error) {
             console.error(error);
