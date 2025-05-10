@@ -15,7 +15,7 @@ import Avatar from "react-avatar";
 export default function Layout() {
   const { isLoggedIn, userSession, roleSession, userActive, logout, ua } = useContext(AuthContext);
   const [active, setActive] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const Logout = () => {
     localStorage.clear();
     window.location.replace("/");

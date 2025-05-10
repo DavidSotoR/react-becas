@@ -28,7 +28,7 @@ export default function ConfiguracionPage() {
     })
     const [ errorLink, setErrorLink ] = useState(null)
     const [ linkRegistro, setLinkRegistro ] = useState(null)
-    const [ showInputLink, setShowInputLink ] = useState(true);
+    const [ showInputLink, setShowInputLink ] = useState(false);
 
     const copiarLink = async () => {
         console.log('copiando LINK');
@@ -105,6 +105,9 @@ export default function ConfiguracionPage() {
             console.log(resp);
             var configCuenta = resp.data;
             if (configCuenta.habilitar_alta_familias) {
+                if (configCuenta.habilitar_alta_familias === 1) {
+                    setShowInputLink(true)
+                }
                 generarLinkRegistro()
             }
             setDataCliente(resp.data);
@@ -193,7 +196,7 @@ export default function ConfiguracionPage() {
                         </Form.Check>
                                                         
                     </div>
-                    <div className="col-12 d-flex" hidden={showInputLink}>
+                    <div className={showInputLink ? "col-12 d-flex" : "d-none"  } hidden={showInputLink}>
                         <input className="form-control" type="text" value={ linkRegistro ? linkRegistro.link_registro : 'SIN DATO' } aria-label="readonly input example" />
                         <button className="btn btn-sm btn-info text-white mx-1" onClick={()=>{ copiarLink() }}>
                             <i className="bi bi-copy"></i>
