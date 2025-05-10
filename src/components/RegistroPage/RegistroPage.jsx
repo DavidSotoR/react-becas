@@ -28,9 +28,12 @@ function RegistroPage(){
 
     const [ errorLink, setErrorLink ] = useState(false)
 
+    const [ registroCompleto, setRegistroCompleto ] = useState(false)
+
     const [ validToken, setValidToken ] = useState(false)
 
     const [dataRegistroCuenta, setDataRegistroCuenta] = useState({
+        clave_familia: '',
         id_servicio_estado: 0,
         id_proyecto: 0,
         id_cliente:0,
@@ -294,9 +297,15 @@ function RegistroPage(){
     const postDataRegistro = (dataPost) => {
         axios.post('http://localhost:8000/api/registro/escuela/'+ token, dataPost).then(resp => {
             console.log(resp);
-            
+            execShowAlert({ type: 'success', title: 'COMPLETADO', message: 'SE REGISTRO CORRECTAMENTE FAMILIA.' })
+            setRegistroCompleto(true);
         }).catch(error => {
             console.log(error);
+            var err = error.response.data
+            if (err.error) {
+                console.log(err.errores);
+                execShowAlert({ type: 'danger', title: 'ERROR AL REGISTRAR USUARIO', message: 'DATOS NO VALIDOS. REVISAR LOS DATOS INGRESADOS.' })
+            }
             
         })
     }
@@ -336,7 +345,7 @@ function RegistroPage(){
                         <p className="fw-bold text-center mb-2">Registro de Estudio Socioeconomico</p>
                         <p className="fw-bold text-center mb-2">Escuela: { dataCliente ? dataCliente.cliente.nombre : 'SIN DATO' }</p>
                     </div>
-                    <div className="col-12">
+                    <div className={ !registroCompleto ? "col-12" : "d-none" }>
                         <Tabs 
                         defaultActiveKey="familia"
                         id="uncontrolled-tab-example"
@@ -345,11 +354,11 @@ function RegistroPage(){
                             <Tab eventKey="familia" title="CUENTA">
                                 <div className="tab-content-scroll">
                                     <div className="row px-2">
-                                        {/* <div className="col-12 mb-3">
-                                            <label htmlFor="matricula" className="form-label"> Matricula: </label>
+                                        <div className="col-12 mb-3">
+                                            <label htmlFor="clave_familia" className="form-label"> CLAVE: </label>
                                             <input type="text" className="form-control-sm form-control" 
-                                            id="matricula" name="matricula" onChange={(e) => {changeInputValue(e)}}/>
-                                        </div> */}
+                                            id="clave_familia" name="clave_familia" onChange={(e) => {changeInputValue(e)}}/>
+                                        </div>
                                         <div className="col-12 mb-3">
                                             <label htmlFor="candidato" className="form-label p-0">Nombre Familia:</label>
                                             <input key={"AES-candidato"} value={dataRegistroCuenta.candidato} type="text" onChange={(e) => {changeInputValue(e)}}
@@ -424,8 +433,17 @@ function RegistroPage(){
                             </Tab>
                         </Tabs>
                     </div>
-                    <div className="col-12 text-center my-2">
+                    <div className={ !registroCompleto ? "col-12 text-center my-2" : "d-none" }>
                         <button className="btn btn-info text-white fw-bold" onClick={()=> { sendDataRegistro() }}>Registrar</button>
+                    </div>
+                    <div className={ registroCompleto ? "col-12" : "d-none" } style={{ height: '40vh' }}>
+                        <div className="d-block justify-content-center ">
+                            <h3 className="fw-bold text-success text-center my-2">REGISTRO COMPLETADO</h3>
+                            <p className="fw-bold text-center my-2">Se completo registro de familia. Revisar correo para validar e ingresar a su cuenta en el sistema.</p>
+                            <div className="d-flex justify-content-center align-items-center">
+                                <i style={{ fontSize: '8rem' }} className="bi bi-check-circle-fill text-success " ></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
