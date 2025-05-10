@@ -780,12 +780,12 @@ function PageActualizarCliente() {
         axios.post(APIURL+'/clientes/'+dataPOST.id , formDataSend ,config).then((resp)=>{
             console.log(resp.data);
             execShowAlert({ type: 'success', title: 'Cliente Actualizado', message: 'Datos del cliente actualizados.'})
-            if (resp.data.tokenData === null) {
+            /* if (resp.data.tokenData === null) {
                 setErrorLink(resp.data.error_link)
                 execShowAlert({ type: 'warning', title: 'Cliente Actualizado', message: 'Se requiere asignar cliente a proyecto para generar LINK.'})
-            } else {
+            } else { */
                 navigate("/clientes")
-            }
+            /* } */
             
        
         }).catch((resp)=>{
@@ -1204,7 +1204,7 @@ function PageActualizarCliente() {
                                         
                                     </div>
                                 </div>
-                                <div className="col-12 d-flex" hidden={!formData.habilitar_alta_familias}>
+                                <div className={formData.habilitar_alta_familias ? "col-12 d-flex" : "d-none" }>
                                     <input class="form-control" type="text" value={ linkRegistro ? linkRegistro.link_registro : 'SIN DATO' } aria-label="readonly input example" />
                                     <button className="btn btn-sm btn-info text-white mx-1" onClick={()=>{ copiarLink() }}>
                                         <i class="bi bi-copy"></i>
