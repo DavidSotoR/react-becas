@@ -688,6 +688,11 @@ function PageActualizarCliente() {
             var data = resp.data
             console.log(resp);
             setLinkRegistro(data)
+        }).catch(resp => {
+            var error = resp.response
+            if (error.status === 422) {
+                execShowAlert({ type: 'warning', title: 'ERROR AL GENERAR LINK', message: 'Cliente no cuenta con proyecto actual y activo.' })
+            }
         })
         
     }
