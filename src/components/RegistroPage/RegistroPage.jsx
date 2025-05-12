@@ -12,6 +12,7 @@ const correoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function RegistroPage(){
     const APIURL = process.env.REACT_APP_API_URL_REGISTRO;
+    const APIURLEXTERNO = process.env.REACT_APP_API_URL_REGISTRO;
     const CONFIG = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -127,7 +128,7 @@ function RegistroPage(){
                             id="direccion"
                             name="direccion"
                             placeholder="Dirección..."
-                            rows="4"
+                            rows="2"
                             cols="50" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}
                             style={{ width: '100%' }}
                         />
@@ -355,68 +356,69 @@ function RegistroPage(){
                                 <div className="tab-content-scroll">
                                     <div className="row px-2">
                                         <div className="col-12 mb-3">
-                                            <label htmlFor="clave_familia" className="form-label"> CLAVE: </label>
+                                            <label htmlFor="clave_familia" className="form-label mb-1"> CLAVE: </label>
                                             <input type="text" className="form-control-sm form-control" 
                                             id="clave_familia" name="clave_familia" onChange={(e) => {changeInputValue(e)}}/>
                                         </div>
                                         <div className="col-12 mb-3">
-                                            <label htmlFor="candidato" className="form-label p-0">Nombre Familia:</label>
+                                            <label htmlFor="candidato" className="form-label p-0 mb-1">Nombre Familia:</label>
                                             <input key={"AES-candidato"} value={dataRegistroCuenta.candidato} type="text" onChange={(e) => {changeInputValue(e)}}
                                             className="form-control-sm form-control form-control-sm p-0" id="candidato" name="candidato"/>
                                         </div>
                                         <div className="col-12 mb-3">
-                                            <label htmlFor="situacion" className="form-label">Situacion:</label>
+                                            <label htmlFor="situacion" className="form-label mb-1">Situacion:</label>
                                             <textarea id="situacion" name="situacion" onChange={(e) => {changeInputValue(e)}}
-                                                placeholder="situacion..." rows="4" cols="50" style={{ width: '100%' }}/>
+                                                placeholder="situacion..." rows="2" cols="50" style={{ width: '100%' }}/>
                                         </div>
                                     
                                         <div className="row">
-                                            <div className="col-6 col-md-6">
+                                            <div className="col-6 col-md-5">
                                                 <div className="mb-3">
-                                                    <label htmlFor="calle" className="form-label">Calle:</label>
+                                                    <label htmlFor="calle" className="form-label mb-1">Calle:</label>
                                                     <input key={"AES-calle"} type="text" onChange={(e) => {changeInputValue(e)}} 
                                                     className="form-control-sm form-control" id="calle" name="calle" />
                                                 </div>
                                             </div>
                     
-                                            <div className="col-6 col-md-6">
+                                            <div className="col-6 col-md-3">
                                                 <div className="mb-3">
-                                                    <label htmlFor="numero_exterior" className="form-label">No Exterior:</label>
+                                                    <label htmlFor="numero_exterior" className="form-label mb-1">No Exterior:</label>
                                                     <input key={"AES-numero_exterior"} type="text" onChange={(e) => {changeInputValue(e)}}
                                                     className="form-control-sm form-control" id="numero_exterior" name="numero_exterior" />
                                                 </div>
                                             </div>
-                                            <div className="col-sm-6">
-                                                <div className="mb-3">
-                                                    <label htmlFor="colonia" className="form-label">Colonia:</label>
-                                                    <input key={"AES-colonia"} type="text" onChange={(e) => {changeInputValue(e)}} 
-                                                    className="form-control-sm form-control" id="colonia" name="colonia"/>
-                                                </div>
-                                            </div>
-                                            <div className="col-sm-6">
-                                                <div className="mb-3">
-                                                    <label htmlFor="municipio" className="form-label">Municipio:</label>
-                                                    <input key={"AES-municipio"} type="text" onChange={(e) => {changeInputValue(e)}} 
-                                                    className="form-control-sm form-control" id="municipio" name="municipio"/>
-                                                </div>
-                                            </div>
-                                            <div className="col-sm-6">
+                                            <div className="col-6 col-md-3">
                                                 <div className="mb-3 ">
-                                                    <label htmlFor="estado" className="form-label">Estado:</label>
-                                                    <input key={"AES-estado"} type="text" onChange={(e) => {changeInputValue(e)}} 
-                                                    className="form-control-sm form-control" id="estado" name="estado" />
-                                                </div>
-                                            </div>
-                                            <div className="col-sm-6">
-                                                <div className="mb-3 ">
-                                                    <label htmlFor="codigo_postal" className="form-label">Código Postal:</label>
+                                                    <label htmlFor="codigo_postal" className="form-label mb-1">Código Postal:</label>
                                                     <input key={"AES-codigo_postal"} type="text" onChange={(e) => {changeInputValue(e)}} 
                                                     className="form-control-sm form-control" id="codigo_postal" name="codigo_postal"/>
                                                 </div>
                                             </div>
-                                            <div className="col-sm-6">
+                                            <div className="col-6 col-md-5">
+                                                <div className="mb-3">
+                                                    <label htmlFor="colonia" className="form-label mb-1">Colonia:</label>
+                                                    <input key={"AES-colonia"} type="text" onChange={(e) => {changeInputValue(e)}} 
+                                                    className="form-control-sm form-control" id="colonia" name="colonia"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-6 col-md-5">
+                                                <div className="mb-3">
+                                                    <label htmlFor="municipio" className="form-label mb-1">Municipio:</label>
+                                                    <input key={"AES-municipio"} type="text" onChange={(e) => {changeInputValue(e)}} 
+                                                    className="form-control-sm form-control" id="municipio" name="municipio"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-6 col-md-5">
                                                 <div className="mb-3 ">
-                                                    <label htmlFor="pais" className="form-label">País:</label>
+                                                    <label htmlFor="estado" className="form-label mb-1">Estado:</label>
+                                                    <input key={"AES-estado"} type="text" onChange={(e) => {changeInputValue(e)}} 
+                                                    className="form-control-sm form-control" id="estado" name="estado" />
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="col-6 col-md-5">
+                                                <div className="mb-3 ">
+                                                    <label htmlFor="pais" className="form-label mb-1">País:</label>
                                                     <input key={"AES-pais"} type="text" onChange={(e) => {changeInputValue(e)}} 
                                                     className="form-control-sm form-control" id="pais" name="pais" />
                                                 </div>
