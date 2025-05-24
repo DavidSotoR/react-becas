@@ -321,7 +321,8 @@ function FamiliaSubirArchivos() {
         setDataFamiliaFile(null);
         handleCloseModalEliminarFile();
         setCargandoImgIngreso(false)
-        if (idtipo === 1) {
+        getFilesDeFamilia()
+        /* if (idtipo === 1) {
           setCargandoImgIngreso(false)
           renderImgDeFamilia(1)
         }
@@ -329,7 +330,7 @@ function FamiliaSubirArchivos() {
         renderImgDeFamilia(2)
         renderImgDeFamilia(3)
         renderImgDeFamilia(4)
-        renderImgDeFamilia(5)
+        renderImgDeFamilia(5) */
       })
       .catch((err) => {
         console.log(err);
