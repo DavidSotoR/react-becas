@@ -160,7 +160,12 @@ function RegistroPage(){
                         <input type="text" className="form-control-sm form-control"  
                         id="email" name="email" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
                     </div>
-                    <div className="col-12 mb-2">
+                    <div className="col-6 mb-2">
+                        <label htmlFor="telefono" className="form-label">Correo:</label>
+                        <input type="text" className="form-control-sm form-control"  
+                        id="telefono_casa" name="telefono_casa" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
+                    </div>
+                    <div className="col-6 mb-2">
                         <p className="form-label">
                             Contacto Principal:
                         </p>
@@ -444,6 +449,9 @@ function RegistroPage(){
                             <p className="fw-bold text-center my-2">Se completo registro de familia. Revisar correo para validar e ingresar a su cuenta en el sistema.</p>
                             <div className="d-flex justify-content-center align-items-center">
                                 <i style={{ fontSize: '8rem' }} className="bi bi-check-circle-fill text-success " ></i>
+                            </div>
+                            <div className="d-flex justify-content-center">
+                                <p className="fw-bold">Ir a Inicio de Sesión: <a href="http://localhost:3000/login">INICIAR</a></p>
                             </div>
                         </div>
                     </div>
