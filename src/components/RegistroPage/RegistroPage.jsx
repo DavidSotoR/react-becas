@@ -27,6 +27,8 @@ function RegistroPage(){
 
     const [showSpinner , setShowSpinner] = useState(true)
 
+    const [showSpinnerCreate , setShowSpinnerCreate] = useState(false)
+
     const [ errorLink, setErrorLink ] = useState(false)
 
     const [ registroCompleto, setRegistroCompleto ] = useState(false)
@@ -161,7 +163,7 @@ function RegistroPage(){
                         id="email" name="email" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
                     </div>
                     <div className="col-6 mb-2">
-                        <label htmlFor="telefono" className="form-label">Correo:</label>
+                        <label htmlFor="telefono_casa" className="form-label">Telefono:</label>
                         <input type="text" className="form-control-sm form-control"  
                         id="telefono_casa" name="telefono_casa" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
                     </div>
@@ -199,7 +201,7 @@ function RegistroPage(){
         
         setDataRegistroCuenta(prevState => ({
             ...prevState,
-            [name]: updatedValue
+            [name]: type === 'text' ? convertirAMayusculas(updatedValue) : updatedValue
         }));
 
         if(type !== 'checkbox' && type !== 'number'){
@@ -273,7 +275,7 @@ function RegistroPage(){
     }
 
     const sendDataRegistro = () => {
-
+        setShowSpinnerCreate(true);
         var dataPost = dataRegistroCuenta;
 
         dataPost.id_cliente = dataCliente.cliente.id
@@ -301,11 +303,14 @@ function RegistroPage(){
     }
 
     const postDataRegistro = (dataPost) => {
+        
         axios.post('http://localhost:8000/api/registro/escuela/'+ token, dataPost).then(resp => {
             console.log(resp);
             execShowAlert({ type: 'success', title: 'COMPLETADO', message: 'SE REGISTRO CORRECTAMENTE FAMILIA.' })
             setRegistroCompleto(true);
+            setShowSpinnerCreate(false);
         }).catch(error => {
+            setShowSpinnerCreate(false);
             console.log(error);
             var err = error.response.data
             if (err.error) {
@@ -441,7 +446,19 @@ function RegistroPage(){
                         </Tabs>
                     </div>
                     <div className={ !registroCompleto ? "col-12 text-center my-2" : "d-none" }>
-                        <button className="btn btn-info text-white fw-bold" onClick={()=> { sendDataRegistro() }}>Registrar</button>
+                        
+                        <div className="d-flex justify-content-center">
+                            { showSpinnerCreate ? (
+                            <div className="spinner-border text-info" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                            ) : (
+                                <button className="btn btn-info text-white fw-bold" onClick={()=> { sendDataRegistro() }}>Registrar</button>
+                            )
+
+                            }
+                            
+                        </div>
                     </div>
                     <div className={ registroCompleto ? "col-12" : "d-none" } style={{ height: '40vh' }}>
                         <div className="d-block justify-content-center ">
