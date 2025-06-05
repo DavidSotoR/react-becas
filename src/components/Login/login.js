@@ -8,6 +8,7 @@ function Login() {
   const [inputPass, setInputPass] = useState("");
   const navigate = useNavigate();
   const { login, isLoggedIn, execShowAlert  } = useContext(AuthContext);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const changeEmail = (e) => {
     setInputEmail(e.target.value);
@@ -24,6 +25,7 @@ function Login() {
   };
 
   const sendLogin = async () => {
+    setShowSpinner(true);
     var dataPost = {
       login: inputEmail,
       password: inputPass,
@@ -33,8 +35,11 @@ function Login() {
     console.log(loged);
     
     if (loged) {
+      setShowSpinner(false);
       navigate("/");
+      
     } else {
+      setShowSpinner(false);
       execShowAlert({type: 'danger', title: 'Error de Autorización', message: 'Credenciales no validas.'})
     }
   };
@@ -96,9 +101,15 @@ function Login() {
               />
             </div>
             <div className="col-12 mb-3 d-flex justify-content-center">
-              <button onClick={sendLogin} className="btn btn-primary">
-                Iniciar Sesión
-              </button>
+              { showSpinner ? (
+                <div class="spinner-border text-info" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              ) : (
+                <button onClick={sendLogin} className="btn btn-primary">
+                  Iniciar Sesión
+                </button>
+              ) }    
             </div>
           </div>
       </div>

@@ -4,13 +4,17 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 const telefonoRegex = /^(?:\d{10})?$/;
 const textoRegex = /^(?!.* {2})[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/;
 const correoRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+
 function RegistroPage(){
+    const navigate = useNavigate();
+
     const APIURL = process.env.REACT_APP_API_URL_REGISTRO;
     const APIURLEXTERNO = process.env.REACT_APP_API_URL_REGISTRO;
     const CONFIG = {
@@ -100,75 +104,8 @@ function RegistroPage(){
         return (
             <div className="tab-content-scroll">
                 <div className="row px-2">
-                    <div className="col-12 mb-3">
-                        <label htmlFor="nombre" className="form-label"> Nombre </label>
-                        <input type="text" className="form-control-sm form-control" 
-                        id="nombre" name="nombre" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
-                    </div>
-                    <div className="col-6 mb-3">
-                        <label htmlFor="edad" className="form-label">Edad</label>
-                        <input  type="number" className="form-control-sm form-control" 
-                        id="edad" name="edad" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
-                    </div>
-                    <div className="col-6 mb-3">
-                        <p className="form-label">
-                            Vivie
-                        </p>
-                        <div className="form-switch">
-                            <input className="form-check-input" id="vive" 
-                                name="vive" type="checkbox" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}
-                                checked={dataRegistroCuenta[familiar].vive} role="switch" />
-                            <label className="form-check-label">{(dataRegistroCuenta[familiar].vive) ? 'Si' : 'No'}</label>
-                        </div>
-                        
-                    </div>
                     <div className="col-12 mb-2">
-                        <label htmlFor="direccion" className="form-label">
-                            Direccion:
-                        </label>
-                        <textarea
-                            id="direccion"
-                            name="direccion"
-                            placeholder="Dirección..."
-                            rows="2"
-                            cols="50" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}
-                            style={{ width: '100%' }}
-                        />
-                    </div>
-                    <div className="col-12 mb-2">
-                        <label htmlFor="ocupacion_actual" className="form-label">
-                            Ocupacion actual:
-                        </label>
-                        <input 
-                            type="text" 
-                            className="form-control-sm form-control" 
-                            id="ocupacion_actual" 
-                            name="ocupacion_actual" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}
-                        />
-                    </div>
-                    <div className="col-12 mb-2">
-                        <label htmlFor="empresa_trabajo" className="form-label">
-                            Empresa de trabajo:
-                        </label>
-                            <input 
-                                type="text" 
-                                className="form-control-sm form-control" 
-                                id="empresa_trabajo" 
-                                name="empresa_trabajo" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}
-                            />
-                    </div>
-                    <div className="col-12 mb-2">
-                        <label htmlFor="email" className="form-label">Correo:</label>
-                        <input type="text" className="form-control-sm form-control"  
-                        id="email" name="email" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
-                    </div>
-                    <div className="col-6 mb-2">
-                        <label htmlFor="telefono_casa" className="form-label">Telefono:</label>
-                        <input type="text" className="form-control-sm form-control"  
-                        id="telefono_casa" name="telefono_casa" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
-                    </div>
-                    <div className="col-6 mb-2">
-                        <p className="form-label">
+                        <p className="form-label fw-bold fw-bold">
                             Contacto Principal:
                         </p>
                         <div className="form-switch">
@@ -183,6 +120,76 @@ function RegistroPage(){
                             <label className="form-check-label">{(dataRegistroCuenta[familiar].contecto_principal) ? 'Si' : 'No'}</label>
                         </div>
                     </div>
+                    <div className="col-12 mb-3">
+                        <label htmlFor="nombre" className="form-label fw-bold fw-bold"> Nombre </label>
+                        <input type="text" className="form-control-sm form-control" 
+                        id="nombre" name="nombre" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
+                    </div>
+                    
+                    <div className="col-6 mb-3">
+                        <label htmlFor="edad" className="form-label fw-bold fw-bold">Edad</label>
+                        <input  type="number" className="form-control-sm form-control" 
+                        id="edad" name="edad" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
+                    </div>
+                    <div className="col-4 mb-3">
+                        <p className="form-label fw-bold fw-bold">
+                            Vivie
+                        </p>
+                        <div className="form-switch">
+                            <input className="form-check-input" id="vive" 
+                                name="vive" type="checkbox" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}
+                                checked={dataRegistroCuenta[familiar].vive} role="switch" />
+                            <label className="form-check-label">{(dataRegistroCuenta[familiar].vive) ? 'Si' : 'No'}</label>
+                        </div>
+                        
+                    </div>
+                    
+                    <div className="col-12 mb-2">
+                        <label htmlFor="direccion" className="form-label fw-bold fw-bold">
+                            Direccion:
+                        </label>
+                        <textarea
+                            id="direccion"
+                            name="direccion"
+                            placeholder="Dirección..."
+                            rows="2"
+                            cols="50" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+                    <div className="col-6 mb-2">
+                        <label htmlFor="ocupacion_actual" className="form-label fw-bold fw-bold">
+                            Ocupacion actual:
+                        </label>
+                        <input 
+                            type="text" 
+                            className="form-control-sm form-control" 
+                            id="ocupacion_actual" 
+                            name="ocupacion_actual" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}
+                        />
+                    </div>
+                    <div className="col-6 mb-2">
+                        <label htmlFor="empresa_trabajo" className="form-label fw-bold fw-bold">
+                            Empresa de trabajo:
+                        </label>
+                            <input 
+                                type="text" 
+                                className="form-control-sm form-control" 
+                                id="empresa_trabajo" 
+                                name="empresa_trabajo" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}
+                            />
+                    </div>
+                    <div className="col-6 mb-2">
+                        <label htmlFor="email" className="form-label fw-bold fw-bold">Correo:</label>
+                        <input type="text" className="form-control-sm form-control"  
+                        id="email" name="email" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
+                    </div>
+                    <div className="col-6 mb-2">
+                        <label htmlFor="telefono_casa" className="form-label fw-bold fw-bold">Telefono:</label>
+                        <input type="text" className="form-control-sm form-control"  
+                        id="telefono_casa" name="telefono_casa" onChange={(e) => {formInputChangeFamiliar(e, familiar)}}/>
+                    </div>
+                    
                 </div>
             </div>
         )
@@ -322,11 +329,21 @@ function RegistroPage(){
     }
 
     useEffect(()=>{
-        if (token) {
-            console.log(token);
-            getDataCliente()
-            
+        console.log('lasdoasd');
+        
+        var loginSession = localStorage.getItem('login');
+        
+        if (loginSession === 'true') {
+            execShowAlert({type: 'danger', title: 'NO PUEDE ACCEDER A LA RUTA', message: 'No puede ingresar al formulario con una cuenta activa.'})
+            navigate("/");
+        } else {
+            if (token) {
+                console.log(token);
+                getDataCliente()
+                
+            }
         }
+        
         //getDataCliente()
     },[])
 
@@ -353,8 +370,8 @@ function RegistroPage(){
                 </div>
                 <div className={showSpinner ? 'd-none' : 'row'} >
                     <div className="col-12">
-                        <p className="fw-bold text-center mb-2">Registro de Estudio Socioeconomico</p>
-                        <p className="fw-bold text-center mb-2">Escuela: { dataCliente ? dataCliente.cliente.nombre : 'SIN DATO' }</p>
+                        <p className="fw-bold text-center fs-5 mb-2">Registro de Estudio Socioeconomico</p>
+                        <p className="fw-bold text-center fs-5 mb-2">Escuela: { dataCliente ? dataCliente.cliente.nombre : 'SIN DATO' }</p>
                     </div>
                     <div className={ !registroCompleto ? "col-12" : "d-none" }>
                         <Tabs 
@@ -365,70 +382,70 @@ function RegistroPage(){
                             <Tab eventKey="familia" title="CUENTA">
                                 <div className="tab-content-scroll">
                                     <div className="row px-2">
-                                        <div className="col-12 mb-3">
-                                            <label htmlFor="clave_familia" className="form-label mb-1"> CLAVE: </label>
+                                        <div className="col-12 mb-2">
+                                            <label htmlFor="clave_familia" className="form-label fw-bold mb-1"> CLAVE: </label>
                                             <input type="text" className="form-control-sm form-control" 
                                             id="clave_familia" name="clave_familia" onChange={(e) => {changeInputValue(e)}}/>
                                         </div>
-                                        <div className="col-12 mb-3">
-                                            <label htmlFor="candidato" className="form-label p-0 mb-1">Nombre Familia:</label>
+                                        <div className="col-12 mb-2">
+                                            <label htmlFor="candidato" className="form-label fw-bold p-0 mb-1">Nombre Familia:</label>
                                             <input key={"AES-candidato"} value={dataRegistroCuenta.candidato} type="text" onChange={(e) => {changeInputValue(e)}}
                                             className="form-control-sm form-control form-control-sm p-0" id="candidato" name="candidato"/>
                                         </div>
-                                        <div className="col-12 mb-3">
-                                            <label htmlFor="situacion" className="form-label mb-1">Situacion:</label>
+                                        <div className="col-12 mb-2">
+                                            <label htmlFor="situacion" className="form-label fw-bold mb-1">Situacion:</label>
                                             <textarea id="situacion" name="situacion" onChange={(e) => {changeInputValue(e)}}
                                                 placeholder="situacion..." rows="2" cols="50" style={{ width: '100%' }}/>
                                         </div>
                                     
                                         <div className="row">
                                             <div className="col-6 col-md-5">
-                                                <div className="mb-3">
-                                                    <label htmlFor="calle" className="form-label mb-1">Calle:</label>
+                                                <div className="mb-2">
+                                                    <label htmlFor="calle" className="form-label fw-bold mb-1">Calle:</label>
                                                     <input key={"AES-calle"} type="text" onChange={(e) => {changeInputValue(e)}} 
                                                     className="form-control-sm form-control" id="calle" name="calle" />
                                                 </div>
                                             </div>
                     
                                             <div className="col-6 col-md-3">
-                                                <div className="mb-3">
-                                                    <label htmlFor="numero_exterior" className="form-label mb-1">No Exterior:</label>
+                                                <div className="mb-2">
+                                                    <label htmlFor="numero_exterior" className="form-label fw-bold mb-1">No Exterior:</label>
                                                     <input key={"AES-numero_exterior"} type="text" onChange={(e) => {changeInputValue(e)}}
                                                     className="form-control-sm form-control" id="numero_exterior" name="numero_exterior" />
                                                 </div>
                                             </div>
                                             <div className="col-6 col-md-3">
-                                                <div className="mb-3 ">
-                                                    <label htmlFor="codigo_postal" className="form-label mb-1">Código Postal:</label>
+                                                <div className="mb-2">
+                                                    <label htmlFor="codigo_postal" className="form-label fw-bold mb-1">Código Postal:</label>
                                                     <input key={"AES-codigo_postal"} type="text" onChange={(e) => {changeInputValue(e)}} 
                                                     className="form-control-sm form-control" id="codigo_postal" name="codigo_postal"/>
                                                 </div>
                                             </div>
                                             <div className="col-6 col-md-5">
-                                                <div className="mb-3">
-                                                    <label htmlFor="colonia" className="form-label mb-1">Colonia:</label>
+                                                <div className="mb-2">
+                                                    <label htmlFor="colonia" className="form-label fw-bold mb-1">Colonia:</label>
                                                     <input key={"AES-colonia"} type="text" onChange={(e) => {changeInputValue(e)}} 
                                                     className="form-control-sm form-control" id="colonia" name="colonia"/>
                                                 </div>
                                             </div>
                                             <div className="col-6 col-md-5">
-                                                <div className="mb-3">
-                                                    <label htmlFor="municipio" className="form-label mb-1">Municipio:</label>
+                                                <div className="mb-2">
+                                                    <label htmlFor="municipio" className="form-label fw-bold mb-1">Municipio:</label>
                                                     <input key={"AES-municipio"} type="text" onChange={(e) => {changeInputValue(e)}} 
                                                     className="form-control-sm form-control" id="municipio" name="municipio"/>
                                                 </div>
                                             </div>
                                             <div className="col-6 col-md-5">
-                                                <div className="mb-3 ">
-                                                    <label htmlFor="estado" className="form-label mb-1">Estado:</label>
+                                                <div className="mb-2">
+                                                    <label htmlFor="estado" className="form-label fw-bold mb-1">Estado:</label>
                                                     <input key={"AES-estado"} type="text" onChange={(e) => {changeInputValue(e)}} 
                                                     className="form-control-sm form-control" id="estado" name="estado" />
                                                 </div>
                                             </div>
                                             
                                             <div className="col-6 col-md-5">
-                                                <div className="mb-3 ">
-                                                    <label htmlFor="pais" className="form-label mb-1">País:</label>
+                                                <div className="mb-2">
+                                                    <label htmlFor="pais" className="form-label fw-bold mb-1">País:</label>
                                                     <input key={"AES-pais"} type="text" onChange={(e) => {changeInputValue(e)}} 
                                                     className="form-control-sm form-control" id="pais" name="pais" />
                                                 </div>

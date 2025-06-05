@@ -661,6 +661,11 @@ export default function PageCrearUsuario() {
   return (
     <div className="container">
       <div className="">
+        <div className="mb-2">
+                <Link className="btn btn-primary fw-bold py-1" to={PathConstants.USUARIOS} variant="secondary" >
+                    <i class="bi bi-arrow-left-square me-2"></i> Regresar
+                </Link>
+            </div>
         <h6 style={{ fontWeight: "bold" }}>Crear Usuarios</h6>
       </div>
       <div className="row mb-3">
@@ -1098,7 +1103,7 @@ export default function PageCrearUsuario() {
                         Cancelar
                     </Button> */}
         <Link className="btn btn-secondary mx-2" to={PathConstants.USUARIOS}>
-          REGRESAR
+          Cancelar
         </Link>
         <Button
           className="mx-2"

@@ -534,7 +534,12 @@ export default function PageUpdateUsuario() {
     return(
         <div className="container">
             <div className="">
-                <h6 style={{ fontWeight: 'bold' }}>Actualizar Usuario</h6>
+                <div className="mb-2">
+                <Link className="btn btn-primary fw-bold py-1" to={PathConstants.USUARIOS} variant="secondary" >
+                    <i class="bi bi-arrow-left-square me-2"></i> Regresar
+                </Link>
+            </div>
+                {/* <h6 style={{ fontWeight: 'bold' }}>Actualizar Usuario</h6> */}
             </div>
             <div className="row mb-3">
                     <div className="col-5 mb-3">
@@ -716,11 +721,11 @@ export default function PageUpdateUsuario() {
                         </div>                        
                     </div>
                 </div>
-            <div className="d-flex mb-3">
+            {/* <div className="d-flex mb-3">
                 <Link className="btn btn-secondary mx-2" to={PathConstants.USUARIOS} variant="secondary" >
                     REGRESAR
                 </Link>
-            </div>
+            </div> */}
         </div>
             
     )

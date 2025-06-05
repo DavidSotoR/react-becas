@@ -314,8 +314,8 @@ export default function PageUpdateUsuario() {
                         className="row rounded border mt-1 p-1 mb-3" 
                         style={{cursor:'pointer' }}
                         >
-                            <div className="col-1">
-                                <img src="/img/ping-map.png" style={{width:'50%'}}/>
+                            <div className="col-1 d-flex align-items-center pe-0">
+                                <img src="/img/ping-map.png" style={{width:'1.5rem', height: '1.5rem'}}/>
                             </div>
                             <div className="col-10">
                                 <div>No se encontraron ubicaciones.</div>
@@ -637,6 +637,11 @@ export default function PageUpdateUsuario() {
 
     return(
         <div className="container">
+            <div className="mb-2">
+                <Link className="btn btn-primary fw-bold py-1" to={PathConstants.USUARIOS} variant="secondary" >
+                    <i class="bi bi-arrow-left-square me-2"></i> Regresar
+                </Link>
+            </div>
             <div className="">
                 <h6 style={{ fontWeight: 'bold' }}>Actualizar Usuario</h6>
             </div>
