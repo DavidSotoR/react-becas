@@ -269,41 +269,40 @@ export default function PageUpdateUsuario() {
     }
 
     const seleccionarUbicacion = (direccion) => {
-       
-        if (convertirAMayusculas(direccion.display_name) === direccionUser) {
-            console.log('entro===');
-            
-            setDireccionSelected(false)
-            placeIdSet('');
-            setLatUser('0')
-            setLonUser('0')
-            setDataUpdateUsuario(prevState => ({
-                ...prevState,
-                direccion: '',
-            }));
-            setDataUpdateUsuario(prevState => ({
-                ...prevState,
-                latitud: '0',
-                longitud: '0'
-            }));
-            return;
-        }
-        setDireccionSelected(true)
-   
-        setDireccionUser(convertirAMayusculas(direccion.display_name))
-        placeIdSet(direccion.place_id);
-        setLatUser(direccion.lat)
-        setLonUser(direccion.lon)
+    const nuevaDireccion = convertirAMayusculas(direccion.display_name);
+
+    // si ya está seleccionada, desmarcar
+    if (nuevaDireccion === convertirAMayusculas(direccionUser)) {
+        setDireccionSelected(false);
+        placeIdSet('');
+        setLatUser('0');
+        setLonUser('0');
+        setDireccionUser(''); // importante: vaciar también aquí
+
         setDataUpdateUsuario(prevState => ({
             ...prevState,
-            direccion: direccion.display_name,
+            direccion: '',
+            latitud: '0',
+            longitud: '0',
         }));
-        setDataUpdateUsuario(prevState => ({
-            ...prevState,
-            latitud: direccion.lat,
-            longitud: direccion.lon
-        }));
+
+        return;
     }
+
+    // si es una nueva dirección, marcar
+    setDireccionSelected(true);
+    setDireccionUser(nuevaDireccion);
+    placeIdSet(direccion.place_id);
+    setLatUser(direccion.lat);
+    setLonUser(direccion.lon);
+
+    setDataUpdateUsuario(prevState => ({
+        ...prevState,
+        direccion: direccion.display_name,
+        latitud: direccion.lat,
+        longitud: direccion.lon,
+    }));
+};
 
     const seccionUbicaciones = () => {
 
@@ -331,7 +330,9 @@ export default function PageUpdateUsuario() {
               <div 
                 key={'asu-' + index} 
                 className="row rounded border mt-1 p-1" 
-                style={{ backgroundColor: (direccion.place_id === placeId) ? direccionSelected ? '#47E58A' : '' : '' , cursor:'pointer' }}
+                style={{ 
+                    backgroundColor: (direccion.place_id === placeId || (dataUpdateUsuario.longitud === direccion.lon && dataUpdateUsuario.latitud === direccion.lat)) 
+                    ? (direccionSelected || ((dataUpdateUsuario.longitud === direccion.lon && dataUpdateUsuario.latitud === direccion.lat))) ? '#47E58A' : '' : '' , cursor:'pointer' }}
                 onClick={() => seleccionarUbicacion(direccion)}
               >
                 <div className="col-1">
@@ -481,7 +482,7 @@ export default function PageUpdateUsuario() {
         } else {
             axios.put(APIURL+'/usuarios',dataUpdate,config).then((resp)=>{
                 console.log(resp);
-                navigate(PathConstants.USUARIOS)
+                //navigate(PathConstants.USUARIOS)
                 execShowAlert({ type: 'success', title: 'Usuario Actualizado', message: 'EL usuario ' + dataUpdate.email + ' se ha actualizado.' })
 
             }).catch((error)=>{
@@ -638,8 +639,8 @@ export default function PageUpdateUsuario() {
     return(
         <div className="container">
             <div className="mb-2">
-                <Link className="btn btn-primary fw-bold py-1" to={PathConstants.USUARIOS} variant="secondary" >
-                    <i class="bi bi-arrow-left-square me-2"></i> Regresar
+                <Link className="btn btn-info py-1" to={PathConstants.USUARIOS} variant="secondary" style={{ color:'white' }}>
+                    <i className="bi bi-arrow-left-square me-2" style={{ color:'white' }}></i> Regresar
                 </Link>
             </div>
             <div className="">
