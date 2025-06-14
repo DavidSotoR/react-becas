@@ -33,6 +33,7 @@ function OrdenesServicios() {
     fecha_estimada_entrega: "",
     fecha_estimada_finalizacion: "",
     activo: true,
+    bloqueado: false,
   };
   const [dataFormOrdenServicio, setDataFormOrdenServicio] = useState(modelOrdenServicio);
   const [ dataSelectedOrdenServicio, setDataSelectedOrdenServicio ] = useState(null);
@@ -140,6 +141,13 @@ function OrdenesServicios() {
     }));
   };
 
+  const handleCheckChangeBloqueo = (e) => {
+    setDataFormOrdenServicio((prevState) => ({
+      ...prevState,
+      bloqueado: e.target.checked,
+    }));
+  };
+
   const formInputChange = (e) => {
     const { name, value } = e.target;
     setDataFormOrdenServicio((prevState) => ({
@@ -171,6 +179,11 @@ function OrdenesServicios() {
     if (name === 'activo') {
       console.log(name , value);
       
+      setDataSelectedOrdenServicio((prevState) => ({
+        ...prevState,
+        [name]: checked,
+      }));
+    } else if (name === 'bloqueado') {
       setDataSelectedOrdenServicio((prevState) => ({
         ...prevState,
         [name]: checked,
@@ -228,6 +241,7 @@ function OrdenesServicios() {
       id_proyecto: dataSelectedOrdenServicio.id_proyecto,
       descripcion: dataSelectedOrdenServicio.descripcion,
       activo: dataSelectedOrdenServicio.activo,
+      bloqueado: dataSelectedOrdenServicio.bloqueado,
       notas: dataSelectedOrdenServicio.notas,
       fecha_estimada_entrega: dataSelectedOrdenServicio.fecha_estimada_entrega,
       fecha_estimada_finalizacion: dataSelectedOrdenServicio.fecha_estimada_finalizacion,
@@ -275,10 +289,7 @@ function OrdenesServicios() {
           <p className="fw-bold mb-2">FILTROS:</p>
         </div>
         <div className="col-3">
-          <input
-            onChange={(e) => {
-              changeFilterOrdenes(e);
-            }}
+          <input onChange={(e) => {changeFilterOrdenes(e);}}
             type="text"
             readonly
             className="form-control form-control-sm"
@@ -292,9 +303,7 @@ function OrdenesServicios() {
             aria-label="Default select example"
             className="form-control-sm"
             name="filtro_proyecto"
-            onChange={(e) => {
-              changeFilterOrdenes(e);
-            }}
+            onChange={(e) => {changeFilterOrdenes(e);}}
           >
             <option value="all">Proyectos</option>
             {renderOpcionesProyectosSelect()}
@@ -315,12 +324,7 @@ function OrdenesServicios() {
           </Form.Select>
         </div>
         <div className="col-3">
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={() => {
-              handleShowNuevoOrdenServicio();
-            }}
-          >
+          <button className="btn btn-primary btn-sm" onClick={() => {handleShowNuevoOrdenServicio(); }}>
             {" "}
             Crear Orden Servicio{" "}
           </button>
@@ -388,25 +392,47 @@ function OrdenesServicios() {
               onChange={(e) => formInputChange(e)}
             />
           </div>
-          <div className="mb-3">
-            <label>Estado: </label>
-            <Form.Check type="switch">
-              <Form.Check.Input
-                name="activo"
-                onChange={(e) => {
-                  handleCheckChange(e);
-                }}
-                style={{ width: "2rem" }}
-                checked={dataFormOrdenServicio.activo}
-                type="checkbox"
-              />
-              <Form.Check.Label>
-                {" "}
-                <span className="pl-3">
-                  {dataFormOrdenServicio.activo ? "Activo" : "Inactivo"}
-                </span>{" "}
-              </Form.Check.Label>
-            </Form.Check>
+
+          <div className="d-flex">
+            <div className="mb-3">
+              <label>Estado: </label>
+              <Form.Check type="switch">
+                <Form.Check.Input
+                  name="activo"
+                  onChange={(e) => {
+                    handleCheckChange(e);
+                  }}
+                  style={{ width: "2rem" }}
+                  checked={dataFormOrdenServicio.activo}
+                  type="checkbox"
+                />
+                <Form.Check.Label>
+                  {" "}
+                  <span className="pl-3">
+                    {dataFormOrdenServicio.activo ? "Activo" : "Inactivo"}
+                  </span>{" "}
+                </Form.Check.Label>
+              </Form.Check>
+            </div>
+            <div className="mb-3 mx-2">
+              <label>Bloqueado: </label>
+              <Form.Check type="switch">
+                <Form.Check.Input
+                  name="bloqueado"
+                  onChange={(e) => {
+                    handleCheckChangeBloqueo(e);
+                  }}
+                  style={{ width: "2rem" }}
+                  checked={dataFormOrdenServicio.bloqueado}
+                  type="checkbox"
+                />
+                <Form.Check.Label>
+                  <span className="pl-3">
+                    {dataFormOrdenServicio.bloqueado ? "Bloquedo" : "No bloqueado"}
+                  </span>
+                </Form.Check.Label>
+              </Form.Check>
+            </div>
           </div>
 
           <div className="mb-3">
@@ -495,26 +521,50 @@ function OrdenesServicios() {
                   onChange={(e) => changeDataEditarOrdenServicio(e)}
                 />
               </div>
-              <div className="mb-3">
-                <label>Estado: </label>
-                <Form.Check type="switch">
-                  <Form.Check.Input
-                    name="activo"
-                    onChange={(e) => {
-                      changeDataEditarOrdenServicio(e);
-                    }}
-                    style={{ width: "2rem" }}
-                    checked={dataSelectedOrdenServicio.activo}
-                    type="checkbox"
-                  />
-                  <Form.Check.Label>
-                    {" "}
-                    <span className="pl-3">
-                      {dataSelectedOrdenServicio.activo ? "Activo" : "Inactivo"}
-                    </span>{" "}
-                  </Form.Check.Label>
-                </Form.Check>
+              <div className="d-flex"> 
+                <div className="mb-3">
+                  <label>Estado: </label>
+                  <Form.Check type="switch">
+                    <Form.Check.Input
+                      name="activo"
+                      onChange={(e) => {
+                        changeDataEditarOrdenServicio(e);
+                      }}
+                      style={{ width: "2rem" }}
+                      checked={dataSelectedOrdenServicio.activo}
+                      type="checkbox"
+                    />
+                    <Form.Check.Label>
+                      {" "}
+                      <span className="pl-3">
+                        {dataSelectedOrdenServicio.activo ? "Activo" : "Inactivo"}
+                      </span>{" "}
+                    </Form.Check.Label>
+                  </Form.Check>
+                </div>
+                <div className="mb-3 mx-4">
+                  <label>Bloqueado: </label>
+                  <Form.Check type="switch">
+                    <Form.Check.Input
+                      name="bloqueado"
+                      onChange={(e) => {
+                        changeDataEditarOrdenServicio(e);
+                      }}
+                      style={{ width: "2rem" }}
+                      checked={dataSelectedOrdenServicio.bloqueado}
+                      type="checkbox"
+                    />
+                    <Form.Check.Label>
+                      {" "}
+                      <span className="pl-3">
+                        {dataSelectedOrdenServicio.bloqueado ? "Bloqueado" : "No bloqueado"}
+                      </span>{" "}
+                    </Form.Check.Label>
+                  </Form.Check>
+                </div>
+
               </div>
+              
               <div className="mb-3">
                 <label>Notas:</label>
                 <input value={ dataSelectedOrdenServicio.notas }
