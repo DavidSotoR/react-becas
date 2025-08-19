@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import ModalCopiaEncuesta from "./ModalCopiaEncuesta";
+import PathConstants from "routes/pathsConstants";
 
 export default function Encuestas() {
   const APIURL = process.env.REACT_APP_API_URL;
@@ -60,41 +61,46 @@ export default function Encuestas() {
           <p style={{ fontWeight: "bold" }}>{encuesta.descripcion}</p>
         </td>
         <td>
-          {/*<div className="d-flex justify-content-center">
-            <Link
-              className="btn btn-primary btn-sm"
-              to={`/encuestas/${encuesta.id}`}
-            >
-              Editar
-            </Link>
-              onClick={() => openEditProyecto(proyecto, 'eliminar')}
-          </div>*/}
+          { (encuesta.id_tipo_cliente === 2) ? 
+          (
+            <div>
+              <Link
+                className="btn"
+                title="Ver Formulario"
+                to={`${PathConstants.ESECDB}`}
+              >
+                <i className="bi bi-pencil-square"></i>
+              </Link>
+            </div>
+          ) : (
+            <div className="d-flex justify-content-start">
+              <Link
+                className="btn"
+                title="Editar Datos"
+                to={`/encuestas/${encuesta.id}`}
+              >
+                <i className="bi bi-pencil-square"></i>
+              </Link>
+              <Link
+                className="btn"
+                to={`/encuestas/${encuesta.id}`}
+              >
+                <i className="bi bi-file-earmark-text text-blue" title="Archivo Proyecto"></i>
+              </Link>
+              <Link
+                className="btn"
+                title="Eliminar Proyecto"
+                onClick={() => seleccionarEncuesta(encuesta) }
+              >
+                <i
+                  className="bi bi-stack text-dark"
+                  title="Crear copia"
+                ></i>
+              </Link>
+            </div>
+          )  
+          }
           
-          <div className="d-flex justify-content-start">
-            <Link
-              className="btn"
-               title="Editar Datos"
-              to={`/encuestas/${encuesta.id}`}
-            >
-              <i className="bi bi-pencil-square"></i>
-            </Link>
-            <Link
-              className="btn"
-              to={`/encuestas/${encuesta.id}`}
-            >
-              <i className="bi bi-file-earmark-text text-blue" title="Archivo Proyecto"></i>
-            </Link>
-            <Link
-              className="btn"
-              title="Eliminar Proyecto"
-              onClick={() => seleccionarEncuesta(encuesta) }
-            >
-              <i
-                className="bi bi-stack text-dark"
-                title="Crear copia"
-              ></i>
-            </Link>
-          </div>
         </td>
       </tr>
     ));

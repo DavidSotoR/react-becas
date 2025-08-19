@@ -3,6 +3,7 @@ const PathConstants = {
     LOGIN: '/login',
     REGISTRO: '/registro/:token',
     ESEBP2: '/form-1',
+    ESECDB: '/form-esecdb',
     DATOSFAMILIA: '/datos-familia',
     COLABORADOR: '/colaborador',
     CALIDAD: '/calidad',

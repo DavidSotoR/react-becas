@@ -43,6 +43,8 @@ const EncuestaProyectoID = React.lazy(() => import('../components/HomePageEmpres
 const EmpresaEstudio = React.lazy(() => import('../components/HomeCom/Estudio'))
 const EmpresaConfig = React.lazy(() => import('../components/HomePageEmpresa/Configuraciones/ConfiguracionPage'))
 
+const FormEsecDB = React.lazy(() => import('../components/Formularios/ESECDB/FormEsecDB'))
+
 const OrdenesServicio = React.lazy(()=> import('../components/Catalogos/OrdenesServicios/OrdenesServicios'))
 //const Details = React.lazy(() => import("../pages/details/details"))
 
@@ -111,12 +113,14 @@ const PrivateRoute = ({ path, element }) => {
       PathConstants.ESTUDIO_SOCIOECONOMICO_ID,
       PathConstants.ENCUESTAPROYECTOID,
       PathConstants.CONFIGURACIONES,
+      PathConstants.ESECDB,
       // Agrega más rutas aquí
     ],
     Empresas: [
       PathConstants.HOME,
       PathConstants.ENCUESTAPROYECTOID,
       PathConstants.ESTUDIOSID,
+      PathConstants.ESECDB,
       PathConstants.CONFIGURACIONES,
     ],
     Familias: [
@@ -180,6 +184,7 @@ const routes = [
   generateRoute(PathConstants.PROYECTOS, <CatProyectos />, 'Administrador'),
   generateRoute(PathConstants.PROYECTO, <CatProyecto />, 'Administrador'),
   generateRoute(PathConstants.ESEBP2, <FormBP2 />, 'Administrador'),
+  generateRoute(PathConstants.ESECDB, <FormEsecDB />, 'Administrador'),
   generateRoute(PathConstants.CLIENTES, <CatClientes />, 'Administrador'),
   generateRoute(PathConstants.CLIENTENUEVO, <ClienteNuevo />),
   generateRoute(PathConstants.CLIENTEACTUALIZAR, <ClienteActualizar />),
