@@ -11,6 +11,7 @@ import TablaOrdenesDeTrabajo from "./TablaOrdenesDeTrabajo";
 
 function Proyecto() {
     const { ID } = useParams();
+    const [ idTipoCliente, setIdTipoCliente ] = useState(null)
     const { logout } = useContext(AuthContext);
     const APIURL = process.env.REACT_APP_API_URL;
     const config = {
@@ -24,8 +25,10 @@ function Proyecto() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
    
-    const getProyecto = () =>{
+    const getProyecto = async () =>{
         axios.get(`${APIURL}/proyectos/${ID}`,config).then((resp)=>{
+            var data = resp.data;
+            setIdTipoCliente(data.id_tipo_cliente)
             setProyecto(resp.data);
         }).catch((error)=>{
             if (error?.response.status === 401) {
@@ -64,7 +67,10 @@ function Proyecto() {
                 </TabList>
 
                 <TabPanel>
-                    <TablaClientesProyecto ID={ID} idTipoCliente={1}></TablaClientesProyecto>
+                    { idTipoCliente &&
+                        <TablaClientesProyecto ID={ID} idTipoCliente={idTipoCliente}></TablaClientesProyecto>
+                    }
+                    
                 </TabPanel>
                 <TabPanel>
                     Plan Ordenes de servicio

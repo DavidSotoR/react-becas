@@ -5,6 +5,9 @@ function useForm(initialValues = {}) {
   const [valuesF1, setValuesF1] = useState(initialValues);
   const [errorsF1, setErrorsF1] = useState({});
 
+  const [valuesF2, setValuesF2] = useState(initialValues);
+  const [errorsF2, setErrorsF2] = useState({});
+
   const handleChangeF1 = (e) => {
     const { name, value } = e.target;
     
@@ -14,17 +17,37 @@ function useForm(initialValues = {}) {
     });
   };
 
+  const handleChangeF2 = (e) => {
+    const { name, value } = e.target;
+    
+    setValuesF2({
+      ...valuesF2,
+      [name]: value
+    });
+  };
+
   const resetForm1 = () => {
     setValuesF1(initialValues);
     setErrorsF1({});
   };
+
+  const resetForm2 = () => {
+    setValuesF2(initialValues);
+    setErrorsF2({});
+  };
+
 
   return {
     valuesF1,
     errorsF1,
     handleChangeF1,
     setErrorsF1,
-    resetForm1
+    resetForm1,
+    valuesF2,
+    errorsF2,
+    handleChangeF2,
+    setErrorsF2,
+    resetForm2
   };
 }
 
@@ -53,9 +76,27 @@ function FormEsecDB() {
 
     });
 
+    const { valuesF2, handleChangeF2 } = useForm({
+        estado_salud: 1,
+        estado_salud_desc: '',
+        enfermedad_cronica: false,
+        enfermedad_cronica_desc: '',
+        operacion_accidente: false,
+        operacion_accidente_desc: '',
+        practica_deporte: false,
+        practica_deporte_desc: '',
+        practica_deporte_frecuencia: '',
+
+    });
+
     const handleSubmitF1 = (e) => {
         e.preventDefault();
         console.log('Datos:', valuesF1);
+    };
+
+    const handleSubmitF2 = (e) => {
+        e.preventDefault();
+        console.log('Datos:', valuesF2);
     };
 
     const siguienteEtapa = () => {
@@ -201,73 +242,102 @@ function FormEsecDB() {
             { showModulo === 2 && //SALUD
                 <div id="contenido-2" className="col-12 card pt-2">
                     <p className="fw-bold">SALUD</p>
-                    <div className="row mb-3">
-                        <div className="col-4">
-                            <label className="form-label"> ¿Como evaluaria su estado de Salud?</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Seleccione una opción</option>
-                                <option value="1">Excelente</option>
-                                <option value="2">Muy Buena</option>
-                                <option value="3">Buena</option>
-                                <option value="4">Regular</option>
-                                <option value="5">Mala</option>
-                            </select>
+                    <form onSubmit={handleSubmitF2}>
+                        <div className="row mb-3">
+                            <div className="col-4">
+                                <label className="form-label"> ¿Como evaluaria su estado de Salud?</label>
+                                <select name="estado_salud" class="form-select" aria-label="Default select example"
+                                value={valuesF2.estado_salud}
+                                onChange={handleChangeF2}>
+                                    <option selected>Seleccione una opción</option>
+                                    <option value="1">Excelente</option>
+                                    <option value="2">Muy Buena</option>
+                                    <option value="3">Buena</option>
+                                    <option value="4">Regular</option>
+                                    <option value="5">Mala</option>
+                                </select>
+                            </div>
+                            <div className="col-6">
+                                <label className="form-label">¿Por que?</label>
+                                <input name="estado_salud_desc" className="form-control" type="text" placeholder="" aria-label="default input example"
+                                value={valuesF2.estado_salud_desc}
+                                onChange={handleChangeF2}/>
+                            </div>
                         </div>
-                        <div className="col-6">
-                            <label className="form-label">¿Por que?</label>
-                            <input className="form-control" type="text" placeholder="" aria-label="default input example"/>
+                        <div className="row mb-3">
+                            <div className="col-4">
+                                <label className="form-label"> PADECE O HA PADECIDO ALGUNA ENFERMEDAD CRONICA?</label>
+                                <select name="enfermedad_cronica" class="form-select" aria-label="Default select example"
+                                value={valuesF2.enfermedad_cronica}
+                                onChange={handleChangeF2}>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Sí</option>
+                                </select>
+                            </div>
+                            <div className="col-8">
+                                <label className="form-label">¿Cual?</label>
+                                <input name="enfermedad_cronica_desc" className="form-control" type="text" placeholder="¿Cual?" aria-label="default input example"
+                                value={valuesF2.enfermedad_cronica_desc}
+                                onChange={handleChangeF2}/>
+                            </div>
+                            
                         </div>
-                    </div>
-                    <div className="row mb-3">
-                        <div className="col-4">
-                            <label className="form-label"> PADECE O HA PADECIDO ALGUNA ENFERMEDAD CRONICA?</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option value="0" selected>No</option>
-                                <option value="1">Sí</option>
-                            </select>
+                        <div className="row mb-3">
+                            <div className="col-4">
+                                <label className="form-label"> HA SUFRIDO ALGUN OPERACIÓN O ACCIDENTE?</label>
+                                <select name="operacion_accidente" class="form-select" aria-label="Default select example"
+                                value={valuesF2.operacion_accidente}
+                                onChange={handleChangeF2}>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Sí</option>
+                                </select>
+                            </div>
+                            <div className="col-8">
+                                <label className="form-label">DEFINA</label>
+                                <input name="operacion_accidente_desc" className="form-control" type="text" placeholder="DEFINA" aria-label="default input example"
+                                value={valuesF2.operacion_accidente_desc}
+                                onChange={handleChangeF2}/>
+                            </div>
+                            
                         </div>
-                        <div className="col-8">
-                            <label className="form-label">¿Cual?</label>
-                            <input className="form-control" type="text" placeholder="¿Cual?" aria-label="default input example"/>
+                        <div className="row mb-3">
+                            <div className="col-4">
+                                <label className="form-label">PRACTICA ALGUN DEPORTE?</label>
+                                <select name="practica_deporte" class="form-select" aria-label="Default select example"
+                                value={valuesF2.practica_deporte}
+                                onChange={handleChangeF2}>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Sí</option>
+                                </select>
+                            </div>
+                            <div className="col-4">
+                                <label className="form-label">¿Cual?</label>
+                                <input name="practica_deporte_desc" className="form-control" type="text" placeholder="Cual" aria-label="default input example"
+                                value={valuesF2.practica_deporte_desc}
+                                onChange={handleChangeF2}/>
+                            </div>
+                            <div className="col-4">
+                                <label className="form-label">Frecuencia</label>
+                                <input name="practica_deporte_frecuencia" className="form-control" type="text" placeholder="Frecuencia" aria-label="default input example"
+                                value={valuesF2.practica_deporte_frecuencia}
+                                onChange={handleChangeF2}/>
+                            </div>
+                            
                         </div>
-                        
-                    </div>
-                    <div className="row mb-3">
-                        <div className="col-4">
-                            <label className="form-label"> PADECE O HA PADECIDO ALGUNA ENFERMEDAD CRONICA?</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option value="0" selected>No</option>
-                                <option value="1">Sí</option>
-                            </select>
+                        <div className="col-12">
+                            <div className="d-flex justify-content-between mb-3">
+                                <div>
+                                    <button type="submit" className="btn btn-primary me-1 ms-1">Guardar</button>
+                                </div>
+                                <div>
+                                    <button className="btn btn-primary me-1 ms-1" onClick={ () => anteriorEtapa() }>Anterior</button>
+                                    <button className="btn btn-primary me-1 ms-1" onClick={ () => siguienteEtapa() }>Siguinte</button>
+                                </div>
+                                
+                            </div>
+
                         </div>
-                        <div className="col-8">
-                            <label className="form-label">DEFINA</label>
-                            <input className="form-control" type="text" placeholder="DEFINA" aria-label="default input example"/>
-                        </div>
-                        
-                    </div>
-                    <div className="row mb-3">
-                        <div className="col-4">
-                            <label className="form-label">PRACTICA ALGUN DEPORTE?</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option value="0" selected>No</option>
-                                <option value="1">Sí</option>
-                            </select>
-                        </div>
-                        <div className="col-4">
-                            <label className="form-label">¿Cual?</label>
-                            <input className="form-control" type="text" placeholder="Cual" aria-label="default input example"/>
-                        </div>
-                        <div className="col-4">
-                            <label className="form-label">Frecuencia</label>
-                            <input className="form-control" type="text" placeholder="Frecuencia" aria-label="default input example"/>
-                        </div>
-                        
-                    </div>
-                    <div className="d-flex justify-content-end mb-3">
-                        <button className="btn btn-primary me-1 ms-1" onClick={ () => anteriorEtapa() }>Anterior</button>
-                        <button className="btn btn-primary me-1 ms-1" onClick={ () => siguienteEtapa() }>Siguinte</button>
-                    </div>
+                    </form>
                 </div>
             }
 

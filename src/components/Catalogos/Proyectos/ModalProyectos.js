@@ -15,7 +15,7 @@ function ModalProyectos({ show, handleClose,idTipoCliente,TipoCliente  }) {
     const [formValid, setFormValid] = useState(true)
     const [formData, setFormData] = useState({
         nombre:"",
-        id_tipo_cliente:idTipoCliente,
+        id_tipo_cliente: idTipoCliente,
         activo: true
     })
     const [ cicloActivo, setCicloActivo ] = useState(true)

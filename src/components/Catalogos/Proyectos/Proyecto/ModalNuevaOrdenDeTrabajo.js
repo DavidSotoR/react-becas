@@ -18,7 +18,8 @@ function ModalNuevaOrdenDeTrabajo({ show, handleClose , idProyecto, idCliente = 
         notas:'',
         fecha_estimada_entrega: '',
         fecha_estimada_finalizacion: '',
-        activo: true
+        activo: true,
+        bloqueado: false,
     })
 
   const handleCheckChange = (e) => {
