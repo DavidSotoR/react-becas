@@ -209,13 +209,38 @@ export default function Layout() {
                     {/*<MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> 
                                 {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>CICLOS ESCOLARES</p>)}
                               </MenuItem>*/}
-                    <SubMenu
-                      label="NUEVO ESTUDIO"
-                      icon={
-                        collapsed && (
+                    <SubMenu label="NUEVO ESTUDIO" icon={ collapsed && (
                           <div className="d-flex justify-content-center align-items-center">
-                            {" "}
-                            <ion-icon size="large" name="documents-outline" />
+                            {" "} <ion-icon size="large" name="documents-outline" />
+                          </div>
+                        )
+                      }
+                      rootStyles={{
+                        color: "white",
+                        ["& > ." + menuClasses.button]: {
+                          backgroundColor: "#47D1D6",
+                          color: "white",
+                          "&:hover": { backgroundColor: "#47D1D6" },
+                        },
+                        ["." + menuClasses.subMenuContent]: {
+                          backgroundColor: "#47D1D6",
+                          fontWeight: "bold",
+                        },
+                      }}>
+                      <MenuItem
+                        component={
+                          <Link to={PathConstants.ESTUDIOSOCIOECONOMICO} />
+                        }
+                      >
+                        {" "}
+                        SOCIOECONOMICO
+                      </MenuItem>
+                    </SubMenu>
+
+                    <SubMenu label="EMPRESAS" icon={ collapsed && (
+                          <div className="d-flex justify-content-center align-items-center">
+                            {" "} <ion-icon size="large" name="business-outline" />
+                            
                           </div>
                         )
                       }
@@ -232,28 +257,25 @@ export default function Layout() {
                         },
                       }}
                     >
-                      <MenuItem
-                        component={
-                          <Link to={PathConstants.ESTUDIOSOCIOECONOMICO} />
-                        }
-                      >
+                      <MenuItem component={ <Link to={PathConstants.MODULOEMPRESAORDENESSERVICIO} />}>
                         {" "}
-                        SOCIOECONOMICO
+                        ORDENES SERVICIOS
                       </MenuItem>
-                      <MenuItem
-                        component={<Link to={PathConstants.ESTUDIOLABORAL} />}
-                      >
+                      <MenuItem component={<Link to={PathConstants.MODULOEMPRESASUCURSALES} />}>
                         {" "}
-                        LABORAL
+                        SUCURSALES
+                      </MenuItem>
+                      <MenuItem component={<Link to={PathConstants.MODULOEMPRESAEMPLEADOS} />}>
+                        {" "}
+                        EMPLEADOS
+                      </MenuItem>
+                      <MenuItem component={<Link to={PathConstants.MODULOEMPRESAESTUDIOSOCIECONOMICO} />}>
+                        {" "}
+                        ESTUDIO SOCIOECONOMICOS
                       </MenuItem>
                     </SubMenu>
 
-                    {/*<MenuItem component={<Link to={PathConstants.SERVICIOESTUDIO} />}> 
-                                {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>NUEVO ESTUDIO</p>)}
-                              </MenuItem>*/}
-
-                    <SubMenu
-                      label="CATALOGOS"
+                    <SubMenu label="CATALOGOS"
                       icon={
                         collapsed && (
                           <div className="d-flex justify-content-center align-items-center">

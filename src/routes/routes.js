@@ -43,6 +43,12 @@ const EncuestaProyectoID = React.lazy(() => import('../components/HomePageEmpres
 const EmpresaEstudio = React.lazy(() => import('../components/HomeCom/Estudio'))
 const EmpresaConfig = React.lazy(() => import('../components/HomePageEmpresa/Configuraciones/ConfiguracionPage'))
 
+//EMPRESAS MODULOS
+const ModuloEmpresaSucursales = React.lazy(()=> import('../components/Catalogos/ModuloEmpresas/Sucursales'));
+const ModuloEmpresaEmpleados = React.lazy(()=> import('../components/Catalogos/ModuloEmpresas/Empleados'));
+const ModuloEmpresaEstudioSocioEconomico = React.lazy(()=> import('../components/Catalogos/ModuloEmpresas/EstudioSocioEconomico'));
+const ModuloEmpresaOrdenesServicio = React.lazy(()=> import('../components/Catalogos/ModuloEmpresas/OrdenesServicios'));
+
 const FormEsecDB = React.lazy(() => import('../components/Formularios/ESECDB/FormEsecDB'))
 
 const OrdenesServicio = React.lazy(()=> import('../components/Catalogos/OrdenesServicios/OrdenesServicios'))
@@ -114,6 +120,10 @@ const PrivateRoute = ({ path, element }) => {
       PathConstants.ENCUESTAPROYECTOID,
       PathConstants.CONFIGURACIONES,
       PathConstants.ESECDB,
+      PathConstants.MODULOEMPRESASUCURSALES,
+      PathConstants.MODULOEMPRESAESTUDIOSOCIECONOMICO,
+      PathConstants.MODULOEMPRESAORDENESSERVICIO,
+      PathConstants.MODULOEMPRESAEMPLEADOS,
       // Agrega más rutas aquí
     ],
     Empresas: [
@@ -190,6 +200,10 @@ const routes = [
   generateRoute(PathConstants.CLIENTEACTUALIZAR, <ClienteActualizar />),
   generateRoute(PathConstants.COLEGIOSCOMUNES, <CatColegiosComunes />, 'Administrador'),
   generateRoute(PathConstants.TIPOSCLIENTES, <CatTiposClientes />, 'Administrador'),
+  generateRoute(PathConstants.MODULOEMPRESASUCURSALES, <ModuloEmpresaSucursales />, 'Administrador'),
+  generateRoute(PathConstants.MODULOEMPRESAEMPLEADOS, <ModuloEmpresaEmpleados />, 'Administrador'),
+  generateRoute(PathConstants.MODULOEMPRESAESTUDIOSOCIECONOMICO, <ModuloEmpresaEstudioSocioEconomico />, 'Administrador'),
+  generateRoute(PathConstants.MODULOEMPRESAORDENESSERVICIO, <ModuloEmpresaOrdenesServicio />, 'Administrador'),
   {
     path: PathConstants.LOGIN,
     perfil: 'todos',

@@ -8,6 +8,9 @@ function useForm(initialValues = {}) {
   const [valuesF2, setValuesF2] = useState(initialValues);
   const [errorsF2, setErrorsF2] = useState({});
 
+  const [valuesF3, setValuesF3] = useState(initialValues);
+  const [errorsF3, setErrorsF3] = useState({});
+
   const handleChangeF1 = (e) => {
     const { name, value } = e.target;
     
@@ -26,6 +29,15 @@ function useForm(initialValues = {}) {
     });
   };
 
+  const handleChangeF3 = (e) => {
+    const { name, value } = e.target;
+    
+    setValuesF3({
+      ...valuesF3,
+      [name]: value
+    });
+  };
+
   const resetForm1 = () => {
     setValuesF1(initialValues);
     setErrorsF1({});
@@ -34,6 +46,11 @@ function useForm(initialValues = {}) {
   const resetForm2 = () => {
     setValuesF2(initialValues);
     setErrorsF2({});
+  };
+
+  const resetForm3 = () => {
+    setValuesF3(initialValues);
+    setErrorsF3({});
   };
 
 
@@ -47,7 +64,12 @@ function useForm(initialValues = {}) {
     errorsF2,
     handleChangeF2,
     setErrorsF2,
-    resetForm2
+    resetForm2,
+    valuesF3,
+    errorsF3,
+    handleChangeF3,
+    setErrorsF3,
+    resetForm3,
   };
 }
 
@@ -89,12 +111,29 @@ function FormEsecDB() {
 
     });
 
+    const { valuesF3, handleChangeF3 } = useForm({
+        grado_estudio: '',
+        lugar: '',
+        documento_valido: '',
+        documento_oficial: '',
+        estudia: false,
+        estudia_desc: '',
+        estudia_lugar: '',
+        estudia_periodo: '',
+
+    });
+
     const handleSubmitF1 = (e) => {
         e.preventDefault();
         console.log('Datos:', valuesF1);
     };
 
     const handleSubmitF2 = (e) => {
+        e.preventDefault();
+        console.log('Datos:', valuesF2);
+    };
+
+    const handleSubmitF3 = (e) => {
         e.preventDefault();
         console.log('Datos:', valuesF2);
     };
@@ -122,7 +161,7 @@ function FormEsecDB() {
                     <p className="fw-bold">INFORMACION GENERAL</p>
                     <form onSubmit={handleSubmitF1}>
                     <div className="row mb-3">
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="nombre" className="form-control" type="text" placeholder="Nombre:" aria-label="default input example"
                                 value={valuesF1.nombre}
                                 onChange={handleChangeF1}
@@ -143,17 +182,17 @@ function FormEsecDB() {
                         </div>
                     </div>
                     <div className="row mb-3">
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="nacionalidad" className="form-control" type="text" placeholder="Nacionalidad:" aria-label="default input example"
                                 value={valuesF1.nacionalidad}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="lugar_nacimiento" className="form-control" type="text" placeholder="Lugar Nacimiento:" aria-label="default input example"
                                 value={valuesF1.lugar_nacimiento}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4 d-flex">
+                        <div className="col-12 d-flex">
                             <label for="date_m1" className="form-label">Fecha Nacimiento</label>
                             <input name="fecha_nacimiento" id="date_m1" className="form-control" type="date" aria-label="default input example"
                                 value={valuesF1.fecha_nacimiento}
@@ -162,51 +201,51 @@ function FormEsecDB() {
 
                     </div>
                     <div className="row mb-3">
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="domicilio" className="form-control" type="text" placeholder="Domicilio:" aria-label="default input example"
                                 value={valuesF1.domicilio}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="colonia" className="form-control" type="text" placeholder="Colonia:" aria-label="default input example"
                                 value={valuesF1.colonia}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="ciudad" className="form-control" type="text" placeholder="Municipio/Ciudad:" aria-label="default input example"
                             value={valuesF1.ciudad}
                                 onChange={handleChangeF1}/>
                         </div>
                     </div>
                     <div className="row mb-3">
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="email" className="form-control" type="text" placeholder="Correo:" aria-label="default input example"
                             value={valuesF1.email}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="celular" className="form-control" type="text" placeholder="Celular:" aria-label="default input example"
                             value={valuesF1.celular}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="telefono" className="form-control" type="text" placeholder="Telefono:" aria-label="default input example"
                             value={valuesF1.telefono}
                                 onChange={handleChangeF1}/>
                         </div>
                     </div>
                     <div className="row mb-3">
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="curp" className="form-control" type="text" placeholder="CURP:" aria-label="default input example"
                             value={valuesF1.curp}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="rfc" className="form-control" type="text" placeholder="RFC:" aria-label="default input example"
                             value={valuesF1.rfc}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="nss" className="form-control" type="text" placeholder="NSS:" aria-label="default input example"
                             value={valuesF1.nss}
                                 onChange={handleChangeF1}/>
@@ -214,17 +253,17 @@ function FormEsecDB() {
                         
                     </div>
                     <div className="row mb-3">
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="ine" className="form-control" type="text" placeholder="INE:" aria-label="default input example"
                             value={valuesF1.ine}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="pasaporte" className="form-control" type="text" placeholder="Pasaporte:" aria-label="default input example"
                             value={valuesF1.pasaporte}
                                 onChange={handleChangeF1}/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <input name="licencia_conductor" className="form-control" type="text" placeholder="Licencia Conductor:" aria-label="default input example"
                             value={valuesF1.licencia_conductor}
                                 onChange={handleChangeF1}/>
@@ -244,9 +283,9 @@ function FormEsecDB() {
                     <p className="fw-bold">SALUD</p>
                     <form onSubmit={handleSubmitF2}>
                         <div className="row mb-3">
-                            <div className="col-4">
+                            <div className="col-12">
                                 <label className="form-label"> ¿Como evaluaria su estado de Salud?</label>
-                                <select name="estado_salud" class="form-select" aria-label="Default select example"
+                                <select name="estado_salud" className="form-select" aria-label="Default select example"
                                 value={valuesF2.estado_salud}
                                 onChange={handleChangeF2}>
                                     <option selected>Seleccione una opción</option>
@@ -265,16 +304,16 @@ function FormEsecDB() {
                             </div>
                         </div>
                         <div className="row mb-3">
-                            <div className="col-4">
+                            <div className="col-12">
                                 <label className="form-label"> PADECE O HA PADECIDO ALGUNA ENFERMEDAD CRONICA?</label>
-                                <select name="enfermedad_cronica" class="form-select" aria-label="Default select example"
+                                <select name="enfermedad_cronica" className="form-select" aria-label="Default select example"
                                 value={valuesF2.enfermedad_cronica}
                                 onChange={handleChangeF2}>
                                     <option value="0" selected>No</option>
                                     <option value="1">Sí</option>
                                 </select>
                             </div>
-                            <div className="col-8">
+                            <div className="col-12">
                                 <label className="form-label">¿Cual?</label>
                                 <input name="enfermedad_cronica_desc" className="form-control" type="text" placeholder="¿Cual?" aria-label="default input example"
                                 value={valuesF2.enfermedad_cronica_desc}
@@ -283,16 +322,16 @@ function FormEsecDB() {
                             
                         </div>
                         <div className="row mb-3">
-                            <div className="col-4">
+                            <div className="col-12">
                                 <label className="form-label"> HA SUFRIDO ALGUN OPERACIÓN O ACCIDENTE?</label>
-                                <select name="operacion_accidente" class="form-select" aria-label="Default select example"
+                                <select name="operacion_accidente" className="form-select" aria-label="Default select example"
                                 value={valuesF2.operacion_accidente}
                                 onChange={handleChangeF2}>
                                     <option value="0" selected>No</option>
                                     <option value="1">Sí</option>
                                 </select>
                             </div>
-                            <div className="col-8">
+                            <div className="col-12">
                                 <label className="form-label">DEFINA</label>
                                 <input name="operacion_accidente_desc" className="form-control" type="text" placeholder="DEFINA" aria-label="default input example"
                                 value={valuesF2.operacion_accidente_desc}
@@ -301,22 +340,22 @@ function FormEsecDB() {
                             
                         </div>
                         <div className="row mb-3">
-                            <div className="col-4">
+                            <div className="col-12">
                                 <label className="form-label">PRACTICA ALGUN DEPORTE?</label>
-                                <select name="practica_deporte" class="form-select" aria-label="Default select example"
+                                <select name="practica_deporte" className="form-select" aria-label="Default select example"
                                 value={valuesF2.practica_deporte}
                                 onChange={handleChangeF2}>
                                     <option value="0" selected>No</option>
                                     <option value="1">Sí</option>
                                 </select>
                             </div>
-                            <div className="col-4">
+                            <div className="col-12">
                                 <label className="form-label">¿Cual?</label>
                                 <input name="practica_deporte_desc" className="form-control" type="text" placeholder="Cual" aria-label="default input example"
                                 value={valuesF2.practica_deporte_desc}
                                 onChange={handleChangeF2}/>
                             </div>
-                            <div className="col-4">
+                            <div className="col-12">
                                 <label className="form-label">Frecuencia</label>
                                 <input name="practica_deporte_frecuencia" className="form-control" type="text" placeholder="Frecuencia" aria-label="default input example"
                                 value={valuesF2.practica_deporte_frecuencia}
@@ -345,68 +384,85 @@ function FormEsecDB() {
 
                 <div id="contenido-3" className="col-12 card pt-2">
                     <p className="fw-bold">NIVEL DE EDUCACION</p>
-                    <div className="row mb-3">
-                        <div className="col-4">
-                            <label className="form-label">ULTIMO GRADO DE ESTUDIOS</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Seleccione una opción</option>
-                                <option value="1">Primarua</option>
-                                <option value="2">Secundaria</option>
-                                <option value="3">Bachillerato</option>
-                                <option value="4">Tecnica</option>
-                                <option value="5">Licenciatura</option>
-                                <option value="6">Maestria</option>
-                                <option value="7">Postgrado</option>
-                                <option value="8">Doctorado</option>
-                            </select>
+                    <form onSubmit={handleSubmitF3}>
+                        <div className="row mb-3">
+                            <div className="col-12">
+                                <label className="form-label">ULTIMO GRADO DE ESTUDIOS</label>
+                                <select name="grado_estudio" className="form-select" aria-label="Default select example"
+                                value={valuesF3.grado_estudio}
+                                onChange={handleChangeF3}>
+                                    <option selected>Seleccione una opción</option>
+                                    <option value="1">Primarua</option>
+                                    <option value="2">Secundaria</option>
+                                    <option value="3">Bachillerato</option>
+                                    <option value="4">Tecnica</option>
+                                    <option value="5">Licenciatura</option>
+                                    <option value="6">Maestria</option>
+                                    <option value="7">Postgrado</option>
+                                    <option value="8">Doctorado</option>
+                                </select>
+                            </div>
+                            <div className="col-12">
+                                <label className="form-label">LUGAR</label>
+                                <input className="form-control" type="text" placeholder="LUGAR" aria-label="default input example"
+                                value={valuesF3.lugar}
+                                onChange={handleChangeF3}/>
+                            </div>
+                            <div className="col-12">
+                                <label className="form-label">CUENTA CON UN DOCUMENTO</label>
+                                <select name="documento_oficial" className="form-select" aria-label="Default select example"
+                                value={valuesF3.documento_oficial}
+                                onChange={handleChangeF3}>
+                                    <option value="1">SI</option>
+                                    <option value="2">NO</option>
+                                </select>
+                            </div>
+                            <div className="col-12">
+                                <label className="form-label">DOCUMENTO</label>
+                                <select className="form-select" aria-label="Default select example">
+                                    <option selected>Seleccione una opción</option>
+                                    <option value="1">Certificado</option>
+                                    <option value="2">Kardex</option>
+                                    <option value="3">Carta Pasante</option>
+                                    <option value="4">Cedula Profesional</option>
+                                    <option value="5">Constancia/Diploma</option>
+                                </select>
+                            </div>
+                            <div className="col-12">
+                                <label className="form-label">ACTUALMENTE ESTUDIA</label>
+                                <select className="form-select" aria-label="Default select example">
+                                    <option value="1">SI</option>
+                                    <option value="2">NO</option>
+                                </select>
+                            </div>
+                            <div className="col-12">
+                                <label className="form-label">QUE ESTUDIA?</label>
+                                <input className="form-control" type="text" placeholder="ESTUDIA:" aria-label="default input example"/>
+                            </div>
+                            <div className="col-12">
+                                <label className="form-label">LUGAR</label>
+                                <input className="form-control" type="text" placeholder="LUGAR:" aria-label="default input example"/>
+                            </div>
+                            <div className="col-12">
+                                <label className="form-label">PERIODO</label>
+                                <input className="form-control" type="text" placeholder="PERIODO:" aria-label="default input example"/>
+                            </div>
                         </div>
-                        <div className="col-4">
-                            <label className="form-label">LUGAR</label>
-                            <input className="form-control" type="text" placeholder="LUGAR" aria-label="default input example"/>
+                        
+                        <div className="col-12">
+                            <div className="d-flex justify-content-between mb-3">
+                                <div>
+                                    <button type="submit" className="btn btn-primary me-1 ms-1">Guardar</button>
+                                </div>
+                                <div>
+                                    <button className="btn btn-primary me-1 ms-1" onClick={ () => anteriorEtapa() }>Anterior</button>
+                                    <button className="btn btn-primary me-1 ms-1" onClick={ () => siguienteEtapa() }>Siguinte</button>
+                                </div>
+                                
+                            </div>
+
                         </div>
-                        <div className="col-4">
-                            <label className="form-label">CUENTA CON UN DOCUMENTO</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option value="1">SI</option>
-                                <option value="2">NO</option>
-                            </select>
-                        </div>
-                        <div className="col-4">
-                            <label className="form-label">DOCUMENTO</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Seleccione una opción</option>
-                                <option value="1">Certificado</option>
-                                <option value="2">Kardex</option>
-                                <option value="3">Carta Pasante</option>
-                                <option value="4">Cedula Profesional</option>
-                                <option value="5">Constancia/Diploma</option>
-                            </select>
-                        </div>
-                        <div className="col-4">
-                            <label className="form-label">ACTUALMENTE ESTUDIA</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option value="1">SI</option>
-                                <option value="2">NO</option>
-                            </select>
-                        </div>
-                        <div className="col-4">
-                            <label className="form-label">QUE ESTUDIA?</label>
-                            <input className="form-control" type="text" placeholder="ESTUDIA:" aria-label="default input example"/>
-                        </div>
-                        <div className="col-4">
-                            <label className="form-label">LUGAR</label>
-                            <input className="form-control" type="text" placeholder="LUGAR:" aria-label="default input example"/>
-                        </div>
-                        <div className="col-4">
-                            <label className="form-label">PERIODO</label>
-                            <input className="form-control" type="text" placeholder="PERIODO:" aria-label="default input example"/>
-                        </div>
-                    </div>
-                    
-                    <div className="d-flex justify-content-end mb-3">
-                        <button className="btn btn-primary me-1 ms-1" onClick={ () => anteriorEtapa() }>Anterior</button>
-                        <button className="btn btn-primary me-1 ms-1" onClick={ () => siguienteEtapa() }>Siguinte</button>
-                    </div>
+                    </form>
                 </div>
 
             }
@@ -414,39 +470,40 @@ function FormEsecDB() {
             { showModulo === 4 && // LABORAL
                 <div id="contenido-2" className="col-12 card pt-2">
                     <p className="fw-bold">LABORAL</p>
+                    <form ></form>
                     <div className="row mb-3">
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">CUAL ES EL INTERES DE INGRESAR A LA EMPRESA</label>
                             <input className="form-control" type="text" placeholder="Describa:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">PARA QUE PUESTO SE POSTULA</label>
                             <input className="form-control" type="text" placeholder="Puesto:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">CUAL ES LA DISTANCIA A LA EMPRESA Y MEDIO DE TRANSPORTE</label>
                             <input className="form-control" type="text" placeholder="Distancia y tiempo:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">TIENES FAMILIARES QUE TRABAJEN O TRABAJARON EN LA EMPRESA?</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">SI</option>
                                 <option value="0">NO</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">NOMBRE DE FAMILIAR</label>
                             <input className="form-control" type="text" placeholder="Nombre:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">PARENTESCO</label>
                             <input className="form-control" type="text" placeholder="Parentesco:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">PUESTO</label>
                             <input className="form-control" type="text" placeholder="puesto:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4 mb-3">
+                        <div className="col-12 mb-3">
                             <label className="form-label">CUANTOS EMPLEOS HA TENIDO DE 6 AÑOS ATRÁS A LA FECHA</label>
                             <input className="form-control" type="number" placeholder="Cantidad:" aria-label="default input example"/>
                         </div>
@@ -500,9 +557,9 @@ function FormEsecDB() {
                     <p className="fw-bold">CONDICIONES GENERALES DE LA VIVIENDA, ZONA Y NIVEL SOCIAL</p>
                     
                     <div className="row mb-3">
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">ZONDA DE UBICACIÓN DE LA COLONIA</label>
-                            <select class="form-select" aria-label="Default select example"> 
+                            <select className="form-select" aria-label="Default select example"> 
                                 <option value="1">Residencial</option>
                                 <option value="2">Interes social</option>
                                 <option value="3">Popular</option>
@@ -510,9 +567,9 @@ function FormEsecDB() {
                                 <option value="5">Industrial</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">NIVEL SOCIAL</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">Alta</option>
                                 <option value="2">Media Alta</option>
                                 <option value="3">Media</option>
@@ -520,46 +577,46 @@ function FormEsecDB() {
                                 <option value="5">Baja</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">ZONA DE RIESGO</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">Segura</option>
                                 <option value="2">Insegura</option>
                                 <option value="3">Medio</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">CUENTA CON TODOS LOS SERVICIOS NECESARIOS, CALLES PAVIMENTADAS Y ALUMBRADO PUBLICO</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">SI</option>
                                 <option value="0">NO</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">DEFINIR FALTANTE</label>
                             <input className="form-control" type="text" placeholder="Faltantes:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">AVENIDAS PRINICIPALES CERCA DEL DOMICILIO</label>
                             <input className="form-control" type="text" placeholder="Referencia:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">TRANSPORTE QUE PASA POR LA COLONIA</label>
                             <input className="form-control" type="text" placeholder="Rutas:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">ESTRUCTURA DE LA VIVIENDA</label>
                             <input className="form-control" type="text" placeholder="Estado vivienda:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">CONDICIONES DE LA VIVIENDA Y MOBILIARIO</label>
                             <input className="form-control" type="text" placeholder="Estado Mobiliario:" aria-label="default input example"/>
                         </div>  
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">CUANTO TIEMPO TIENE VIVIENDO EN EL DOMICILIO ACTUAL?</label>
                             <input className="form-control" type="text" placeholder="Tiempo:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">EN CASO DE SER MENOR A UN AÑO, DESCRIBIR DONDE VIVIA, CUANTO TIEMPO VIVIO Y MOTIVO DEL CAMBIO?</label>
                             <input className="form-control" type="text" placeholder="Motivo:" aria-label="default input example"/>
                         </div>
@@ -685,40 +742,40 @@ function FormEsecDB() {
                 <div id="contenido-2" className="col-12 card pt-2">
                     <p className="fw-bold">SITUACION ECONOMICA</p>
                     <div className="row mb-3">
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">LA CASA DONDE VIVE ES PROPIA?</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">SI</option>
                                 <option value="0">NO</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">ESPECIFIQUE</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">Propia</option>
                                 <option value="2">Rentada</option>
                                 <option value="3">Vive con Familiares</option>
                                 <option value="4">Hipotecada</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">VALOR COMERCIAL</label>
                             <input className="form-control" type="number" placeholder="Valor:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">CUENTA CON VEHICULO PROPIO?</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">SI</option>
                                 <option value="0">NO</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">MARCA, MODELO, AÑO</label>
                             <input className="form-control" type="text" placeholder="Valor:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">ESPECIFIQUE</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">Propia</option>
                                 <option value="2">Pagando Credito Automotriz</option>
                                 <option value="3">Usa el de la familia</option>
@@ -757,37 +814,37 @@ function FormEsecDB() {
                             </table>
                         </div>
 
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">MANEJA CREDITOS COMERCIALES</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">SI</option>
                                 <option value="0">NO</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">MANEJA TARJETAS DE CREDITO</label>
-                            <select class="form-select" aria-label="Default select example">
+                            <select className="form-select" aria-label="Default select example">
                                 <option value="1">SI</option>
                                 <option value="0">NO</option>
                             </select>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">DEFINA SITUACION CREDITICIA</label>
                             <input className="form-control" type="text" placeholder="Descripcion:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">SUELDO ACTUAL</label>
                             <input className="form-control" type="number" placeholder="Sueldo:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">OTRO INGRESO / DEFINIR</label>
                             <input className="form-control" type="number" placeholder="Otro:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">PERSONAS DEPENDEN ECONOMICAMENTE DE UD.</label>
                             <input className="form-control" type="text" placeholder="Dependen:" aria-label="default input example"/>
                         </div>
-                        <div className="col-4">
+                        <div className="col-12">
                             <label className="form-label">PARENTESCO</label>
                             <input className="form-control" type="text" placeholder="Parentesco:" aria-label="default input example"/>
                         </div>
@@ -881,31 +938,31 @@ function FormEsecDB() {
                         <div className="col-12">
                             <div className="row">
                                 <p className="fw-bold">REFERENCIA 1</p>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">NOMBRE</label>
                                     <input className="form-control" type="text" placeholder="NOMBRE:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">TELEFONO</label>
                                     <input className="form-control" type="text" placeholder="TELEFONO:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">CUANTO TIEMPO TIENE QUE CONOCE AL CANDIDATO</label>
                                     <input className="form-control" type="text" placeholder="Especifique:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">SABE SI EL CANDIDATO HA TENIDO PROBLEMAS CON LA JUSTICIA</label>
                                     <input className="form-control" type="text" placeholder="Describa:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">SABE SI EL CANDIDATOS FUMA, TOMA ALCOHOL, INGIERE ALGUNA SUBSTANCIA TOXICA</label>
                                     <input className="form-control" type="text" placeholder="Describa:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">COMO ES LA RELACION FAMILIAR O CON LAS PERSONAS QUE VIVE</label>
                                     <input className="form-control" type="text" placeholder="Describa:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">COMO LO PUEDE DESCRIBIR COMO PERSONA, MANERA DE SER, COMO SE RELACIONA CON LOS DEMAS</label>
                                     <input className="form-control" type="text" placeholder="Describa:" aria-label="default input example"/>
                                 </div>
@@ -915,31 +972,31 @@ function FormEsecDB() {
                         <div className="col-12">
                             <p className="fw-bold">REFERENCIA 2</p>
                             <div className="row">
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">NOMBRE</label>
                                     <input className="form-control" type="text" placeholder="NOMBRE:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">TELEFONO</label>
                                     <input className="form-control" type="text" placeholder="TELEFONO:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">CUANTO TIEMPO TIENE QUE CONOCE AL CANDIDATO</label>
                                     <input className="form-control" type="text" placeholder="Especifique:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">SABE SI EL CANDIDATO HA TENIDO PROBLEMAS CON LA JUSTICIA</label>
                                     <input className="form-control" type="text" placeholder="Describa:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">SABE SI EL CANDIDATOS FUMA, TOMA ALCOHOL, INGIERE ALGUNA SUBSTANCIA TOXICA</label>
                                     <input className="form-control" type="text" placeholder="Describa:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">COMO ES LA RELACION FAMILIAR O CON LAS PERSONAS QUE VIVE</label>
                                     <input className="form-control" type="text" placeholder="Describa:" aria-label="default input example"/>
                                 </div>
-                                <div className="col-4">
+                                <div className="col-12">
                                     <label className="form-label">COMO LO PUEDE DESCRIBIR COMO PERSONA, MANERA DE SER, COMO SE RELACIONA CON LOS DEMAS</label>
                                     <input className="form-control" type="text" placeholder="Describa:" aria-label="default input example"/>
                                 </div>

@@ -39,7 +39,10 @@ const PathConstants = {
     ESTUDIO_SOCIOECONOMICO_ID: '/estudio-socioeconomico/:idEstudio',
     ENCUESTAPROYECTOID: '/encuesta/proyecto/:idProyecto',
     CONFIGURACIONES: '/configuraciones',
-    
+    MODULOEMPRESASUCURSALES: '/empresas/sucursales',
+    MODULOEMPRESAEMPLEADOS: '/empresas/empleados',
+    MODULOEMPRESAESTUDIOSOCIECONOMICO: '/empresas/estudiosocioeconomico',
+    MODULOEMPRESAORDENESSERVICIO: '/empresas/empleados',
 }
 
 export default PathConstants
