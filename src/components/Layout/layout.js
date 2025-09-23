@@ -257,10 +257,10 @@ export default function Layout() {
                         },
                       }}
                     >
-                      <MenuItem component={ <Link to={PathConstants.MODULOEMPRESAORDENESSERVICIO} />}>
+                      {/* <MenuItem component={ <Link to={PathConstants.MODULOEMPRESAORDENESSERVICIO} />}>
                         {" "}
                         ORDENES SERVICIOS
-                      </MenuItem>
+                      </MenuItem> */}
                       <MenuItem component={<Link to={PathConstants.MODULOEMPRESASUCURSALES} />}>
                         {" "}
                         SUCURSALES
