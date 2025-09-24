@@ -13,7 +13,8 @@ import {
 import Avatar from "react-avatar";
 
 export default function Layout() {
-  const { isLoggedIn, userSession, roleSession, userActive, logout, ua } = useContext(AuthContext);
+  const { isLoggedIn, userSession, roleSession, userActive, logout, ua } =
+    useContext(AuthContext);
   const [active, setActive] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
   const Logout = () => {
@@ -22,17 +23,15 @@ export default function Layout() {
   };
 
   const returnRutaFamiliaFiles = () => {
-    return `${PathConstants.FAMILIASFILES}?idse=${localStorage.getItem("se")}` 
-  }
+    return `${PathConstants.FAMILIASFILES}?idse=${localStorage.getItem("se")}`;
+  };
   useEffect(() => {
     if (collapsed) {
     }
   }, [collapsed]);
 
   useEffect(() => {
-    
     if (ua) {
-
       var ls = localStorage.getItem("ua");
       var act;
       if (ls === "true") {
@@ -48,7 +47,7 @@ export default function Layout() {
         setActive(false);
       } else {
         console.log("entra ua");
-  
+
         var ls = localStorage.getItem("ua");
         console.log("este es el valor " + ls);
         var act;
@@ -60,8 +59,7 @@ export default function Layout() {
           act = false;
           setActive(false);
         }
-    }
-    
+      }
     }
   }, [ua]);
 
@@ -166,11 +164,7 @@ export default function Layout() {
 
                 {roleSession === "Familias" && active && (
                   <MenuItem
-                    component={
-                      <Link
-                        to={`${returnRutaFamiliaFiles()}`}
-                      />
-                    }
+                    component={<Link to={`${returnRutaFamiliaFiles()}`} />}
                   >
                     {collapsed ? (
                       <div className="ion-text-center">
@@ -196,10 +190,15 @@ export default function Layout() {
                         <p>ASIGNACIONES</p>
                       )}
                     </MenuItem>
-                    <MenuItem component={<Link to={PathConstants.ORDENESSERVICIOS} />}>
+                    <MenuItem
+                      component={<Link to={PathConstants.ORDENESSERVICIOS} />}
+                    >
                       {collapsed ? (
                         <div className="ion-text-center">
-                          <ion-icon name="albums-outline" size="large"></ion-icon>
+                          <ion-icon
+                            name="albums-outline"
+                            size="large"
+                          ></ion-icon>
                         </div>
                       ) : (
                         <p>ORDENES DE SERVICIO</p>
@@ -209,9 +208,13 @@ export default function Layout() {
                     {/*<MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> 
                                 {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>CICLOS ESCOLARES</p>)}
                               </MenuItem>*/}
-                    <SubMenu label="NUEVO ESTUDIO" icon={ collapsed && (
+                    <SubMenu
+                      label="NUEVO ESTUDIO"
+                      icon={
+                        collapsed && (
                           <div className="d-flex justify-content-center align-items-center">
-                            {" "} <ion-icon size="large" name="documents-outline" />
+                            {" "}
+                            <ion-icon size="large" name="documents-outline" />
                           </div>
                         )
                       }
@@ -226,7 +229,8 @@ export default function Layout() {
                           backgroundColor: "#47D1D6",
                           fontWeight: "bold",
                         },
-                      }}>
+                      }}
+                    >
                       <MenuItem
                         component={
                           <Link to={PathConstants.ESTUDIOSOCIOECONOMICO} />
@@ -237,10 +241,13 @@ export default function Layout() {
                       </MenuItem>
                     </SubMenu>
 
-                    <SubMenu label="EMPRESAS" icon={ collapsed && (
+                    <SubMenu
+                      label="EMPRESAS"
+                      icon={
+                        collapsed && (
                           <div className="d-flex justify-content-center align-items-center">
-                            {" "} <ion-icon size="large" name="business-outline" />
-                            
+                            {" "}
+                            <ion-icon size="large" name="business-outline" />
                           </div>
                         )
                       }
@@ -261,21 +268,36 @@ export default function Layout() {
                         {" "}
                         ORDENES SERVICIOS
                       </MenuItem> */}
-                      <MenuItem component={<Link to={PathConstants.MODULOEMPRESASUCURSALES} />}>
+                      <MenuItem
+                        component={
+                          <Link to={PathConstants.MODULOEMPRESASUCURSALES} />
+                        }
+                      >
                         {" "}
                         SUCURSALES
                       </MenuItem>
-                      <MenuItem component={<Link to={PathConstants.MODULOEMPRESAEMPLEADOS} />}>
+                      <MenuItem
+                        component={
+                          <Link to={PathConstants.MODULOEMPRESAEMPLEADOS} />
+                        }
+                      >
                         {" "}
                         EMPLEADOS
                       </MenuItem>
-                      <MenuItem component={<Link to={PathConstants.MODULOEMPRESAESTUDIOSOCIECONOMICO} />}>
+                      <MenuItem
+                        component={
+                          <Link
+                            to={PathConstants.MODULOEMPRESAESTUDIOSOCIECONOMICO}
+                          />
+                        }
+                      >
                         {" "}
                         ESTUDIO SOCIOECONOMICOS
                       </MenuItem>
                     </SubMenu>
 
-                    <SubMenu label="CATALOGOS"
+                    <SubMenu
+                      label="CATALOGOS"
                       icon={
                         collapsed && (
                           <div className="d-flex justify-content-center align-items-center">
@@ -337,18 +359,6 @@ export default function Layout() {
                   </>
                 )}
 
-                { roleSession === 'Empresas' && (
-                  <MenuItem component={<Link to={PathConstants.CONFIGURACIONES} />}>
-                    {collapsed ? (
-                      <div className="ion-text-center">
-                        <ion-icon name="settings-outline" size="large"></ion-icon>
-                      </div>
-                    ) : (
-                      <p>CONFIGURACIÓN</p>
-                    )}
-                  </MenuItem>
-                ) }
-
                 <MenuItem onClick={Logout} className="ps-1">
                   {collapsed ? (
                     <ion-icon name="log-out" size="large" />
@@ -364,18 +374,23 @@ export default function Layout() {
             className="col pt-4 scrollable-content"
             style={{ height: "100vh" }}
           >
-            { isLoggedIn && (
+            {isLoggedIn && (
               <div className="d-flex justify-content-end">
                 <div className="d-flex align-items-center">
-                  <Avatar name={localStorage.getItem('name')} size="30" round={true} />
+                  <Avatar
+                    name={localStorage.getItem("name")}
+                    size="30"
+                    round={true}
+                  />
                 </div>
                 <div className="ps-1 align-self-center">
-                  <p className="fw-bold m-0">{localStorage.getItem('user') ?? 'SIN DATO'}</p>
+                  <p className="fw-bold m-0">
+                    {localStorage.getItem("user") ?? "SIN DATO"}
+                  </p>
                 </div>
               </div>
-            )
-            }
-            
+            )}
+
             <Suspense fallback={<div>Loading...</div>}>
               <Outlet />
             </Suspense>
