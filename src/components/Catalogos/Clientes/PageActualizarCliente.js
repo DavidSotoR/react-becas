@@ -876,7 +876,7 @@ function PageActualizarCliente() {
             
             setFormValid(true)
         }
-    }, [formData.documentacion_digital, formData.requiere_facturar]);
+    }, [formData.documentacion_digital, formData.requiere_facturar, formData.habilitar_resumen]);
 
     useEffect(()=>{
         
@@ -884,11 +884,11 @@ function PageActualizarCliente() {
             
             if ((formData.id_tipo_cliente === '1' || formData.id_tipo_cliente === 1) && validarValoresBtn(formData)) {
                 setFormValid(false)
+                
             } else if ((formData.id_tipo_cliente === '2' || formData.id_tipo_cliente === 2) && validarValoresBtn(formData)) {
                 setFormValid(false)
             } else {
-                console.log('btn disable');
-                
+
                 setFormValid(true)
             }
             

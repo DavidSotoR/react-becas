@@ -78,7 +78,7 @@ export default function Observaciones({idEstudio,encuesta,callback,columnRow}){
         }
     },[encuesta]);
 
-    return encuesta?.aniadir_observaciones && encuesta.aniadir_observaciones === 1  && (
+    return encuesta?.cliente && encuesta.cliente.habilitar_resumen === 1  && (
         <>
         <div className="row">
             <div className="col" />
