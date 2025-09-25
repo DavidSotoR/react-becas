@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('login') === 'true');
   const [roleSession, setRoleSession] = useState(localStorage.getItem('role'))
+  const [documentoDigital, setDocumentoDigital] = useState(localStorage.getItem('dd'))
   const [userSession, setUserSession] = useState(localStorage.getItem('user'))
   const [userID, setUserID] = useState(localStorage.getItem('id'))
   const [ userActive, setUserActive ] = useState(null)
@@ -22,6 +23,7 @@ export const AuthProvider = ({ children }) => {
     var token = ''
     var role = ''
     var user = ''
+    var dd ;
     var id
     var loggedSuccess = false
     var body = {
@@ -32,6 +34,7 @@ export const AuthProvider = ({ children }) => {
     try {
        resp = await axios.post(APIURL+'/login', body)
        console.log(resp);
+       dd = resp.data.se.cliente.documentacion_digital;//DOCUMENTACION DIGITAL
        token = resp.data.access_token
        role = resp.data.data.perfil.nombre
        user = resp.data.data.email
@@ -49,11 +52,13 @@ export const AuthProvider = ({ children }) => {
        setUA(data.password_temporal === null ? true : false)
        setIsLoggedIn(true);
        localStorage.setItem('role', role)
+       localStorage.setItem('dd', dd)
        localStorage.setItem('user', user)
        localStorage.setItem('id', id)
        localStorage.setItem('name', data.name)
        setRoleSession(role)
        setUserSession(user)
+       setDocumentoDigital(dd)
        setUserID(id)
        loggedSuccess = true
        localStorage.setItem('login', 'true');
@@ -112,9 +117,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession,userID, 
-    userActive, login, logout, ua, 
-    showAlertContext, execShowAlert, execHideAlert }}>
+    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession,userID, userActive, login, logout, ua, showAlertContext, execShowAlert, execHideAlert, documentoDigital }}>
       {children}
       <ToastContainer className="position-fixed bottom-0 end-0 p-3">
         <Toast 

@@ -13,8 +13,7 @@ import {
 import Avatar from "react-avatar";
 
 export default function Layout() {
-  const { isLoggedIn, userSession, roleSession, userActive, logout, ua } =
-    useContext(AuthContext);
+  const { isLoggedIn, userSession, roleSession, userActive, logout, ua, documentoDigital } = useContext(AuthContext);
   const [active, setActive] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
   const Logout = () => {
@@ -162,7 +161,7 @@ export default function Layout() {
                   </MenuItem>
                 )}
 
-                {roleSession === "Familias" && active && (
+                {roleSession === "Familias" && active && localStorage.getItem('dd') === '1' && (
                   <MenuItem
                     component={<Link to={`${returnRutaFamiliaFiles()}`} />}
                   >

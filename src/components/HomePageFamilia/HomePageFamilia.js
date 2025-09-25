@@ -7,6 +7,7 @@ import axios from "axios";
 function HomePageFamilia() {
   const { logout, userID, userActive } = useContext(AuthContext);
   const [tieneSE, setTieneSE] = useState(false);
+  const [activeDocumentoDigital, setActiveDocumentoDigital] = useState('0');
   const [active, setActive] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordConfirmar, setPasswordConfirmar] = useState("");
@@ -36,17 +37,16 @@ function HomePageFamilia() {
       }
     }
 
-    axios
-      .get(APIURL + "/familias/" + userID + "/estudio/socioeconomico", config)
-      .then((resp) => {
-        console.log(resp);
+    axios.get(APIURL + "/familias/" + userID + "/estudio/socioeconomico", config).then((resp) => {
         if (resp.data.id) {
           console.log("contiene datos");
           setTieneSE(true);
           setIdSE(resp.data.id);
           localStorage.setItem("se", resp.data.id);
+          localStorage.setItem("dd", resp.data.cliente.documentacion_digital);
+          setActiveDocumentoDigital(resp.data.cliente.documentacion_digital);
         } else {
-          console.log("mo contiene datps");
+          console.log("no contiene datos");
           setTieneSE(false);
         }
       })
@@ -204,7 +204,7 @@ function HomePageFamilia() {
             </p>
           </div>
           <div className="col-12 d-flex justify-content-center pb-5">
-            {tieneSE ? (
+            {tieneSE && activeDocumentoDigital === 1 ? (
               <Link
                 className="btn btn-primary"
                 to={`${PathConstants.FAMILIASFILES}?idse=${idSE}`}
