@@ -43,8 +43,8 @@ function HomePageFamilia() {
           setTieneSE(true);
           setIdSE(resp.data.id);
           localStorage.setItem("se", resp.data.id);
-          localStorage.setItem("dd", resp.data.cliente.documentacion_digital);
-          setActiveDocumentoDigital(resp.data.cliente.documentacion_digital);
+          localStorage.setItem("dd", resp.data.cliente ? resp.data.cliente.documentacion_digital : 0);
+          setActiveDocumentoDigital(resp.data.cliente ? resp.data.cliente.documentacion_digital : 0);
         } else {
           console.log("no contiene datos");
           setTieneSE(false);

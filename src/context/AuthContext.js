@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     try {
        resp = await axios.post(APIURL+'/login', body)
        console.log(resp);
-       dd = resp.data.se.cliente.documentacion_digital;//DOCUMENTACION DIGITAL
+       dd = 0; //DOCUMENTACION DIGITAL
        token = resp.data.access_token
        role = resp.data.data.perfil.nombre
        user = resp.data.data.email
@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }) => {
        console.log(data);
        if (data.id_perfil == 6) {
         if (famSE) {
+          dd = resp.data.se.cliente.documentacion_digital;
           localStorage.setItem("se", famSE.id);
         }
        }
