@@ -61,7 +61,7 @@ function AltaEstudioSocioeconomico(){
         email:'',
         telefono_movil:'',
         telefono_contacto:'',
-        generar_usuario_automaticamente: true,
+        generar_usuario_automaticamente: false,
         calle:'',
         numero_exterior:'',
         colonia:'',
@@ -195,7 +195,7 @@ function AltaEstudioSocioeconomico(){
         }
 
         
-        console.log(updatedValue+' '+familiar);
+        //console.log(updatedValue+' '+familiar);
     }
 
     const renderValidationErrors = (errors) => {
@@ -512,7 +512,7 @@ function AltaEstudioSocioeconomico(){
                                 <p><b>Familia:</b> <span>{estudio.candidato}</span></p>
                             </div>
                             <div>
-                                <p><b>Situacion:</b> <span>{getNumeroContactoPrincipal(estudio)}</span></p>
+                                <p><b>Situacion:</b> <span>{estudio.situacion}</span></p>
                             </div>
                         </div>
                     </div>
