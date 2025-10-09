@@ -152,24 +152,7 @@ function EstudioSeccionFamilia ({
                     </div>
 
                     
-                    {fromData.proyecto.documentacion_digital && (
-                    <div className="mb-3 row">
-                        <p className="col-sm-2 col-form-label">Generar usuario para estudio:</p>
-                        <div className="col-sm-10 pt-1">
-                            <div className="form-switch">
-                                <input 
-                                    className="form-check-input" 
-                                    name="generar_usuario_automaticamente" 
-                                    type="checkbox" 
-                                    checked={fromData.generar_usuario_automaticamente}
-                                    role="switch" id="generar_usuario_automaticamente" 
-                                    onChange={(e) => {formInputChange(e)}}
-                                    />
-                                <label className="form-check-label">{(fromData.generar_usuario_automaticamente) ? 'Si' : 'No'}</label>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                    
             </div>
         </div>)
 }
