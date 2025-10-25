@@ -9,7 +9,7 @@ import PathConstants from "../../../routes/pathsConstants";
 import ReactQuill from 'react-quill';
 
 function PageActualizarCliente() {
-    const urlIMG = "http://127.0.0.1:8000/storage/";
+    const urlIMG = process.env.SERVER_STORAGE;
 
     const [preview, setPreview] = useState(null);
     const [fileLogo, setFileLogo] = useState(null);

@@ -294,7 +294,7 @@ function RegistroPage(){
     }
 
     const getDataCliente = async () => {
-        axios.get('http://localhost:8000/api/registro/escuela/'+ token).then(resp=>{
+        axios.get(APIURL+'/registro/escuela/'+ token).then(resp=>{
             console.log(resp);
             var respData = resp.data
             if (respData.cliente !== null && respData.proyecto !== null && respData.orden_servicio !== null) {
@@ -311,7 +311,7 @@ function RegistroPage(){
 
     const postDataRegistro = (dataPost) => {
         
-        axios.post('http://localhost:8000/api/registro/escuela/'+ token, dataPost).then(resp => {
+        axios.post(APIURL+'/registro/escuela/'+ token, dataPost).then(resp => {
             console.log(resp);
             execShowAlert({ type: 'success', title: 'COMPLETADO', message: 'SE REGISTRO CORRECTAMENTE FAMILIA.' })
             setRegistroCompleto(true);

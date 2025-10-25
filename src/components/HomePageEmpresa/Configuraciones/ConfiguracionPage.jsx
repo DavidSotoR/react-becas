@@ -6,7 +6,7 @@ import { Alert, Form } from "react-bootstrap";
 
 export default function ConfiguracionPage() {
     const APIURL = process.env.REACT_APP_API_URL;
-    const urlIMG = "http://127.0.0.1:8000/storage/";
+    const urlIMG = process.env.SERVER_STORAGE;
     const config = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,

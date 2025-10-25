@@ -43,6 +43,7 @@ function ServicioEstudio() {
   const [errorsCargaMasiva, setErrorsCargaMasiva] = useState([]);
   const [totalInserts, setTotalInserts] = useState(0);
   const [dataToInsert, setDataToInsert] = useState([]);
+  const [dataToInsertDG, setDataToInsertDG] = useState([]);
   const [dataError, setDataError] = useState([]);
   const [dataReactivada, setDataReactivada] = useState([]);
   const [dataNoAsignada, setDataNoAsignada] = useState([]);
@@ -295,6 +296,10 @@ function ServicioEstudio() {
   };
 
   const renderFilasTablaEstudiosSocioeconomicos = () => {
+    allEstudiosSocioeconomicosFiltrados.forEach(element => {
+      console.log(element);
+      
+    });
     return allEstudiosSocioeconomicosFiltrados.map((estudio, index) => (
       <tr key={"tr-cliente-" + index}>
         <td>
@@ -317,7 +322,7 @@ function ServicioEstudio() {
           {estudio?.colaborador && avatarColaborador(estudio.colaborador)}
         </td>
         <td>
-          <div className="d-flex justify-content-end bd-highlight">
+          <div className="d-flex justify-content-center bd-highlight">
             <Link
               title="Editar Familia Estudio"
               className="btn btn-outline text-primary"
@@ -325,16 +330,16 @@ function ServicioEstudio() {
             >
               <i className="bi bi-pencil-square"></i>
             </Link>
-            <Link
-              title="Reenvio Correo Usuario"
-              onClick={() => openModalSendEmail(estudio)}
-              className="btn btn-outline text-secondary"
-            >
-              <i class="bi bi-envelope"></i>
-            </Link>
+            { estudio.cliente.documentacion_digital === 1 &&
+              <Link title="Reenvio Correo Usuario" onClick={() => openModalSendEmail(estudio)} className="btn btn-outline text-secondary" >
+                <i class="bi bi-envelope"></i>
+              </Link>
+
+            }
+            
             <Link
               title="Editar Estudio"
-              className="btn btn-outline text-primary"
+              className="btn btn-outline text-primary" 
               to={`/estudio-socioeconomico/${estudio.id}`}
             >
               <i className="bi bi-clipboard2-fill"></i>
@@ -346,6 +351,24 @@ function ServicioEstudio() {
   };
 
   const renderExitosos = () => {
+    if (dataToInsert.length === 0) {
+      return dataToInsertDG.map((exito, index) => {
+        if(index !== 0){
+          return (
+            <li
+              key={index}
+              className="list-group-item list-group-item-action list-group-item-success"
+            >
+              <div className="d-flex w-100 justify-content-between">
+                <p className="mb-1">Familia: {exito[0]}</p>
+                <small className="text-body-secondary">{index}</small>
+              </div>
+            </li>
+          );
+        }
+        
+      }); 
+    }
     return dataToInsert.map((exito, index) => {
       return (
         <li
@@ -482,6 +505,7 @@ function ServicioEstudio() {
         setErrorsCargaMasiva(resp.data.errors);
         setTotalInserts(resp.data.total_insert);
         setDataToInsert(resp.data.dataToInsert);
+        setDataToInsertDG(resp.data.data)
         setDataError(resp.data.errors);
         setDataNoAsignada(resp.data.no_asignadas);
         setDataReactivada(resp.data.reactivados);

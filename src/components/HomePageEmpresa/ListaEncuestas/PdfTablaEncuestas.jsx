@@ -12,7 +12,7 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 export default function PdfTablaEncuestas({ parametros, data, tipo_reporte }) {
 
-  const APISTORAGE = "http://127.0.0.1:8000/storage/";//process.env.SERVER_STORAGE;
+  const APISTORAGE = process.env.SERVER_STORAGE;
   const APIURL = process.env.REACT_APP_API_URL;
 
   const config = {
