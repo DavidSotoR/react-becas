@@ -193,9 +193,6 @@ function AltaEstudioSocioeconomico(){
                 }
             }
         }
-
-        
-        //console.log(updatedValue+' '+familiar);
     }
 
     const renderValidationErrors = (errors) => {
@@ -210,11 +207,11 @@ function AltaEstudioSocioeconomico(){
     
     const sendDataEstudioSocioeconomico = () =>{
         var creado = fromData
-        axios.post(`${APIURL}/estudio/socioeconomico`,fromData,config).then((resp)=>{
+        creado.padre.email = creado.padre.email === '' ? null : fromData.padre.email
+        creado.madre.email = creado.madre.email === '' ? null : fromData.madre.email
+        axios.post(`${APIURL}/estudio/socioeconomico`,creado,config).then((resp)=>{
             setFormDataError({})
             const {message,data} = resp.data
-            console.log(resp);
-
             setShowToastSuccess(true);
 
             
@@ -231,6 +228,16 @@ function AltaEstudioSocioeconomico(){
                 name: ''
             }));
             setColaboradores([]);
+            placeIdSet(null)
+            setFormData(prevState => ({
+                ...prevState,
+                direccion: `` 
+            }));
+            setFormData(prevState => ({
+                ...prevState,
+                latitud:25.67507,
+                longitud:-100.31847,
+            }));
 
         }).catch((err)=>{
             console.log(err);
@@ -248,7 +255,6 @@ function AltaEstudioSocioeconomico(){
             if (err.response.status === 401) {
                 logout()
             }
-            console.log(err);
         })
     }
     
@@ -340,7 +346,6 @@ function AltaEstudioSocioeconomico(){
             setColaboradores(resp.data)
         }).catch((resp)=>{
             //(resp.response.status === 401) ?? logout();
-            console.log(resp);
             if (resp.response.status === 401) {
                 logout()   
             }
@@ -366,18 +371,34 @@ function AltaEstudioSocioeconomico(){
     const seleccionarUbicacion = (direccion) => {
         console.log(direccion);
         setDireccionFamilia(convertirAMayusculas(direccion.display_name))
+        if (direccion.place_id === placeId) {
+            
+            placeIdSet(null)
+            setFormData(prevState => ({
+                ...prevState,
+                direccion: `` 
+            }));
+            setFormData(prevState => ({
+                ...prevState,
+                latitud:25.67507,
+                longitud:-100.31847,
+            }));
+        } else {
+            
+            placeIdSet(direccion.place_id);
+            setFormData(prevState => ({
+                ...prevState,
+                direccion: `${convertirAMayusculas(direccion.display_name)}` 
+            }));
+            setFormData(prevState => ({
+                ...prevState,
+                latitud: direccion.lat,
+                longitud: direccion.lon
+            }));
+        }
         
-        placeIdSet(direccion.place_id);
-        setFormData(prevState => ({
-            ...prevState,
-            direccion: `${convertirAMayusculas(direccion.display_name)}` 
-        }));
-        setFormData(prevState => ({
-            ...prevState,
-            latitud: direccion.lat,
-            longitud: direccion.lon
-        }));
-        placeIdSet('');
+        
+        //placeIdSet('');
     }
     
     const convertirAMayusculas = (texto) => {
@@ -419,7 +440,6 @@ function AltaEstudioSocioeconomico(){
         const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
         if(colaboradoresFiltro.length){
             const colaborador = obtenerUbicacionMasCercana(fromData.latitud, fromData.longitud, colaboradoresFiltro);
-            console.log(colaborador);
             setFormData(prevState => ({
                 ...prevState,
                 id_colaborador: colaborador.id
@@ -454,45 +474,6 @@ function AltaEstudioSocioeconomico(){
         getDireccionGSP()
         
     }
-
-    useEffect(()=>{
-        getProyecto();
-        getCliente();
-        getOrdenServicio();
-        getListaColaboradores();
-    },[])
-
-    useEffect(() => {
-        if(fromData.es_cliente_comun === true){
-            getListaClientesHermanos();
-        }else{
-            setClientesComunes([]);
-        }
-    },[fromData.id_cliente,fromData.es_cliente_comun])
-
-    /* useEffect(()=>{
-        getDireccionGSP();
-    },[fromData.direccion]) */
-
-    
-    useEffect(()=>{
-        cambiarCaloborador();
-    },[fromData.latitud])
-
-    useEffect(()=>{ 
-        setFormData(prevState => ({
-            ...prevState,
-            direccion: crearDireccion(fromData) //`${fromData.numero_exterior}, ${fromData.calle}, ${fromData.colonia}, ${fromData.municipio}, ${fromData.estado}, ${fromData.codigo_postal}, ${fromData.pais}` 
-        }));
-    },[
-        fromData.calle,
-        fromData.numero_exterior,
-        fromData.colonia,
-        fromData.municipio,
-        fromData.estado,
-        fromData.codigo_postal,
-        fromData.pais,
-    ])
     
     const ultimasFamiliasAñadidas = () => {
         return (
@@ -523,9 +504,7 @@ function AltaEstudioSocioeconomico(){
     }
     
     const cricleColaboradores = () => {
-        //console.log(colaboradores);
         const colaboradoresFiltro = colaboradores.filter(colaborador => colaborador.latitud);
-        //console.log(colaboradoresFiltro);
         return <>{colaboradoresFiltro.map((colaborador,index) => 
             (<Circle key={'cum-'+index} center={[colaborador.latitud, colaborador.longitud]} radius="200" pathOptions={{ color: 'blue' }}>
                 <Popup>
@@ -562,7 +541,7 @@ function AltaEstudioSocioeconomico(){
               <div 
                 key={'asu-' + index} 
                 className="row rounded border mt-1 p-1" 
-                style={{ backgroundColor: (direccion.place_id === placeId) ? '#47E58A' : '' , cursor:'pointer' }}
+                style={{ backgroundColor: direccion.place_id === placeId ? '#47E58A' : '' , cursor:'pointer' }}
                 onClick={() => seleccionarUbicacion(direccion)}
               >
                 <div className="col-1">
@@ -773,6 +752,45 @@ function AltaEstudioSocioeconomico(){
             </>
         )
     }
+
+    useEffect(()=>{
+        getProyecto();
+        getCliente();
+        getOrdenServicio();
+        getListaColaboradores();
+    },[])
+
+    useEffect(() => {
+        if(fromData.es_cliente_comun === true){
+            getListaClientesHermanos();
+        }else{
+            setClientesComunes([]);
+        }
+    },[fromData.id_cliente,fromData.es_cliente_comun])
+
+    /* useEffect(()=>{
+        getDireccionGSP();
+    },[fromData.direccion]) */
+
+    
+    useEffect(()=>{
+        cambiarCaloborador();
+    },[fromData.latitud])
+
+    useEffect(()=>{ 
+        setFormData(prevState => ({
+            ...prevState,
+            direccion: crearDireccion(fromData) //`${fromData.numero_exterior}, ${fromData.calle}, ${fromData.colonia}, ${fromData.municipio}, ${fromData.estado}, ${fromData.codigo_postal}, ${fromData.pais}` 
+        }));
+    },[
+        fromData.calle,
+        fromData.numero_exterior,
+        fromData.colonia,
+        fromData.municipio,
+        fromData.estado,
+        fromData.codigo_postal,
+        fromData.pais,
+    ])
 
 
     return(<>

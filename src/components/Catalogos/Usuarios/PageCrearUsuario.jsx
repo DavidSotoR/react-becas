@@ -470,13 +470,8 @@ export default function PageCrearUsuario() {
     return (
       <div>
         {direcciones.slice(0, 5).map((direccion, index) => (
-          <div
-            key={"asu-" + index}
-            className="row rounded border mt-1 p-1"
-            style={{
-              backgroundColor: direccion.place_id === placeId ? "#47E58A" : "",
-              cursor: "pointer",
-            }}
+          <div key={"asu-" + index}  className="row rounded border mt-1 p-1"
+            style={{ backgroundColor: direccion.place_id === placeId ? "#47E58A" : "", cursor: "pointer", }}
             onClick={() => seleccionarUbicacion(direccion)}
           >
             <div className="col-1">
@@ -1044,28 +1039,17 @@ export default function PageCrearUsuario() {
                 <label htmlFor="inputLong" className="form-label">
                   Longitud:
                 </label>
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  id="inputLong"
-                  name="longitud"
-                  placeholder="Longitud:"
-                  value={lonUser}
-                  onChange={handleInputChange}
+                <input type="text" className="form-control mb-2"  id="inputLong"
+                  name="longitud" placeholder="Longitud:" value={lonUser} onChange={handleInputChange}
                 />
               </div>
               <div className="col-5">
                 <label htmlFor="inputLat" className="form-label">
                   Latitud:
                 </label>
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  id="inputLat"
-                  name="latitud"
-                  placeholder="Latitud:"
-                  value={latUser}
-                  onChange={handleInputChange}
+                <input type="text" className="form-control mb-2"
+                  id="inputLat" name="latitud"  placeholder="Latitud:"
+                  value={latUser} onChange={handleInputChange}
                 />
               </div>
               <div className="col-12">
