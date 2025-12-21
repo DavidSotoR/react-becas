@@ -26,6 +26,9 @@ export default function PageUpdateUsuario() {
     const [latUser, setLatUser] = useState('')
     const [lonUser, setLonUser] = useState('')
 
+    const [ resetPassword, setResetPassword ] = useState(false)
+    const [ spinReset, setSpinReset ] = useState(false);
+
 
     const [errors, setErrors] = useState({});
     const [ btnEnable, setBtnEnable ] = useState(true)
@@ -41,6 +44,11 @@ export default function PageUpdateUsuario() {
     const [ cuentaConUbicacion, setCuentaConUbicacion ] = useState(true)
     const [colaboradores,setColaboradores] = useState([])
 
+    const [ dataResetContrasena, setDataResetContrasena ] = useState({
+        id: localStorage.getItem('id'),
+        password_nueva: '',
+        password_confirmar: ','
+    })
 
     const [ dataUpdateUsuario, setDataUpdateUsuario ] = useState({
         id: 0,
@@ -262,7 +270,7 @@ export default function PageUpdateUsuario() {
     const seccionUbicaciones = () => {
         console.log(direcciones);
         
-        if (!Array.isArray(direcciones) || direcciones.length === 0) {
+        if (direcciones && (!Array.isArray(direcciones) || direcciones.length === 0)) {
             // Si `direcciones` no es un array válido o está vacío, mostramos un mensaje
             return (<div>
                         <div 
@@ -417,8 +425,9 @@ export default function PageUpdateUsuario() {
             console.log(resp);
             setDataUpdateUsuario(resp.data)
             var data = resp.data
-            console.log(data.direccion);
-            
+            //console.log(data.direccion);
+            setResetPassword(data.password_temporal ?? false)
+
             setEsExterno(data.externo === 1)
             setDireccionUser(data.direccion !== null ? data.direccion : '')
             setLatUser(data.latitud !== null ? data.latitud : '')
@@ -493,6 +502,37 @@ export default function PageUpdateUsuario() {
         })
     }
 
+    const changePassword = (e) =>{
+        var valor = e.target.value;
+        setDataResetContrasena(prev => ({
+            ...prev,
+            password_nueva: valor
+        }));
+    }
+
+    const changePasswordConfirmacion = (e) =>{
+        var valor = e.target.value;
+        setDataResetContrasena(prev => ({
+            ...prev,
+            password_confirmar: valor
+        }));
+    }
+
+    const actualizarContraseña = async () => {
+        setSpinReset(true)
+        try {
+            var resp = await axios.post(APIURL + '/reset/password', dataResetContrasena, config)
+            console.log(resp);
+            setSpinReset(false)
+            setResetPassword(false)
+        } catch (error) {
+            console.log(error);
+            setSpinReset(false)
+        }
+        
+        
+    }
+
     useEffect(()=>{
         console.log(errorsArray);
         if (errorsArray.length === 0 && validateDataFormBtn(dataUpdateUsuario) ) {
@@ -536,7 +576,7 @@ export default function PageUpdateUsuario() {
             <div className="">
                 <div className="mb-2">
                 <Link className="btn btn-primary fw-bold py-1" to={PathConstants.USUARIOS} variant="secondary" >
-                    <i class="bi bi-arrow-left-square me-2"></i> Regresar
+                    <i className="bi bi-arrow-left-square me-2"></i> Regresar
                 </Link>
             </div>
                 {/* <h6 style={{ fontWeight: 'bold' }}>Actualizar Usuario</h6> */}
@@ -591,6 +631,37 @@ export default function PageUpdateUsuario() {
                                     value={dataUpdateUsuario.password_temporal}
                                     onChange={handleInputChange}/>
                         </div>
+                    }
+
+                    { dataUpdateUsuario.force_password_reset === 1 &&
+
+                    <div className="col-12 row mb-5">
+                        <div className="col-12 col-md-6">
+                            <h6 className="fw-bold">Cambiar Contraseña:</h6>
+                            <input type="text" className="form-control mb-2" id="inputNuevaContraseña" name="inputNuevaContraseña"
+                                    placeholder="Nueva Contraseña:" 
+                            onChange={(e) => {
+                                changePassword(e);
+                            }}/>
+                            <input type="text" className="form-control mb-2" id="inputNuevaContraseña2" name="inputNuevaContraseña2"
+                                    placeholder="Rescribir Contraseña:"
+                            onChange={(e) => {
+                                changePasswordConfirmacion(e);
+                            }}/>
+                            { !spinReset ? (
+                                <button type="button" className="btn btn-primary" onClick={()=>{ actualizarContraseña() }}>Cambiar Contraseña</button>
+                            ):(
+                                <div className="spinner-border text-info" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            )
+
+                            }
+                            
+                        </div>
+                        
+                    </div>
+
                     }
                     
 

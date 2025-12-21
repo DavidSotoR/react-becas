@@ -358,6 +358,16 @@ export default function Layout() {
                   </>
                 )}
 
+                <MenuItem component={<Link to={`/usuarios/${userSession.id ?? localStorage.getItem('id')}/ver`} />}>
+                  {collapsed ? (
+                    <div className="ion-text-center">
+                      <ion-icon name="person" size="large" />
+                    </div>
+                  ) : (
+                    <p className="pt-3">MI CUENTA</p>
+                  )}
+                </MenuItem>
+
                 <MenuItem onClick={Logout} className="ps-1">
                   {collapsed ? (
                     <ion-icon name="log-out" size="large" />
