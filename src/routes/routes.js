@@ -17,6 +17,7 @@ const CatUsuarios = React.lazy(()=> import('../components/Catalogos/Usuarios/Usu
 const CatUsuariosCrear = React.lazy(()=> import('../components/Catalogos/Usuarios/PageCrearUsuario'))
 const CatUsuariosActualizar = React.lazy(()=> import('../components/Catalogos/Usuarios/PageUpdateUsuario'))
 const CatUsuariosVer = React.lazy(()=>import('../components/Catalogos/Usuarios/PageVerUsuario'))
+const UsuarioVerCuenta = React.lazy(()=>import('../components/Catalogos/Usuarios/PageVerPerfil'))
 
 const CatPerfiles = React.lazy(()=> import('../components/Catalogos/Perfiles/Perfiles'))
 const CatCiclosEscolares = React.lazy(()=> import('../components/Catalogos/CiclosEscolares/CiclosEscolares'))
@@ -124,6 +125,7 @@ const PrivateRoute = ({ path, element }) => {
       PathConstants.MODULOEMPRESAESTUDIOSOCIECONOMICO,
       PathConstants.MODULOEMPRESAORDENESSERVICIO,
       PathConstants.MODULOEMPRESAEMPLEADOS,
+      PathConstants.USUARIOVERPERFIL,
       // Agrega más rutas aquí
     ],
     Empresas: [
@@ -132,12 +134,14 @@ const PrivateRoute = ({ path, element }) => {
       PathConstants.ESTUDIOSID,
       PathConstants.ESECDB,
       PathConstants.CONFIGURACIONES,
+      PathConstants.USUARIOVERPERFIL,
     ],
     Familias: [
       PathConstants.HOME,
       PathConstants.FAMILIASFILES,
       PathConstants.DATOSFAMILIA,
       PathConstants.CONFIGURACIONES,
+      PathConstants.USUARIOVERPERFIL,
     ],
   };
 
@@ -166,6 +170,7 @@ const generateRoute = (path, element, perfil = 'todos') => ({
 const routes = [
   generateRoute(PathConstants.DATOSFAMILIA, <PageDatosFamilia />, 'Familias'),
   generateRoute(PathConstants.HOME, <Home />),
+  generateRoute(PathConstants.USUARIOVERPERFIL, <UsuarioVerCuenta />),
   generateRoute(PathConstants.ESTUDIOSID, <EmpresaEstudio />),
   generateRoute(PathConstants.ESTUDIOS, <Estudios />),
   generateRoute(PathConstants.ENCUESTAPROYECTOID, <EncuestaProyectoID />),

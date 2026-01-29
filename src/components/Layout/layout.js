@@ -68,8 +68,7 @@ export default function Layout() {
       <main className={!isLoggedIn ? "background-login" : ""}>
         <div className="row m-0">
           {isLoggedIn && (
-            <Sidebar
-              collapsed={collapsed}
+            <Sidebar collapsed={collapsed}
               rootStyles={{
                 backgroundColor: "#47D1D6",
                 overflowY: "auto",
@@ -86,17 +85,9 @@ export default function Layout() {
                 }
               >
                 {collapsed ? (
-                  <ion-icon
-                    size="large"
-                    onClick={() => setCollapsed(!collapsed)}
-                    name="menu-outline"
-                  ></ion-icon>
+                  <ion-icon size="large" onClick={() => setCollapsed(!collapsed)} name="menu-outline" ></ion-icon>
                 ) : (
-                  <ion-icon
-                    size="large"
-                    onClick={() => setCollapsed(!collapsed)}
-                    name="close-circle-outline"
-                  ></ion-icon>
+                  <ion-icon size="large" onClick={() => setCollapsed(!collapsed)} name="close-circle-outline"></ion-icon>
                 )}
               </div>
               <Menu
@@ -127,11 +118,7 @@ export default function Layout() {
                 }}
               >
                 <div className="d-flex justify-content-center align-items-center">
-                  <img
-                    src="/img/logo_principal_blanco.png"
-                    style={{ width: "200px", maxWidth: "100%" }}
-                    alt="Descripción de la imagen"
-                  />
+                  <img src="/img/logo_principal_blanco.png" style={{ width: "200px", maxWidth: "100%" }} alt="Descripción de la imagen" />
                 </div>
 
                 <MenuItem component={<Link to={PathConstants.HOME} />}>
@@ -140,42 +127,46 @@ export default function Layout() {
                       <ion-icon name="home" size="large" />
                     </div>
                   ) : (
-                    <p>INICIO</p>
+                    <p class="mb-0">INICIO</p>
                   )}
                 </MenuItem>
 
                 {roleSession === "Familias" && active && (
-                  <MenuItem
-                    component={<Link to={PathConstants.DATOSFAMILIA} />}
-                  >
+                  <>
+                  <MenuItem component={<Link to={PathConstants.DATOSFAMILIA} />} >
                     {collapsed ? (
                       <div className="ion-text-center">
-                        <ion-icon
-                          name="id-card-outline"
-                          size="large"
-                        ></ion-icon>
+                        <ion-icon name="id-card-outline" size="large" />
                       </div>
                     ) : (
-                      <p>DATOS CONTACTOS</p>
+                      <p className="mb-0">DATOS CONTACTOS</p>
                     )}
                   </MenuItem>
+                  <MenuItem component={<Link to={`/micuenta`} />}>
+                    {collapsed ? (
+                      <div className="ion-text-center">
+                        <ion-icon name="person" size="large" />
+                      </div>
+                    ) : (
+                      <p className="pt-3">MI CUENTA</p>
+                    )}
+                  </MenuItem>
+                  </>
+                  
                 )}
 
                 {roleSession === "Familias" && active && localStorage.getItem('dd') === '1' && (
-                  <MenuItem
-                    component={<Link to={`${returnRutaFamiliaFiles()}`} />}
-                  >
+                  <MenuItem component={<Link to={`${returnRutaFamiliaFiles()}`} />}>
                     {collapsed ? (
                       <div className="ion-text-center">
-                        <ion-icon
-                          name="cloud-upload-outline"
-                          size="large"
+                        <ion-icon name="cloud-upload-outline" size="large"
                         ></ion-icon>
                       </div>
                     ) : (
-                      <p>SUBIR ARCHIVOS</p>
+                      <p className="mb-0">SUBIR ARCHIVOS</p>
                     )}
                   </MenuItem>
+
                 )}
 
                 {roleSession === "Administrador" && (
@@ -189,9 +180,7 @@ export default function Layout() {
                         <p>ASIGNACIONES</p>
                       )}
                     </MenuItem>
-                    <MenuItem
-                      component={<Link to={PathConstants.ORDENESSERVICIOS} />}
-                    >
+                    <MenuItem component={<Link to={PathConstants.ORDENESSERVICIOS} />} >
                       {collapsed ? (
                         <div className="ion-text-center">
                           <ion-icon
@@ -207,9 +196,7 @@ export default function Layout() {
                     {/*<MenuItem component={<Link to={PathConstants.CICLOSESCOLARES} />}> 
                                 {collapsed ? (<div className="ion-text-center"><ion-icon size="large" name="school"/></div>):(<p>CICLOS ESCOLARES</p>)}
                               </MenuItem>*/}
-                    <SubMenu
-                      label="NUEVO ESTUDIO"
-                      icon={
+                    <SubMenu label="NUEVO ESTUDIO" icon={
                         collapsed && (
                           <div className="d-flex justify-content-center align-items-center">
                             {" "}
@@ -230,19 +217,13 @@ export default function Layout() {
                         },
                       }}
                     >
-                      <MenuItem
-                        component={
-                          <Link to={PathConstants.ESTUDIOSOCIOECONOMICO} />
-                        }
-                      >
+                      <MenuItem component={ <Link to={PathConstants.ESTUDIOSOCIOECONOMICO} />}>
                         {" "}
                         SOCIOECONOMICO
                       </MenuItem>
                     </SubMenu>
 
-                    <SubMenu
-                      label="EMPRESAS"
-                      icon={
+                    <SubMenu label="EMPRESAS" icon={
                         collapsed && (
                           <div className="d-flex justify-content-center align-items-center">
                             {" "}
@@ -295,9 +276,7 @@ export default function Layout() {
                       </MenuItem>
                     </SubMenu>
 
-                    <SubMenu
-                      label="CATALOGOS"
-                      icon={
+                    <SubMenu label="CATALOGOS" icon={
                         collapsed && (
                           <div className="d-flex justify-content-center align-items-center">
                             <ion-icon size="large" name="file-tray-full" />
@@ -355,18 +334,19 @@ export default function Layout() {
                         COLEGIOS COMUNES
                       </MenuItem>
                     </SubMenu>
+
+                    <MenuItem component={<Link to={`/micuenta`} />}>
+                      {collapsed ? (
+                        <div className="ion-text-center">
+                          <ion-icon name="person" size="large" />
+                        </div>
+                      ) : (
+                        <p className="pt-3">MI CUENTA</p>
+                      )}
+                    </MenuItem>
                   </>
                 )}
-
-                <MenuItem component={<Link to={`/usuarios/${userSession.id ?? localStorage.getItem('id')}/ver`} />}>
-                  {collapsed ? (
-                    <div className="ion-text-center">
-                      <ion-icon name="person" size="large" />
-                    </div>
-                  ) : (
-                    <p className="pt-3">MI CUENTA</p>
-                  )}
-                </MenuItem>
+                
 
                 <MenuItem onClick={Logout} className="ps-1">
                   {collapsed ? (
@@ -379,10 +359,7 @@ export default function Layout() {
             </Sidebar>
           )}
 
-          <div
-            className="col pt-4 scrollable-content"
-            style={{ height: "100vh" }}
-          >
+          <div className="col pt-4 scrollable-content" style={{ height: "100vh" }}>
             {isLoggedIn && (
               <div className="d-flex justify-content-end">
                 <div className="d-flex align-items-center">

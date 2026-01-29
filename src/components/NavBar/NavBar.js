@@ -65,7 +65,8 @@ function Navbar() {
                 
             </ul>
             <div>
-              <a style={ { color:"white" } } className="nav-link dropdown-toggle numeros" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a style={ { color:"white" } } 
+              className="nav-link dropdown-toggle numeros" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 { userSession }
               </a>
               <ul className="dropdown-menu dropdown-menu-end">
