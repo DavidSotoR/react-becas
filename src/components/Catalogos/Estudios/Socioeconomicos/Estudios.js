@@ -239,6 +239,10 @@ export default function Estudios() {
   }, []);
 
   useEffect(() => {
+    setSelectedRows([]);
+  },[idEstado])
+
+  useEffect(() => {
     getProyectoClientes();
   }, [preyecto]);
 
@@ -559,6 +563,44 @@ export default function Estudios() {
                     onChange={searchText}
                   />
                 </div>
+              {selectedRows.length > 0 && (
+                <div className="col-6 col-md-6">
+                  <div className="row d-flex align-items-center">
+                    <div className="col-2 col-md-1 mx-md-2">
+                      <label className="">
+                        Asignar:
+                      </label>
+                    </div>
+                    <div className="col-6 ps-0 ps-md-3">
+                      <Select
+                        name="id_colaborador"
+                        id="id_colaborador"
+                        components={animatedComponents}
+                        options={opcionesColaboradores}
+                        value={selectedOption}
+                        onChange={(e) => {
+                          setSelectedOption(e);
+                          setFromAsignarColaborador((prevState) => ({
+                            ...prevState,
+                            id_colaborador: e.value,
+                          }));
+                        }}
+                      ></Select>
+                    </div>
+                    <div className="col-2">
+                      <Button
+                        className="btn btn-primary btn-sm fw-bold"
+                        onClick={(e) => {
+                          postDataEditarColaborador();
+                        }}
+                      >
+                        Guardar
+                      </Button>
+                    </div>
+                  </div>
+ 
+                </div>
+              )}
             </div>
           </>
         );
