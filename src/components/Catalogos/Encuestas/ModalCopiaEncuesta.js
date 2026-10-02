@@ -56,6 +56,7 @@ export default function ModalCopiaEncuesta({ show, handleClose, encuesta }) {
         })
         
     }
+//                         <input type="text" className="form-control" name="nombre" placeholder={encuesta?.nombre || ""} onChange={(e)=> formInputChange(e)}/>
 
     useEffect(()=>{
         validateFields()
@@ -72,7 +73,10 @@ export default function ModalCopiaEncuesta({ show, handleClose, encuesta }) {
                     </div>
                     <div className="mb-3">
                         <label>Nombre</label>
-                        <input type="text" className="form-control" name="nombre" onChange={(e)=> formInputChange(e)}/>
+                        <div className="input-group mb-3">
+                            <span className="input-group-text" id="basic-addon1">{encuesta?.nombre || ""}-</span>
+                            <input type="text" className="form-control" onChange={(e)=> formInputChange(e)}/>
+                        </div>
                     </div>
                     <div className="mb-3">
                         <label>Intrdusca su Contraseña:</label>
