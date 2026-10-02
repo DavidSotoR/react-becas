@@ -369,7 +369,7 @@ export default function Estudios() {
               className="btn btn-primary btn-sm"
               to={`/estudio/${estudio.id}`}
             >
-              <i class="bi bi-eye-fill"></i>
+              <i className="bi bi-eye-fill"></i>
             </Link>
           </div>
         </td>
