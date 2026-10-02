@@ -19,10 +19,7 @@ export default function TablaDePuntos({ID}){
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     
-    const [allPuntos, setAllPuntos ] = useState([
-        {id:1,limite_inferior:0,limite_superior:20,porcentaje_sujerido:20},
-        {id:2,limite_inferior:21,limite_superior:40,porcentaje_sujerido:40},
-    ]);
+    const [allPuntos, setAllPuntos ] = useState([]);
 
     const handleEditClick = (item) => {
         setEditarItem(item)
