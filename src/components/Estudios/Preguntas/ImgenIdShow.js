@@ -6,7 +6,6 @@ const ImagenIdShow = ({ id, name }) => {
     const { logout } = useContext(AuthContext);
 
     const APIURL = process.env.REACT_APP_API_URL;
-    //'http://127.0.0.1:8000/storage/'
     const SERVER_STORAGE = process.env.SERVER_STORAGE;
     const config = {
         headers: {
