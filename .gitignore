@@ -23,3 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 # Archivos de entorno
 .env
+.env.development
+.env.example
