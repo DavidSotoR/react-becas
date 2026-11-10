@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { AuthProvider } from 'context/AuthContext';
 
 const APIURL = process.env.REACT_APP_API_URL;
 // Configuración base para Axios
-const apiClient = axios.create({
+export const apiClient = axios.create({
   baseURL: APIURL, // Cambia esto por tu URL base
   timeout: 5000, // Tiempo máximo de espera
   headers: {

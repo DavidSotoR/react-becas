@@ -1,8 +1,9 @@
 // src/context/AuthContext.js
 import axios from 'axios';
 import { Toast, ToastContainer } from 'react-bootstrap';
-import React, { createContext, useState } from 'react';
-import ToastHeader from '../../node_modules/react-bootstrap/esm/ToastHeader';
+import React, { createContext, useState, useEffect, useCallback, useRef } from 'react';
+import { apiClient } from '../services/ApiService';
+import { tokenExpiresAt, isCurrentApiRequest } from '../services/session';
 
 export const AuthContext = createContext();
 
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }) => {
   const [userID, setUserID] = useState(localStorage.getItem('id'))
   const [ userActive, setUserActive ] = useState(null)
   const [ ua, setUA ] = useState(false)
+  const closingSession = useRef(false);
   const login = async (sendData) => {
     var token = ''
     var role = ''
@@ -64,6 +66,7 @@ export const AuthProvider = ({ children }) => {
        loggedSuccess = true
        localStorage.setItem('login', 'true');
        localStorage.setItem('token', token);
+       closingSession.current = false;
       
     } catch (error) {
       setRoleSession('')
@@ -101,11 +104,74 @@ export const AuthProvider = ({ children }) => {
     )
   }
 
-  const logout = () => {
+  const logout = useCallback(() => {
+    if (closingSession.current) return;
+    closingSession.current = true;
     localStorage.clear();
     setIsLoggedIn(false);
-    window.location.replace('/')
-  };
+    setRoleSession(null);
+    setUserSession(null);
+    setUserID(null);
+    setDocumentoDigital(null);
+    setUserActive(null);
+    setUA(false);
+    window.location.replace('/login');
+  }, []);
+
+  const validarSesionActiva = useCallback(() => {
+    const active = localStorage.getItem('login') === 'true';
+    if (!active) return false;
+    const expiresAt = tokenExpiresAt(localStorage.getItem('token'));
+    if (!expiresAt || expiresAt <= Date.now()) {
+      logout();
+      return false;
+    }
+    return true;
+  }, [logout]);
+
+  useEffect(() => {
+    let timer;
+    const check = () => {
+      clearTimeout(timer);
+      if (!validarSesionActiva()) {
+        if (isLoggedIn && localStorage.getItem('login') !== 'true') logout();
+        return;
+      }
+      const remaining = tokenExpiresAt(localStorage.getItem('token')) - Date.now();
+      timer = setTimeout(check, Math.min(Math.max(remaining, 1), 2147483647));
+    };
+    check();
+    window.addEventListener('focus', check);
+    window.addEventListener('storage', check);
+    document.addEventListener('visibilitychange', check);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('focus', check);
+      window.removeEventListener('storage', check);
+      document.removeEventListener('visibilitychange', check);
+    };
+  }, [isLoggedIn, logout, validarSesionActiva]);
+
+  useEffect(() => {
+    const clients = [axios, apiClient];
+    const registrations = clients.map(client => {
+      const requestId = client.interceptors.request.use(config => {
+        if (isCurrentApiRequest(config, APIURL, localStorage.getItem('token')) && !validarSesionActiva()) {
+          throw new axios.CanceledError('La sesión ha expirado.');
+        }
+        return config;
+      });
+      const responseId = client.interceptors.response.use(response => response, error => {
+        if (error.response?.status === 401 && isCurrentApiRequest(error.config, APIURL, localStorage.getItem('token'))) logout();
+        return Promise.reject(error);
+      });
+      return { client, requestId, responseId };
+    });
+    return () => registrations.forEach(({ client, requestId, responseId }) => {
+      client.interceptors.request.eject(requestId);
+      client.interceptors.response.eject(responseId);
+    });
+  }, [APIURL, logout, validarSesionActiva]);
 
   const execShowAlert = (data) =>{
     setShowAlertContext(true)
@@ -118,7 +184,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession,userID, userActive, login, logout, ua, showAlertContext, execShowAlert, execHideAlert, documentoDigital }}>
+    <AuthContext.Provider value={{ isLoggedIn,userSession, roleSession,userID, userActive, login, logout, validarSesionActiva, ua, showAlertContext, execShowAlert, execHideAlert, documentoDigital }}>
       {children}
       <ToastContainer className="position-fixed bottom-0 end-0 p-3">
         <Toast 
