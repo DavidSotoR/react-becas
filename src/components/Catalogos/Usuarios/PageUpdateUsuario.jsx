@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
+import AdminPassword from "./AdminPassword";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PathConstants from "../../../routes/pathsConstants";
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
@@ -697,6 +698,8 @@ export default function PageUpdateUsuario() {
                                 onChange={handleInputChange}/>
                         {contieneError(4) && <div className="text-danger fw-medium">{ getErrorMsg(4) }</div>}
                     </div>
+
+                    <AdminPassword key={id} userId={dataUpdateUsuario.id} onSaved={() => setDataUpdateUsuario(previous => ({ ...previous, password_temporal: null }))} />
 
                     { dataUpdateUsuario.id_perfil === 6 &&
                         <div className="col-12 col-sm-8 col-md-5 mb-3">
